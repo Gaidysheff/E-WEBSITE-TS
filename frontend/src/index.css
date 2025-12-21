@@ -250,3 +250,106 @@ html {
   --color-myRedDark: oklch(0.537 0.218 25);
   --color-myRedDarker: oklch(0.455 0.184 25);
 }
+
+/* ======================================================================= */
+/* ======================================================================= */
+
+@layer utilities {
+  .search-form {
+    @apply w-[300px] max-sm:w-[250px] max-sm:h-[40px] max-sm:text-[14px] 
+            h-[50px] bg-card border-3 border-primaryDark rounded-[80px] 
+            px-5 max-sm:px-3 flex flex-row items-center gap-5;
+  }
+
+  .nav-btn {
+    @apply px-4 py-2 bg-primaryDark border-2 border-primaryDark rounded-md 
+            hover:bg-primary transition cursor-pointer text-primaryLight
+            hover:scale-110;
+  }
+
+  .flex-center {
+    @apply flex items-center justify-center;
+  }
+
+  .main-max-width {
+    @apply max-w-[1440px];
+  }
+
+  /* .padding-x {
+    @apply px-24 max-sm:px-10;
+  } */
+
+  .default-btn {
+    @apply w-[250px] max-xsm:w-full h-[45px] rounded-md
+    bg-primaryDark border-2 border-primaryDark
+    text-sm xsm:text-lg text-primaryLight transition cursor-pointer
+    hover:bg-primary hover:scale-105 transition-all duration-300
+    disabled:opacity-50 disabled:cursor-not-allowed
+    drop-shadow-[5px_5px_5px_rgba(0,0,0,0.5)]
+    dark:shadow-[5px_5px_5px_rgba(255,255,255,0.5)]
+    flex items-center justify-center;
+  }
+
+  .product-btn {
+    @apply w-[200px] max-md:w-full h-[45px] rounded-md bg-primaryDark 
+            border-2 border-primaryLight text-sm xsm:text-lg text-primaryLight 
+            transition cursor-pointer flex items-center justify-center
+            hover:bg-primary hover:scale-105 transition-all duration-300
+            disabled:opacity-50 disabled:cursor-not-allowed
+            drop-shadow-[5px_5px_5px_rgba(0,0,0,0.5)]
+            dark:shadow-[5px_5px_5px_rgba(255,255,255,0.5)];
+  }
+
+  .wish-btn {
+    @apply w-[200px] max-md:w-full h-[45px] rounded-md bg-primaryLight 
+            border-2 border-primaryDark text-sm xsm:text-lg text-primaryDark 
+            transition cursor-pointer flex items-center justify-center
+            hover:bg-primary hover:scale-105 transition-all duration-300
+            disabled:opacity-50 disabled:cursor-not-allowed
+            drop-shadow-[5px_5px_5px_rgba(255,255,255,0.5)]
+            dark:shadow-[5px_5px_5px_rgba(0,0,0,0.5)];
+  }
+
+  .checkout-btn {
+    @apply w-full mt-5 py-3 bg-primaryDark border-2 border-primaryDark rounded-md 
+            text-xs 2xsm:text-base sm:text-lg lg:text-sm text-primaryLight
+            hover:bg-primary hover:scale-105 transition disabled:opacity-50
+            drop-shadow-[3px_3px_5px_rgba(0,0,0,0.5)]
+            dark:shadow-[3px_3px_5px_rgba(255,255,255,0.5)] 
+            disabled:cursor-not-allowed cursor-pointer;
+  }
+
+  .update-item-btn {
+    @apply px-4 py-2 bg-primaryDark border-2 border-primaryDark rounded-md 
+            text-sm xsm:text-lg 
+            hover:bg-primary transition cursor-pointer text-primaryLight
+            hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed
+            drop-shadow-[3px_3px_5px_rgba(0,0,0,0.5)]
+            dark:shadow-[3px_3px_5px_rgba(255,255,255,0.5)];
+  }
+
+  .custom-overflow {
+    @apply overflow-x-auto whitespace-nowrap;
+  }
+
+  .cat-btn {
+    @apply w-[250px] max-sm:w-full h-[50px] rounded-lg 
+    shadow-md flex items-center gap-4 px-4 transition-all duration-300;
+  }
+  .cat-btn-active {
+    @apply bg-gradient-to-r from-gray-800 to-gray-600
+    border-2 border-primaryDark text-gray-100
+    drop-shadow-[5px_5px_5px_rgba(255,255,255,0.3)];
+  }
+  .cat-btn-passive {
+    @apply bg-gradient-to-r from-gray-300 to-gray-200 ring-2 ring-gray-400
+    hover:shadow-lg hover:scale-105 active:scale-100
+    border-2 border-primaryLight cursor-pointer text-gray-800
+    drop-shadow-[5px_5px_5px_rgba(0,0,0,0.3)];
+  }
+
+  .icon-container-round {
+    @apply size-10 rounded-full bg-radial-[at_25%_25%] from-white 
+    to-zinc-600 to-95%;
+  }
+}
