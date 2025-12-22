@@ -24,7 +24,7 @@ const LogoSwitch = ({ id }: Props): JSX.Element | never => {
   }
 
   const _: never = id;
-  // console.log("🚀 ~ LogoSwitch ~ _:", _);
+  console.log(_);
 
   throw new Error();
 };
