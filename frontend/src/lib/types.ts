@@ -5,3 +5,6 @@ export type Product = {
   price: number;
   // sale: number;
 };
+
+export type ThemeSwitch = "light" | "dark";
+// export type ThemeSwitch = "light" | "dark" | null;
