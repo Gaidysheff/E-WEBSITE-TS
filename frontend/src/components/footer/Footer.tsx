@@ -1,8 +1,7 @@
-import React from "react";
+// type Props = {};
 
-type Props = {};
-
-const Footer = (props: Props) => {
+// const Footer = (props: Props) => {
+const Footer = () => {
   return (
     <footer
       className="bg-black text-white w-full py-16 border-t
