@@ -9,7 +9,11 @@ import Image7 from "@/assets/images/product/Product-7.png";
 import Image8 from "@/assets/images/product/Product-8.png";
 import Image9 from "@/assets/images/product/Product-9.png";
 
-export const HERO_DATA = [
+import { type Product } from "@/lib/types";
+
+export const HERO_DATA: Array<
+  Pick<Product, "id" | "image" | "title" | "price">
+> = [
   {
     id: 1,
     image: Image1,
