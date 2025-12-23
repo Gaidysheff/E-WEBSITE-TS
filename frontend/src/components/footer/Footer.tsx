@@ -2,9 +2,10 @@ import { FaFacebookF, FaLinkedin, FaYoutube } from "react-icons/fa";
 
 import { BsTwitterX } from "react-icons/bs";
 
-type Props = {};
+// type Props = {};
 
-const Footer = (props: Props) => {
+// const Footer = (props: Props) => {
+const Footer = () => {
   const options = {
     // weekday: "long",
     year: "numeric",

@@ -1,8 +1,9 @@
 import CategoryCard from "./CategoryCard.tsx";
 
-type Props = {};
+// type Props = {};
 
-const CategorySection = (props: Props) => {
+// const CategorySection = (props: Props) => {
+const CategorySection = () => {
   return (
     <section className="mx-auto my-20">
       <h2 className="my-9 text-center text-xl font-bold text-primaryDark">

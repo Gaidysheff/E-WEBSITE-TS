@@ -1,8 +1,9 @@
 import { Laptop } from "lucide-react";
 
-type Props = {};
+// type Props = {};
 
-const CategoryCard = (props: Props) => {
+// const CategoryCard = (props: Props) => {
+const CategoryCard = () => {
   return (
     <div
       className="w-[160px] h-[90px] sm:w-[220px] sm:h-[120px] bg-card

@@ -1,8 +1,9 @@
 import Product from "@/assets/images/product/Product-1.png";
 
-type Props = {};
+// type Props = {};
 
-const ProductCard = (props: Props) => {
+// const ProductCard = (props: Props) => {
+const ProductCard = () => {
   return (
     <div
       className="w-[280px] rounded-lg bg-card flex flex-col items-center gap-4
