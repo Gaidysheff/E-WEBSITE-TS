@@ -34,7 +34,8 @@
     local("Comfortaa"),
     url("./assets/fonts/Comfortaa.woff2") format("woff2"),
     url("./assets/fonts/Comfortaa.woff") format("woff"),
-    url("./assets/fonts/Comfortaa.eot") format("eot");
+    url("./assets/fonts/Comfortaa.eot") format("eot"),
+    url("./assets/fonts/Comfortaa.ttf") format("ttf");
 }
 
 @font-face {
@@ -53,7 +54,6 @@
 /* ======================================================================= */
 
 @custom-variant dark (&:is(.dark *));
-/* @import "tw-animate-css"; */
 
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
