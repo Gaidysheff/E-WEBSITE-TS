@@ -11,6 +11,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as CategoriesCategoryIdRouteImport } from './routes/categories/$categoryId'
 
 const IndexLazyRouteImport = createFileRoute('/')()
 
@@ -19,27 +20,36 @@ const IndexLazyRoute = IndexLazyRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
+const CategoriesCategoryIdRoute = CategoriesCategoryIdRouteImport.update({
+  id: '/categories/$categoryId',
+  path: '/categories/$categoryId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
+  '/categories/$categoryId': typeof CategoriesCategoryIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
+  '/categories/$categoryId': typeof CategoriesCategoryIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexLazyRoute
+  '/categories/$categoryId': typeof CategoriesCategoryIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/categories/$categoryId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/categories/$categoryId'
+  id: '__root__' | '/' | '/categories/$categoryId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
+  CategoriesCategoryIdRoute: typeof CategoriesCategoryIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -51,11 +61,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexLazyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/categories/$categoryId': {
+      id: '/categories/$categoryId'
+      path: '/categories/$categoryId'
+      fullPath: '/categories/$categoryId'
+      preLoaderRoute: typeof CategoriesCategoryIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
+  CategoriesCategoryIdRoute: CategoriesCategoryIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
