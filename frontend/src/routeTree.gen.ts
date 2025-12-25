@@ -12,44 +12,69 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as CategoriesCategoryIdRouteImport } from './routes/categories/$categoryId'
+import { Route as CartCartcodeRouteImport } from './routes/cart/$cartcode'
 
 const IndexLazyRouteImport = createFileRoute('/')()
+const CartIndexLazyRouteImport = createFileRoute('/cart/')()
 
 const IndexLazyRoute = IndexLazyRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
+const CartIndexLazyRoute = CartIndexLazyRouteImport.update({
+  id: '/cart/',
+  path: '/cart/',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/cart/index.lazy').then((d) => d.Route))
 const CategoriesCategoryIdRoute = CategoriesCategoryIdRouteImport.update({
   id: '/categories/$categoryId',
   path: '/categories/$categoryId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CartCartcodeRoute = CartCartcodeRouteImport.update({
+  id: '/cart/$cartcode',
+  path: '/cart/$cartcode',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
+  '/cart/$cartcode': typeof CartCartcodeRoute
   '/categories/$categoryId': typeof CategoriesCategoryIdRoute
+  '/cart': typeof CartIndexLazyRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
+  '/cart/$cartcode': typeof CartCartcodeRoute
   '/categories/$categoryId': typeof CategoriesCategoryIdRoute
+  '/cart': typeof CartIndexLazyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexLazyRoute
+  '/cart/$cartcode': typeof CartCartcodeRoute
   '/categories/$categoryId': typeof CategoriesCategoryIdRoute
+  '/cart/': typeof CartIndexLazyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/categories/$categoryId'
+  fullPaths: '/' | '/cart/$cartcode' | '/categories/$categoryId' | '/cart'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/categories/$categoryId'
-  id: '__root__' | '/' | '/categories/$categoryId'
+  to: '/' | '/cart/$cartcode' | '/categories/$categoryId' | '/cart'
+  id:
+    | '__root__'
+    | '/'
+    | '/cart/$cartcode'
+    | '/categories/$categoryId'
+    | '/cart/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
+  CartCartcodeRoute: typeof CartCartcodeRoute
   CategoriesCategoryIdRoute: typeof CategoriesCategoryIdRoute
+  CartIndexLazyRoute: typeof CartIndexLazyRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -61,6 +86,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexLazyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/cart/': {
+      id: '/cart/'
+      path: '/cart'
+      fullPath: '/cart'
+      preLoaderRoute: typeof CartIndexLazyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/categories/$categoryId': {
       id: '/categories/$categoryId'
       path: '/categories/$categoryId'
@@ -68,12 +100,21 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CategoriesCategoryIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/cart/$cartcode': {
+      id: '/cart/$cartcode'
+      path: '/cart/$cartcode'
+      fullPath: '/cart/$cartcode'
+      preLoaderRoute: typeof CartCartcodeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
+  CartCartcodeRoute: CartCartcodeRoute,
   CategoriesCategoryIdRoute: CategoriesCategoryIdRoute,
+  CartIndexLazyRoute: CartIndexLazyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -3,10 +3,10 @@ import ProductCard from "@/components/sectionProduct/ProductCard.tsx";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/categories/$categoryId")({
-  component: RouteComponent,
+  component: CategoryPage,
 });
 
-function RouteComponent() {
+function CategoryPage() {
   return (
     <div className="py-9">
       <p className="font-semibold text-center pl-3">Electronics</p>
