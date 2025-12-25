@@ -1,4 +1,4 @@
-import { EmblaCarousel } from "./HeroCarouselEmbla.jsx";
+import { EmblaCarousel } from "./HeroCarouselEmbla";
 
 // const Hero = ({ productsForCarousel }) => {
 const Hero = () => {

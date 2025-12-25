@@ -1,6 +1,6 @@
 import DarkLogo from "@/assets/images/shared/Kalika-LogoSignNew.png";
 import LightLogo from "@/assets/images/shared/Kalika-LogoSign-Gray.png";
-import { type ThemeSwitch } from "@/lib/types.ts";
+import { type ThemeSwitch } from "@/lib/types";
 import type { JSX } from "react";
 
 type Props = {

@@ -1,6 +1,6 @@
 import { Moon, Sun } from "lucide-react";
 
-import { useTheme } from "@/store/ThemeContext.tsx";
+import { useTheme } from "@/store/ThemeContext";
 
 type Props = {
   id: string;

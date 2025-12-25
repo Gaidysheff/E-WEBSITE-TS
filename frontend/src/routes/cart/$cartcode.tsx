@@ -1,5 +1,5 @@
-import CartItem from "@/components/cart/CartItem.tsx";
-import CartSummary from "@/components/cart/CartSummary.tsx";
+import CartItem from "@/components/cart/CartItem";
+import CartSummary from "@/components/cart/CartSummary";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/cart/$cartcode")({

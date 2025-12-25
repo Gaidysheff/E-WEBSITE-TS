@@ -1,4 +1,4 @@
-import CategoryCard from "./CategoryCard.tsx";
+import CategoryCard from "./CategoryCard";
 
 // type Props = {};
 

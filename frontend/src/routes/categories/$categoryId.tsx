@@ -1,5 +1,5 @@
-import CategoryBtn from "@/components/category/CategoryBtn.tsx";
-import ProductCard from "@/components/sectionProduct/ProductCard.tsx";
+import CategoryBtn from "@/components/category/CategoryBtn";
+import ProductCard from "@/components/sectionProduct/ProductCard";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/categories/$categoryId")({

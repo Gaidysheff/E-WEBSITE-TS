@@ -1,11 +1,11 @@
 import { Link } from "@tanstack/react-router";
-import MobileNavbar from "./MobileNavbar.tsx";
-import NavItems from "./NavItems.tsx";
-import SearchButton from "./SearchButton.tsx";
-import SearchForm from "./SearchForm.tsx";
-import ThemeSwitch from "./ThemeSwitch.tsx";
+import MobileNavbar from "./MobileNavbar";
+import NavItems from "./NavItems";
+import SearchButton from "./SearchButton";
+import SearchForm from "./SearchForm";
+import ThemeSwitch from "./ThemeSwitch";
 import { useState } from "react";
-import { useTheme } from "@/store/ThemeContext.tsx";
+import { useTheme } from "@/store/ThemeContext";
 
 const NavBar = () => {
   const [showSearchForm, setShowSearchForm] = useState(false);

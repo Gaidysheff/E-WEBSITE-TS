@@ -1,5 +1,5 @@
-import LogoSwitch from "./LogoSwitch.tsx";
-import { useTheme } from "@/store/ThemeContext.tsx";
+import LogoSwitch from "./LogoSwitch";
+import { useTheme } from "@/store/ThemeContext";
 
 const Introduction = () => {
   const { theme } = useTheme();
