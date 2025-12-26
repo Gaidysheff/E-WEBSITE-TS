@@ -15,9 +15,15 @@ import { Route as ProductsProductSlugRouteImport } from './routes/products/$prod
 import { Route as CategoriesCategoryIdRouteImport } from './routes/categories/$categoryId'
 import { Route as CartCartcodeRouteImport } from './routes/cart/$cartcode'
 
+const ProfileLazyRouteImport = createFileRoute('/profile')()
 const IndexLazyRouteImport = createFileRoute('/')()
 const CartIndexLazyRouteImport = createFileRoute('/cart/')()
 
+const ProfileLazyRoute = ProfileLazyRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/profile.lazy').then((d) => d.Route))
 const IndexLazyRoute = IndexLazyRouteImport.update({
   id: '/',
   path: '/',
@@ -46,6 +52,7 @@ const CartCartcodeRoute = CartCartcodeRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
+  '/profile': typeof ProfileLazyRoute
   '/cart/$cartcode': typeof CartCartcodeRoute
   '/categories/$categoryId': typeof CategoriesCategoryIdRoute
   '/products/$productSlug': typeof ProductsProductSlugRoute
@@ -53,6 +60,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
+  '/profile': typeof ProfileLazyRoute
   '/cart/$cartcode': typeof CartCartcodeRoute
   '/categories/$categoryId': typeof CategoriesCategoryIdRoute
   '/products/$productSlug': typeof ProductsProductSlugRoute
@@ -61,6 +69,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexLazyRoute
+  '/profile': typeof ProfileLazyRoute
   '/cart/$cartcode': typeof CartCartcodeRoute
   '/categories/$categoryId': typeof CategoriesCategoryIdRoute
   '/products/$productSlug': typeof ProductsProductSlugRoute
@@ -70,6 +79,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/profile'
     | '/cart/$cartcode'
     | '/categories/$categoryId'
     | '/products/$productSlug'
@@ -77,6 +87,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/profile'
     | '/cart/$cartcode'
     | '/categories/$categoryId'
     | '/products/$productSlug'
@@ -84,6 +95,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/profile'
     | '/cart/$cartcode'
     | '/categories/$categoryId'
     | '/products/$productSlug'
@@ -92,6 +104,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
+  ProfileLazyRoute: typeof ProfileLazyRoute
   CartCartcodeRoute: typeof CartCartcodeRoute
   CategoriesCategoryIdRoute: typeof CategoriesCategoryIdRoute
   ProductsProductSlugRoute: typeof ProductsProductSlugRoute
@@ -100,6 +113,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileLazyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -140,6 +160,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
+  ProfileLazyRoute: ProfileLazyRoute,
   CartCartcodeRoute: CartCartcodeRoute,
   CategoriesCategoryIdRoute: CategoriesCategoryIdRoute,
   ProductsProductSlugRoute: ProductsProductSlugRoute,
