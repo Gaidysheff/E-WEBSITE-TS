@@ -1,11 +1,27 @@
+import { Link, useNavigate } from "@tanstack/react-router";
+
 import { FaCartShopping } from "react-icons/fa6";
-import { Link } from "@tanstack/react-router";
 import { cn } from "@/lib/utils";
 
 type Props = {
   mobile?: boolean;
 };
 const NavItems = ({ mobile }: Props) => {
+  const navigate = useNavigate();
+
+  const logoutHandler = () => {
+    // logout();
+    navigate({ to: `/` });
+  };
+
+  const loginHandler = () => {
+    navigate({ to: `/login` });
+  };
+
+  const registerHandler = () => {
+    navigate({ to: `/register` });
+  };
+
   return (
     <div
       className={cn(
@@ -35,16 +51,16 @@ const NavItems = ({ mobile }: Props) => {
           </div>
         </Link>
 
-        <button type="button" className="nav-btn">
+        <button type="button" className="nav-btn" onClick={logoutHandler}>
           Logout
         </button>
       </div>
 
       <div className="flex items-center justify-center gap-6">
-        <button type="button" className="nav-btn">
+        <button type="button" className="nav-btn" onClick={loginHandler}>
           Login
         </button>{" "}
-        <button type="button" className="nav-btn">
+        <button type="button" className="nav-btn" onClick={registerHandler}>
           Sign up
         </button>
       </div>

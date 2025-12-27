@@ -1,9 +1,10 @@
 import * as React from "react";
 
-import { Outlet, createRootRoute } from "@tanstack/react-router";
+import { Outlet, createRootRoute, useLocation } from "@tanstack/react-router";
 
-import Footer from "./../components/footer/Footer.tsx";
-import NavBar from "./../components/navbar/NavBar.tsx";
+import Footer from "@/components/footer/Footer.tsx";
+import NavBar from "@/components/navbar/NavBar.tsx";
+import NoNavbarOutlet from "@/components/noNavbarOutlet/NoNavbarOutlet";
 import { ThemeProvider } from "@/store/ThemeContext.tsx";
 import { ToastContainer } from "react-toastify";
 
@@ -12,7 +13,15 @@ export const Route = createRootRoute({
 });
 
 function RootComponent() {
+  const location = useLocation();
   const theme = localStorage.getItem("theme");
+
+  const noNavbar =
+    location.pathname === "/login" ||
+    location.pathname === "/register" ||
+    location.pathname.includes("password") ||
+    location.pathname === "/success" ||
+    location.pathname === "/failed";
 
   return (
     <React.Fragment>
@@ -34,11 +43,18 @@ function RootComponent() {
             className="text-center"
           />
         )}
-        <NavBar />
-        <div className="container">
-          <Outlet />
-        </div>
-        <Footer />
+        {noNavbar ? (
+          <NoNavbarOutlet location={location} />
+        ) : (
+          // Standard Pages with NavBar and Footer
+          <>
+            <NavBar />
+            <div className="container">
+              <Outlet />
+            </div>
+            <Footer />
+          </>
+        )}
       </ThemeProvider>
     </React.Fragment>
   );
