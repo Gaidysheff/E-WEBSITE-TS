@@ -8,3 +8,9 @@ export type Product = {
 
 export type ThemeSwitch = "light" | "dark";
 // export type ThemeSwitch = "light" | "dark" | null;
+
+export type User = {
+  email: string;
+  password: string;
+  confirm_password: string;
+};

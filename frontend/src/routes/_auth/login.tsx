@@ -8,17 +8,73 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
+import type { AnyFieldApi } from "@tanstack/react-form";
+// import { type User } from "@/lib/types.ts";
 import { Button } from "@/components/ui/button";
 import Google from "@/assets/images/shared/google.png";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { createFileRoute } from "@tanstack/react-router";
+import { useForm } from "@tanstack/react-form";
+import { z } from "zod";
+
+// import { type FormEvent } from "react";
 
 export const Route = createFileRoute("/_auth/login")({
   component: Login,
 });
 
+const LoginSchema = z.object({
+  email: z.email(),
+  password: z.string().min(4, "Password must be at least 4 characters"),
+});
+
+// type Login = Pick<User, "email" | "password">;
+type Login = z.infer<typeof LoginSchema>;
+
+function FieldInfo({ field }: { field: AnyFieldApi }) {
+  return (
+    <>
+      {field.state.meta.isTouched && !field.state.meta.isValid ? (
+        <em
+          className={
+            field.state.meta.errors.length ? "text-destructive text-sm" : ""
+          }
+        >
+          {field.state.meta.errors.map((err) => err.message).join(",")}
+        </em>
+      ) : null}
+      {field.state.meta.isValidating ? "Validating..." : null}
+    </>
+  );
+}
+
 export function Login() {
+  const form = useForm({
+    defaultValues: {
+      email: "",
+      password: "",
+    } as Login,
+
+    validators: {
+      onChange: LoginSchema,
+    },
+
+    onSubmit: async ({ value }) => {
+      // Do something with data
+      alert(JSON.stringify(value, null, 2));
+      console.log("🚀 ~ Login ~ value:", value);
+      // login(value);
+      // navigate({ to: `/` });
+    },
+  });
+
+  // const submitHandler = (event: FormEvent<HTMLFormElement>) => {
+  //   event.preventDefault();
+  //   event.stopPropagation();
+  //   console.log("🚀 ~ Login ~ value: submitHandler");
+  // };
+
   return (
     <section
       className="mt-10 xsm:mt-0 xsm:h-dvh
@@ -32,30 +88,56 @@ export function Login() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
+          {/* <form onSubmit={submitHandler}> */}
+          <form
+            onSubmit={(event) => {
+              event.preventDefault();
+              form.handleSubmit();
+            }}
+          >
             <div className="flex flex-col gap-6">
-              <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="mail@example.com"
-                  required
-                />
-              </div>
-              <div className="grid gap-2">
-                <div className="flex items-center">
-                  <Label htmlFor="password">Password</Label>
-                  <a
-                    href="#"
-                    className="ml-auto inline-block text-sm underline-offset-4
-                    hover:underline"
-                  >
-                    Forgot your password?
-                  </a>
-                </div>
-                <Input id="password" type="password" required />
-              </div>
+              <form.Field
+                name="email"
+                children={(field) => (
+                  <div className="grid gap-2">
+                    <Label htmlFor="email">Email</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="mail@example.com"
+                      value={field.state.value || ""}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      required
+                    />
+                    <FieldInfo field={field} />
+                  </div>
+                )}
+              />
+              <form.Field
+                name="password"
+                children={(field) => (
+                  <div className="grid gap-2">
+                    <div className="flex items-center">
+                      <Label htmlFor="password">Password</Label>
+                      <a
+                        href="/passwordResetRequest"
+                        className="ml-auto inline-block text-sm 
+                            underline-offset-4 hover:underline"
+                      >
+                        Forgot your password?
+                      </a>
+                    </div>
+                    <Input
+                      id="password"
+                      type="password"
+                      value={field.state.value}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      required
+                    />
+                    <FieldInfo field={field} />
+                  </div>
+                )}
+              />
             </div>
           </form>
         </CardContent>
@@ -69,7 +151,7 @@ export function Login() {
             </div>
           </CardAction>
 
-          <Button type="submit" className="w-full">
+          <Button type="submit" className="w-full" onClick={form.handleSubmit}>
             Login
           </Button>
           <Button variant="outline" className="w-full">
