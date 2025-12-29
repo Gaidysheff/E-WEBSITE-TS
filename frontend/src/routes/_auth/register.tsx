@@ -7,13 +7,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 
 import type { AnyFieldApi } from "@tanstack/react-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Link } from "@tanstack/react-router";
-import { createFileRoute } from "@tanstack/react-router";
+import { register } from "@/api/endpoints_auth";
 import { useForm } from "@tanstack/react-form";
 import { z } from "zod";
 
@@ -72,6 +72,7 @@ function FieldInfo({ field }: { field: AnyFieldApi }) {
 }
 
 export function Register() {
+  const navigate = useNavigate();
   const form = useForm({
     defaultValues: {
       email: "",
@@ -84,8 +85,11 @@ export function Register() {
     },
 
     onSubmit: async ({ value }) => {
-      // Do something with form data
-      console.log("🚀 ~ Login ~ value:", value);
+      register(value);
+
+      setTimeout(() => {
+        navigate({ to: `/login` });
+      }, 3000);
     },
   });
 
