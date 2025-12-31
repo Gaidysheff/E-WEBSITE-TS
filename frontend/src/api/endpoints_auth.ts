@@ -12,9 +12,9 @@ const LOGIN_URL = `${BASE_URL}/users/login/`;
 // const PASSWORD_RESET_URL = `${BASE_URL}/password_reset/`;
 // const PASSWORD_CONFIRM_URL = `${BASE_URL}/password_reset/confirm/`;
 
-// ======================= API Requests =================================
-
 type Auth = Pick<User, "email" | "password">;
+
+// ======================= API Requests =================================
 
 export const register = async (value: Auth) => {
   try {

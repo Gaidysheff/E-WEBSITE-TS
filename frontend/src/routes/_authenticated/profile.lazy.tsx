@@ -1,8 +1,8 @@
-import Orders from "./../components/order/Orders";
-import Wishlist from "./../components/wishlist/Wishlist";
+import Orders from "@/components/order/Orders";
+import Wishlist from "@/components/wishlist/Wishlist";
 import { createLazyFileRoute } from "@tanstack/react-router";
 
-export const Route = createLazyFileRoute("/profile")({
+export const Route = createLazyFileRoute("/_authenticated/profile")({
   component: RouteComponent,
 });
 

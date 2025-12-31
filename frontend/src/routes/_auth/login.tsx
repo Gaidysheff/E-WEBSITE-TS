@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 
 import type { AnyFieldApi } from "@tanstack/react-form";
 // import { type User } from "@/lib/types.ts";
@@ -14,7 +15,7 @@ import { Button } from "@/components/ui/button";
 import Google from "@/assets/images/shared/google.png";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { createFileRoute } from "@tanstack/react-router";
+import { login } from "@/api/endpoints_auth";
 import { useForm } from "@tanstack/react-form";
 import { z } from "zod";
 
@@ -50,6 +51,8 @@ function FieldInfo({ field }: { field: AnyFieldApi }) {
 }
 
 export function Login() {
+  const navigate = useNavigate();
+
   const form = useForm({
     defaultValues: {
       email: "",
@@ -62,10 +65,10 @@ export function Login() {
 
     onSubmit: async ({ value }) => {
       // Do something with data
-      alert(JSON.stringify(value, null, 2));
+      // alert(JSON.stringify(value, null, 2));
       console.log("🚀 ~ Login ~ value:", value);
-      // login(value);
-      // navigate({ to: `/` });
+      login(value);
+      navigate({ to: `/` });
     },
   });
 
@@ -146,7 +149,7 @@ export function Login() {
             <div className="grid grid-cols-2 gap-2 flex items-center">
               <CardDescription>No account yet?</CardDescription>
               <Button variant="link" className="justify-self-end">
-                Sign Up
+                <Link to="/register">Sign Up</Link>
               </Button>
             </div>
           </CardAction>

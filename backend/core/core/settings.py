@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     "rest_framework",
     # "django_rest_passwordreset",
     "corsheaders",
-    # "knox",
+    "knox",
     # "mailing",
     # "crispy_forms",
     # "crispy_bootstrap4",
@@ -67,6 +67,11 @@ MIDDLEWARE = [
 
 AUTH_USER_MODEL = "users.CustomUser"
 
+AUTHENTICATION_BACKENDS = [
+    # 'users.auth_backend.EmailBackend',
+    "django.contrib.auth.backends.ModelBackend",  # this line fixed the problem
+]
+
 ROOT_URLCONF = "core.urls"
 
 TEMPLATES = [
@@ -83,6 +88,11 @@ TEMPLATES = [
         },
     },
 ]
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": ("knox.auth.TokenAuthentication",),
+    # "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
 
 WSGI_APPLICATION = "core.wsgi.application"
 
