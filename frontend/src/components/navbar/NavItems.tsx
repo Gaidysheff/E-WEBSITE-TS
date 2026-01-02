@@ -2,6 +2,7 @@ import { Link, useNavigate } from "@tanstack/react-router";
 
 import { FaCartShopping } from "react-icons/fa6";
 import { cn } from "@/lib/utils";
+import { logout } from "@/api/endpoints_auth";
 
 type Props = {
   mobile?: boolean;
@@ -10,7 +11,7 @@ const NavItems = ({ mobile }: Props) => {
   const navigate = useNavigate();
 
   const logoutHandler = () => {
-    // logout();
+    logout();
     navigate({ to: `/` });
   };
 

@@ -8,7 +8,7 @@ const BASE_URL = env.VITE_API_URL;
 
 const REGISTER_URL = `${BASE_URL}/users/register/`;
 const LOGIN_URL = `${BASE_URL}/users/login/`;
-// const LOGOUT_URL = `${BASE_URL}/logoutall/`;
+const LOGOUT_URL = `${BASE_URL}/logoutall/`;
 const PASSWORD_RESET_URL = `${BASE_URL}/password_reset/`;
 const PASSWORD_CONFIRM_URL = `${BASE_URL}/password_reset/confirm/`;
 
@@ -61,21 +61,21 @@ export const login = async (value: Auth) => {
   }
 };
 
-// export const logout = async () => {
-//   try {
-//     await api.post(LOGOUT_URL, {}).then(() => {
-//       localStorage.removeItem("Token");
-//       toast.info("You have left the authorized area 👋! ");
-//       // -------- Delay for showing toaster ------------
-//       const reloadDelay = () => {
-//         window.location.reload();
-//       };
-//       setTimeout(reloadDelay, 3000);
-//     });
-//   } catch (error) {
-//     console.log("🚀 ~ Register ~ error:", error);
-//   }
-// };
+export const logout = async () => {
+  try {
+    await api.post(LOGOUT_URL, {}).then(() => {
+      localStorage.removeItem("Token");
+      toast.info("You have left the authorized area 👋! ");
+      // -------- Delay for showing toaster ------------
+      const reloadDelay = () => {
+        window.location.reload();
+      };
+      setTimeout(reloadDelay, 3000);
+    });
+  } catch (error) {
+    console.log("🚀 ~ Register ~ error:", error);
+  }
+};
 
 export const passwordResetRequest = async (value: Reset) => {
   try {
