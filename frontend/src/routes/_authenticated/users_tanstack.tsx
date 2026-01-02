@@ -6,7 +6,8 @@ import Error from "@/components/error/Error";
 import api from "@/api/api";
 
 export const Route = createFileRoute("/_authenticated/users_tanstack")({
-  component: UsersPage,
+  // component: UsersPage,
+
   loader: async () => {
     // ---------- Loading Delay ----------
     // await new Promise((resolve) => setTimeout(resolve, 5000));
@@ -25,16 +26,16 @@ export const Route = createFileRoute("/_authenticated/users_tanstack")({
   },
 });
 
-export function UsersPage() {
-  const { users } = Route.useLoaderData();
-  return (
-    <div>
-      {users.map((item: User, index: number) => (
-        <div key={index} className="my-5">
-          <div> ID: {item.id}</div>
-          <div> Email: {item.email} </div>
-        </div>
-      ))}
-    </div>
-  );
-}
+// export function UsersPage() {
+//   const { users } = Route.useLoaderData();
+//   return (
+//     <div>
+//       {users.map((item: User, index: number) => (
+//         <div key={index} className="my-5">
+//           <div> ID: {item.id}</div>
+//           <div> Email: {item.email} </div>
+//         </div>
+//       ))}
+//     </div>
+//   );
+// }

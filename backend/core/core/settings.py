@@ -44,12 +44,12 @@ INSTALLED_APPS = [
     "api",
     "users",
     "rest_framework",
-    # "django_rest_passwordreset",
+    "django_rest_passwordreset",
     "corsheaders",
     "knox",
-    # "mailing",
-    # "crispy_forms",
-    # "crispy_bootstrap4",
+    "mailing",
+    "crispy_forms",
+    "crispy_bootstrap4",
     # "drf_spectacular",
 ]
 
@@ -77,7 +77,7 @@ ROOT_URLCONF = "core.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -123,6 +123,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
+        "OPTIONS": {
+            "min_length": 4,  # Set your desired minimum length here
+        },
     },
 ]
 
@@ -143,6 +146,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = "static/"
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "mailing/static")]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -160,3 +165,33 @@ else:
         "http://www.test.gaidysheff.ru",
     ]
 CORS_ALLOWS_CREDENTIALS = True
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+
+# ======================= Gmail ==========================
+
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = "KALIKA Shop"
+EMAIL_HOST_USER = os.getenv("GMAIL_EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.getenv("GMAIL_EMAIL_HOST_PASSWORD")
+# EMAIL_HOST_USER = os.environ.get("GMAIL_EMAIL_HOST_USER")
+# EMAIL_HOST_PASSWORD = os.environ.get("GMAIL_EMAIL_HOST_PASSWORD")
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
+CRISPY_TEMPLATE_PACK = "bootstrap4"
+
+# ======================= Yandex ==========================
+
+# EMAIL_HOST = "smtp.yandex.ru"
+# EMAIL_PORT = 465
+# EMAIL_HOST_USER = os.getenv("YANDEX_EMAIL_HOST_USER")
+# EMAIL_HOST_PASSWORD = os.getenv("YANDEX_EMAIL_HOST_PASSWORD")
+# EMAIL_USE_SSL = True
+
+# ACCOUNT_EMAIL_REQUIRED = True
+# ACCOUNT_UNIQUE_EMAIL = True
+# ACCOUNT_USERNAME_REQUIRED = False
+# ACCOUNT_AUTHENTICATION_METHOD = "email"
+# ACCOUNT_EMAIL_VERIFICATION = "mandatory"
