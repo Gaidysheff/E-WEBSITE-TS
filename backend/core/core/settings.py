@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     "mailing",
     "crispy_forms",
     "crispy_bootstrap4",
-    # "drf_spectacular",
+    "drf_spectacular",
 ]
 
 MIDDLEWARE = [
@@ -91,7 +91,14 @@ TEMPLATES = [
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": ("knox.auth.TokenAuthentication",),
-    # "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "My Ecommerce Project",
+    "DESCRIPTION": "Your project description",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
 }
 
 WSGI_APPLICATION = "core.wsgi.application"

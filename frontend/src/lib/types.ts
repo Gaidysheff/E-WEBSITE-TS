@@ -6,6 +6,13 @@ export type Product = {
   // sale: number;
 };
 
+export type Category = {
+  id: number;
+  name: string;
+  slug: string;
+  image: string;
+};
+
 export type ThemeSwitch = "light" | "dark";
 // export type ThemeSwitch = "light" | "dark" | null;
 
