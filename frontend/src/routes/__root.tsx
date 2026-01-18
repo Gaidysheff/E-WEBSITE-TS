@@ -7,6 +7,7 @@ import NavBar from "@/components/navbar/NavBar.tsx";
 import NoNavbarOutlet from "@/components/noNavbarOutlet/NoNavbarOutlet";
 import { ThemeProvider } from "@/store/ThemeContext.tsx";
 import { ToastContainer } from "react-toastify";
+import { UserContextProvider } from "@/store/UserContext.tsx";
 
 export const Route = createRootRoute({
   component: RootComponent,
@@ -47,13 +48,13 @@ function RootComponent() {
           <NoNavbarOutlet location={location} />
         ) : (
           // Standard Pages with NavBar and Footer
-          <>
+          <UserContextProvider>
             <NavBar />
             <div className="container">
               <Outlet />
             </div>
             <Footer />
-          </>
+          </UserContextProvider>
         )}
       </ThemeProvider>
     </React.Fragment>

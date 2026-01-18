@@ -60,8 +60,8 @@ class UserViewset(viewsets.ViewSet):
         return Response(serializer.data)
 
 
-# class CurrentUserView(APIView):
-#     # permission_classes = [permissions.IsAuthenticated]
-#     def get(self, request):
-#         serializer = UserSerializer(request.user)
-#         return Response(serializer.data)
+class CurrentUserView(APIView):
+    # permission_classes = [permissions.IsAuthenticated]
+    def get(self, request):
+        serializer = UserSerializer(request.user)
+        return Response(serializer.data)
