@@ -1,9 +1,12 @@
-import { Laptop } from "lucide-react";
+import { type Category } from "@/lib/types.ts";
 
-// type Props = {};
+import { BASE_URL } from "@/api/api";
 
-// const CategoryCard = (props: Props) => {
-const CategoryCard = () => {
+type Props = {
+  cat: Category;
+};
+
+const CategoryCard = ({ cat }: Props) => {
   return (
     <div
       className="w-[160px] h-[90px] sm:w-[220px] sm:h-[120px] bg-card
@@ -13,12 +16,18 @@ const CategoryCard = () => {
     >
       {/* Category Icon */}
       <div className="bg-card p-1 sm:p-3 rounded-full">
-        <Laptop className="stroke-primary" width={40} height={40} />
+        <img
+          src={`${BASE_URL}${cat.image}`}
+          className="stroke-primaryDark"
+          width={40}
+          height={40}
+          alt=""
+        />
       </div>
 
       {/* Category Name */}
       <p className="font-semibold sm:mt-1 text-primaryDark text-sm sm:text-lg">
-        Electronics
+        {cat.name}
       </p>
     </div>
   );
@@ -26,7 +35,6 @@ const CategoryCard = () => {
 
 export default CategoryCard;
 
-// import { BASE_URL } from "@/api/api";
 // import { Link } from "@tanstack/react-router";
 
 // const CategoryCard = ({ cat }) => {
@@ -40,13 +48,13 @@ export default CategoryCard;
 //       >
 //         {/* Category Icon */}
 //         <div className="bg-card p-1 sm:p-3 rounded-full">
-//           <img
-//             src={`${BASE_URL}${cat.image}`}
-//             className="stroke-primaryDark"
-//             width={40}
-//             height={40}
-//             alt=""
-//           />
+// <img
+//   src={`${BASE_URL}${cat.image}`}
+//   className="stroke-primaryDark"
+//   width={40}
+//   height={40}
+//   alt=""
+// />
 //         </div>
 
 //         {/* Category Name */}

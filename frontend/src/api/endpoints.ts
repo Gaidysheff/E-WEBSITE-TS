@@ -6,7 +6,7 @@ const BASE_URL = env.VITE_API_URL;
 
 export const USERS_URL = `${BASE_URL}/users/users/`;
 export const CURRENT_USER_URL = `${BASE_URL}/users/current-user/`;
-export const CATEGORY_LIST_URL = `${BASE_URL}/api/category_list/`;
+export const CATEGORY_LIST_URL = `${BASE_URL}/api/category_lis/`;
 export const CATEGORY_DETAIL_PAGE_URL = `${BASE_URL}/api/categories/`;
 
 export const FEATURED_PRODUCT_LIST_URL = `${BASE_URL}/api/featured_product_list/`;

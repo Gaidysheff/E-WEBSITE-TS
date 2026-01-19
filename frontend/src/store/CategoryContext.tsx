@@ -13,15 +13,33 @@ interface CatProviderProps {
   children: ReactNode;
 }
 
-const CategoryContext = createContext<Category[] | undefined>(undefined);
+interface CategoriesContextType {
+  categories: Category[];
+  isLoading: boolean;
+  error: unknown | null;
+}
+
+const CategoryContext = createContext<CategoriesContextType | undefined>(
+  undefined,
+);
 
 export const CategoryContextProvider = ({ children }: CatProviderProps) => {
   const [categories, setCategories] = useState<Category[]>([]);
+
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<unknown | null>(null);
+
+  const value = {
+    categories,
+    isLoading,
+    error,
+  };
 
   useEffect(() => {
     const getCategories = async () => {
       // await new Promise((resolve) => setTimeout(resolve, 4000));
       try {
+        setIsLoading(true);
         await api.get(CATEGORY_LIST_URL).then((response) => {
           const res = response.data;
           const loadedData: Category[] = [];
@@ -39,16 +57,29 @@ export const CategoryContextProvider = ({ children }: CatProviderProps) => {
         });
       } catch (error) {
         console.log("🚀 ~ Register ~ error:", error);
+        setError(error);
+      } finally {
+        setIsLoading(false);
       }
     };
     getCategories();
   }, []);
 
   return (
-    <CategoryContext.Provider value={categories}>
+    <CategoryContext.Provider value={value}>
       {children}
     </CategoryContext.Provider>
   );
 };
 
-export const useCategory = () => useContext(CategoryContext);
+// export const useCategory = () => useContext(CategoryContext)
+
+export const useCategory = () => {
+  const context = useContext(CategoryContext);
+  if (context === undefined) {
+    throw new Error(
+      "useCategory must be used within a CategoryContextProvider",
+    );
+  }
+  return context;
+};
