@@ -1,9 +1,12 @@
-import Product from "@/assets/images/product/Product-1.png";
+import { type Product } from "@/lib/types.ts";
+import { BASE_URL } from "@/api/api";
+import { NumericFormat } from "react-number-format";
 
-// type Props = {};
+type Props = {
+  product: Product;
+};
 
-// const ProductCard = (props: Props) => {
-const ProductCard = () => {
+const ProductCard = ({ product }: Props) => {
   return (
     <div
       className="w-[280px] rounded-lg bg-card flex flex-col items-center gap-4
@@ -13,7 +16,7 @@ const ProductCard = () => {
     >
       <div className="w-[200px] h-[200px] rounded-md overflow-hidden">
         <img
-          src={Product}
+          src={`${BASE_URL}${product.image}`}
           className="object-cover w-full h-full"
           // width={200}
           // height={200}
@@ -23,12 +26,20 @@ const ProductCard = () => {
 
       {/* Product Name */}
       <p className="text-center text-lg font-semibold text-primaryDark">
-        Apple Gaming Pad
+        {product.name}
       </p>
 
       {/* Product Price */}
       <p className="text-[18px] text-center font-bold text-primaryDark">
-        $ 300.00
+        <NumericFormat
+          value={product.price}
+          displayType={"text"}
+          thousandSeparator="."
+          decimalSeparator=","
+          prefix={"$ "}
+          // suffix={" ₽"}
+        />
+        {/* ${product.price} */}
       </p>
     </div>
   );

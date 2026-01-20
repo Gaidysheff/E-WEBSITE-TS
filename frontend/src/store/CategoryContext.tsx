@@ -40,7 +40,7 @@ export const CategoryContextProvider = ({ children }: CatProviderProps) => {
       // await new Promise((resolve) => setTimeout(resolve, 4000));
       try {
         setIsLoading(true);
-        await api.get(CATEGORY_LIST_URL).then((response) => {
+        await api.get<Category[]>(CATEGORY_LIST_URL).then((response) => {
           const res = response.data;
           const loadedData: Category[] = [];
 

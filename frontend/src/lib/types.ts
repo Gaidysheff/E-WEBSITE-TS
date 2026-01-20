@@ -1,9 +1,12 @@
 export type Product = {
   id: number;
-  image: string;
-  title: string;
+  name: string;
+  description: string;
   price: number;
-  // sale: number;
+  slug: string;
+  image: string;
+  featured: boolean;
+  category: Category;
 };
 
 export type Category = {
@@ -12,6 +15,8 @@ export type Category = {
   slug: string;
   image: string;
 };
+
+export type CategoryWithProducts = Category & { products: Product[] };
 
 export type ThemeSwitch = "light" | "dark";
 // export type ThemeSwitch = "light" | "dark" | null;
