@@ -1,54 +1,68 @@
-// import {
-//   ADDRESS_ADD_URL,
-//   CARTITEM_DELETE_URL,
-//   CARTITEM_UPDATE_QUANTITY_URL,
-//   CART_ADD_URL,
-//   CART_DELETE_URL,
-//   CART_GET_URL,
-//   CART_UPDATE_URL,
-//   CHECKOUT_URL,
-//   ORDER_GET_URL,
-//   PRODUCT_SEARCH_URL,
-//   REVIEW_ADD_URL,
-//   REVIEW_DELETE_URL,
-//   REVIEW_UPDATE_URL,
-//   WISHLIST_ADD_AND_DELETE_URL,
-// } from "@/api/endpoints.js";
+import {
+  ADDRESS_ADD_URL,
+  CARTITEM_DELETE_URL,
+  CARTITEM_UPDATE_QUANTITY_URL,
+  CART_ADD_URL,
+  CART_DELETE_URL,
+  CART_GET_URL,
+  CART_UPDATE_URL,
+  CHECKOUT_URL,
+  ORDER_GET_URL,
+  PRODUCT_SEARCH_URL,
+  REVIEW_ADD_URL,
+  REVIEW_DELETE_URL,
+  REVIEW_UPDATE_URL,
+  WISHLIST_ADD_AND_DELETE_URL,
+} from "@/api/endpoints.ts";
 
-// import api from "@/api/api.js";
+import api from "@/api/api.ts";
+import { toast } from "react-toastify";
 
-// // ===================== Add Review =========================
+type FormSubmitHandler = (formData: FormData) => Promise<void>;
 
-// export const createReviewAction = async (formData) => {
-//   const product_id = Number(formData.get("product_id"));
-//   const email = formData.get("email");
-//   const rating = Number(formData.get("rating"));
-//   const review = formData.get("review");
+// ===================== Add Review =========================
 
-//   const slug = formData.get("slug");
+export const createReviewAction: FormSubmitHandler = async (formData) => {
+  const product_id = Number(formData.get("product_id"));
+  const email = formData.get("email");
+  const rating = Number(formData.get("rating"));
+  const review = formData.get("review");
+  const slug = formData.get("slug");
 
-//   if (!product_id || !email || !rating || !review || !slug) {
-//     throw new Error("All fields are required");
-//   }
+  if (!product_id || !email || !rating || !review || !slug) {
+    toast.error("All fields are required");
+    throw new Error("All fields are required");
+  }
 
-//   const reviewObject = { product_id, email, rating, review };
+  const reviewObject = { product_id, email, rating, review };
 
-//   // --------------- Fetching delay ----------------------
-//   // await new Promise((resolve) => setTimeout(resolve, 4000));
-//   // -----------------------------------------------------
+  // --------------- Fetching delay ----------------------
+  // await new Promise((resolve) => setTimeout(resolve, 3000));
+  // -----------------------------------------------------
 
-//   try {
-//     await api.post(REVIEW_ADD_URL, reviewObject).then((response) => {
-//       // console.log("🚀: createReview -> response", response);
-//       return response;
-//     });
-//   } catch (error) {
-//     if (error instanceof Error) {
-//       throw new Error(error.message);
-//     }
-//     throw new Error("An unknown error occured");
-//   }
-// };
+  try {
+    await api.post(REVIEW_ADD_URL, reviewObject).then((response) => {
+      console.log("🚀 ~ createReviewAction ~ response:", response);
+
+      if (response?.status === 200) {
+        toast.success("Review added successfully!");
+      } else {
+        toast.error("Something went wrong");
+      }
+
+      const reloadDelay = () => {
+        window.location.reload();
+      };
+      setTimeout(reloadDelay, 3000);
+      return response;
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+    throw new Error("An unknown error occured");
+  }
+};
 
 // // ===================== Update Review =========================
 

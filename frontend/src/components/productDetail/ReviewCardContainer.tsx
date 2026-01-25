@@ -1,10 +1,17 @@
-import ReviewCard from "./ReviewCard";
+import { type Review } from "@/lib/types.ts";
+import { useUser } from "@/store/UserContext.tsx";
+import Collapse from "@/components/uiComponents/Collapse.tsx";
 
-const ReviewCardContainer = () => {
+interface Props {
+  reviews: Review[];
+}
+
+const ReviewCardContainer = ({ reviews }: Props) => {
+  const user = useUser();
+
   return (
     <>
-      <h4 className="my-4 font-semibold text-primaryDark">Reviews (3)</h4>
-      <ReviewCard />
+      <Collapse reviews={reviews} user={user} />
     </>
   );
 };

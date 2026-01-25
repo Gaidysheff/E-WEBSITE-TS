@@ -2,8 +2,41 @@ import Modal from "@/components/uiComponents/Modal";
 import RatingProgressBar from "@/components/productDetail/RatingProgressBar";
 import ReviewForm from "@/components/productDetail/ReviewForm";
 import { Star } from "lucide-react";
+import { cn } from "@/lib/utils.ts";
+import { Link } from "@tanstack/react-router";
+import { type ProductInDetails, type Review } from "@/lib/types.ts";
+import { useUser } from "@/store/UserContext.tsx";
 
-const CustomerReviews = () => {
+type Props = {
+  product: ProductInDetails;
+  isAuthorized: boolean;
+  reviews: Review[];
+};
+
+const CustomerReviews = ({ product, isAuthorized, reviews }: Props) => {
+  const avgRating = product.rating?.average_rating ?? 0;
+  // console.log("🚀 ~ IndividualProductComponent ~ avgRating:", avgRating);
+
+  const reviewCount = product.rating?.total_reviews ?? 0;
+  // console.log("🚀 ~ IndividualProductComponent ~ reviewCount:", reviewCount);
+
+  const starRating = Math.floor(avgRating);
+  // console.log("🚀 ~ CustomerReviews ~ starRating:", starRating);
+
+  const stars: number[] = [1, 2, 3, 4, 5];
+
+  const poor_rating = product.poor_review;
+  const fair_rating = product.fair_review;
+  const good_rating = product.good_review;
+  const very_good_rating = product.very_good_review;
+  const excellent_rating = product.excellent_review;
+
+  const user = useUser();
+
+  const userAlreadyHaveReview = reviews.some(
+    (review) => review.user.email === user?.email,
+  );
+
   return (
     <>
       <div className="mx-auto">
@@ -19,34 +52,54 @@ const CustomerReviews = () => {
             className="w-[250px] h-[250px] bg-card rounded-lg px-4 py-6 
           flex flex-col gap-3 items-center justify-center shadow-lg"
           >
-            <h1 className="text-5xl font-bold text-primaryDark">5.0</h1>
-            <small className="text-primaryDark text-sm">of 10 review(s)</small>
+            <h1 className="text-5xl font-bold text-primaryDark">
+              {avgRating.toFixed(1)}
+            </h1>
+            <small className="text-primaryDark text-sm">
+              of {reviewCount} {reviewCount < 2 ? "review" : "reviews"}
+            </small>
             <div className="flex gap-2">
-              <Star className="w-5 h-5 cursor-pointer" />
-              <Star className="w-5 h-5 cursor-pointer" />
-              <Star className="w-5 h-5 cursor-pointer" />
-              <Star className="w-5 h-5 cursor-pointer" />
-              <Star className="w-5 h-5 cursor-pointer" />
+              {stars.map((star) => (
+                <Star
+                  key={star}
+                  className={cn(
+                    "w-5 h-5 cursor-pointer",
+                    star <= starRating ? "fill-black" : "fill-gray-100",
+                  )}
+                />
+              ))}
             </div>
           </div>
           {/* ------------------------------------------------------- */}
 
           {/* Rating progress bar */}
           <div className="flex flex-col gap-6 w-[700px] max-md:w-full">
-            <RatingProgressBar rating="Excellent" numRating={10} />
-            <RatingProgressBar rating="Very Good" numRating={8} />
-            <RatingProgressBar rating="Good" numRating={6} />
-            <RatingProgressBar rating="Fair" numRating={5} />
-            <RatingProgressBar rating="Poor" numRating={3} />
+            <RatingProgressBar
+              rating="Excellent"
+              numRating={excellent_rating}
+            />
+            <RatingProgressBar
+              rating="Very Good"
+              numRating={very_good_rating}
+            />
+            <RatingProgressBar rating="Good" numRating={good_rating} />
+            <RatingProgressBar rating="Fair" numRating={fair_rating} />
+            <RatingProgressBar rating="Poor" numRating={poor_rating} />
           </div>
           {/* ------------------------------------------------------- */}
         </div>
 
         {/* Review modal form */}
         <div className="flex justify-center items-center w-full mb-5">
-          <Modal>
-            <ReviewForm />
-          </Modal>
+          {isAuthorized ? (
+            <Modal userAlreadyHaveReview={userAlreadyHaveReview}>
+              <ReviewForm product={product} />
+            </Modal>
+          ) : (
+            <Link to="/login" className="nav-btn">
+              Login to add a review
+            </Link>
+          )}
         </div>
         {/* ------------------------------------------------------- */}
       </div>

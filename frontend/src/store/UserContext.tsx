@@ -35,6 +35,7 @@ export const UserContextProvider = ({ children }: UserProviderProps) => {
             // console.log("🚀 ~ getUser ~ Response:", response);
 
             const loadedData = {
+              id: response.data.id,
               email: response.data.email,
               first_name: response.data.first_name,
               last_name: response.data.last_name,

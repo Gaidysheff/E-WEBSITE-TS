@@ -1,26 +1,3 @@
-export type Product = {
-  id: number;
-  name: string;
-  description: string;
-  price: number;
-  slug: string;
-  image: string;
-  featured: boolean;
-  category: Category;
-};
-
-export type Category = {
-  id: number;
-  name: string;
-  slug: string;
-  image: string;
-};
-
-export type CategoryWithProducts = Category & { products: Product[] };
-
-export type ThemeSwitch = "light" | "dark";
-// export type ThemeSwitch = "light" | "dark" | null;
-
 export type User = {
   id: number;
   email: string;
@@ -36,6 +13,66 @@ export type User = {
     state: string;
   };
 };
+
+export type UserLoggedIn = AugmentedRequired<DeepPartial<User>, "email">;
+
+// --------------------- Category -------------------------
+
+export type Category = {
+  id: number;
+  name: string;
+  slug: string;
+  image: string;
+};
+
+export type CategoryWithProducts = Category & { products: Product[] };
+
+// --------------------- Product -------------------------
+
+export type Product = {
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+  slug: string;
+  image: string;
+  featured: boolean;
+  category: Category;
+};
+
+export type Review = {
+  id: number;
+  product: Product;
+  user: User;
+  rating: number;
+  review: string;
+  created: string;
+  updated: string;
+};
+
+export type Rating = {
+  id: number;
+  product: Product;
+  average_rating: number;
+  total_reviews: number;
+};
+export type Evaluation = {
+  poor_review: number;
+  fair_review: number;
+  good_review: number;
+  very_good_review: number;
+  excellent_review: number;
+};
+
+export type ProductInDetails = Product &
+  Evaluation & { rating: Rating } & { reviews: Review[] } & {
+    similar_products: Product[];
+  };
+
+// --------------------- Theme -------------------------
+
+export type ThemeSwitch = "light" | "dark";
+// export type ThemeSwitch = "light" | "dark" | null;
 
 // ==================== Deep Partial ===========================
 

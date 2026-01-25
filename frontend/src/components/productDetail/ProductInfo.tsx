@@ -1,7 +1,13 @@
 import Button from "@/components/uiComponents/Button";
-import Image from "@/assets/images/product/Product-1.png";
+import { type Product } from "@/lib/types.ts";
+import { BASE_URL } from "@/api/api";
+import { NumericFormat } from "react-number-format";
 
-const ProductInfo = () => {
+type Props = {
+  product: Product;
+};
+
+const ProductInfo = ({ product }: Props) => {
   return (
     <div
       className="py-10 md:pt-20 flex items-start flex-wrap md:grid 
@@ -13,7 +19,7 @@ const ProductInfo = () => {
       max-md:mt-10 p-3 xsm:p-10 md:p-3 shadow-sm border border-gray-200"
       >
         <img
-          src={Image}
+          src={`${BASE_URL}${product.image}`}
           alt="product image"
           className="w-full sm:w-[75%] md:w-full object-cover rounded-lg mx-auto"
         />
@@ -23,10 +29,17 @@ const ProductInfo = () => {
       <div className="md:col-span-5 w-full max-md:mt-10">
         <div className="flex flex-col gap-3">
           <h1 className="text-2xl sm:text-3xl font-bold text-primaryDark">
-            Apple Smart Watch
+            {product.name}
           </h1>
           <h3 className="text-xl sm:text-2xl font-semibold text-primaryDark">
-            $ 200.00
+            <NumericFormat
+              value={product?.price}
+              displayType={"text"}
+              thousandSeparator="."
+              decimalSeparator=","
+              prefix={"$ "}
+              // suffix={" ₽"}
+            />
           </h3>
         </div>
 
@@ -38,10 +51,7 @@ const ProductInfo = () => {
             max-sm:text-sm mb-10"
           >
             {/* {product.description} */}
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium
-            recusandae placeat expedita veritatis? Distinctio ratione explicabo
-            sunt dicta, tenetur corporis alias tempore quasi eius magnam enim
-            provident veritatis quisquam molestiae?
+            {product.description}
           </p>
         </div>
 

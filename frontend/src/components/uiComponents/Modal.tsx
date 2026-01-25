@@ -7,13 +7,16 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-// import { PenIcon } from "lucide-react";
-
 type Props = {
   children: React.ReactNode;
+  userAlreadyHaveReview: boolean;
 };
 
-const Modal = ({ children }: Props) => {
+const Modal = ({ children, userAlreadyHaveReview }: Props) => {
+  if (userAlreadyHaveReview) {
+    return null;
+  }
+
   return (
     <Dialog>
       <DialogTrigger

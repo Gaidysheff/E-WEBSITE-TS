@@ -1,8 +1,16 @@
 import { PenIcon, Star, TrashIcon } from "lucide-react";
+import { cn, timeAgo } from "@/lib/utils.js";
+// import Image from "@/assets/images/shared/profile_pic.jpg";
+import { BASE_URL } from "@/api/api.ts";
 
-import Image from "@/assets/images/shared/profile_pic.jpg";
+import { type Review, type UserLoggedIn } from "@/lib/types.ts";
 
-const ReviewCard = () => {
+type Props = {
+  review: Review;
+  user: UserLoggedIn | undefined;
+};
+
+const ReviewCard = ({ review, user }: Props) => {
   const starArray = [1, 2, 3, 4, 5];
 
   return (
@@ -12,35 +20,42 @@ const ReviewCard = () => {
     >
       {/* Action buttons for editing and deleting the review */}
       <div className="flex justify-between items-center">
-        <span className="flex gap-4">
-          <>
-            {/* Trash button to delete review */}
+        {user?.email == review.user.email ? (
+          <span className="flex gap-4">
+            <>
+              {/* Trash button to delete review */}
 
-            <button
-              type="button"
-              className="bg-primaryLight p-2 rounded-md cursor-pointer
+              <button
+                type="button"
+                className="bg-primaryLight p-2 rounded-md cursor-pointer
               transition-all hover:bg-gray-300"
-            >
-              <TrashIcon className="size-5 text-primaryDark" />
-            </button>
+              >
+                <TrashIcon className="size-5 text-primaryDark" />
+              </button>
 
-            {/* Pen button to edit review */}
+              {/* Pen button to edit review */}
 
-            <button
-              type="button"
-              className="bg-primaryLight p-2 rounded-md cursor-pointer
+              <button
+                type="button"
+                className="bg-primaryLight p-2 rounded-md cursor-pointer
               transition-all hover:bg-gray-300"
-            >
-              <PenIcon className="size-5 text-primaryDark" />
-            </button>
-          </>
-        </span>
+              >
+                <PenIcon className="size-5 text-primaryDark" />
+              </button>
+            </>
+          </span>
+        ) : (
+          <span></span>
+        )}
 
         {/* Information showing when the review was edited */}
         <span className="text-sm text-primary">
-          <small className="block">edited...</small>
-
-          <small>1 month age</small>
+          {review.created == review.updated ? (
+            <small className="block">published...</small>
+          ) : (
+            <small className="block">edited...</small>
+          )}
+          <small>{timeAgo(review.updated)}</small>
         </span>
       </div>
 
@@ -52,7 +67,8 @@ const ReviewCard = () => {
           border-2 border-gray-200"
         >
           <img
-            src={Image}
+            src={`${BASE_URL}${review.user.image}`}
+            // src={review.user.image ? `${BASE_URL}${review.user.image}` : Image}
             alt="profile_pic"
             className="object-cover rounded-full"
             // fill="true"
@@ -62,12 +78,20 @@ const ReviewCard = () => {
         {/* Review content including name, rating, and review text */}
         <div className="flex flex-col flex-1">
           <p className="font-semibold text-sm xsm:text-lg text-primaryDark">
-            Ivan Ivanov
+            {review.user.first_name || review.user.last_name
+              ? `${review.user.first_name} ${review.user.last_name}`
+              : `${review.user.email.split("@")[0]}`}
           </p>
 
           <div className="flex gap-1 mt-2">
             {starArray.map((star) => (
-              <Star key={star} className="size-4 xsm:size-5 cursor-pointer" />
+              <Star
+                key={star}
+                className={cn(
+                  "size-4 xsm:size-5 cursor-pointer",
+                  star <= review.rating ? "fill-black" : "",
+                )}
+              />
             ))}
           </div>
 
@@ -76,7 +100,7 @@ const ReviewCard = () => {
             className="text-primaryDark text-justify leading-6 mt-4
           text-xs xsm:text-sm"
           >
-            Something about the product
+            {review.review}
           </small>
         </div>
       </div>

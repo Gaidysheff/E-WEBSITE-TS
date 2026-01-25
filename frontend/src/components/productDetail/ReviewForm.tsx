@@ -1,21 +1,28 @@
+import { REVIEW_ADD_URL } from "@/api/endpoints.ts";
+import api from "@/api/api.ts";
+import { toast } from "react-toastify";
 import Button from "../uiComponents/Button";
 import { Star } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
+import { type ProductInDetails } from "@/lib/types.ts";
+import { createReviewAction } from "@/api/actions.ts";
 import { useState } from "react";
+import { useUser } from "@/store/UserContext.tsx";
+import { type FormEvent } from "react";
 
-type Props = {
+type FormSubmitHandler = (formData: FormData) => Promise<void>;
+
+type HandleStars = {
   rating: number;
   review: string;
 };
 
-const ReviewForm = () => {
-  const [hoverRating, setHoverRating] = useState(0);
-  const [hoverReview, setHoverReview] = useState("");
+interface Props {
+  product: ProductInDetails;
+}
 
-  const [clickedRating, setClickedRating] = useState(0);
-  const [clickedReview, setClickedReview] = useState("");
-
+const ReviewForm = ({ product }: Props) => {
   const ratings = [
     { rating: 1, review: "Poor" },
     { rating: 2, review: "Fair" },
@@ -24,12 +31,47 @@ const ReviewForm = () => {
     { rating: 5, review: "Excellent" },
   ];
 
-  const handleStarClick = ({ rating, review }: Props) => {
+  const [hoverRating, setHoverRating] = useState(0);
+  const [hoverReview, setHoverReview] = useState("");
+
+  const [clickedRating, setClickedRating] = useState(0);
+  const [clickedReview, setClickedReview] = useState("");
+
+  // console.log("🚀 product ReviewForm:", product);
+  const { id, slug } = product;
+  const [customerReview, setCustomerReview] = useState("");
+  const user = useUser();
+
+  const [reviewBtnLoader, setReviewBtnLoader] = useState<boolean>(false);
+
+  // ===================== Add Review =========================
+
+  const handleCreateReview = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    setReviewBtnLoader(true);
+
+    const formData = new FormData();
+    formData.set("product_id", String(id));
+    formData.set("slug", slug);
+    formData.set("review", customerReview);
+    formData.set("rating", String(clickedRating));
+    formData.set("email", String(user?.email));
+
+    createReviewAction(formData);
+
+    const reloadDelay = () => {
+      setReviewBtnLoader(false);
+    };
+    setTimeout(reloadDelay, 3000);
+  };
+
+  const handleStarClick = ({ rating, review }: HandleStars) => {
     setClickedRating(rating);
     setClickedReview(review);
   };
 
-  const handleHoverIn = ({ rating, review }: Props) => {
+  const handleHoverIn = ({ rating, review }: HandleStars) => {
     setHoverRating(rating);
     setHoverReview(review);
   };
@@ -57,7 +99,7 @@ const ReviewForm = () => {
               rating <= hoverRating ||
                 (rating <= clickedRating && hoverRating < 1)
                 ? "fill-black"
-                : ""
+                : "",
             )}
           />
         ))}
@@ -67,9 +109,11 @@ const ReviewForm = () => {
         {hoverReview || clickedReview || "Review Score"}
       </p>
       {/* Review Form */}
-      <form className="flex flex-col gap-4 mt-4">
+      <form className="flex flex-col gap-4 mt-4" onSubmit={handleCreateReview}>
         <Textarea
           name="content"
+          value={customerReview}
+          onChange={(e) => setCustomerReview(e.target.value)}
           className="border border-gray-300 focus:border-blue-500 focus:ring
           focus:ring-blue-300 rounded-lg p-3 w-full resize-none"
           placeholder="Write your review..."
@@ -77,11 +121,16 @@ const ReviewForm = () => {
         />
 
         <Button
-          className="bg-black text-white w-full py-2 rounded-lg
+          disabled={
+            clickedRating < 1 ||
+            (customerReview && customerReview.trim()).length == 0 ||
+            reviewBtnLoader
+          }
+          className="bg-black text-white w-full py-2 rounded-lg 
           hover:bg-gray-900 transition
           disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Add Review
+          {reviewBtnLoader ? "Adding Review ..." : "Add Review"}
         </Button>
       </form>
     </div>
