@@ -1,17 +1,12 @@
-import { REVIEW_ADD_URL } from "@/api/endpoints.ts";
-import api from "@/api/api.ts";
-import { toast } from "react-toastify";
 import Button from "../uiComponents/Button";
 import { Star } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
-import { type ProductInDetails } from "@/lib/types.ts";
-import { createReviewAction } from "@/api/actions.ts";
-import { useState } from "react";
+import { type ProductInDetails, type Review } from "@/lib/types.ts";
+import { useEffect, useState } from "react";
 import { useUser } from "@/store/UserContext.tsx";
+import { createReviewAction, updateReviewAction } from "@/api/actions.ts";
 import { type FormEvent } from "react";
-
-type FormSubmitHandler = (formData: FormData) => Promise<void>;
 
 type HandleStars = {
   rating: number;
@@ -20,9 +15,11 @@ type HandleStars = {
 
 interface Props {
   product: ProductInDetails;
+  review: Review;
+  updateReviewForm: boolean;
 }
 
-const ReviewForm = ({ product }: Props) => {
+const ReviewForm = ({ product, review, updateReviewForm }: Props) => {
   const ratings = [
     { rating: 1, review: "Poor" },
     { rating: 2, review: "Fair" },
@@ -43,6 +40,18 @@ const ReviewForm = ({ product }: Props) => {
   const user = useUser();
 
   const [reviewBtnLoader, setReviewBtnLoader] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (updateReviewForm) {
+      const { rating, review: reviewMessage } = review;
+
+      setClickedRating(rating);
+      setCustomerReview(reviewMessage);
+
+      const ratingTag = ratings.find((r) => r.rating === rating);
+      setClickedReview(ratingTag ? ratingTag.review : "");
+    }
+  }, [updateReviewForm]);
 
   // ===================== Add Review =========================
 
@@ -66,6 +75,27 @@ const ReviewForm = ({ product }: Props) => {
     setTimeout(reloadDelay, 3000);
   };
 
+  // ===================== Update Review =========================
+
+  const handleUpdateReview = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    setReviewBtnLoader(true);
+
+    const formData = new FormData();
+    formData.set("review", customerReview);
+    formData.set("rating", String(clickedRating));
+    formData.set("review_id", review ? String(review.id) : "");
+
+    updateReviewAction(formData);
+
+    const reloadDelay = () => {
+      setReviewBtnLoader(false);
+    };
+    setTimeout(reloadDelay, 3000);
+  };
+
+  // ==========================================================
   const handleStarClick = ({ rating, review }: HandleStars) => {
     setClickedRating(rating);
     setClickedReview(review);
@@ -109,7 +139,10 @@ const ReviewForm = ({ product }: Props) => {
         {hoverReview || clickedReview || "Review Score"}
       </p>
       {/* Review Form */}
-      <form className="flex flex-col gap-4 mt-4" onSubmit={handleCreateReview}>
+      <form
+        className="flex flex-col gap-4 mt-4"
+        onSubmit={updateReviewForm ? handleUpdateReview : handleCreateReview}
+      >
         <Textarea
           name="content"
           value={customerReview}
@@ -130,7 +163,15 @@ const ReviewForm = ({ product }: Props) => {
           hover:bg-gray-900 transition
           disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {reviewBtnLoader ? "Adding Review ..." : "Add Review"}
+          {/* {reviewBtnLoader ? "Adding Review ..." : "Add Review"} */}
+
+          {updateReviewForm
+            ? reviewBtnLoader
+              ? "Updating Review ..."
+              : "Update Review"
+            : reviewBtnLoader
+              ? "Adding Review ..."
+              : "Add Review"}
         </Button>
       </form>
     </div>

@@ -1,16 +1,22 @@
-import { PenIcon, Star, TrashIcon } from "lucide-react";
+import { Star, TrashIcon } from "lucide-react";
 import { cn, timeAgo } from "@/lib/utils.js";
 // import Image from "@/assets/images/shared/profile_pic.jpg";
 import { BASE_URL } from "@/api/api.ts";
-
-import { type Review, type UserLoggedIn } from "@/lib/types.ts";
+import Modal from "@/components/uiComponents/Modal.tsx";
+import ReviewForm from "@/components/productDetail/ReviewForm.tsx";
+import {
+  type Review,
+  type UserLoggedIn,
+  type ProductInDetails,
+} from "@/lib/types.ts";
 
 type Props = {
   review: Review;
   user: UserLoggedIn | undefined;
+  product: ProductInDetails;
 };
 
-const ReviewCard = ({ review, user }: Props) => {
+const ReviewCard = ({ review, user, product }: Props) => {
   const starArray = [1, 2, 3, 4, 5];
 
   return (
@@ -34,14 +40,13 @@ const ReviewCard = ({ review, user }: Props) => {
               </button>
 
               {/* Pen button to edit review */}
-
-              <button
-                type="button"
-                className="bg-primaryLight p-2 rounded-md cursor-pointer
-              transition-all hover:bg-gray-300"
-              >
-                <PenIcon className="size-5 text-primaryDark" />
-              </button>
+              <Modal userAlreadyHaveReview={false} updateReviewModal>
+                <ReviewForm
+                  updateReviewForm
+                  review={review}
+                  product={product}
+                />
+              </Modal>
             </>
           </span>
         ) : (

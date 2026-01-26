@@ -7,15 +7,20 @@ import {
 import { Button } from "@/components/ui/button.jsx";
 import { ChevronsUpDown } from "lucide-react";
 import ReviewCard from "@/components/productDetail/ReviewCard.tsx";
-import { type Review, type UserLoggedIn } from "@/lib/types.ts";
+import {
+  type Review,
+  type UserLoggedIn,
+  type ProductInDetails,
+} from "@/lib/types.ts";
 import { useState } from "react";
 
 interface Props {
   reviews: Review[];
   user: UserLoggedIn | undefined;
+  product: ProductInDetails;
 }
 
-const Collapse = ({ reviews, user }: Props) => {
+const Collapse = ({ reviews, user, product }: Props) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   return (
@@ -33,11 +38,21 @@ const Collapse = ({ reviews, user }: Props) => {
         </CollapsibleTrigger>
       </div>
       {!isOpen && (
-        <ReviewCard key={reviews[0]?.id} review={reviews[0]} user={user} />
+        <ReviewCard
+          key={reviews[0]?.id}
+          review={reviews[0]}
+          user={user}
+          product={product}
+        />
       )}
       <CollapsibleContent>
         {reviews.map((review) => (
-          <ReviewCard key={review?.id} review={review} user={user} />
+          <ReviewCard
+            key={review?.id}
+            review={review}
+            user={user}
+            product={product}
+          />
         ))}
       </CollapsibleContent>
     </Collapsible>

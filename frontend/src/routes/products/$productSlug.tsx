@@ -73,7 +73,7 @@ function IndividualProductComponent() {
       />
 
       {reviews.length > 0 ? (
-        <ReviewCardContainer reviews={reviews} />
+        <ReviewCardContainer reviews={reviews} product={product} />
       ) : (
         <div className="flex items-center justify-between space-x-4 px-4 pb-10">
           <h4 className="font-semibold text-primaryDark">

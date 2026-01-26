@@ -92,8 +92,15 @@ const CustomerReviews = ({ product, isAuthorized, reviews }: Props) => {
         {/* Review modal form */}
         <div className="flex justify-center items-center w-full mb-5">
           {isAuthorized ? (
-            <Modal userAlreadyHaveReview={userAlreadyHaveReview}>
-              <ReviewForm product={product} />
+            <Modal
+              userAlreadyHaveReview={userAlreadyHaveReview}
+              updateReviewModal={false}
+            >
+              <ReviewForm
+                product={product}
+                updateReviewForm={false}
+                review={{} as Review}
+              />
             </Modal>
           ) : (
             <Link to="/login" className="nav-btn">

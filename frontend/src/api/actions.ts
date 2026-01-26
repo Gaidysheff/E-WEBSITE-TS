@@ -64,30 +64,41 @@ export const createReviewAction: FormSubmitHandler = async (formData) => {
   }
 };
 
-// // ===================== Update Review =========================
+// ===================== Update Review =========================
 
-// export const updateReviewAction = async (formData) => {
-//   const rating = Number(formData.get("rating"));
-//   const review = formData.get("review");
-//   const review_id = formData.get("review_id");
+export const updateReviewAction: FormSubmitHandler = async (formData) => {
+  const rating = Number(formData.get("rating"));
+  const review = formData.get("review");
+  const review_id = formData.get("review_id");
 
-//   const reviewObject = { rating, review };
+  const reviewObject = { rating, review };
 
-//   try {
-//     await api
-//       .put(`${REVIEW_UPDATE_URL}${review_id}/`, reviewObject)
-//       .then((response) => {
-//         // console.log("🚀 ~ updateReviewAction ~ review_id:", review_id);
-//         // console.log("🚀: updateReviewAction -> Response", response);
-//         return response;
-//       });
-//   } catch (error) {
-//     if (error instanceof Error) {
-//       throw new Error(error.message);
-//     }
-//     throw new Error("An unknown error occured");
-//   }
-// };
+  try {
+    await api
+      .put(`${REVIEW_UPDATE_URL}${review_id}/`, reviewObject)
+      .then((response) => {
+        // console.log("🚀 ~ updateReviewAction ~ review_id:", review_id);
+        // console.log("🚀: updateReviewAction -> Response", response);
+        if (response?.status === 200) {
+          toast.success("Review updated successfully!");
+        } else {
+          toast.error("Something went wrong");
+        }
+
+        const reloadDelay = () => {
+          window.location.reload();
+        };
+
+        setTimeout(reloadDelay, 3000);
+        return response;
+      });
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+    throw new Error("An unknown error occured");
+  }
+};
 
 // // ===================== Delete Review =========================
 
