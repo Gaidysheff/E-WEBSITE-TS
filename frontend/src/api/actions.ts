@@ -49,11 +49,12 @@ export const createReviewAction: FormSubmitHandler = async (formData) => {
       } else {
         toast.error("Something went wrong");
       }
-
+      // ------ Delay for reloading while showing toaster ---------
       const reloadDelay = () => {
         window.location.reload();
       };
       setTimeout(reloadDelay, 3000);
+
       return response;
     });
   } catch (error) {
@@ -84,12 +85,12 @@ export const updateReviewAction: FormSubmitHandler = async (formData) => {
         } else {
           toast.error("Something went wrong");
         }
-
+        // ------ Delay for reloading while showing toaster ---------
         const reloadDelay = () => {
           window.location.reload();
         };
-
         setTimeout(reloadDelay, 3000);
+
         return response;
       });
   } catch (error) {
@@ -100,22 +101,30 @@ export const updateReviewAction: FormSubmitHandler = async (formData) => {
   }
 };
 
-// // ===================== Delete Review =========================
+// ===================== Delete Review =========================
 
-// export const deleteReviewAction = async (formData) => {
-//   const review_id = formData.get("review_id");
+export const deleteReviewAction: FormSubmitHandler = async (formData) => {
+  const review_id = formData.get("review_id");
 
-//   try {
-//     await api.delete(`${REVIEW_DELETE_URL}${review_id}/`).then((response) => {
-//       return response;
-//     });
-//   } catch (error) {
-//     if (error instanceof Error) {
-//       throw new Error(error.message);
-//     }
-//     throw new Error("An unknown error occured");
-//   }
-// };
+  try {
+    await api.delete(`${REVIEW_DELETE_URL}${review_id}/`).then((response) => {
+      toast.warning("Review deleted successfully!");
+
+      // ------ Delay for reloading while showing toaster ---------
+      const reloadDelay = () => {
+        window.location.reload();
+      };
+      setTimeout(reloadDelay, 3000);
+
+      return response;
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+    throw new Error("An unknown error occured");
+  }
+};
 
 // // ===================== Add to Cart =========================
 

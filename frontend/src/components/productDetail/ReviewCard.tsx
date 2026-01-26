@@ -9,6 +9,8 @@ import {
   type UserLoggedIn,
   type ProductInDetails,
 } from "@/lib/types.ts";
+import DeleteModal from "@/components/uiComponents/DeleteModal.tsx";
+import { deleteReviewAction } from "@/api/actions.ts";
 
 type Props = {
   review: Review;
@@ -18,6 +20,13 @@ type Props = {
 
 const ReviewCard = ({ review, user, product }: Props) => {
   const starArray = [1, 2, 3, 4, 5];
+
+  const handleDeleteReview = async () => {
+    const formData = new FormData();
+    formData.set("review_id", String(review.id));
+
+    deleteReviewAction(formData);
+  };
 
   return (
     <div
@@ -31,13 +40,7 @@ const ReviewCard = ({ review, user, product }: Props) => {
             <>
               {/* Trash button to delete review */}
 
-              <button
-                type="button"
-                className="bg-primaryLight p-2 rounded-md cursor-pointer
-              transition-all hover:bg-gray-300"
-              >
-                <TrashIcon className="size-5 text-primaryDark" />
-              </button>
+              <DeleteModal handleDeleteReview={handleDeleteReview} />
 
               {/* Pen button to edit review */}
               <Modal userAlreadyHaveReview={false} updateReviewModal>
