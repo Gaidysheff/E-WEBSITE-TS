@@ -5,7 +5,6 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-
 export function timeAgo(timestamp: Date | string | number): string {
   const now = new Date();
   const past = new Date(timestamp);

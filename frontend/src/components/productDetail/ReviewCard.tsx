@@ -1,4 +1,4 @@
-import { Star, TrashIcon } from "lucide-react";
+import { Star } from "lucide-react";
 import { cn, timeAgo } from "@/lib/utils.js";
 // import Image from "@/assets/images/shared/profile_pic.jpg";
 import { BASE_URL } from "@/api/api.ts";

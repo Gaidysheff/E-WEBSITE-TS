@@ -2,12 +2,134 @@ import Button from "@/components/uiComponents/Button";
 import { type Product } from "@/lib/types.ts";
 import { BASE_URL } from "@/api/api";
 import { NumericFormat } from "react-number-format";
+import { useCart } from "@/store/CartContext.tsx";
+import { useEffect, useState } from "react";
+import {
+  CART_PRODUCT_ADDED_URL,
+  WISHLIST_PRODUCT_ADDED_URL,
+} from "@/api/endpoints.ts";
+import api from "@/api/api.ts";
+import WishlistTooltip from "@/components/uiComponents/WishlistTooltip.tsx";
 
-type Props = {
+import { useUser } from "@/store/UserContext.tsx";
+import { addToCartAction, wishlistAddAndDeleteAction } from "@/api/actions.ts";
+
+import { toast } from "react-toastify";
+
+interface Props {
   product: Product;
-};
+  isAuthorized: boolean;
+}
 
-const ProductInfo = ({ product }: Props) => {
+const ProductInfo = ({ product, isAuthorized }: Props) => {
+  const user = useUser();
+  const email = user?.email;
+
+  const { cartCode, setCartItemsCount } = useCart();
+
+  const [addToCartLoader, setAddToCartLoader] = useState<boolean>(false);
+  const [isAddedToCart, setIsAddedToCart] = useState<boolean>(false);
+  const [isAddedToWishlist, setIsAddedToWishlist] = useState<boolean>(false);
+  // console.log("🚀 ~ ProductInfo ~ isAddedToWishlist:", isAddedToWishlist);
+
+  const [isLoadingWishlist, setIsLoadingWishlist] = useState<boolean>(false);
+
+  // ----------- Add Product to the Cart ------------------------
+
+  const handleAddToCart = () => {
+    setAddToCartLoader(true);
+
+    const formData = new FormData();
+    formData.set("cart_code", cartCode ? cartCode : "");
+    formData.set("product_id", String(product.id));
+
+    addToCartAction(formData);
+
+    setIsAddedToCart(true);
+
+    setCartItemsCount((current: number) => current + 1);
+
+    // ------ Delay for disabling the button ---------
+    const reloadDelay = () => {
+      setAddToCartLoader(false);
+    };
+    setTimeout(reloadDelay, 3000);
+  };
+
+  // ----------- Is the Product in the Cart ? ------------------------
+  const handleIsProductInCart = async () => {
+    try {
+      await api
+        .get(
+          `${CART_PRODUCT_ADDED_URL}?cart_code=${cartCode}&product_id=${product.id}`,
+        )
+        .then((response) => {
+          setIsAddedToCart(response.data.product_in_cart);
+          // console.log("🚀 ~ handleIsProductInCart ~ response:", response);
+          return response;
+        });
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      }
+      throw new Error("An unknown error occured");
+    }
+  };
+
+  useEffect(() => {
+    handleIsProductInCart();
+  }, [cartCode, product.id]);
+
+  // ----------- WishList - Add & Delete ------------------------
+  const handleWishlistAddAndDelete = () => {
+    setIsLoadingWishlist(true);
+
+    const formData = new FormData();
+    formData.set("email", typeof email !== "undefined" ? email : "");
+    formData.set("product_id", String(product.id));
+
+    wishlistAddAndDeleteAction(formData);
+
+    setIsAddedToWishlist((current) => !current);
+
+    if (isAddedToWishlist) {
+      toast.info("Item removed from your Wishlist successfully!");
+    } else {
+      toast.success("Item added to your Wishlist successfully!");
+    }
+    // -------- Delay for showing toaster ------------
+    const reloadDelay = () => {
+      setIsLoadingWishlist(false);
+    };
+    setTimeout(reloadDelay, 3000);
+  };
+
+  // ---------- Is the Product in the WishList ? -------------
+
+  const handleIsProductInWishlist = async () => {
+    if (isAuthorized) {
+      try {
+        await api
+          .get(
+            `${WISHLIST_PRODUCT_ADDED_URL}?email=${email}&product_id=${product.id}`,
+          )
+          .then((response) => {
+            setIsAddedToWishlist(response.data.product_in_wishlist);
+            return response;
+          });
+      } catch (error) {
+        if (error instanceof Error) {
+          throw new Error(error.message);
+        }
+        throw new Error("An unknown error occured");
+      }
+    }
+  };
+
+  useEffect(() => {
+    handleIsProductInWishlist();
+  }, [email, product.id]);
+
   return (
     <div
       className="py-10 md:pt-20 flex items-start flex-wrap md:grid 
@@ -58,18 +180,36 @@ const ProductInfo = ({ product }: Props) => {
         {/* Buttons */}
         <div className="flex py-3 items-center gap-4 flex-wrap">
           <Button
+            disabled={addToCartLoader || isAddedToCart}
+            handleClick={handleAddToCart}
             className="product-btn 
               disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Add to Cart
+            {addToCartLoader
+              ? "Adding to Cart ..."
+              : isAddedToCart
+                ? "Added to Cart"
+                : "Add to Cart"}
           </Button>
 
-          <Button
-            className="wish-btn
+          {isAuthorized ? (
+            <Button
+              disabled={isLoadingWishlist}
+              handleClick={handleWishlistAddAndDelete}
+              className="wish-btn
               disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            Add to Wishlist
-          </Button>
+            >
+              {isAddedToWishlist
+                ? isLoadingWishlist
+                  ? "Updating ..."
+                  : "Remove from Wishlist"
+                : isLoadingWishlist
+                  ? "Updating ..."
+                  : "Add to Wishlist"}
+            </Button>
+          ) : (
+            <WishlistTooltip />
+          )}
         </div>
       </div>
     </div>

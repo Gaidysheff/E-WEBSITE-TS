@@ -15,7 +15,7 @@ import api from "@/api/api.ts";
 
 // type UserPartial = Partial<User>;
 // type UserDeepPartial = DeepPartial<User>;
-type UserLoggedIn = AugmentedRequired<DeepPartial<User>, "email">;
+export type UserLoggedIn = AugmentedRequired<DeepPartial<User>, "email">;
 
 const UserContext = createContext<UserLoggedIn | undefined>(undefined);
 

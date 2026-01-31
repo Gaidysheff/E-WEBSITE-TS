@@ -56,6 +56,7 @@ export type Rating = {
   average_rating: number;
   total_reviews: number;
 };
+
 export type Evaluation = {
   poor_review: number;
   fair_review: number;
@@ -68,6 +69,34 @@ export type ProductInDetails = Product &
   Evaluation & { rating: Rating } & { reviews: Review[] } & {
     similar_products: Product[];
   };
+
+// --------------------- Cart -------------------------
+
+// export type Cart = {
+//   cart_code: string;
+//   created_at: string;
+//   updated_at: string;
+// };
+
+// export type CartItem = {
+//   cart: Cart;
+//   product: Product;
+//   quantity: number;
+// };
+
+export type Cartitem = {
+  id: number;
+  product: Product;
+  quantity: number;
+  sub_total: number;
+};
+
+export type CartItemsWithTotal = {
+  id: number;
+  cart_code: string | undefined;
+  cart_total: number;
+  cartitems: Cartitem[];
+};
 
 // --------------------- Theme -------------------------
 

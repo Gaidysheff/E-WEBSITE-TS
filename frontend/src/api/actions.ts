@@ -20,6 +20,11 @@ import { toast } from "react-toastify";
 
 type FormSubmitHandler = (formData: FormData) => Promise<void>;
 
+type FormSubmitupdateCartItemHandler = (
+  formData: FormData,
+  productName: string,
+) => Promise<void>;
+
 // ===================== Add Review =========================
 
 export const createReviewAction: FormSubmitHandler = async (formData) => {
@@ -42,7 +47,7 @@ export const createReviewAction: FormSubmitHandler = async (formData) => {
 
   try {
     await api.post(REVIEW_ADD_URL, reviewObject).then((response) => {
-      console.log("🚀 ~ createReviewAction ~ response:", response);
+      // console.log("🚀 ~ createReviewAction ~ response:", response);
 
       if (response?.status === 200) {
         toast.success("Review added successfully!");
@@ -126,29 +131,41 @@ export const deleteReviewAction: FormSubmitHandler = async (formData) => {
   }
 };
 
-// // ===================== Add to Cart =========================
+// ===================== Add to Cart =========================
 
-// export const addToCartAction = async (formData) => {
-//   const product_id = formData.get("product_id");
-//   const cart_code = formData.get("cart_code");
+export const addToCartAction: FormSubmitHandler = async (formData) => {
+  const product_id = formData.get("product_id");
+  const cart_code = formData.get("cart_code");
 
-//   const cartObject = { product_id, cart_code };
+  const cartObject = { product_id, cart_code };
 
-//   // --------------- Fetching delay ----------------------
-//   // await new Promise((resolve) => setTimeout(resolve, 4000));
-//   // -----------------------------------------------------
+  // --------------- Fetching delay ----------------------
+  // await new Promise((resolve) => setTimeout(resolve, 4000));
+  // -----------------------------------------------------
 
-//   try {
-//     await api.post(CART_ADD_URL, cartObject).then((response) => {
-//       return response;
-//     });
-//   } catch (error) {
-//     if (error instanceof Error) {
-//       throw new Error(error.message);
-//     }
-//     throw new Error("An unknown error occured");
-//   }
-// };
+  try {
+    await api.post(CART_ADD_URL, cartObject).then((response) => {
+      if (response?.status === 200) {
+        toast.success("Selected item added successfully!");
+      } else {
+        toast.error("Something went wrong");
+      }
+
+      // ------ Delay for reloading while showing toaster ---------
+      const reloadDelay = () => {
+        window.location.reload();
+      };
+      setTimeout(reloadDelay, 3000);
+
+      return response;
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+    throw new Error("An unknown error occured");
+  }
+};
 
 // // ===================== is Product in Cart =========================
 
@@ -165,46 +182,67 @@ export const deleteReviewAction: FormSubmitHandler = async (formData) => {
 //   }
 // };
 
-// // ================== Update CartItem Quantity ====================
+// ================== Update CartItem Quantity ====================
 
-// export const updateCartItemAction = async (formData) => {
-//   const item_id = Number(formData.get("cartitem_id"));
-//   const quantity = Number(formData.get("quantity"));
+export const updateCartItemAction: FormSubmitupdateCartItemHandler = async (
+  formData,
+  productName,
+) => {
+  const item_id = Number(formData.get("cartitem_id"));
+  const quantity = Number(formData.get("quantity"));
 
-//   const cartObject = { item_id, quantity };
+  const cartObject = { item_id, quantity };
 
-//   // --------------- Fetching delay ----------------------
-//   // await new Promise((resolve) => setTimeout(resolve, 4000));
-//   // -----------------------------------------------------
+  try {
+    await api.put(CARTITEM_UPDATE_QUANTITY_URL, cartObject).then((response) => {
+      // console.log("🚀 ~ updateCartItemAction ~ response:", response);
 
-//   try {
-//     await api.put(CARTITEM_UPDATE_QUANTITY_URL, cartObject).then((response) => {
-//       return response;
-//     });
-//   } catch (error) {
-//     if (error instanceof Error) {
-//       throw new Error(error.message);
-//     }
-//     throw new Error("An unknown error occured");
-//   }
-// };
+      if (typeof response !== "undefined") {
+        toast.success(`Item - ${productName}'s quantity has been updated`, {
+          autoClose: 2000,
+        });
+      } else {
+        toast.error("Something went wrong");
+      }
 
-// // ================ Delete CartItem from the Cart =================
+      return response;
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+    throw new Error("An unknown error occured");
+  }
+};
 
-// export const deleteCartItemAction = async (formData) => {
-//   const item_id = Number(formData.get("item_id"));
+// ================ Delete CartItem from the Cart =================
 
-//   try {
-//     await api.delete(`${CARTITEM_DELETE_URL}${item_id}/`).then((response) => {
-//       return response;
-//     });
-//   } catch (error) {
-//     if (error instanceof Error) {
-//       throw new Error(error.message);
-//     }
-//     throw new Error("An unknown error occured");
-//   }
-// };
+export const deleteCartItemAction: FormSubmitupdateCartItemHandler = async (
+  formData,
+  productName,
+) => {
+  const item_id = Number(formData.get("item_id"));
+
+  try {
+    await api.delete(`${CARTITEM_DELETE_URL}${item_id}/`).then((response) => {
+      // console.log("🚀 ~ updateCartItemAction ~ response:", response);
+
+      if (typeof response !== "undefined") {
+        toast.success(`Item - ${productName}'s quantity has been updated`, {
+          autoClose: 2000,
+        });
+      } else {
+        toast.error("Something went wrong");
+      }
+      return response;
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+    throw new Error("An unknown error occured");
+  }
+};
 
 // // ===================== Get Cart =========================
 
@@ -222,25 +260,27 @@ export const deleteReviewAction: FormSubmitHandler = async (formData) => {
 // //   }
 // // };
 
-// // =================== WishList - Add & Delete ======================
+// =================== WishList - Add & Delete ======================
 
-// export const wishlistAddAndDeleteAction = async (formData) => {
-//   const product_id = formData.get("product_id");
-//   const email = formData.get("email");
+export const wishlistAddAndDeleteAction: FormSubmitHandler = async (
+  formData,
+) => {
+  const product_id = formData.get("product_id");
+  const email = formData.get("email");
 
-//   const wishObject = { product_id, email };
+  const wishObject = { product_id, email };
 
-//   try {
-//     await api.post(WISHLIST_ADD_AND_DELETE_URL, wishObject).then((response) => {
-//       return response;
-//     });
-//   } catch (error) {
-//     if (error instanceof Error) {
-//       throw new Error(error.message);
-//     }
-//     throw new Error("An unknown error occured");
-//   }
-// };
+  try {
+    await api.post(WISHLIST_ADD_AND_DELETE_URL, wishObject).then((response) => {
+      return response;
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+    throw new Error("An unknown error occured");
+  }
+};
 
 // // =================== CHECKOUT SESSION ======================
 

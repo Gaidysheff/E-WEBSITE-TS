@@ -2,9 +2,7 @@ import CategoryBtnSkeleton from "./CategoryBtnSkeleton.tsx";
 import ProductCardSkeleton from "./../sectionProduct/ProductCardSkeleton.tsx";
 import Skeleton from "react-loading-skeleton";
 
-interface Props {}
-
-const CategoryPageSkeleton = (props: Props) => {
+const CategoryPageSkeleton = () => {
   return (
     <div className="py-9">
       <div className="mx-auto flex items-center justify-center w-[25%]">

@@ -61,10 +61,7 @@ function IndividualProductComponent() {
 
   return (
     <>
-      <ProductInfo
-        product={product}
-        // isAuthorized={isAuthorized}
-      />
+      <ProductInfo product={product} isAuthorized={isAuthorized} />
 
       <CustomerReviews
         product={product}

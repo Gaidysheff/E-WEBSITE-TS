@@ -4,6 +4,7 @@ import * as React from "react";
 
 import { Outlet, createRootRoute, useLocation } from "@tanstack/react-router";
 
+import { CartContextProvider } from "@/store/CartContext.tsx";
 import { CategoryContextProvider } from "@/store/CategoryContext.tsx";
 import Footer from "@/components/footer/Footer.tsx";
 import NavBar from "@/components/navbar/NavBar.tsx";
@@ -55,11 +56,13 @@ function RootComponent() {
             // Standard Pages with NavBar and Footer
             <UserContextProvider>
               <CategoryContextProvider>
-                <NavBar />
-                <div className="container">
-                  <Outlet />
-                </div>
-                <Footer />
+                <CartContextProvider>
+                  <NavBar />
+                  <div className="container">
+                    <Outlet />
+                  </div>
+                  <Footer />
+                </CartContextProvider>
               </CategoryContextProvider>
             </UserContextProvider>
           )}

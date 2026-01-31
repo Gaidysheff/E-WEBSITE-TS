@@ -4,6 +4,7 @@ import { BASE_URL } from "@/api/api.ts";
 import { FaCartShopping } from "react-icons/fa6";
 import { cn } from "@/lib/utils";
 import { logout } from "@/api/endpoints_auth";
+import { useCart } from "@/store/CartContext.tsx";
 import { useUser } from "@/store/UserContext.tsx";
 
 type Props = {
@@ -11,6 +12,8 @@ type Props = {
 };
 
 const NavItems = ({ mobile }: Props) => {
+  const { cartItemsCount, cartCode } = useCart();
+
   const user = useUser();
 
   const imgURL = `${BASE_URL}${user?.image}`;
@@ -92,21 +95,24 @@ const NavItems = ({ mobile }: Props) => {
         </div>
       )}
 
-      <Link to="/">
+      <Link from="/" to={`cart/${cartCode}`}>
         <div
           className="relative flex items-center h-[60px] w-[60px]
-          justify-center cursor-pointer group/cart hover:scale-110"
+            justify-center cursor-pointer group/cart hover:scale-110"
         >
           <FaCartShopping
             className="text-4xl text-primaryDark
-            hover:text-primaryDark/50 transition duration-300"
+              hover:text-primaryDark/50 transition duration-300"
           />
-          <span
-            className="absolute top-0 right-0 px-3 py-1 bg-red-500
-              rounded-full text-white group-hover/cart:bg-red-400"
-          >
-            3
-          </span>
+
+          {cartItemsCount == 0 || (
+            <span
+              className="absolute top-0 right-0 px-3 py-1 bg-red-500
+                rounded-full text-white group-hover/cart:bg-red-400"
+            >
+              {cartItemsCount}
+            </span>
+          )}
         </div>
       </Link>
     </div>

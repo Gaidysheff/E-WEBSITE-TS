@@ -12,66 +12,66 @@ import Image9 from "@/assets/images/product/Product-9.png";
 import { type Product } from "@/lib/types";
 
 export const HERO_DATA: Array<
-  Pick<Product, "id" | "image" | "title" | "price">
+  Pick<Product, "id" | "image" | "name" | "price">
 > = [
   {
     id: 1,
     image: Image1,
-    title: "Product-1",
+    name: "Product-1",
     price: 99.99,
   },
   {
     id: 2,
     image: Image2,
-    title: "Product-2",
+    name: "Product-2",
     price: 88.99,
   },
   {
     id: 3,
     image: Image3,
-    title: "Product-3",
+    name: "Product-3",
     price: 77.99,
   },
   {
     id: 4,
     image: Image4,
-    title: "Product-4",
+    name: "Product-4",
     price: 66.99,
   },
   {
     id: 5,
     image: Image5,
-    title: "Product-5",
+    name: "Product-5",
     price: 55.99,
   },
   {
     id: 6,
     image: Image6,
-    title: "Product-6",
+    name: "Product-6",
     price: 44.99,
   },
   {
     id: 7,
     image: Image7,
-    title: "Product-7",
+    name: "Product-7",
     price: 33.99,
   },
   {
     id: 8,
     image: Image8,
-    title: "Product-8",
+    name: "Product-8",
     price: 22.99,
   },
   {
     id: 9,
     image: Image9,
-    title: "Product-9",
+    name: "Product-9",
     price: 11.99,
   },
   {
     id: 10,
     image: Image10,
-    title: "Product-10",
+    name: "Product-10",
     price: 9.99,
   },
 ];

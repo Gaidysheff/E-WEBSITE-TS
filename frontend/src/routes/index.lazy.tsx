@@ -15,7 +15,12 @@ function RouteComponent() {
       <Hero />
       {/* <Hero productsForCarousel={productsForCarousel} /> */}
       <CategorySection />
-      <ProductSection title="Featured Products" />
+      <ProductSection
+        title="Featured Products"
+        similar_products={[]}
+        detailPage={false}
+        loadingFromDetailPage={false}
+      />
     </main>
   );
 }

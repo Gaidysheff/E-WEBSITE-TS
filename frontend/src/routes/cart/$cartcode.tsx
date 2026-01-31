@@ -1,13 +1,116 @@
 import CartItem from "@/components/cart/CartItem";
 import CartSummary from "@/components/cart/CartSummary";
-import { createFileRoute } from "@tanstack/react-router";
+import Error from "@/components/error/Error.tsx";
+// import Error404notFound from "@/components/error/Error404notFound.tsx";
+// import { toast } from "react-toastify";
+// import { type CartItemsWithTotal, type Cartitem } from "@/lib/types.ts";
+import { type Cartitem } from "@/lib/types.ts";
+// import { type ErrorComponentProps } from "@tanstack/react-router";
+import api from "@/api/api.ts";
+import { CART_GET_URL } from "@/api/endpoints.ts";
+import { useEffect, useState } from "react";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+
+import CartItemSkeleton from "@/components/cart/CartItemSkeleton.tsx";
+import CartSummarySkeleton from "@/components/cart/CartSummarySkeleton.tsx";
 
 export const Route = createFileRoute("/cart/$cartcode")({
   component: CartItemPage,
+
+  // loader: async ({ params: { cartcode } }) => {
+  //   const navigate = useNavigate();
+  //   try {
+  //     const getCart = await api.get<CartItems>(`${CART_GET_URL}${cartcode}`);
+
+  //     return {
+  //       _cartitems: getCart.data.cartitems,
+  //       _cart_total: getCart.data.cart_total,
+  //     };
+  //   } catch (error: unknown) {
+  //     console.log("🚀 ~ error:", error);
+  //     if (error instanceof Error) {
+  //       if (
+  //         (error as any).message.includes("Cannot read properties of undefined")
+  //         // error.message ==
+  //         // "Cannot read properties of undefined (reading "data")"
+  //       ) {
+  //         // navigate({ to: `/cart` });
+  //       }
+  //       console.log("🚀 ~ FIND ERROR:", (error as any).message);
+  //     }
+  //     throw Error();
+  //   }
+  // },
+
+  // pendingComponent: () => {},
+
+  // errorComponent: (error: ErrorComponentProps) => {
+  //   const navigate = useNavigate();
+  //   console.log("🚀 ~ error:", error);
+
+  //   if (
+  //     (error as any).message.includes("Cannot read properties of undefined")
+  //     // error.message ==
+  //     // "Cannot read properties of undefined (reading "data")"
+  //   ) {
+  //     navigate({ to: `/cart` });
+  //   }
+  //   console.log("🚀 ~ FIND ERROR:", (error as any).message);
+
+  //   // toast.error("Something went wrong");
+  //   // return <Error404notFound />;
+  //   // throw Error();
+  // },
 });
 
 function CartItemPage() {
-  // const cartitems_count = 3;
+  const { cartcode } = Route.useParams();
+
+  const navigate = useNavigate();
+
+  const [cartItems, setCartItems] = useState<Cartitem[]>([]);
+  const [cartTotal, setCartTotal] = useState<number>(0);
+
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const cartitems_count = cartItems.length;
+
+  // ===================== Get Cart =========================
+
+  const getCart = async (cart_code: string) => {
+    setIsLoading(true);
+    // --------------- Fetching delay ----------------------
+    // await new Promise((resolve) => setTimeout(resolve, 4000));
+    // -----------------------------------------------------
+
+    try {
+      await api.get(`${CART_GET_URL}${cart_code}`).then((response) => {
+        // console.log("🚀 ~ getCartAction ~ response:", response);
+
+        if (typeof response === "undefined") {
+          navigate({ to: `/cart` });
+        } else {
+          setCartItems(response.data.cartitems);
+          setCartTotal(response.data.cart_total);
+        }
+      });
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error("🚀 ~  ERROR:", error);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getCart(cartcode);
+  }, []);
+
+  // const { _cartitems, _cart_total } = Route.useLoaderData();
+  // const cartitems: Cartitem[] = _cartitems;
+  // const cart_total: number = _cart_total;
+
   return (
     <section className="py-9">
       <h1 className="font-semibold text-2xl text-primaryDark mb-6">Cart</h1>
@@ -21,14 +124,26 @@ function CartItemPage() {
             className="max-h-[650px] overflow-y-auto p-2 xsm:p-3 
             sm:px-6 sm:py-4 bg-card"
           >
-            <CartItem />
-            <CartItem />
-            <CartItem />
+            {isLoading ? (
+              <CartItemSkeleton cards={2} />
+            ) : cartitems_count > 0 ? (
+              cartItems.map((cartItem) => (
+                <CartItem key={cartItem.id} cartItem={cartItem} />
+              ))
+            ) : (
+              <p className="text-center text-gray-500 py-10">
+                Your cart is empty.
+              </p>
+            )}
           </div>
         </div>
 
         {/* CartSummary */}
-        <CartSummary />
+        {isLoading ? (
+          <CartSummarySkeleton />
+        ) : (
+          <CartSummary total={cartTotal} />
+        )}
       </div>
     </section>
   );

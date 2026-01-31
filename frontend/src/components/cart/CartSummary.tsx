@@ -1,6 +1,15 @@
 import Button from "@/components/uiComponents/Button";
+import { NumericFormat } from "react-number-format";
 
-const CartSummary = () => {
+interface Props {
+  total: number;
+}
+
+const CartSummary = ({ total }: Props) => {
+  const tax = 5;
+  const cartSubTotal = total;
+  const cartTotal = cartSubTotal + tax;
+
   return (
     <div
       className="xl:w-[400px] max-lg:w-full border border-primaryDark
@@ -15,7 +24,17 @@ const CartSummary = () => {
           Subtotal
         </p>
         <p className="text-sm 2xsm:text-lg text-primaryDark font-semibold">
-          $100.00
+          {/* $100.00 */}
+          <NumericFormat
+            value={cartSubTotal}
+            displayType={"text"}
+            decimalScale={2}
+            fixedDecimalScale
+            thousandSeparator=" "
+            decimalSeparator="."
+            prefix={"$ "}
+            // suffix={" ₽"}
+          />
         </p>
       </div>
 
@@ -24,7 +43,17 @@ const CartSummary = () => {
           Estimated Tax
         </p>
         <p className="text-sm 2xsm:text-lg text-primaryDark font-semibold">
-          $5.00
+          {/* $5.00 */}
+          <NumericFormat
+            value={tax}
+            displayType={"text"}
+            decimalScale={2}
+            fixedDecimalScale
+            thousandSeparator=" "
+            decimalSeparator="."
+            prefix={"$ "}
+            // suffix={" ₽"}
+          />
         </p>
       </div>
 
@@ -38,11 +67,23 @@ const CartSummary = () => {
           Total
         </p>
         <p className="text-sm 2xsm:text-lg font-bold text-primaryDark">
-          $1280.00
+          {/* $1280.00 */}
+          <NumericFormat
+            value={cartTotal}
+            displayType={"text"}
+            decimalScale={2}
+            fixedDecimalScale
+            thousandSeparator=" "
+            decimalSeparator="."
+            prefix={"$ "}
+            // suffix={" ₽"}
+          />
         </p>
       </div>
 
-      <Button className="checkout-btn">Proceed to Checkout</Button>
+      <Button disabled={false} handleClick={() => {}} className="checkout-btn">
+        Proceed to Checkout
+      </Button>
     </div>
   );
 };
