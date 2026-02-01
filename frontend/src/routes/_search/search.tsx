@@ -28,7 +28,7 @@ export const Route = createFileRoute("/_search/search")({
 
     // ---------- Product Search ----------
     const response = await api.get(`${PRODUCT_SEARCH_URL}${query}`);
-    if (response.status != 200) {
+    if (response?.status != 200) {
       throw Error();
     }
     // ------------------------------------

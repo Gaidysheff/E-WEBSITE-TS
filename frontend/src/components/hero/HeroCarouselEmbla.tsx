@@ -4,11 +4,16 @@ import Autoplay from "embla-carousel-autoplay";
 import { ChevronLeft } from "lucide-react";
 import { ChevronRight } from "lucide-react";
 import Fade from "embla-carousel-fade";
-import { HERO_DATA } from "@/lib/utilities/heroData.ts";
 import { useCallback } from "react";
 import useEmblaCarousel from "embla-carousel-react";
+import { type Product } from "@/lib/types.ts";
+import { BASE_URL } from "@/api/api.ts";
 
-export function EmblaCarousel() {
+interface Props {
+  productsForCarousel: Product[];
+}
+
+export function EmblaCarousel({ productsForCarousel }: Props) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [
     Autoplay({
       delay: 2000,
@@ -28,14 +33,14 @@ export function EmblaCarousel() {
   return (
     <div className="embla relative" ref={emblaRef}>
       <div className="embla__container">
-        {HERO_DATA.map((slide) => (
+        {productsForCarousel.map((slide) => (
           <div
             key={slide.id}
             className="embla__slide 
             flex flex-col items-center justify-center relative"
           >
             <img
-              src={slide.image}
+              src={`${BASE_URL}${slide.image}`}
               alt="Product icon"
               className="w-[80%] h-auto md:w-auto md:max-h-[500px]
               grayscale hover:grayscale-0"
@@ -60,6 +65,7 @@ export function EmblaCarousel() {
           </div>
         ))}
       </div>
+
       <button
         className="absolute bottom-[50%] left-0"
         type="button"

@@ -12,6 +12,7 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
+import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProductsProductSlugRouteImport } from './routes/products/$productSlug'
 import { Route as CategoriesCategoryIdRouteImport } from './routes/categories/$categoryId'
 import { Route as CartCartcodeRouteImport } from './routes/cart/$cartcode'
@@ -22,7 +23,6 @@ import { Route as AuthPasswordResetRequestRouteImport } from './routes/_auth/pas
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
 import { Route as AuthPasswordResetTokenRouteImport } from './routes/_auth/password-reset/$token'
 
-const IndexLazyRouteImport = createFileRoute('/')()
 const CartIndexLazyRouteImport = createFileRoute('/cart/')()
 const AuthenticatedUsersLazyRouteImport = createFileRoute(
   '/_authenticated/users',
@@ -35,7 +35,7 @@ const AuthenticatedRoute = AuthenticatedRouteImport.update({
   id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexLazyRoute = IndexLazyRouteImport.update({
+const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
@@ -111,7 +111,7 @@ const AuthPasswordResetTokenRoute = AuthPasswordResetTokenRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexLazyRoute
+  '/': typeof IndexRoute
   '/login': typeof AuthLoginRoute
   '/passwordResetRequest': typeof AuthPasswordResetRequestRoute
   '/register': typeof AuthRegisterRoute
@@ -126,7 +126,7 @@ export interface FileRoutesByFullPath {
   '/password-reset/$token': typeof AuthPasswordResetTokenRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexLazyRoute
+  '/': typeof IndexRoute
   '/login': typeof AuthLoginRoute
   '/passwordResetRequest': typeof AuthPasswordResetRequestRoute
   '/register': typeof AuthRegisterRoute
@@ -142,7 +142,7 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexLazyRoute
+  '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/_auth/login': typeof AuthLoginRoute
   '/_auth/passwordResetRequest': typeof AuthPasswordResetRequestRoute
@@ -207,7 +207,7 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexLazyRoute: typeof IndexLazyRoute
+  IndexRoute: typeof IndexRoute
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   AuthLoginRoute: typeof AuthLoginRoute
   AuthPasswordResetRequestRoute: typeof AuthPasswordResetRequestRoute
@@ -233,7 +233,7 @@ declare module '@tanstack/react-router' {
       id: '/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexLazyRouteImport
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/cart/': {
@@ -340,7 +340,7 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
 )
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexLazyRoute: IndexLazyRoute,
+  IndexRoute: IndexRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   AuthLoginRoute: AuthLoginRoute,
   AuthPasswordResetRequestRoute: AuthPasswordResetRequestRoute,

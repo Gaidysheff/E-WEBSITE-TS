@@ -1,7 +1,11 @@
 import { EmblaCarousel } from "./HeroCarouselEmbla";
+import { type Product } from "@/lib/types.ts";
 
-// const Hero = ({ productsForCarousel }) => {
-const Hero = () => {
+interface Props {
+  productsForCarousel: Product[];
+}
+
+const Hero = ({ productsForCarousel }: Props) => {
   return (
     <section
       className="bg-card text-center w-full px-2 py-5 sm:px-4 sm:py-10 
@@ -39,8 +43,7 @@ const Hero = () => {
         className="mt-[1rem] 2xsm:mt-[2rem] xsm:mt-[3rem] sm:mt-[4rem] 
         xl:mt-[5rem]"
       >
-        <EmblaCarousel />
-        {/* <EmblaCarousel productsForCarousel={productsForCarousel} /> */}
+        <EmblaCarousel productsForCarousel={productsForCarousel} />
       </div>
     </section>
   );

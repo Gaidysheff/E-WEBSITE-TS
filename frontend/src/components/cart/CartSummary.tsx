@@ -6,6 +6,8 @@ interface Props {
 }
 
 const CartSummary = ({ total }: Props) => {
+  const isAuthorized = !!localStorage.getItem("Token");
+
   const tax = 5;
   const cartSubTotal = total;
   const cartTotal = cartSubTotal + tax;
@@ -81,8 +83,14 @@ const CartSummary = ({ total }: Props) => {
         </p>
       </div>
 
-      <Button disabled={false} handleClick={() => {}} className="checkout-btn">
-        Proceed to Checkout
+      <Button
+        disabled={!isAuthorized || cartSubTotal < 0.01}
+        handleClick={() => {}}
+        className="checkout-btn"
+      >
+        {isAuthorized
+          ? "Proceed to Checkout"
+          : "Login to Proceed with Checkout"}
       </Button>
     </div>
   );
