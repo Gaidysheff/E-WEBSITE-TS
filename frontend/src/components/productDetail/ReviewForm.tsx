@@ -159,6 +159,7 @@ const ReviewForm = ({ product, review, updateReviewForm }: Props) => {
             (customerReview && customerReview.trim()).length == 0 ||
             reviewBtnLoader
           }
+          handleClick={() => {}}
           className="bg-black text-white w-full py-2 rounded-lg 
           hover:bg-gray-900 transition
           disabled:opacity-50 disabled:cursor-not-allowed"

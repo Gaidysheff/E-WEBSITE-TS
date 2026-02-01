@@ -40,7 +40,11 @@ const ReviewCard = ({ review, user, product }: Props) => {
             <>
               {/* Trash button to delete review */}
 
-              <DeleteModal handleDeleteReview={handleDeleteReview} />
+              <DeleteModal
+                handleDeleteReview={handleDeleteReview}
+                deleteCartItemHandler={() => {}}
+                deleteCartitem={false}
+              />
 
               {/* Pen button to edit review */}
               <Modal userAlreadyHaveReview={false} updateReviewModal>

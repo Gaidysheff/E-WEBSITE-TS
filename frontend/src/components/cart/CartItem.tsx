@@ -1,4 +1,4 @@
-import { Minus, Plus, X } from "lucide-react";
+import { Minus, Plus } from "lucide-react";
 import Button from "@/components/uiComponents/Button";
 // import Image from "@/assets/images/product/Product-1.png";
 import { type Cartitem } from "@/lib/types.ts";

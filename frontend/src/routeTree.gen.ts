@@ -15,6 +15,7 @@ import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as ProductsProductSlugRouteImport } from './routes/products/$productSlug'
 import { Route as CategoriesCategoryIdRouteImport } from './routes/categories/$categoryId'
 import { Route as CartCartcodeRouteImport } from './routes/cart/$cartcode'
+import { Route as SearchSearchRouteImport } from './routes/_search/search'
 import { Route as AuthenticatedUsers_tanstackRouteImport } from './routes/_authenticated/users_tanstack'
 import { Route as AuthRegisterRouteImport } from './routes/_auth/register'
 import { Route as AuthPasswordResetRequestRouteImport } from './routes/_auth/passwordResetRequest'
@@ -74,6 +75,11 @@ const CartCartcodeRoute = CartCartcodeRouteImport.update({
   path: '/cart/$cartcode',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SearchSearchRoute = SearchSearchRouteImport.update({
+  id: '/_search/search',
+  path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedUsers_tanstackRoute =
   AuthenticatedUsers_tanstackRouteImport.update({
     id: '/users_tanstack',
@@ -110,6 +116,7 @@ export interface FileRoutesByFullPath {
   '/passwordResetRequest': typeof AuthPasswordResetRequestRoute
   '/register': typeof AuthRegisterRoute
   '/users_tanstack': typeof AuthenticatedUsers_tanstackRoute
+  '/search': typeof SearchSearchRoute
   '/cart/$cartcode': typeof CartCartcodeRoute
   '/categories/$categoryId': typeof CategoriesCategoryIdRoute
   '/products/$productSlug': typeof ProductsProductSlugRoute
@@ -124,6 +131,7 @@ export interface FileRoutesByTo {
   '/passwordResetRequest': typeof AuthPasswordResetRequestRoute
   '/register': typeof AuthRegisterRoute
   '/users_tanstack': typeof AuthenticatedUsers_tanstackRoute
+  '/search': typeof SearchSearchRoute
   '/cart/$cartcode': typeof CartCartcodeRoute
   '/categories/$categoryId': typeof CategoriesCategoryIdRoute
   '/products/$productSlug': typeof ProductsProductSlugRoute
@@ -140,6 +148,7 @@ export interface FileRoutesById {
   '/_auth/passwordResetRequest': typeof AuthPasswordResetRequestRoute
   '/_auth/register': typeof AuthRegisterRoute
   '/_authenticated/users_tanstack': typeof AuthenticatedUsers_tanstackRoute
+  '/_search/search': typeof SearchSearchRoute
   '/cart/$cartcode': typeof CartCartcodeRoute
   '/categories/$categoryId': typeof CategoriesCategoryIdRoute
   '/products/$productSlug': typeof ProductsProductSlugRoute
@@ -156,6 +165,7 @@ export interface FileRouteTypes {
     | '/passwordResetRequest'
     | '/register'
     | '/users_tanstack'
+    | '/search'
     | '/cart/$cartcode'
     | '/categories/$categoryId'
     | '/products/$productSlug'
@@ -170,6 +180,7 @@ export interface FileRouteTypes {
     | '/passwordResetRequest'
     | '/register'
     | '/users_tanstack'
+    | '/search'
     | '/cart/$cartcode'
     | '/categories/$categoryId'
     | '/products/$productSlug'
@@ -185,6 +196,7 @@ export interface FileRouteTypes {
     | '/_auth/passwordResetRequest'
     | '/_auth/register'
     | '/_authenticated/users_tanstack'
+    | '/_search/search'
     | '/cart/$cartcode'
     | '/categories/$categoryId'
     | '/products/$productSlug'
@@ -200,6 +212,7 @@ export interface RootRouteChildren {
   AuthLoginRoute: typeof AuthLoginRoute
   AuthPasswordResetRequestRoute: typeof AuthPasswordResetRequestRoute
   AuthRegisterRoute: typeof AuthRegisterRoute
+  SearchSearchRoute: typeof SearchSearchRoute
   CartCartcodeRoute: typeof CartCartcodeRoute
   CategoriesCategoryIdRoute: typeof CategoriesCategoryIdRoute
   ProductsProductSlugRoute: typeof ProductsProductSlugRoute
@@ -265,6 +278,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CartCartcodeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_search/search': {
+      id: '/_search/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof SearchSearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/users_tanstack': {
       id: '/_authenticated/users_tanstack'
       path: '/users_tanstack'
@@ -325,6 +345,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthLoginRoute: AuthLoginRoute,
   AuthPasswordResetRequestRoute: AuthPasswordResetRequestRoute,
   AuthRegisterRoute: AuthRegisterRoute,
+  SearchSearchRoute: SearchSearchRoute,
   CartCartcodeRoute: CartCartcodeRoute,
   CategoriesCategoryIdRoute: CategoriesCategoryIdRoute,
   ProductsProductSlugRoute: ProductsProductSlugRoute,
