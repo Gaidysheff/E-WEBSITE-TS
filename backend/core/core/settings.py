@@ -26,10 +26,12 @@ else:
     ALLOWED_HOSTS = [
         "test.gaidysheff.ru",
         "www.test.gaidysheff.ru",
-        # "https://2wffbr-83-217-13-212.ru.tuna.am",
+        "https://a7l7tv-83-217-13-207.ru.tuna.am",
     ]
 
-ALLOWED_HOSTS = []
+CSRF_TRUSTED_ORIGINS = ["https://a7l7tv-83-217-13-207.ru.tuna.am"]
+
+# ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -205,3 +207,13 @@ CRISPY_TEMPLATE_PACK = "bootstrap4"
 # ACCOUNT_USERNAME_REQUIRED = False
 # ACCOUNT_AUTHENTICATION_METHOD = "email"
 # ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+
+
+# ======================= STRIPE ==========================
+
+STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
+STRIPE_PUBLIC_KEY = os.getenv("STRIPE_PUBLIC_KEY")
+
+WEBHOOK_SECRET = os.getenv("WEBHOOK_SECRET")
+
+BASE_URL_FRONTEND = os.getenv("BASE_URL_FRONTEND")

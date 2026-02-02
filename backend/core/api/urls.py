@@ -29,12 +29,12 @@ urlpatterns = [
     path("delete_cartitem/<int:pk>/", views.delete_cartitem, name="delete_cartitem"),
     path("add_to_wishlist/", views.add_to_wishlist, name="add_to_wishlist"),
     path("search", views.product_search, name="search"),
-    # path(
-    #     "create_checkout_session/",
-    #     views.create_checkout_session,
-    #     name="create_checkout_session",
-    # ),
-    # path("webhook/", views.my_webhook_view, name="webhook"),
+    path(
+        "create_checkout_session/",
+        views.create_checkout_session,
+        name="create_checkout_session",
+    ),
+    path("webhook/", views.my_webhook_view, name="webhook"),
     # # Newly Added
     path("get_orders", views.get_orders, name="get_orders"),
     # path("create_user/", views.create_user, name="create_user"),

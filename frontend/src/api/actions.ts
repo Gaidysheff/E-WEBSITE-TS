@@ -25,6 +25,11 @@ type FormSubmitupdateCartItemHandler = (
   productName: string,
 ) => Promise<void>;
 
+type PaymentHandler = (paymentObject: {
+  cart_code: string;
+  email: string;
+}) => Promise<void>;
+
 // ===================== Add Review =========================
 
 export const createReviewAction: FormSubmitHandler = async (formData) => {
@@ -244,21 +249,21 @@ export const deleteCartItemAction: FormSubmitupdateCartItemHandler = async (
   }
 };
 
-// // ===================== Get Cart =========================
+// ===================== Get Cart =========================
 
-// // export const getCartAction = async (cart_code) => {
-// //   try {
-// //     await api.get(`${CART_GET_URL}${cart_code}`).then((response) => {
-// //       console.log("🚀 ~ getCartAction ~ Response:", response);
-// //       return response;
-// //     });
-// //   } catch (error) {
-// //     if (error instanceof Error) {
-// //       throw new Error(error.message);
-// //     }
-// //     throw new Error("An unknown error occured");
-// //   }
-// // };
+// export const getCartAction = async (cart_code) => {
+//   try {
+//     await api.get(`${CART_GET_URL}${cart_code}`).then((response) => {
+//       console.log("🚀 ~ getCartAction ~ Response:", response);
+//       return response;
+//     });
+//   } catch (error) {
+//     if (error instanceof Error) {
+//       throw new Error(error.message);
+//     }
+//     throw new Error("An unknown error occured");
+//   }
+// };
 
 // =================== WishList - Add & Delete ======================
 
@@ -282,22 +287,23 @@ export const wishlistAddAndDeleteAction: FormSubmitHandler = async (
   }
 };
 
-// // =================== CHECKOUT SESSION ======================
+// =================== CHECKOUT SESSION ======================
 
-// // export const initiatePaymentAction = async (paymentObject) => {
-// //   // const paymentObject = { cart_code, email };
-
-// //   try {
-// //     await api.post(CHECKOUT_URL, paymentObject).then((response) => {
-// //       return response;
-// //     });
-// //   } catch (error) {
-// //     if (error instanceof Error) {
-// //       throw new Error(error.message);
-// //     }
-// //     throw new Error("An unknown error occured");
-// //   }
-// // };
+export const initiatePaymentAction: PaymentHandler = async (paymentObject) => {
+  // --------------- Fetching delay ----------------------
+  // await new Promise((resolve) => setTimeout(resolve, 4000));
+  // -----------------------------------------------------
+  try {
+    await api.post(CHECKOUT_URL, paymentObject).then((response) => {
+      window.location.href = response.data.data.url;
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+    throw new Error("An unknown error occured");
+  }
+};
 
 // // =================== Get Orders ======================
 // export const getOrdersAction = async (email) => {

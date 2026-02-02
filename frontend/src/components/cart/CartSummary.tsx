@@ -1,16 +1,43 @@
 import Button from "@/components/uiComponents/Button";
 import { NumericFormat } from "react-number-format";
+import { initiatePaymentAction } from "@/api/actions.ts";
+import { useCart } from "@/store/CartContext.tsx";
+import { useUser } from "@/store/UserContext.tsx";
+import { type UserLoggedIn } from "@/lib/types.ts";
+
+import { useState } from "react";
 
 interface Props {
   total: number;
 }
 
 const CartSummary = ({ total }: Props) => {
-  const isAuthorized = !!localStorage.getItem("Token");
+  const [initiatePaymentLoader, setInitiatePaymentLoader] =
+    useState<boolean>(false);
 
   const tax = 5;
   const cartSubTotal = total;
   const cartTotal = cartSubTotal + tax;
+
+  const isAuthorized = !!localStorage.getItem("Token");
+
+  const user: UserLoggedIn | undefined = useUser();
+  const email = typeof user === "undefined" ? "" : user.email;
+
+  const { cartCode } = useCart();
+
+  const paymentObject = { email, cart_code: cartCode };
+
+  const initiatePaymentHandler = () => {
+    setInitiatePaymentLoader(true);
+    initiatePaymentAction(paymentObject);
+    setInitiatePaymentLoader(false);
+    // ------ Delay for loading --------
+    // const reloadDelay = () => {
+    //   setInitiatePaymentLoader(false);
+    // };
+    // setTimeout(reloadDelay, 3000);
+  };
 
   return (
     <div
@@ -84,12 +111,14 @@ const CartSummary = ({ total }: Props) => {
       </div>
 
       <Button
-        disabled={!isAuthorized || cartSubTotal < 0.01}
-        handleClick={() => {}}
+        disabled={!isAuthorized || cartSubTotal < 0.01 || initiatePaymentLoader}
+        handleClick={initiatePaymentHandler}
         className="checkout-btn"
       >
         {isAuthorized
-          ? "Proceed to Checkout"
+          ? initiatePaymentLoader
+            ? "Redirecting to Stripe"
+            : "Proceed to Checkout"
           : "Login to Proceed with Checkout"}
       </Button>
     </div>
