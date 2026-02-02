@@ -1,14 +1,8 @@
 import {
-  ADDRESS_ADD_URL,
   CARTITEM_DELETE_URL,
   CARTITEM_UPDATE_QUANTITY_URL,
   CART_ADD_URL,
-  CART_DELETE_URL,
-  CART_GET_URL,
-  CART_UPDATE_URL,
   CHECKOUT_URL,
-  ORDER_GET_URL,
-  PRODUCT_SEARCH_URL,
   REVIEW_ADD_URL,
   REVIEW_DELETE_URL,
   REVIEW_UPDATE_URL,
@@ -17,6 +11,18 @@ import {
 
 import api from "@/api/api.ts";
 import { toast } from "react-toastify";
+
+// import {
+//   ADDRESS_ADD_URL,
+//   CART_DELETE_URL,
+//   CART_GET_URL,
+//   CART_UPDATE_URL,
+//   ORDER_GET_URL,
+//   PRODUCT_SEARCH_URL,
+// } from "@/api/endpoints.ts";
+
+
+
 
 type FormSubmitHandler = (formData: FormData) => Promise<void>;
 
