@@ -26,10 +26,10 @@ else:
     ALLOWED_HOSTS = [
         "test.gaidysheff.ru",
         "www.test.gaidysheff.ru",
-        "https://a7l7tv-83-217-13-207.ru.tuna.am",
+        "https://mwu0o2-83-217-13-197.ru.tuna.am",
     ]
 
-CSRF_TRUSTED_ORIGINS = ["https://a7l7tv-83-217-13-207.ru.tuna.am"]
+CSRF_TRUSTED_ORIGINS = ["https://mwu0o2-83-217-13-197.ru.tuna.am"]
 
 # ALLOWED_HOSTS = []
 

@@ -16,7 +16,7 @@ export type User = {
 
 export type UserLoggedIn = AugmentedRequired<DeepPartial<User>, "email">;
 
-// --------------------- Category -------------------------
+// ------- Category -------
 
 export type Category = {
   id: number;
@@ -27,7 +27,7 @@ export type Category = {
 
 export type CategoryWithProducts = Category & { products: Product[] };
 
-// --------------------- Product -------------------------
+// ------- Product -------
 
 export type Product = {
   id: number;
@@ -70,7 +70,7 @@ export type ProductInDetails = Product &
     similar_products: Product[];
   };
 
-// --------------------- Cart -------------------------
+// ------- Cart -----------
 
 // export type Cart = {
 //   cart_code: string;
@@ -96,6 +96,24 @@ export type CartItemsWithTotal = {
   cart_code: string | undefined;
   cart_total: number;
   cartitems: Cartitem[];
+};
+
+// -------- Order ----------
+export type OrderItem = {
+  id: string;
+  product: Product;
+  quantity: number;
+};
+
+export type Order = {
+  id: number;
+  stripe_checkout_id: string;
+  amount: number;
+  // currency: string;
+  // customer_email: string;
+  status: "Pending" | "Paid";
+  created_at: string;
+  items: OrderItem[];
 };
 
 // --------------------- Theme -------------------------

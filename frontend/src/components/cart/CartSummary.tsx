@@ -36,7 +36,7 @@ const CartSummary = ({ total }: Props) => {
     // const reloadDelay = () => {
     //   setInitiatePaymentLoader(false);
     // };
-    // setTimeout(reloadDelay, 3000);
+    // setTimeout(reloadDelay, 7000);
   };
 
   return (

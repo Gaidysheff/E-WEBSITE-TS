@@ -275,6 +275,7 @@ def product_in_wishlist(request):
 
 
 # ----------------------------------------------------------------
+@api_view(["POST"])
 def create_checkout_session(request):
     cart_code = request.data.get("cart_code")
     email = request.data.get("email")

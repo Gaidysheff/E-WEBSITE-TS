@@ -21,9 +21,6 @@ import { toast } from "react-toastify";
 //   PRODUCT_SEARCH_URL,
 // } from "@/api/endpoints.ts";
 
-
-
-
 type FormSubmitHandler = (formData: FormData) => Promise<void>;
 
 type FormSubmitupdateCartItemHandler = (
@@ -296,12 +293,16 @@ export const wishlistAddAndDeleteAction: FormSubmitHandler = async (
 // =================== CHECKOUT SESSION ======================
 
 export const initiatePaymentAction: PaymentHandler = async (paymentObject) => {
-  // --------------- Fetching delay ----------------------
-  // await new Promise((resolve) => setTimeout(resolve, 4000));
-  // -----------------------------------------------------
   try {
     await api.post(CHECKOUT_URL, paymentObject).then((response) => {
       window.location.href = response.data.data.url;
+
+      // console.log("🚀 ~ initiatePaymentAction ~ response:", response);
+      // // ------ Delay for loading --------
+      // const reloadDelay = () => {
+      //   window.location.href = response.data.data.url;
+      // };
+      // setTimeout(reloadDelay, 70000);
     });
   } catch (error) {
     if (error instanceof Error) {

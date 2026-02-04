@@ -1,6 +1,6 @@
 import { Link, createLazyFileRoute } from "@tanstack/react-router";
 
-export const Route = createLazyFileRoute("/cart/")({
+export const Route = createLazyFileRoute("/_authenticated/cart/")({
   component: CartPage,
 });
 

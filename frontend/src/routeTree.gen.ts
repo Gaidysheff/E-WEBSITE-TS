@@ -15,20 +15,28 @@ import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProductsProductSlugRouteImport } from './routes/products/$productSlug'
 import { Route as CategoriesCategoryIdRouteImport } from './routes/categories/$categoryId'
-import { Route as CartCartcodeRouteImport } from './routes/cart/$cartcode'
 import { Route as SearchSearchRouteImport } from './routes/_search/search'
 import { Route as AuthenticatedUsers_tanstackRouteImport } from './routes/_authenticated/users_tanstack'
 import { Route as AuthRegisterRouteImport } from './routes/_auth/register'
 import { Route as AuthPasswordResetRequestRouteImport } from './routes/_auth/passwordResetRequest'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
+import { Route as AuthenticatedCartCartcodeRouteImport } from './routes/_authenticated/cart/$cartcode'
 import { Route as AuthPasswordResetTokenRouteImport } from './routes/_auth/password-reset/$token'
 
-const CartIndexLazyRouteImport = createFileRoute('/cart/')()
+const PaymentResultSuccessLazyRouteImport = createFileRoute(
+  '/_paymentResult/success',
+)()
+const PaymentResultFailedLazyRouteImport = createFileRoute(
+  '/_paymentResult/failed',
+)()
 const AuthenticatedUsersLazyRouteImport = createFileRoute(
   '/_authenticated/users',
 )()
 const AuthenticatedProfileLazyRouteImport = createFileRoute(
   '/_authenticated/profile',
+)()
+const AuthenticatedCartIndexLazyRouteImport = createFileRoute(
+  '/_authenticated/cart/',
 )()
 
 const AuthenticatedRoute = AuthenticatedRouteImport.update({
@@ -40,11 +48,21 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
-const CartIndexLazyRoute = CartIndexLazyRouteImport.update({
-  id: '/cart/',
-  path: '/cart/',
+const PaymentResultSuccessLazyRoute =
+  PaymentResultSuccessLazyRouteImport.update({
+    id: '/_paymentResult/success',
+    path: '/success',
+    getParentRoute: () => rootRouteImport,
+  } as any).lazy(() =>
+    import('./routes/_paymentResult/success.lazy').then((d) => d.Route),
+  )
+const PaymentResultFailedLazyRoute = PaymentResultFailedLazyRouteImport.update({
+  id: '/_paymentResult/failed',
+  path: '/failed',
   getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/cart/index.lazy').then((d) => d.Route))
+} as any).lazy(() =>
+  import('./routes/_paymentResult/failed.lazy').then((d) => d.Route),
+)
 const AuthenticatedUsersLazyRoute = AuthenticatedUsersLazyRouteImport.update({
   id: '/users',
   path: '/users',
@@ -68,11 +86,6 @@ const ProductsProductSlugRoute = ProductsProductSlugRouteImport.update({
 const CategoriesCategoryIdRoute = CategoriesCategoryIdRouteImport.update({
   id: '/categories/$categoryId',
   path: '/categories/$categoryId',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CartCartcodeRoute = CartCartcodeRouteImport.update({
-  id: '/cart/$cartcode',
-  path: '/cart/$cartcode',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SearchSearchRoute = SearchSearchRouteImport.update({
@@ -104,6 +117,20 @@ const AuthLoginRoute = AuthLoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedCartIndexLazyRoute =
+  AuthenticatedCartIndexLazyRouteImport.update({
+    id: '/cart/',
+    path: '/cart/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any).lazy(() =>
+    import('./routes/_authenticated/cart/index.lazy').then((d) => d.Route),
+  )
+const AuthenticatedCartCartcodeRoute =
+  AuthenticatedCartCartcodeRouteImport.update({
+    id: '/cart/$cartcode',
+    path: '/cart/$cartcode',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthPasswordResetTokenRoute = AuthPasswordResetTokenRouteImport.update({
   id: '/_auth/password-reset/$token',
   path: '/password-reset/$token',
@@ -117,13 +144,15 @@ export interface FileRoutesByFullPath {
   '/register': typeof AuthRegisterRoute
   '/users_tanstack': typeof AuthenticatedUsers_tanstackRoute
   '/search': typeof SearchSearchRoute
-  '/cart/$cartcode': typeof CartCartcodeRoute
   '/categories/$categoryId': typeof CategoriesCategoryIdRoute
   '/products/$productSlug': typeof ProductsProductSlugRoute
   '/profile': typeof AuthenticatedProfileLazyRoute
   '/users': typeof AuthenticatedUsersLazyRoute
-  '/cart': typeof CartIndexLazyRoute
+  '/failed': typeof PaymentResultFailedLazyRoute
+  '/success': typeof PaymentResultSuccessLazyRoute
   '/password-reset/$token': typeof AuthPasswordResetTokenRoute
+  '/cart/$cartcode': typeof AuthenticatedCartCartcodeRoute
+  '/cart': typeof AuthenticatedCartIndexLazyRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -132,13 +161,15 @@ export interface FileRoutesByTo {
   '/register': typeof AuthRegisterRoute
   '/users_tanstack': typeof AuthenticatedUsers_tanstackRoute
   '/search': typeof SearchSearchRoute
-  '/cart/$cartcode': typeof CartCartcodeRoute
   '/categories/$categoryId': typeof CategoriesCategoryIdRoute
   '/products/$productSlug': typeof ProductsProductSlugRoute
   '/profile': typeof AuthenticatedProfileLazyRoute
   '/users': typeof AuthenticatedUsersLazyRoute
-  '/cart': typeof CartIndexLazyRoute
+  '/failed': typeof PaymentResultFailedLazyRoute
+  '/success': typeof PaymentResultSuccessLazyRoute
   '/password-reset/$token': typeof AuthPasswordResetTokenRoute
+  '/cart/$cartcode': typeof AuthenticatedCartCartcodeRoute
+  '/cart': typeof AuthenticatedCartIndexLazyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -149,13 +180,15 @@ export interface FileRoutesById {
   '/_auth/register': typeof AuthRegisterRoute
   '/_authenticated/users_tanstack': typeof AuthenticatedUsers_tanstackRoute
   '/_search/search': typeof SearchSearchRoute
-  '/cart/$cartcode': typeof CartCartcodeRoute
   '/categories/$categoryId': typeof CategoriesCategoryIdRoute
   '/products/$productSlug': typeof ProductsProductSlugRoute
   '/_authenticated/profile': typeof AuthenticatedProfileLazyRoute
   '/_authenticated/users': typeof AuthenticatedUsersLazyRoute
-  '/cart/': typeof CartIndexLazyRoute
+  '/_paymentResult/failed': typeof PaymentResultFailedLazyRoute
+  '/_paymentResult/success': typeof PaymentResultSuccessLazyRoute
   '/_auth/password-reset/$token': typeof AuthPasswordResetTokenRoute
+  '/_authenticated/cart/$cartcode': typeof AuthenticatedCartCartcodeRoute
+  '/_authenticated/cart/': typeof AuthenticatedCartIndexLazyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -166,13 +199,15 @@ export interface FileRouteTypes {
     | '/register'
     | '/users_tanstack'
     | '/search'
-    | '/cart/$cartcode'
     | '/categories/$categoryId'
     | '/products/$productSlug'
     | '/profile'
     | '/users'
-    | '/cart'
+    | '/failed'
+    | '/success'
     | '/password-reset/$token'
+    | '/cart/$cartcode'
+    | '/cart'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -181,13 +216,15 @@ export interface FileRouteTypes {
     | '/register'
     | '/users_tanstack'
     | '/search'
-    | '/cart/$cartcode'
     | '/categories/$categoryId'
     | '/products/$productSlug'
     | '/profile'
     | '/users'
-    | '/cart'
+    | '/failed'
+    | '/success'
     | '/password-reset/$token'
+    | '/cart/$cartcode'
+    | '/cart'
   id:
     | '__root__'
     | '/'
@@ -197,13 +234,15 @@ export interface FileRouteTypes {
     | '/_auth/register'
     | '/_authenticated/users_tanstack'
     | '/_search/search'
-    | '/cart/$cartcode'
     | '/categories/$categoryId'
     | '/products/$productSlug'
     | '/_authenticated/profile'
     | '/_authenticated/users'
-    | '/cart/'
+    | '/_paymentResult/failed'
+    | '/_paymentResult/success'
     | '/_auth/password-reset/$token'
+    | '/_authenticated/cart/$cartcode'
+    | '/_authenticated/cart/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -213,10 +252,10 @@ export interface RootRouteChildren {
   AuthPasswordResetRequestRoute: typeof AuthPasswordResetRequestRoute
   AuthRegisterRoute: typeof AuthRegisterRoute
   SearchSearchRoute: typeof SearchSearchRoute
-  CartCartcodeRoute: typeof CartCartcodeRoute
   CategoriesCategoryIdRoute: typeof CategoriesCategoryIdRoute
   ProductsProductSlugRoute: typeof ProductsProductSlugRoute
-  CartIndexLazyRoute: typeof CartIndexLazyRoute
+  PaymentResultFailedLazyRoute: typeof PaymentResultFailedLazyRoute
+  PaymentResultSuccessLazyRoute: typeof PaymentResultSuccessLazyRoute
   AuthPasswordResetTokenRoute: typeof AuthPasswordResetTokenRoute
 }
 
@@ -236,11 +275,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/cart/': {
-      id: '/cart/'
-      path: '/cart'
-      fullPath: '/cart'
-      preLoaderRoute: typeof CartIndexLazyRouteImport
+    '/_paymentResult/success': {
+      id: '/_paymentResult/success'
+      path: '/success'
+      fullPath: '/success'
+      preLoaderRoute: typeof PaymentResultSuccessLazyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_paymentResult/failed': {
+      id: '/_paymentResult/failed'
+      path: '/failed'
+      fullPath: '/failed'
+      preLoaderRoute: typeof PaymentResultFailedLazyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/users': {
@@ -269,13 +315,6 @@ declare module '@tanstack/react-router' {
       path: '/categories/$categoryId'
       fullPath: '/categories/$categoryId'
       preLoaderRoute: typeof CategoriesCategoryIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/cart/$cartcode': {
-      id: '/cart/$cartcode'
-      path: '/cart/$cartcode'
-      fullPath: '/cart/$cartcode'
-      preLoaderRoute: typeof CartCartcodeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_search/search': {
@@ -313,6 +352,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/cart/': {
+      id: '/_authenticated/cart/'
+      path: '/cart'
+      fullPath: '/cart'
+      preLoaderRoute: typeof AuthenticatedCartIndexLazyRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/cart/$cartcode': {
+      id: '/_authenticated/cart/$cartcode'
+      path: '/cart/$cartcode'
+      fullPath: '/cart/$cartcode'
+      preLoaderRoute: typeof AuthenticatedCartCartcodeRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_auth/password-reset/$token': {
       id: '/_auth/password-reset/$token'
       path: '/password-reset/$token'
@@ -327,12 +380,16 @@ interface AuthenticatedRouteChildren {
   AuthenticatedUsers_tanstackRoute: typeof AuthenticatedUsers_tanstackRoute
   AuthenticatedProfileLazyRoute: typeof AuthenticatedProfileLazyRoute
   AuthenticatedUsersLazyRoute: typeof AuthenticatedUsersLazyRoute
+  AuthenticatedCartCartcodeRoute: typeof AuthenticatedCartCartcodeRoute
+  AuthenticatedCartIndexLazyRoute: typeof AuthenticatedCartIndexLazyRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedUsers_tanstackRoute: AuthenticatedUsers_tanstackRoute,
   AuthenticatedProfileLazyRoute: AuthenticatedProfileLazyRoute,
   AuthenticatedUsersLazyRoute: AuthenticatedUsersLazyRoute,
+  AuthenticatedCartCartcodeRoute: AuthenticatedCartCartcodeRoute,
+  AuthenticatedCartIndexLazyRoute: AuthenticatedCartIndexLazyRoute,
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
@@ -346,10 +403,10 @@ const rootRouteChildren: RootRouteChildren = {
   AuthPasswordResetRequestRoute: AuthPasswordResetRequestRoute,
   AuthRegisterRoute: AuthRegisterRoute,
   SearchSearchRoute: SearchSearchRoute,
-  CartCartcodeRoute: CartCartcodeRoute,
   CategoriesCategoryIdRoute: CategoriesCategoryIdRoute,
   ProductsProductSlugRoute: ProductsProductSlugRoute,
-  CartIndexLazyRoute: CartIndexLazyRoute,
+  PaymentResultFailedLazyRoute: PaymentResultFailedLazyRoute,
+  PaymentResultSuccessLazyRoute: PaymentResultSuccessLazyRoute,
   AuthPasswordResetTokenRoute: AuthPasswordResetTokenRoute,
 }
 export const routeTree = rootRouteImport

@@ -1,6 +1,14 @@
 import MiniProductCard from "./MiniProductCard";
+import { type Order } from "@/lib/types.ts";
+import { timeAgo } from "@/lib/utils.ts";
 
-const IndividualOrder = () => {
+interface Props {
+  order: Order;
+}
+
+const IndividualOrder = ({ order }: Props) => {
+  const orderItems = order.items;
+
   return (
     <div
       className="w-full border border-gray-400 bg-card px-4 py-4 rounded-lg
@@ -17,17 +25,20 @@ const IndividualOrder = () => {
         >
           ORDER ID:{" "}
           <span className="text-green-600 font-semibold">
-            PO-147-17039646431273026
+            {order.stripe_checkout_id.slice(0, 22)}
           </span>
         </p>
+        <small className="text-primaryDark text-xs sm:text-sm">
+          {timeAgo(order.created_at)}
+        </small>
       </div>
 
       {/* Order Items */}
       <div className="w-full py-4 flex items-center gap-4 custom-overflow">
-        <MiniProductCard />
-        <MiniProductCard />
-        <MiniProductCard />
-        <MiniProductCard />
+        {orderItems &&
+          orderItems.map((orderItem) => (
+            <MiniProductCard key={orderItem.id} item={orderItem} />
+          ))}
       </div>
     </div>
   );

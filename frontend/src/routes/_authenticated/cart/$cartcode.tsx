@@ -14,7 +14,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import CartItemSkeleton from "@/components/cart/CartItemSkeleton.tsx";
 import CartSummarySkeleton from "@/components/cart/CartSummarySkeleton.tsx";
 
-export const Route = createFileRoute("/cart/$cartcode")({
+export const Route = createFileRoute("/_authenticated/cart/$cartcode")({
   component: CartItemPage,
 
   // loader: async ({ params: { cartcode } }) => {

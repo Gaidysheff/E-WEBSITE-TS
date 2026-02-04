@@ -1,10 +1,18 @@
 import Image from "@/assets/images/product/a_box.png";
+import { type OrderItem } from "@/lib/types.ts";
+import { BASE_URL } from "@/api/api";
+import { NumericFormat } from "react-number-format";
+
 import { Link } from "@tanstack/react-router";
 
-const MiniProductCard = () => {
+interface Props {
+  item: OrderItem;
+}
+
+const MiniProductCard = ({ item }: Props) => {
   return (
     <Link
-      to={"/"}
+      to={`/products/${item?.product?.slug}`}
       className="w-[150px] sm:w-[220px] rounded-lg shadow-md bg-card 
       flex flex-col items-center gap-3 px-4 py-5 transition-all duration-300 
       hover:shadow-lg hover:scale-105 cursor-pointer border border-gray-400"
@@ -14,7 +22,11 @@ const MiniProductCard = () => {
         overflow-hidden"
       >
         <img
-          src={Image}
+          src={
+            item?.product?.image
+              ? `${BASE_URL}${item.product.image}`
+              : `${Image}`
+          }
           className="object-cover w-full h-full"
           width={160}
           height={160}
@@ -27,7 +39,7 @@ const MiniProductCard = () => {
         className="text-center text-xs sm:text-base font-medium
         text-primaryDark"
       >
-        Apple Smart Watch
+        {item?.product?.name}
       </p>
 
       {/* Product Price */}
@@ -35,7 +47,14 @@ const MiniProductCard = () => {
         className="text-xs sm:text-base text-center font-bold 
         text-primaryDark"
       >
-        $ 300.00
+        <NumericFormat
+          value={item?.product?.price}
+          displayType={"text"}
+          thousandSeparator="."
+          decimalSeparator=","
+          prefix={"$ "}
+          // suffix={" ₽"}
+        />
       </p>
     </Link>
   );

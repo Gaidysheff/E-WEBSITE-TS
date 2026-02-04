@@ -32,41 +32,41 @@ function RootComponent() {
   return (
     <React.Fragment>
       <ThemeProvider>
-        <SkeletonTheme baseColor="#abababff" highlightColor="#eaeaeaff">
-          {theme === "light" ? (
-            <ToastContainer
-              position="top-center"
-              theme="dark"
-              // hideProgressBar={true}
-              autoClose={2000}
-              className="text-center"
-            />
-          ) : (
-            <ToastContainer
-              position="top-center"
-              theme="light"
-              // hideProgressBar={true}
-              autoClose={2000}
-              className="text-center"
-            />
-          )}
-          {noNavbar ? (
-            <NoNavbarOutlet location={location} />
-          ) : (
-            // Standard Pages with NavBar and Footer
-            <UserContextProvider>
-              <CategoryContextProvider>
-                <CartContextProvider>
+        <CartContextProvider>
+          <SkeletonTheme baseColor="#abababff" highlightColor="#eaeaeaff">
+            {theme === "light" ? (
+              <ToastContainer
+                position="top-center"
+                theme="dark"
+                // hideProgressBar={true}
+                autoClose={2000}
+                className="text-center"
+              />
+            ) : (
+              <ToastContainer
+                position="top-center"
+                theme="light"
+                // hideProgressBar={true}
+                autoClose={2000}
+                className="text-center"
+              />
+            )}
+            {noNavbar ? (
+              <NoNavbarOutlet location={location} />
+            ) : (
+              // Standard Pages with NavBar and Footer
+              <UserContextProvider>
+                <CategoryContextProvider>
                   <NavBar />
                   <div className="container">
                     <Outlet />
                   </div>
                   <Footer />
-                </CartContextProvider>
-              </CategoryContextProvider>
-            </UserContextProvider>
-          )}
-        </SkeletonTheme>
+                </CategoryContextProvider>
+              </UserContextProvider>
+            )}
+          </SkeletonTheme>
+        </CartContextProvider>
       </ThemeProvider>
     </React.Fragment>
   );

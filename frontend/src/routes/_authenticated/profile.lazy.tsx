@@ -5,10 +5,10 @@ import { createLazyFileRoute } from "@tanstack/react-router";
 import { useUser } from "@/store/UserContext.tsx";
 
 export const Route = createLazyFileRoute("/_authenticated/profile")({
-  component: RouteComponent,
+  component: ProfilePage,
 });
 
-function RouteComponent() {
+function ProfilePage() {
   const user = useUser();
 
   const imgURL = `${BASE_URL}${user?.image}`;
