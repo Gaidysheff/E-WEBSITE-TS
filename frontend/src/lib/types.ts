@@ -116,6 +116,14 @@ export type Order = {
   items: OrderItem[];
 };
 
+// -------- WishList ----------
+export type WishList = {
+  id: string;
+  user: User;
+  product: Product;
+  created: string;
+};
+
 // --------------------- Theme -------------------------
 
 export type ThemeSwitch = "light" | "dark";

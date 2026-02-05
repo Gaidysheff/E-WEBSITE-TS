@@ -12,11 +12,12 @@ import ProductCard from "@/components/sectionProduct/ProductCard";
 import api from "@/api/api.ts";
 import { createFileRoute } from "@tanstack/react-router";
 import { toast } from "react-toastify";
-import {
-  type Category,
-  type Product,
-  type CategoryWithProducts,
-} from "@/lib/types.ts";
+import { type Category, type CategoryWithProducts } from "@/lib/types.ts";
+
+interface LoaderData {
+  selectedCategory: CategoryWithProducts;
+  categories: Category[];
+}
 
 export const Route = createFileRoute("/categories/$categoryId")({
   component: CategoryPage,
@@ -56,10 +57,9 @@ export const Route = createFileRoute("/categories/$categoryId")({
 });
 
 function CategoryPage() {
-  const { selectedCategory, categories } = Route.useLoaderData();
+  const { selectedCategory, categories } = Route.useLoaderData() as LoaderData;
 
-  const products: Product[] = selectedCategory.products;
-  const _categories: Category[] = categories;
+  const products = selectedCategory.products;
 
   return (
     <div className="py-9">
@@ -76,7 +76,7 @@ function CategoryPage() {
         </p>
       </div>
       <div className="flex-center flex-wrap my-6 gap-4">
-        {_categories.map((cat) => (
+        {categories.map((cat) => (
           <CategoryBtn key={cat.id} cat={cat} />
         ))}
       </div>

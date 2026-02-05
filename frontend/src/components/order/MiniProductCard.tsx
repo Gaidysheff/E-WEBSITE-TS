@@ -1,12 +1,13 @@
 import Image from "@/assets/images/product/a_box.png";
-import { type OrderItem } from "@/lib/types.ts";
+import { HeartOff } from "lucide-react";
 import { BASE_URL } from "@/api/api";
 import { NumericFormat } from "react-number-format";
+import { type OrderItem, type WishList } from "@/lib/types.ts";
 
 import { Link } from "@tanstack/react-router";
 
 interface Props {
-  item: OrderItem;
+  item: OrderItem | WishList;
 }
 
 const MiniProductCard = ({ item }: Props) => {

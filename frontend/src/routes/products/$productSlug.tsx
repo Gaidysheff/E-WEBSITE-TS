@@ -3,14 +3,18 @@ import ProductInfo from "@/components/productDetail/ProductInfo";
 import ProductSection from "@/components/sectionProduct/ProductSection";
 import ReviewCardContainer from "@/components/productDetail/ReviewCardContainer";
 import { createFileRoute } from "@tanstack/react-router";
-import { PRODUCT_DETAIL_PAGE_URL } from "@/api/endpoints.ts";
-import api from "@/api/api.ts";
-import { type ProductInDetails, type Product } from "@/lib/types.ts";
 import { toast } from "react-toastify";
 import Error from "@/components/error/Error.tsx";
 import ProductInfoSkeleton from "@/components/productDetail/ProductInfoSkeleton.tsx";
 import ReviewCardContainerSkeleton from "@/components/productDetail/ReviewCardContainerSkeleton.tsx";
 import CustomerReviewsSkeleton from "@/components/productDetail/CustomerReviewsSkeleton.tsx";
+import { type ProductInDetails } from "@/lib/types.ts";
+import { PRODUCT_DETAIL_PAGE_URL } from "@/api/endpoints.ts";
+import api from "@/api/api.ts";
+
+interface LoaderData {
+  product: ProductInDetails;
+}
 
 export const Route = createFileRoute("/products/$productSlug")({
   loader: async ({ params: { productSlug } }) => {
@@ -23,7 +27,7 @@ export const Route = createFileRoute("/products/$productSlug")({
       throw Error();
     }
     return {
-      _product: response.data,
+      product: response.data,
     };
   },
 
@@ -50,12 +54,11 @@ export const Route = createFileRoute("/products/$productSlug")({
 });
 
 function IndividualProductComponent() {
-  const { _product } = Route.useLoaderData();
-  const product: ProductInDetails = _product;
+  const { product } = Route.useLoaderData() as LoaderData;
 
   const reviews = product.reviews;
 
-  const similar_products: Product[] = product.similar_products;
+  const similar_products = product.similar_products;
 
   const isAuthorized = !!localStorage.getItem("Token");
 

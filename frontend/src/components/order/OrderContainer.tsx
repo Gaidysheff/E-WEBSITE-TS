@@ -11,13 +11,13 @@ const OrderContainer = () => {
   const user: UserLoggedIn | undefined = useUser();
   const email = typeof user === "undefined" ? "" : user.email;
 
-  const { data, error, isPending } = useQuery(getOrdersOptions(email));
+  const { data: orders, error, isPending } = useQuery(getOrdersOptions(email));
 
   if (error) {
     toast.error("An unknown error occured");
   }
 
-  if (!data || data.length == 0) {
+  if (!orders || orders.length == 0) {
     return (
       <div className="w-full py-20 px-6 text-center bg-gray-50 rounded-lg">
         <div className="flex flex-col items-center space-y-4">
@@ -42,8 +42,8 @@ const OrderContainer = () => {
       rounded-md bg-card"
     >
       {isPending && <Spinner className="size-30 text-red-500 mx-auto" />}
-      {data &&
-        data.map((order) => <IndividualOrder key={order.id} order={order} />)}
+      {orders &&
+        orders.map((order) => <IndividualOrder key={order.id} order={order} />)}
     </div>
   );
 };
