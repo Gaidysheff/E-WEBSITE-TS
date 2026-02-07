@@ -124,6 +124,20 @@ export type WishList = {
   created: string;
 };
 
+// -------- Address ----------
+export type Address = {
+  id: string;
+  customer: User;
+  street: string;
+  state: string;
+  city: string;
+  phone: string;
+};
+
+export type AddressWithError = Address & {
+  error?: string;
+};
+
 // --------------------- Theme -------------------------
 
 export type ThemeSwitch = "light" | "dark";

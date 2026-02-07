@@ -47,7 +47,12 @@ const ReviewCard = ({ review, user, product }: Props) => {
               />
 
               {/* Pen button to edit review */}
-              <Modal userAlreadyHaveReview={false} updateReviewModal>
+              <Modal
+                userAlreadyHaveReview={false}
+                addressForm={false}
+                updateReviewModal
+                address={null}
+              >
                 <ReviewForm
                   updateReviewForm
                   review={review}

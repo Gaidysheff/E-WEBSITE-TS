@@ -1,8 +1,15 @@
+import AddressForm from "@/components/order/AddressForm.tsx";
 import { BASE_URL } from "@/api/api.ts";
+import Modal from "@/components/uiComponents/Modal.tsx";
 import Orders from "@/components/order/Orders";
+import ShippingInfo from "@/components/profile/ShippingInfo.tsx";
 import Wishlist from "@/components/wishlist/Wishlist";
 import { createLazyFileRoute } from "@tanstack/react-router";
+import getAddressOptions from "@/api/queryOptions/getAddressOptions.ts";
+import { useQuery } from "@tanstack/react-query";
 import { useUser } from "@/store/UserContext.tsx";
+
+// import { Spinner } from "@/components/ui/spinner";
 
 export const Route = createLazyFileRoute("/_authenticated/profile")({
   component: ProfilePage,
@@ -10,14 +17,25 @@ export const Route = createLazyFileRoute("/_authenticated/profile")({
 
 function ProfilePage() {
   const user = useUser();
+  const email = typeof user === "undefined" ? "" : user.email;
 
-  const imgURL = `${BASE_URL}${user?.image}`;
+  const { data: address, isPending } = useQuery(getAddressOptions(email));
 
   return (
     <>
-      {user?.image && (
-        <img src={imgURL} className="w-50 mx-auto" alt="User's image" />
-      )}
+      <ShippingInfo address={address} isPending={isPending} />
+
+      <Modal
+        userAlreadyHaveReview={false}
+        updateReviewModal={false}
+        addressForm
+        address={address}
+      >
+        <AddressForm address={address} />
+      </Modal>
+
+      {/* {isPending && <Spinner className="size-30 text-red-500 mx-auto" />} */}
+
       <Orders />
       <Wishlist />
     </>

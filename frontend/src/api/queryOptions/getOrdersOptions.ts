@@ -17,7 +17,7 @@ const getOrdersAction = async (email: string): Promise<Order[] | null> => {
     // -----------------------------------------------------
     // ВАРИАНТ-1 ASYNC AXIOS
     const response = await api.get(`${ORDER_GET_URL}${email}`);
-    console.log("🚀 ~ getOrdersAction ~ response:", response);
+    // console.log("🚀 ~ getOrdersAction ~ response:", response);
     return response.data;
     // -----------------------------------------------------
     // ВАРИАНТ-1 AXIOS

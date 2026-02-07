@@ -95,6 +95,8 @@ const CustomerReviews = ({ product, isAuthorized, reviews }: Props) => {
             <Modal
               userAlreadyHaveReview={userAlreadyHaveReview}
               updateReviewModal={false}
+              addressForm={false}
+              address={null}
             >
               <ReviewForm
                 product={product}

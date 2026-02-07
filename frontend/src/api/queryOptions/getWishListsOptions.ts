@@ -18,7 +18,7 @@ const getWishListsAction = async (
     // -----------------------------------------------------
     const response = await api.get(`${WISHLISTS_GET_URL}${email}`);
 
-    console.log("🚀 ~ getWishListsAction ~ response:", response);
+    // console.log("🚀 ~ getWishListsAction ~ response:", response);
     return response.data;
   } else {
     return null;

@@ -1,4 +1,5 @@
 import {
+  ADDRESS_ADD_URL,
   CARTITEM_DELETE_URL,
   CARTITEM_UPDATE_QUANTITY_URL,
   CART_ADD_URL,
@@ -13,7 +14,6 @@ import api from "@/api/api.ts";
 import { toast } from "react-toastify";
 
 // import {
-//   ADDRESS_ADD_URL,
 //   CART_DELETE_URL,
 //   CART_GET_URL,
 //   CART_UPDATE_URL,
@@ -31,6 +31,14 @@ type FormSubmitupdateCartItemHandler = (
 type PaymentHandler = (paymentObject: {
   cart_code: string;
   email: string;
+}) => Promise<void>;
+
+type AddressHandler = (addressData: {
+  email: string;
+  street: string;
+  city: string;
+  state: string;
+  phone: string;
 }) => Promise<void>;
 
 // ===================== Add Review =========================
@@ -324,20 +332,28 @@ export const initiatePaymentAction: PaymentHandler = async (paymentObject) => {
 //   }
 // };
 
-// // =================== Add Address ======================
+// =================== Add Address ======================
 
-// export const addAddressAction = async (addressData) => {
-//   // --------------- Fetching delay ----------------------
-//   // await new Promise((resolve) => setTimeout(resolve, 4000));
-//   // -----------------------------------------------------
-//   try {
-//     await api.post(ADDRESS_ADD_URL, addressData).then((response) => {
-//       return response;
-//     });
-//   } catch (error) {
-//     if (error instanceof Error) {
-//       throw new Error(error.message);
-//     }
-//     throw new Error("An unknown error occured");
-//   }
-// };
+export const addAddressAction: AddressHandler = async (addressData) => {
+  // --------------- Fetching delay ----------------------
+  // await new Promise((resolve) => setTimeout(resolve, 4000));
+  // -----------------------------------------------------
+  try {
+    await api.post(ADDRESS_ADD_URL, addressData).then((response) => {
+      // console.log("🚀 ~ addAddressAction ~ response:", response);
+      if (response?.status === 200) {
+        toast.success("Your shipping address has been saved!");
+      } else {
+        toast.error("Something went wrong");
+      }
+      return response;
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      toast.error(error.message);
+      throw new Error(error.message);
+    }
+    toast.error("An unknown error occured");
+    throw new Error("An unknown error occured");
+  }
+};
