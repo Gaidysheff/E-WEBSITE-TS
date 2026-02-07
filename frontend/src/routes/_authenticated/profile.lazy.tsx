@@ -1,5 +1,4 @@
 import AddressForm from "@/components/order/AddressForm.tsx";
-import { BASE_URL } from "@/api/api.ts";
 import Modal from "@/components/uiComponents/Modal.tsx";
 import Orders from "@/components/order/Orders";
 import ShippingInfo from "@/components/profile/ShippingInfo.tsx";

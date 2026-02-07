@@ -1,5 +1,4 @@
 import Image from "@/assets/images/product/a_box.png";
-import { HeartOff } from "lucide-react";
 import { BASE_URL } from "@/api/api";
 import { NumericFormat } from "react-number-format";
 import { type OrderItem, type WishList } from "@/lib/types.ts";
