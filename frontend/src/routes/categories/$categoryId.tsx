@@ -3,25 +3,16 @@ import {
   CATEGORY_LIST_URL,
 } from "@/api/endpoints.ts";
 
-import { BASE_URL } from "@/api/api";
-import CategoryBtn from "@/components/category/CategoryBtn";
 import CategoryPageSkeleton from "@/components/category/CategoryPageSkeleton.tsx";
 import Error from "@/components/error/Error.tsx";
 import Error404notFound from "@/components/error/Error404notFound.tsx";
-import ProductCard from "@/components/sectionProduct/ProductCard";
+
 import api from "@/api/api.ts";
 import { createFileRoute } from "@tanstack/react-router";
 import { toast } from "react-toastify";
 import { type Category, type CategoryWithProducts } from "@/lib/types.ts";
 
-interface LoaderData {
-  selectedCategory: CategoryWithProducts;
-  categories: Category[];
-}
-
 export const Route = createFileRoute("/categories/$categoryId")({
-  component: CategoryPage,
-
   loader: async ({ params: { categoryId } }) => {
     // ---------- Loading Delay ----------
     // await new Promise((resolve) => setTimeout(resolve, 5000));
@@ -55,46 +46,3 @@ export const Route = createFileRoute("/categories/$categoryId")({
     return <Error404notFound />;
   },
 });
-
-function CategoryPage() {
-  const { selectedCategory, categories } = Route.useLoaderData() as LoaderData;
-
-  const products = selectedCategory.products;
-
-  return (
-    <div className="py-9">
-      <div className="flex items-center justify-center ">
-        <img
-          src={`${BASE_URL}${selectedCategory.image}`}
-          width={30}
-          height={30}
-          // className="stroke-blue-500 dark:stroke-gray-200"
-          alt="thumbnail"
-        />
-        <p className="font-semibold text-center pl-3">
-          {selectedCategory.name}
-        </p>
-      </div>
-      <div className="flex-center flex-wrap my-6 gap-4">
-        {categories.map((cat) => (
-          <CategoryBtn key={cat.id} cat={cat} />
-        ))}
-      </div>
-
-      <div className="flex-center flex-wrap my-6 gap-4">
-        {products.length > 0 ? (
-          products.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))
-        ) : (
-          <div
-            className="italic font-semibold text-xl text-red-500 text-center
-            py-10"
-          >
-            Извините, товаров в данной категории не найдено.
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}

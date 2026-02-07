@@ -82,17 +82,23 @@ const ProductsProductSlugRoute = ProductsProductSlugRouteImport.update({
   id: '/products/$productSlug',
   path: '/products/$productSlug',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() =>
+  import('./routes/products/$productSlug.lazy').then((d) => d.Route),
+)
 const CategoriesCategoryIdRoute = CategoriesCategoryIdRouteImport.update({
   id: '/categories/$categoryId',
   path: '/categories/$categoryId',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() =>
+  import('./routes/categories/$categoryId.lazy').then((d) => d.Route),
+)
 const SearchSearchRoute = SearchSearchRouteImport.update({
   id: '/_search/search',
   path: '/search',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() =>
+  import('./routes/_search/search.lazy').then((d) => d.Route),
+)
 const AuthenticatedUsers_tanstackRoute =
   AuthenticatedUsers_tanstackRouteImport.update({
     id: '/users_tanstack',
