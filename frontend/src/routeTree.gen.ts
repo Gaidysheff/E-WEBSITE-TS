@@ -20,7 +20,6 @@ import { Route as AuthenticatedUsers_tanstackRouteImport } from './routes/_authe
 import { Route as AuthRegisterRouteImport } from './routes/_auth/register'
 import { Route as AuthPasswordResetRequestRouteImport } from './routes/_auth/passwordResetRequest'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
-import { Route as AuthenticatedCartCartcodeRouteImport } from './routes/_authenticated/cart/$cartcode'
 import { Route as AuthPasswordResetTokenRouteImport } from './routes/_auth/password-reset/$token'
 
 const PaymentResultSuccessLazyRouteImport = createFileRoute(
@@ -37,6 +36,9 @@ const AuthenticatedProfileLazyRouteImport = createFileRoute(
 )()
 const AuthenticatedCartIndexLazyRouteImport = createFileRoute(
   '/_authenticated/cart/',
+)()
+const AuthenticatedCartCartcodeLazyRouteImport = createFileRoute(
+  '/_authenticated/cart/$cartcode',
 )()
 
 const AuthenticatedRoute = AuthenticatedRouteImport.update({
@@ -131,12 +133,14 @@ const AuthenticatedCartIndexLazyRoute =
   } as any).lazy(() =>
     import('./routes/_authenticated/cart/index.lazy').then((d) => d.Route),
   )
-const AuthenticatedCartCartcodeRoute =
-  AuthenticatedCartCartcodeRouteImport.update({
+const AuthenticatedCartCartcodeLazyRoute =
+  AuthenticatedCartCartcodeLazyRouteImport.update({
     id: '/cart/$cartcode',
     path: '/cart/$cartcode',
     getParentRoute: () => AuthenticatedRoute,
-  } as any)
+  } as any).lazy(() =>
+    import('./routes/_authenticated/cart/$cartcode.lazy').then((d) => d.Route),
+  )
 const AuthPasswordResetTokenRoute = AuthPasswordResetTokenRouteImport.update({
   id: '/_auth/password-reset/$token',
   path: '/password-reset/$token',
@@ -157,7 +161,7 @@ export interface FileRoutesByFullPath {
   '/failed': typeof PaymentResultFailedLazyRoute
   '/success': typeof PaymentResultSuccessLazyRoute
   '/password-reset/$token': typeof AuthPasswordResetTokenRoute
-  '/cart/$cartcode': typeof AuthenticatedCartCartcodeRoute
+  '/cart/$cartcode': typeof AuthenticatedCartCartcodeLazyRoute
   '/cart': typeof AuthenticatedCartIndexLazyRoute
 }
 export interface FileRoutesByTo {
@@ -174,7 +178,7 @@ export interface FileRoutesByTo {
   '/failed': typeof PaymentResultFailedLazyRoute
   '/success': typeof PaymentResultSuccessLazyRoute
   '/password-reset/$token': typeof AuthPasswordResetTokenRoute
-  '/cart/$cartcode': typeof AuthenticatedCartCartcodeRoute
+  '/cart/$cartcode': typeof AuthenticatedCartCartcodeLazyRoute
   '/cart': typeof AuthenticatedCartIndexLazyRoute
 }
 export interface FileRoutesById {
@@ -193,7 +197,7 @@ export interface FileRoutesById {
   '/_paymentResult/failed': typeof PaymentResultFailedLazyRoute
   '/_paymentResult/success': typeof PaymentResultSuccessLazyRoute
   '/_auth/password-reset/$token': typeof AuthPasswordResetTokenRoute
-  '/_authenticated/cart/$cartcode': typeof AuthenticatedCartCartcodeRoute
+  '/_authenticated/cart/$cartcode': typeof AuthenticatedCartCartcodeLazyRoute
   '/_authenticated/cart/': typeof AuthenticatedCartIndexLazyRoute
 }
 export interface FileRouteTypes {
@@ -369,7 +373,7 @@ declare module '@tanstack/react-router' {
       id: '/_authenticated/cart/$cartcode'
       path: '/cart/$cartcode'
       fullPath: '/cart/$cartcode'
-      preLoaderRoute: typeof AuthenticatedCartCartcodeRouteImport
+      preLoaderRoute: typeof AuthenticatedCartCartcodeLazyRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_auth/password-reset/$token': {
@@ -386,7 +390,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedUsers_tanstackRoute: typeof AuthenticatedUsers_tanstackRoute
   AuthenticatedProfileLazyRoute: typeof AuthenticatedProfileLazyRoute
   AuthenticatedUsersLazyRoute: typeof AuthenticatedUsersLazyRoute
-  AuthenticatedCartCartcodeRoute: typeof AuthenticatedCartCartcodeRoute
+  AuthenticatedCartCartcodeLazyRoute: typeof AuthenticatedCartCartcodeLazyRoute
   AuthenticatedCartIndexLazyRoute: typeof AuthenticatedCartIndexLazyRoute
 }
 
@@ -394,7 +398,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedUsers_tanstackRoute: AuthenticatedUsers_tanstackRoute,
   AuthenticatedProfileLazyRoute: AuthenticatedProfileLazyRoute,
   AuthenticatedUsersLazyRoute: AuthenticatedUsersLazyRoute,
-  AuthenticatedCartCartcodeRoute: AuthenticatedCartCartcodeRoute,
+  AuthenticatedCartCartcodeLazyRoute: AuthenticatedCartCartcodeLazyRoute,
   AuthenticatedCartIndexLazyRoute: AuthenticatedCartIndexLazyRoute,
 }
 

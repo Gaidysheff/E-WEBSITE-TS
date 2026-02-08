@@ -9,12 +9,13 @@ import { type Cartitem } from "@/lib/types.ts";
 import api from "@/api/api.ts";
 import { CART_GET_URL } from "@/api/endpoints.ts";
 import { useEffect, useState } from "react";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useNavigate, createLazyFileRoute } from "@tanstack/react-router";
+import { BASE_URL } from "@/api/api";
 
 import CartItemSkeleton from "@/components/cart/CartItemSkeleton.tsx";
 import CartSummarySkeleton from "@/components/cart/CartSummarySkeleton.tsx";
 
-export const Route = createFileRoute("/_authenticated/cart/$cartcode")({
+export const Route = createLazyFileRoute("/_authenticated/cart/$cartcode")({
   component: CartItemPage,
 
   // loader: async ({ params: { cartcode } }) => {
@@ -112,39 +113,56 @@ function CartItemPage() {
   // const cart_total: number = _cart_total;
 
   return (
-    <section className="py-9">
-      <h1 className="font-semibold text-2xl text-primaryDark mb-6">Cart</h1>
-      <div className="flex flex-wrap gap-6 lg:gap-8 justify-between w-full">
-        {/* Cartitem */}
-        <div
-          className="w-[600px] max-lg:w-full border border-primaryDark 
-          shadow-xl rounded-lg bg-white overflow-hidden flex-1"
-        >
-          <div
-            className="max-h-[650px] overflow-y-auto p-2 xsm:p-3 
-            sm:px-6 sm:py-4 bg-card"
-          >
-            {isLoading ? (
-              <CartItemSkeleton cards={2} />
-            ) : cartitems_count > 0 ? (
-              cartItems.map((cartItem) => (
-                <CartItem key={cartItem.id} cartItem={cartItem} />
-              ))
-            ) : (
-              <p className="text-center text-gray-500 py-10">
-                Your cart is empty.
-              </p>
-            )}
-          </div>
-        </div>
+    <>
+      <>
+        {/* <link rel="icon" type="image/svg+xml" href="/shopping-basket.ico" /> */}
+        <link rel="icon" type="image/svg" href="/shopping-basket.svg" />
+        <title>E-Shop | Cart </title>
+        <meta
+          name="description"
+          content="Here you can find all your items you have selected and put in your shopping cart."
+        />
+        <link rel="canonical" href={`${BASE_URL}/cart/${cartcode}`} />
 
-        {/* CartSummary */}
-        {isLoading ? (
-          <CartSummarySkeleton />
-        ) : (
-          <CartSummary total={cartTotal} />
-        )}
-      </div>
-    </section>
+        {/* <meta property="og:title" content="Eshop | OG:Title" />
+        <meta property="og:description" content="This is OG:Description" />
+        <meta property="og:image" content={"${Image}"} />
+        <meta property="og:url" content={`${BASE_URL}/cart`} /> */}
+      </>
+      <section className="py-9">
+        <h1 className="font-semibold text-2xl text-primaryDark mb-6">Cart</h1>
+        <div className="flex flex-wrap gap-6 lg:gap-8 justify-between w-full">
+          {/* Cartitem */}
+          <div
+            className="w-[600px] max-lg:w-full border border-primaryDark 
+            shadow-xl rounded-lg bg-white overflow-hidden flex-1"
+          >
+            <div
+              className="max-h-[650px] overflow-y-auto p-2 xsm:p-3 
+              sm:px-6 sm:py-4 bg-card"
+            >
+              {isLoading ? (
+                <CartItemSkeleton cards={2} />
+              ) : cartitems_count > 0 ? (
+                cartItems.map((cartItem) => (
+                  <CartItem key={cartItem.id} cartItem={cartItem} />
+                ))
+              ) : (
+                <p className="text-center text-gray-500 py-10">
+                  Your cart is empty.
+                </p>
+              )}
+            </div>
+          </div>
+
+          {/* CartSummary */}
+          {isLoading ? (
+            <CartSummarySkeleton />
+          ) : (
+            <CartSummary total={cartTotal} />
+          )}
+        </div>
+      </section>
+    </>
   );
 }

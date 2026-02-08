@@ -3,6 +3,9 @@ import CustomerReviews from "@/components/productDetail/CustomerReviews";
 import ProductInfo from "@/components/productDetail/ProductInfo";
 import ProductSection from "@/components/sectionProduct/ProductSection";
 import ReviewCardContainer from "@/components/productDetail/ReviewCardContainer";
+import usePageSEO from "@/hooks/usePageSEO.ts";
+import { BASE_URL } from "@/api/api";
+import { useRouterState } from "@tanstack/react-router";
 
 import { type ProductInDetails } from "@/lib/types.ts";
 
@@ -23,32 +26,48 @@ function IndividualProductComponent() {
 
   const isAuthorized = !!localStorage.getItem("Token");
 
+  const routerState = useRouterState();
+  const currentPathname = routerState.location.pathname;
+
+  usePageSEO({
+    title: `Eshop | ${product.name}`,
+    description: `This page presents the information about ${product.name}`,
+  });
+
   return (
     <>
-      <ProductInfo product={product} isAuthorized={isAuthorized} />
+      <>
+        <link rel="icon" type="image/svg" href="/gift.svg" />
+        <link rel="canonical" href={`${BASE_URL}${currentPathname}`} />
+        {/* <link rel="canonical" href={`${BASE_URL}/products/${product.slug}`} /> */}
+      </>
 
-      <CustomerReviews
-        product={product}
-        isAuthorized={isAuthorized}
-        reviews={reviews}
-      />
+      <>
+        <ProductInfo product={product} isAuthorized={isAuthorized} />
 
-      {reviews.length > 0 ? (
-        <ReviewCardContainer reviews={reviews} product={product} />
-      ) : (
-        <div className="flex items-center justify-between space-x-4 px-4 pb-10">
-          <h4 className="font-semibold text-primaryDark">
-            Reviews(0) - there no reviews for the time being."{" "}
-          </h4>
-        </div>
-      )}
+        <CustomerReviews
+          product={product}
+          isAuthorized={isAuthorized}
+          reviews={reviews}
+        />
 
-      <ProductSection
-        title="Products from the same category"
-        similar_products={similar_products}
-        detailPage
-        loadingFromDetailPage={false}
-      />
+        {reviews.length > 0 ? (
+          <ReviewCardContainer reviews={reviews} product={product} />
+        ) : (
+          <div className="flex items-center justify-between space-x-4 px-4 pb-10">
+            <h4 className="font-semibold text-primaryDark">
+              Reviews(0) - there no reviews for the time being."{" "}
+            </h4>
+          </div>
+        )}
+
+        <ProductSection
+          title="Products from the same category"
+          similar_products={similar_products}
+          detailPage
+          loadingFromDetailPage={false}
+        />
+      </>
     </>
   );
 }

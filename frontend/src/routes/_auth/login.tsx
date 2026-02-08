@@ -10,6 +10,7 @@ import {
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 
 import type { AnyFieldApi } from "@tanstack/react-form";
+import { BASE_URL } from "@/api/api";
 // import { type User } from "@/lib/types.ts";
 import { Button } from "@/components/ui/button";
 import Google from "@/assets/images/shared/google.png";
@@ -79,96 +80,110 @@ export function Login() {
   // };
 
   return (
-    <section
-      className="mt-10 xsm:mt-0 xsm:h-dvh
-            flex justify-content-center align-items-center"
-    >
-      <Card className="w-[90%] max-w-sm m-auto">
-        <CardHeader>
-          <CardTitle className="text-2xl">Login to your account</CardTitle>
-          <CardDescription>
-            Enter your email below to login to your account
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {/* <form onSubmit={submitHandler}> */}
-          <form
-            onSubmit={(event) => {
-              event.preventDefault();
-              form.handleSubmit();
-            }}
-          >
-            <div className="flex flex-col gap-6">
-              <form.Field
-                name="email"
-                children={(field) => (
-                  <div className="grid gap-2">
-                    <Label htmlFor="email">Email</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="mail@example.com"
-                      value={field.state.value || ""}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      required
-                    />
-                    <FieldInfo field={field} />
-                  </div>
-                )}
-              />
-              <form.Field
-                name="password"
-                children={(field) => (
-                  <div className="grid gap-2">
-                    <div className="flex items-center">
-                      <Label htmlFor="password">Password</Label>
-                      <a
-                        href="/passwordResetRequest"
-                        className="ml-auto inline-block text-sm 
-                            underline-offset-4 hover:underline"
-                      >
-                        Forgot your password?
-                      </a>
+    <>
+      <>
+        <title>E-Shop | Login</title>
+        <meta
+          name="description"
+          content="LOGIN page is for user's authentication inside the application."
+        />
+        <link rel="canonical" href={`${BASE_URL}/login`} />
+      </>
+      <section
+        className="mt-10 xsm:mt-0 xsm:h-dvh
+              flex justify-content-center align-items-center"
+      >
+        <Card className="w-[90%] max-w-sm m-auto">
+          <CardHeader>
+            <CardTitle className="text-2xl">Login to your account</CardTitle>
+            <CardDescription>
+              Enter your email below to login to your account
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {/* <form onSubmit={submitHandler}> */}
+            <form
+              onSubmit={(event) => {
+                event.preventDefault();
+                form.handleSubmit();
+              }}
+            >
+              <div className="flex flex-col gap-6">
+                <form.Field
+                  name="email"
+                  children={(field) => (
+                    <div className="grid gap-2">
+                      <Label htmlFor="email">Email</Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        placeholder="mail@example.com"
+                        value={field.state.value || ""}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        required
+                      />
+                      <FieldInfo field={field} />
                     </div>
-                    <Input
-                      id="password"
-                      type="password"
-                      value={field.state.value}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      required
-                    />
-                    <FieldInfo field={field} />
-                  </div>
-                )}
-              />
-            </div>
-          </form>
-        </CardContent>
-        <CardFooter className="flex-col gap-2">
-          <CardAction className="w-full">
-            <div className="grid grid-cols-2 gap-2 flex items-center">
-              <CardDescription>No account yet?</CardDescription>
-              <Button variant="link" className="justify-self-end">
-                <Link to="/register">Sign Up</Link>
-              </Button>
-            </div>
-          </CardAction>
+                  )}
+                />
+                <form.Field
+                  name="password"
+                  children={(field) => (
+                    <div className="grid gap-2">
+                      <div className="flex items-center">
+                        <Label htmlFor="password">Password</Label>
+                        <a
+                          href="/passwordResetRequest"
+                          className="ml-auto inline-block text-sm 
+                              underline-offset-4 hover:underline"
+                        >
+                          Forgot your password?
+                        </a>
+                      </div>
+                      <Input
+                        id="password"
+                        type="password"
+                        value={field.state.value}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        required
+                      />
+                      <FieldInfo field={field} />
+                    </div>
+                  )}
+                />
+              </div>
+            </form>
+          </CardContent>
+          <CardFooter className="flex-col gap-2">
+            <CardAction className="w-full">
+              <div className="grid grid-cols-2 gap-2 flex items-center">
+                <CardDescription>No account yet?</CardDescription>
+                <Button variant="link" className="justify-self-end">
+                  <Link to="/register">Sign Up</Link>
+                </Button>
+              </div>
+            </CardAction>
 
-          <Button type="submit" className="w-full" onClick={form.handleSubmit}>
-            Login
-          </Button>
-          <Button variant="outline" className="w-full">
-            <img
-              src={Google}
-              alt="Google Icon"
-              width={20}
-              height={20}
-              className="mr-3"
-            />
-            Continue with Google
-          </Button>
-        </CardFooter>
-      </Card>
-    </section>
+            <Button
+              type="submit"
+              className="w-full"
+              onClick={form.handleSubmit}
+            >
+              Login
+            </Button>
+            <Button variant="outline" className="w-full">
+              <img
+                src={Google}
+                alt="Google Icon"
+                width={20}
+                height={20}
+                className="mr-3"
+              />
+              Continue with Google
+            </Button>
+          </CardFooter>
+        </Card>
+      </section>
+    </>
   );
 }
