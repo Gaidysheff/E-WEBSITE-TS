@@ -6,7 +6,6 @@ import ReviewCardContainer from "@/components/productDetail/ReviewCardContainer"
 import usePageSEO from "@/hooks/usePageSEO.ts";
 import { BASE_URL } from "@/api/api";
 import { useRouterState } from "@tanstack/react-router";
-
 import { type ProductInDetails } from "@/lib/types.ts";
 
 interface LoaderData {
@@ -37,9 +36,15 @@ function IndividualProductComponent() {
   return (
     <>
       <>
-        <link rel="icon" type="image/svg" href="/gift.svg" />
+        <link
+          rel="icon"
+          type="image/png"
+          href="/gift-96x96.png"
+          sizes="96x96"
+        />
+        <link rel="icon" type="image/svg+xml" href="/gift.svg" sizes="any2" />
+
         <link rel="canonical" href={`${BASE_URL}${currentPathname}`} />
-        {/* <link rel="canonical" href={`${BASE_URL}/products/${product.slug}`} /> */}
       </>
 
       <>

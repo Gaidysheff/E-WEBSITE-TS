@@ -9,8 +9,13 @@ import { type Cartitem } from "@/lib/types.ts";
 import api from "@/api/api.ts";
 import { CART_GET_URL } from "@/api/endpoints.ts";
 import { useEffect, useState } from "react";
-import { useNavigate, createLazyFileRoute } from "@tanstack/react-router";
+import {
+  useNavigate,
+  useRouterState,
+  createLazyFileRoute,
+} from "@tanstack/react-router";
 import { BASE_URL } from "@/api/api";
+import usePageSEO from "@/hooks/usePageSEO.ts";
 
 import CartItemSkeleton from "@/components/cart/CartItemSkeleton.tsx";
 import CartSummarySkeleton from "@/components/cart/CartSummarySkeleton.tsx";
@@ -67,6 +72,9 @@ export const Route = createLazyFileRoute("/_authenticated/cart/$cartcode")({
 function CartItemPage() {
   const { cartcode } = Route.useParams();
 
+  const routerState = useRouterState();
+  const currentPathname = routerState.location.pathname;
+
   const navigate = useNavigate();
 
   const [cartItems, setCartItems] = useState<Cartitem[]>([]);
@@ -112,17 +120,34 @@ function CartItemPage() {
   // const cartitems: Cartitem[] = _cartitems;
   // const cart_total: number = _cart_total;
 
+  usePageSEO({
+    title: "Eshop | Cart",
+    description:
+      "Here you can find all your items you have selected and put in your shopping cart.",
+  });
+
   return (
     <>
       <>
         {/* <link rel="icon" type="image/svg+xml" href="/shopping-basket.ico" /> */}
-        <link rel="icon" type="image/svg" href="/shopping-basket.svg" />
-        <title>E-Shop | Cart </title>
-        <meta
-          name="description"
-          content="Here you can find all your items you have selected and put in your shopping cart."
+
+        <link
+          rel="icon"
+          type="image/png"
+          href="/gift-96x96.png"
+          sizes="96x96"
         />
-        <link rel="canonical" href={`${BASE_URL}/cart/${cartcode}`} />
+
+        <link
+          rel="icon"
+          type="image/svg+xml"
+          href="/shopping-basket.svg"
+          sizes="any3"
+        />
+
+        <link rel="canonical" href={`${BASE_URL}${currentPathname}`} />
+
+        {/* <link rel="canonical" href={`${BASE_URL}/cart/${cartcode}`} /> */}
 
         {/* <meta property="og:title" content="Eshop | OG:Title" />
         <meta property="og:description" content="This is OG:Description" />

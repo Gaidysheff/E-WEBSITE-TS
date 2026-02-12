@@ -9,7 +9,7 @@ type Props = {
 
 const ProductCard = ({ product }: Props) => {
   return (
-    <Link to={`/products/${product.slug}`} reloadDocument>
+    <Link to={`/products/${product.slug}`} reloadDocument={true}>
       <div
         className="w-[280px] rounded-lg bg-card flex flex-col items-center gap-4
           shadow-2xl dark:drop-shadow-[10px_10px_10px_rgba(255,255,255,0.35)]
