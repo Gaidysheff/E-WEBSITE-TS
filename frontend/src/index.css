@@ -98,12 +98,12 @@
   --color-primaryDark: var(--primaryDark);
   --color-primaryDarker: var(--primaryDarker);
   /* ------------- Custom Red ------------------- */
-  --color-myRedLighter: var(--myRedLighter);
-  --color-myRedLight: var(--myRedLight);
-  --color-myRed: oklch(0.62 0.251 25);
-  /* --color-myRed: oklch(0.537 0.218 25); */
-  --color-myRedDark: var(--myRedDark);
-  --color-myRedDarker: var(--myRedDarker);
+  --color-myMainColorLighter: var(--myMainColorLighter);
+  --color-myMainColorLight: var(--myMainColorLight);
+  --color-myMainColor: oklch(0.62 0.251 25);
+  /* --color-myMainColor: oklch(0.537 0.218 25); */
+  --color-myMainColorDark: var(--myMainColorDark);
+  --color-myMainColorDarker: var(--myMainColorDarker);
   --radius-2xl: calc(var(--radius) + 8px);
   --radius-3xl: calc(var(--radius) + 12px);
   --radius-4xl: calc(var(--radius) + 16px);
@@ -152,11 +152,11 @@ html {
   --color-primaryLight: oklch(0.85 0.046 257.417);
   --color-primaryDark: oklch(0.15 0.046 257.417);
   --color-primaryDarker: oklch(0.05 0.046 257.417);
-  /* ------------- Custom Red ------------------- */
-  --color-myRedLighter: oklch(0.785 0.125 25);
-  --color-myRedLight: oklch(0.703 0.189 25);
-  --color-myRedDark: oklch(0.537 0.218 25);
-  --color-myRedDarker: oklch(0.455 0.184 25);
+  /* ------------- Main Color ------------------- */
+  --color-myMainColorLighter: oklch(0.785 0.125 25);
+  --color-myMainColorLight: oklch(0.703 0.189 25);
+  --color-myMainColorDark: oklch(0.537 0.218 25);
+  --color-myMainColorDarker: oklch(0.455 0.184 25);
 }
 
 .dark {
@@ -198,10 +198,10 @@ html {
   --color-primaryDark: oklch(0.85 0.046 257.417);
   --color-primaryDarker: oklch(0.95 0.046 257.417);
   /* ------------- Custom Red ------------------- */
-  --color-myRedLighter: oklch(0.455 0.184 25);
-  --color-myRedLight: oklch(0.537 0.218 25);
-  --color-myRedDark: oklch(0.703 0.189 25);
-  --color-myRedDarker: oklch(0.785 0.125 25);
+  --color-myMainColorLighter: oklch(0.455 0.184 25);
+  --color-myMainColorLight: oklch(0.537 0.218 25);
+  --color-myMainColorDark: oklch(0.703 0.189 25);
+  --color-myMainColorDarker: oklch(0.785 0.125 25);
 }
 
 @layer base {
@@ -245,10 +245,10 @@ html {
   --color-primaryDark: oklch(0.15 0.046 257.417);
   --color-primaryDarker: oklch(0.05 0.046 257.417);
   /* ------------- Custom Red ------------------- */
-  --color-myRedLighter: oklch(0.785 0.125 25);
-  --color-myRedLight: oklch(0.703 0.189 25);
-  --color-myRedDark: oklch(0.537 0.218 25);
-  --color-myRedDarker: oklch(0.455 0.184 25);
+  --color-myMainColorLighter: oklch(0.785 0.125 25);
+  --color-myMainColorLight: oklch(0.703 0.189 25);
+  --color-myMainColorDark: oklch(0.537 0.218 25);
+  --color-myMainColorDarker: oklch(0.455 0.184 25);
 }
 
 /* ======================================================================= */

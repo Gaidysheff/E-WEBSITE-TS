@@ -22,6 +22,7 @@ import { Route as AuthPasswordResetRequestRouteImport } from './routes/_auth/pas
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
 import { Route as AuthPasswordResetTokenRouteImport } from './routes/_auth/password-reset/$token'
 
+const TestTestLazyRouteImport = createFileRoute('/_test/test')()
 const PaymentResultSuccessLazyRouteImport = createFileRoute(
   '/_paymentResult/success',
 )()
@@ -50,6 +51,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
+const TestTestLazyRoute = TestTestLazyRouteImport.update({
+  id: '/_test/test',
+  path: '/test',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/_test/test.lazy').then((d) => d.Route))
 const PaymentResultSuccessLazyRoute =
   PaymentResultSuccessLazyRouteImport.update({
     id: '/_paymentResult/success',
@@ -160,6 +166,7 @@ export interface FileRoutesByFullPath {
   '/users': typeof AuthenticatedUsersLazyRoute
   '/failed': typeof PaymentResultFailedLazyRoute
   '/success': typeof PaymentResultSuccessLazyRoute
+  '/test': typeof TestTestLazyRoute
   '/password-reset/$token': typeof AuthPasswordResetTokenRoute
   '/cart/$cartcode': typeof AuthenticatedCartCartcodeLazyRoute
   '/cart': typeof AuthenticatedCartIndexLazyRoute
@@ -177,6 +184,7 @@ export interface FileRoutesByTo {
   '/users': typeof AuthenticatedUsersLazyRoute
   '/failed': typeof PaymentResultFailedLazyRoute
   '/success': typeof PaymentResultSuccessLazyRoute
+  '/test': typeof TestTestLazyRoute
   '/password-reset/$token': typeof AuthPasswordResetTokenRoute
   '/cart/$cartcode': typeof AuthenticatedCartCartcodeLazyRoute
   '/cart': typeof AuthenticatedCartIndexLazyRoute
@@ -196,6 +204,7 @@ export interface FileRoutesById {
   '/_authenticated/users': typeof AuthenticatedUsersLazyRoute
   '/_paymentResult/failed': typeof PaymentResultFailedLazyRoute
   '/_paymentResult/success': typeof PaymentResultSuccessLazyRoute
+  '/_test/test': typeof TestTestLazyRoute
   '/_auth/password-reset/$token': typeof AuthPasswordResetTokenRoute
   '/_authenticated/cart/$cartcode': typeof AuthenticatedCartCartcodeLazyRoute
   '/_authenticated/cart/': typeof AuthenticatedCartIndexLazyRoute
@@ -215,6 +224,7 @@ export interface FileRouteTypes {
     | '/users'
     | '/failed'
     | '/success'
+    | '/test'
     | '/password-reset/$token'
     | '/cart/$cartcode'
     | '/cart'
@@ -232,6 +242,7 @@ export interface FileRouteTypes {
     | '/users'
     | '/failed'
     | '/success'
+    | '/test'
     | '/password-reset/$token'
     | '/cart/$cartcode'
     | '/cart'
@@ -250,6 +261,7 @@ export interface FileRouteTypes {
     | '/_authenticated/users'
     | '/_paymentResult/failed'
     | '/_paymentResult/success'
+    | '/_test/test'
     | '/_auth/password-reset/$token'
     | '/_authenticated/cart/$cartcode'
     | '/_authenticated/cart/'
@@ -266,6 +278,7 @@ export interface RootRouteChildren {
   ProductsProductSlugRoute: typeof ProductsProductSlugRoute
   PaymentResultFailedLazyRoute: typeof PaymentResultFailedLazyRoute
   PaymentResultSuccessLazyRoute: typeof PaymentResultSuccessLazyRoute
+  TestTestLazyRoute: typeof TestTestLazyRoute
   AuthPasswordResetTokenRoute: typeof AuthPasswordResetTokenRoute
 }
 
@@ -283,6 +296,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_test/test': {
+      id: '/_test/test'
+      path: '/test'
+      fullPath: '/test'
+      preLoaderRoute: typeof TestTestLazyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_paymentResult/success': {
@@ -417,6 +437,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProductsProductSlugRoute: ProductsProductSlugRoute,
   PaymentResultFailedLazyRoute: PaymentResultFailedLazyRoute,
   PaymentResultSuccessLazyRoute: PaymentResultSuccessLazyRoute,
+  TestTestLazyRoute: TestTestLazyRoute,
   AuthPasswordResetTokenRoute: AuthPasswordResetTokenRoute,
 }
 export const routeTree = rootRouteImport

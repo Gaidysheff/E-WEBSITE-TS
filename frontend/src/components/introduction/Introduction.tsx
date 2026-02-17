@@ -1,4 +1,5 @@
-import Logo from "@/assets/images/shared/Kalika-Sign.svg";
+// import Logo from "@/assets/images/shared/Kalika-Sign.svg";
+
 import LogoSwitch from "./LogoSwitch";
 import { useTheme } from "@/store/ThemeContext";
 
