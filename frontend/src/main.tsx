@@ -10,11 +10,12 @@ import { createRoot } from "react-dom/client";
 const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")!).render(
-  // <StrictMode>
-  <HelmetProvider>
-    <QueryClientProvider client={queryClient}>
-      <App />
-    </QueryClientProvider>
-  </HelmetProvider>,
-  // </StrictMode>,
+  <StrictMode>
+    <HelmetProvider>
+      <QueryClientProvider client={queryClient}>
+        <App />
+      </QueryClientProvider>
+    </HelmetProvider>
+    ,
+  </StrictMode>,
 );

@@ -41,6 +41,9 @@ const AuthenticatedCartIndexLazyRouteImport = createFileRoute(
 const AuthenticatedCartCartcodeLazyRouteImport = createFileRoute(
   '/_authenticated/cart/$cartcode',
 )()
+const AuthenticatedCloudPaymentPaymentLazyRouteImport = createFileRoute(
+  '/_authenticated/_CloudPayment/payment',
+)()
 
 const AuthenticatedRoute = AuthenticatedRouteImport.update({
   id: '/_authenticated',
@@ -147,6 +150,16 @@ const AuthenticatedCartCartcodeLazyRoute =
   } as any).lazy(() =>
     import('./routes/_authenticated/cart/$cartcode.lazy').then((d) => d.Route),
   )
+const AuthenticatedCloudPaymentPaymentLazyRoute =
+  AuthenticatedCloudPaymentPaymentLazyRouteImport.update({
+    id: '/_CloudPayment/payment',
+    path: '/payment',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any).lazy(() =>
+    import('./routes/_authenticated/_CloudPayment/payment.lazy').then(
+      (d) => d.Route,
+    ),
+  )
 const AuthPasswordResetTokenRoute = AuthPasswordResetTokenRouteImport.update({
   id: '/_auth/password-reset/$token',
   path: '/password-reset/$token',
@@ -168,6 +181,7 @@ export interface FileRoutesByFullPath {
   '/success': typeof PaymentResultSuccessLazyRoute
   '/test': typeof TestTestLazyRoute
   '/password-reset/$token': typeof AuthPasswordResetTokenRoute
+  '/payment': typeof AuthenticatedCloudPaymentPaymentLazyRoute
   '/cart/$cartcode': typeof AuthenticatedCartCartcodeLazyRoute
   '/cart': typeof AuthenticatedCartIndexLazyRoute
 }
@@ -186,6 +200,7 @@ export interface FileRoutesByTo {
   '/success': typeof PaymentResultSuccessLazyRoute
   '/test': typeof TestTestLazyRoute
   '/password-reset/$token': typeof AuthPasswordResetTokenRoute
+  '/payment': typeof AuthenticatedCloudPaymentPaymentLazyRoute
   '/cart/$cartcode': typeof AuthenticatedCartCartcodeLazyRoute
   '/cart': typeof AuthenticatedCartIndexLazyRoute
 }
@@ -206,6 +221,7 @@ export interface FileRoutesById {
   '/_paymentResult/success': typeof PaymentResultSuccessLazyRoute
   '/_test/test': typeof TestTestLazyRoute
   '/_auth/password-reset/$token': typeof AuthPasswordResetTokenRoute
+  '/_authenticated/_CloudPayment/payment': typeof AuthenticatedCloudPaymentPaymentLazyRoute
   '/_authenticated/cart/$cartcode': typeof AuthenticatedCartCartcodeLazyRoute
   '/_authenticated/cart/': typeof AuthenticatedCartIndexLazyRoute
 }
@@ -226,6 +242,7 @@ export interface FileRouteTypes {
     | '/success'
     | '/test'
     | '/password-reset/$token'
+    | '/payment'
     | '/cart/$cartcode'
     | '/cart'
   fileRoutesByTo: FileRoutesByTo
@@ -244,6 +261,7 @@ export interface FileRouteTypes {
     | '/success'
     | '/test'
     | '/password-reset/$token'
+    | '/payment'
     | '/cart/$cartcode'
     | '/cart'
   id:
@@ -263,6 +281,7 @@ export interface FileRouteTypes {
     | '/_paymentResult/success'
     | '/_test/test'
     | '/_auth/password-reset/$token'
+    | '/_authenticated/_CloudPayment/payment'
     | '/_authenticated/cart/$cartcode'
     | '/_authenticated/cart/'
   fileRoutesById: FileRoutesById
@@ -396,6 +415,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCartCartcodeLazyRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/_CloudPayment/payment': {
+      id: '/_authenticated/_CloudPayment/payment'
+      path: '/payment'
+      fullPath: '/payment'
+      preLoaderRoute: typeof AuthenticatedCloudPaymentPaymentLazyRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_auth/password-reset/$token': {
       id: '/_auth/password-reset/$token'
       path: '/password-reset/$token'
@@ -410,6 +436,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedUsers_tanstackRoute: typeof AuthenticatedUsers_tanstackRoute
   AuthenticatedProfileLazyRoute: typeof AuthenticatedProfileLazyRoute
   AuthenticatedUsersLazyRoute: typeof AuthenticatedUsersLazyRoute
+  AuthenticatedCloudPaymentPaymentLazyRoute: typeof AuthenticatedCloudPaymentPaymentLazyRoute
   AuthenticatedCartCartcodeLazyRoute: typeof AuthenticatedCartCartcodeLazyRoute
   AuthenticatedCartIndexLazyRoute: typeof AuthenticatedCartIndexLazyRoute
 }
@@ -418,6 +445,8 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedUsers_tanstackRoute: AuthenticatedUsers_tanstackRoute,
   AuthenticatedProfileLazyRoute: AuthenticatedProfileLazyRoute,
   AuthenticatedUsersLazyRoute: AuthenticatedUsersLazyRoute,
+  AuthenticatedCloudPaymentPaymentLazyRoute:
+    AuthenticatedCloudPaymentPaymentLazyRoute,
   AuthenticatedCartCartcodeLazyRoute: AuthenticatedCartCartcodeLazyRoute,
   AuthenticatedCartIndexLazyRoute: AuthenticatedCartIndexLazyRoute,
 }

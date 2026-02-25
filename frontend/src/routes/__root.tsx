@@ -72,11 +72,13 @@ function RootComponent() {
               // Standard Pages with NavBar and Footer
               <UserContextProvider>
                 <CategoryContextProvider>
-                  <NavBar />
-                  <div className="container">
-                    <Outlet />
+                  <div className="h-screen">
+                    <NavBar />
+                    <div className="container min-h-6/10">
+                      <Outlet />
+                    </div>
+                    <Footer />
                   </div>
-                  <Footer />
                 </CategoryContextProvider>
               </UserContextProvider>
             )}

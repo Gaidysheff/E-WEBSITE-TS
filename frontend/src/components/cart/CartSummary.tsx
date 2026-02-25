@@ -4,14 +4,17 @@ import { initiatePaymentAction } from "@/api/actions.ts";
 import { useCart } from "@/store/CartContext.tsx";
 import { useUser } from "@/store/UserContext.tsx";
 import { type UserLoggedIn } from "@/lib/types.ts";
-
+import StripeIcon from "@/components/svgImages/StripeIcon.tsx";
+import CloudPayments from "@/components/svgImages/CloudPaymentsForButton";
 import { useState } from "react";
+import { useNavigate } from "@tanstack/react-router";
 
 interface Props {
   total: number;
 }
 
 const CartSummary = ({ total }: Props) => {
+  const navigate = useNavigate();
   const [initiatePaymentLoader, setInitiatePaymentLoader] =
     useState<boolean>(false);
 
@@ -37,6 +40,10 @@ const CartSummary = ({ total }: Props) => {
     //   setInitiatePaymentLoader(false);
     // };
     // setTimeout(reloadDelay, 7000);
+  };
+
+  const proceedCloudPaymentHandler = () => {
+    navigate({ to: "/payment" });
   };
 
   return (
@@ -115,11 +122,52 @@ const CartSummary = ({ total }: Props) => {
         handleClick={initiatePaymentHandler}
         className="checkout-btn"
       >
-        {isAuthorized
-          ? initiatePaymentLoader
-            ? "Redirecting to Stripe"
-            : "Proceed to Checkout"
-          : "Login to Proceed with Checkout"}
+        {isAuthorized ? (
+          initiatePaymentLoader ? (
+            // ? "Redirecting to Stripe"
+            <div>
+              <div className="inline-flex items-center">
+                <span>Redirecting to</span>
+                <span className="h-[20px] ml-2">
+                  <StripeIcon />
+                </span>
+              </div>
+            </div>
+          ) : (
+            // "Proceed to Checkout"
+            <div className="inline-flex items-center">
+              <span>Proceed with</span>
+              <span className="h-[20px] ml-2">
+                <StripeIcon />
+              </span>
+            </div>
+          )
+        ) : (
+          "Login to Proceed with Checkout"
+        )}
+      </Button>
+      <Button
+        disabled={cartSubTotal < 0.01 || initiatePaymentLoader}
+        handleClick={proceedCloudPaymentHandler}
+        className="checkout-btn"
+      >
+        {initiatePaymentLoader ? (
+          <div>
+            <div className="inline-flex items-center">
+              <span>Redirecting to</span>
+              <span className="h-[20px] ml-2">
+                <CloudPayments />
+              </span>
+            </div>
+          </div>
+        ) : (
+          <div className="inline-flex items-center">
+            <span>Proceed with</span>
+            <span className="h-[20px] ml-2">
+              <CloudPayments />
+            </span>
+          </div>
+        )}
       </Button>
     </div>
   );

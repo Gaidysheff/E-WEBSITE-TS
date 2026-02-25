@@ -160,7 +160,7 @@ function CartItemPage() {
           {/* Cartitem */}
           <div
             className="w-[600px] max-lg:w-full border border-primaryDark 
-            shadow-xl rounded-lg bg-white overflow-hidden flex-1"
+            shadow-xl rounded-lg bg-white dark:bg-black overflow-hidden flex-1"
           >
             <div
               className="max-h-[650px] overflow-y-auto p-2 xsm:p-3 
