@@ -1,10 +1,15 @@
 import React, { useEffect, useRef } from "react";
 
 import AmEx from "@/assets/images/payments/american-express.svg";
+import China_T_Union from "@/assets/images/payments/China_T-union.svg";
 import DinersClub from "@/assets/images/payments/diners-club.svg";
+import Discover from "@/assets/images/payments/Discover.svg";
 import Globe from "@/assets/images/payments/Globe.svg";
+import JCB from "@/assets/images/payments/JCB.svg";
+import Maestro from "@/assets/images/payments/Maestro.svg";
 import Master from "@/assets/images/payments/MasterCardWithFill.svg";
 import Mir from "@/assets/images/payments/mir.svg";
+import RuPay from "@/assets/images/payments/RuPay.svg";
 import UnionPay from "@/assets/images/payments/UnionPay.svg";
 import Visa from "@/assets/images/payments/Visa.svg";
 
@@ -40,18 +45,50 @@ const CardNumber = ({ numberSets, getNumberSet, setCardType }: Props) => {
 
     if (!firstFour) {
       setCardType(Globe);
-    } else if (firstFour.startsWith("4")) {
-      setCardType(Visa);
-    } else if (firstFour.startsWith("5")) {
-      setCardType(Master);
-    } else if (firstFour.startsWith("34") || firstFour.startsWith("37")) {
-      setCardType(AmEx);
-    } else if (firstFour.match(/^3[0689]/)) {
-      setCardType(DinersClub);
     } else if (firstFour.match(/^220[0-4]/)) {
       setCardType(Mir);
+    } else if (firstFour.match(/^3[0689]/)) {
+      setCardType(DinersClub);
+    } else if (firstFour.startsWith("31")) {
+      setCardType(China_T_Union);
+    } else if (firstFour.startsWith("34") || firstFour.startsWith("37")) {
+      setCardType(AmEx);
+    } else if (firstFour.startsWith("35")) {
+      setCardType(JCB);
+    } else if (firstFour.startsWith("4")) {
+      setCardType(Visa);
+    } else if (
+      firstFour.match(/^222[123456789]/) ||
+      firstFour.match(/^2[34567]/) ||
+      firstFour.match(/^5[12345]/)
+    ) {
+      setCardType(Master);
+    } else if (
+      firstFour.startsWith("5018") ||
+      firstFour.startsWith("5020") ||
+      firstFour.startsWith("5038") ||
+      firstFour.startsWith("5893") ||
+      firstFour.startsWith("6304") ||
+      firstFour.startsWith("6759") ||
+      firstFour.startsWith("6761") ||
+      firstFour.startsWith("6762") ||
+      firstFour.startsWith("6763")
+    ) {
+      setCardType(Maestro);
     } else if (firstFour.startsWith("62")) {
       setCardType(UnionPay);
+    } else if (
+      firstFour.startsWith("6011") ||
+      firstFour.match(/^64[456789]/) ||
+      firstFour.startsWith("65")
+    ) {
+      setCardType(Discover);
+    } else if (
+      firstFour.match(/^6[05]/) ||
+      firstFour.match(/^8[12]/) ||
+      firstFour.startsWith("508")
+    ) {
+      setCardType(RuPay);
     } else {
       setCardType(Globe);
     }
