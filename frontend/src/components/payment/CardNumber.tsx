@@ -12,36 +12,21 @@ import Mir from "@/assets/images/payments/mir.svg";
 import RuPay from "@/assets/images/payments/RuPay.svg";
 import UnionPay from "@/assets/images/payments/UnionPay.svg";
 import Visa from "@/assets/images/payments/Visa.svg";
+import { type BankCardSchemaType } from "./BankCard.tsx";
 
 interface Props {
-  numberSets: {
-    firstSet: string;
-    secondSet: string;
-    thirdSet: string;
-    fourthSet: string;
-  };
-  getNumberSet: (field: string, value: string) => void;
-
+  values: BankCardSchemaType; // Используем тип из схемы
+  onFieldChange: (field: keyof BankCardSchemaType, value: string) => void;
   setCardType: (type: string) => void;
 }
 
-const CardNumber = ({ numberSets, getNumberSet, setCardType }: Props) => {
-  // Создаем ссылки для управления фокусом
+const CardNumber = ({ values, onFieldChange, setCardType }: Props) => {
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
-
-  // Массив для удобного рендеринга и управления
-  const fields: string[] = ["firstSet", "secondSet", "thirdSet", "fourthSet"];
-
-  const values = [
-    numberSets.firstSet,
-    numberSets.secondSet,
-    numberSets.thirdSet,
-    numberSets.fourthSet,
-  ];
+  const fields = ["firstSet", "secondSet", "thirdSet", "fourthSet"] as const;
 
   // Эффект смены логотипа реагирует ТОЛЬКО на изменение первых 4 цифр
   useEffect(() => {
-    const firstFour = numberSets.firstSet;
+    const firstFour = values.firstSet;
 
     if (!firstFour) {
       setCardType(Globe);
@@ -92,23 +77,29 @@ const CardNumber = ({ numberSets, getNumberSet, setCardType }: Props) => {
     } else {
       setCardType(Globe);
     }
-  }, [numberSets]);
+  }, [values.firstSet]);
 
   // Обработчик стандартного ввода цифр
-  const handleChange = (e: React.ChangeEvent, index: number) => {
-    // Разрешаем только цифры
-    const value = (e.target as HTMLInputElement).value.replace(/\D/g, "");
-    if (value.length > 4) return; // Страховка от ввода >4 символов
-    getNumberSet(fields[index], value);
-    // Автоматический переход на следующий инпут при вводе 4 цифр
-    if (value.length === 4 && index < 3) {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    index: number,
+  ) => {
+    const val = e.target.value.replace(/\D/g, "").slice(0, 4);
+
+    // Вызываем переданный метод обновления
+    onFieldChange(fields[index], val);
+
+    if (val.length === 4 && index < 3) {
       inputRefs.current[index + 1]?.focus();
     }
   };
 
   // Обработчик клавиш (Удаление и Стрелки)
-  const handleKeyDown = (e: React.KeyboardEvent, index: number) => {
-    const target = e.currentTarget as HTMLInputElement;
+  const handleKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    index: number,
+  ) => {
+    const target = e.currentTarget;
 
     if (e.key === "Backspace" && target.value === "" && index > 0) {
       // Если стерли инпут до конца и жмем бекспейс — прыгаем назад
@@ -143,15 +134,18 @@ const CardNumber = ({ numberSets, getNumberSet, setCardType }: Props) => {
 
     // Разбиваем вставленную строку по 4 символа и рассылаем в стейт
     let lastFilledIndex = 0;
-    for (let i = 0; i < 4; i++) {
+
+    fields.forEach((field, i) => {
       const chunk = pastedData.slice(i * 4, (i + 1) * 4);
       if (chunk) {
-        getNumberSet(fields[i], chunk);
-        lastFilledIndex = i;
+        onFieldChange(field, chunk);
+        lastFilledIndex = i; // Теперь индекс обновится
       }
-    }
+    });
+
     // Фокусируемся на последнем заполненном инпуте
     // (или следующем, если он заполнен полностью)
+
     const focusIndex =
       pastedData.length % 4 === 0 && lastFilledIndex < 3
         ? lastFilledIndex + 1
@@ -165,41 +159,64 @@ const CardNumber = ({ numberSets, getNumberSet, setCardType }: Props) => {
         Card Number
       </legend>
       <label
-        htmlFor="cc-1"
+        // htmlFor="cc-1"
         className="uppercase text-[0.5rem] 2xsm:text-[0.525rem]
           xsm:text-[0.6562rem] sm:text-sm"
       >
         Card Number
       </label>
       <div
-        data-connected-inputs
-        className="flex gap-5 text-myMainColorDarker text-lg"
+        // data-connected-inputs
+        className="flex justify-between items-center text-myMainColorDarker
+        text-lg"
       >
         {/* Рендерим инпуты через .map(), чтобы не дублировать код 4 раза */}
-        {fields.map((field, index) => (
+        <div className="flex gap-2 2xsm:gap-3 xsm:gap-4 sm:gap-5">
+          {fields.map((field, index) => (
+            <input
+              key={field}
+              ref={(el) => {
+                inputRefs.current[index] = el;
+              }}
+              type="tel"
+              inputMode="numeric"
+              maxLength={4}
+              aria-label={`Credit Card ${index + 1} Set Of Digits`}
+              required
+              value={values[field]} // Берем значение из общего объекта
+              onChange={(e) => handleChange(e, index)}
+              onKeyDown={(e) => handleKeyDown(e, index)}
+              onPaste={handlePaste}
+              pattern="[0-9]{4}"
+              className="bg-white font-mono rounded-xs p-1 w-[6ch] sm:w-[5ch]
+              text-[0.5rem] 2xsm:text-[0.525rem] xsm:text-[0.66rem] sm:text-sm
+              h-[1rem] 2xsm:h-[1.2rem] xsm:h-[1.65rem] sm:h-[2.2rem]
+              focus:outline-white focus:outline-1 focus:outline-offset-1
+              2xsm:focus:outline-2 2xsm:focus:outline-offset-2
+              sm:focus:outline-3 sm:focus:outline-offset-3 text-center"
+            />
+          ))}
+        </div>
+        {/* Дополнительный инпут (CVC/Additional) */}
+        <div className="flex mx-auto">
           <input
-            key={field}
-            ref={(el) => {
-              inputRefs.current[index] = el;
-            }}
             type="tel"
             inputMode="numeric"
-            maxLength={4}
-            aria-label={`Credit Card ${index + 1} Set Of Digits`}
-            required
-            value={values[index]}
-            onChange={(e) => handleChange(e, index)}
-            onKeyDown={(e) => handleKeyDown(e, index)}
-            onPaste={handlePaste}
-            pattern="[0-9]{4}"
-            className="bg-white font-mono rounded-xs p-1 w-[6ch] sm:w-[5ch]
-            text-[0.5rem] 2xsm:text-[0.525rem] xsm:text-[0.66rem] sm:text-sm
-            h-[1rem] 2xsm:h-[1.2rem] xsm:h-[1.65rem] sm:h-[2.2rem]
-            focus:outline-white focus:outline-1 focus:outline-offset-1
-            2xsm:focus:outline-2 2xsm:focus:outline-offset-2
-            sm:focus:outline-3 sm:focus:outline-offset-3 text-center"
+            aria-label={"Additional 3 digits"}
+            value={values.additionalSet}
+            onChange={(e) => {
+              const val = e.target.value.replace(/\D/g, "").slice(0, 3);
+              onFieldChange("additionalSet", val);
+            }}
+            pattern="[0-9]{3}"
+            className="bg-gray-400 font-mono rounded-xs p-1 w-[5ch] sm:w-[4ch]
+              text-[0.5rem] 2xsm:text-[0.525rem] xsm:text-[0.66rem] sm:text-sm
+              h-[1rem] 2xsm:h-[1.2rem] xsm:h-[1.65rem] sm:h-[2.2rem]
+              focus:outline-gray-400 focus:outline-1 focus:outline-offset-1
+              2xsm:focus:outline-2 2xsm:focus:outline-offset-2
+              sm:focus:outline-3 sm:focus:outline-offset-3 text-center"
           />
-        ))}
+        </div>
       </div>
     </fieldset>
   );

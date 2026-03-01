@@ -1,14 +1,14 @@
+import { CURRENT_YEAR } from "@/lib/utils.ts";
+import { type BankCardSchemaType } from "./BankCard.tsx";
 interface Props {
   month: string;
   year: string;
-  getMonth: (month: string) => void;
-  getYear: (year: string) => void;
+  onFieldChange: (field: keyof BankCardSchemaType, value: string) => void;
 }
 
-const Expiration = ({ month, year, getMonth, getYear }: Props) => {
-  // 1. Создаем массив годов прямо перед рендером
-  const currentYear = new Date().getFullYear();
-  const dynamicYears = Array.from({ length: 11 }, (_, i) => currentYear + i);
+const Expiration = ({ month, year, onFieldChange }: Props) => {
+  // Создаем массив годов прямо перед рендером
+  const dynamicYears = Array.from({ length: 11 }, (_, i) => CURRENT_YEAR + i);
 
   // (Опционально) Можно так же сгенерировать месяцы,
   // чтобы не писать 12 тегов <option> вручную
@@ -22,7 +22,7 @@ const Expiration = ({ month, year, getMonth, getYear }: Props) => {
         Expiration
       </legend>
       <label
-        htmlFor="expiration-month"
+        // htmlFor="expiration-month"
         className="uppercase text-[0.5rem] 2xsm:text-[0.525rem]
         xsm:text-[0.66rem] sm:text-sm"
       >
@@ -30,11 +30,14 @@ const Expiration = ({ month, year, getMonth, getYear }: Props) => {
       </label>
       <div className="flex gap-1 sm:gap-2">
         <select
-          id="expiration-month"
+          // id="expiration-month"
           aria-label="Expiration Month"
           required
           value={month}
-          onChange={(e) => getMonth(e.target.value)}
+          // onChange={(e) => getMonth(e.target.value)}
+          onChange={(e) => {
+            onFieldChange("month", e.target.value);
+          }}
           className="bg-white rounded-xs text-myMainColorDarker px-1 sm:p-1
           rounded-xs appearance-none text-[0.5rem]
           2xsm:text-[0.525rem] xsm:text-[0.6562rem] sm:text-sm
@@ -55,7 +58,10 @@ const Expiration = ({ month, year, getMonth, getYear }: Props) => {
           aria-label="Expiration Year"
           required
           value={year}
-          onChange={(e) => getYear(e.target.value)}
+          // onChange={(e) => getYear(e.target.value)}
+          onChange={(e) => {
+            onFieldChange("year", e.target.value);
+          }}
           className="bg-white rounded-xs text-myMainColorDarker px-1 sm:p-1
           rounded-xs appearance-none text-[0.5rem]
           2xsm:text-[0.525rem] xsm:text-[0.6562rem] sm:text-sm

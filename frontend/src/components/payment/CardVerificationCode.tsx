@@ -5,14 +5,15 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { type ReactNode } from "react";
+import { type BankCardSchemaType } from "./BankCard.tsx";
 
 interface Props {
   cvc: string;
-  getCvc: (cvc: string) => void;
+  onFieldChange: (field: keyof BankCardSchemaType, value: string) => void;
   error?: ReactNode | null; // Новый пропс для ошибки
 }
 
-const CardVerificationCode = ({ cvc, getCvc, error }: Props) => {
+const CardVerificationCode = ({ cvc, onFieldChange, error }: Props) => {
   return (
     <div
       className="flex flex-col justify-between gap-1 sm:gap-2 absolute 
@@ -33,11 +34,12 @@ const CardVerificationCode = ({ cvc, getCvc, error }: Props) => {
           <TooltipTrigger asChild>
             {/* ИСХОДНЫЙ ИНПУТ */}
             <input
-              type="tel"
+              type="password"
+              inputMode="numeric"
               maxLength={3}
               id="cvc"
               value={cvc}
-              onChange={(e) => getCvc(e.target.value)}
+              onChange={(e) => onFieldChange("cvc", e.target.value)}
               required
               className="bg-white text-myMainColorDarker rounded-xs sm:p-1
               font-mono w-[4ch] mr-2 text-center

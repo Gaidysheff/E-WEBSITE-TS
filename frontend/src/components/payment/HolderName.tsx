@@ -5,14 +5,18 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { type ReactNode } from "react";
+import { type BankCardSchemaType } from "./BankCard.tsx";
 
 interface Props {
   userName: string;
-  getName: (value: string) => void;
+  onFieldChange: (field: keyof BankCardSchemaType, value: string) => void;
+
+  // onFieldChange: (value: string) => void;
+
   error?: ReactNode | null; // Новый пропс для ошибки
 }
 
-const HolderName = ({ userName, getName, error }: Props) => {
+const HolderName = ({ userName, onFieldChange, error }: Props) => {
   return (
     <fieldset className="flex flex-col gap-1 sm:gap-2">
       <label
@@ -31,7 +35,7 @@ const HolderName = ({ userName, getName, error }: Props) => {
               id="card-name"
               type="text"
               value={userName}
-              onChange={(e) => getName(e.target.value)}
+              onChange={(e) => onFieldChange("userName", e.target.value)}
               required
               className="bg-white text-myMainColorDarker rounded-xs p-1
         text-[0.5rem] 2xsm:text-[0.525rem] xsm:text-[0.6562rem] sm:text-sm

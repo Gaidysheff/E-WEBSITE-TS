@@ -1,5 +1,6 @@
 import Globe from "@/assets/images/payments/Globe.svg";
-import { useForm, type AnyFieldApi } from "@tanstack/react-form";
+import { useForm, useStore, type AnyFieldApi } from "@tanstack/react-form";
+// import { useStore } from "@tanstack/react-form";
 import { z } from "zod";
 import CardLogo from "./CardLogo.tsx";
 import CardNumber from "./CardNumber.tsx";
@@ -8,43 +9,45 @@ import Expiration from "./Expiration.tsx";
 import HolderName from "./HolderName.tsx";
 import Button from "@/components/uiComponents/Button";
 // import { useNavigate } from "@tanstack/react-router";
-import { useState, type FormEvent, type ReactNode } from "react";
+import { useState, useRef, type FormEvent, type ReactNode } from "react";
+
+import { CURRENT_YEAR } from "@/lib/utils.ts";
 
 interface FormProps {
   onSubmitData: (data: Record<string, string>) => void;
 }
 
 const bankCardSchema = z.object({
-  name: z
+  userName: z
     .string()
     .min(1, { message: "Name is required" })
     // Ensures the input is a string and not empty
     .min(2, { message: "Name must be at least 2 characters" })
     // Ensures minimum length
-    .regex(/^[a-zA-Z]+$/, "String must contain only letters (a-z, A-Z)"),
+    .regex(/^[a-zA-Z\s]+$/, "String must contain only letters (a-z, A-Z)"),
   // Ensures Latin letters
   cvc: z
     .string()
     .regex(/^\d+$/, { message: "cvc must contain only digits" })
     .max(3, { message: "cvc must be not more that 3 digits" }),
+  month: z.string(),
+  year: z.string(),
+  firstSet: z.string(),
+  secondSet: z.string(),
+  thirdSet: z.string(),
+  fourthSet: z.string(),
+  additionalSet: z.string(),
 });
 
 // Optional: Infer the TypeScript type from the schema for full type safety
-type BankCardSchemaType = z.infer<typeof bankCardSchema>;
+export type BankCardSchemaType = z.infer<typeof bankCardSchema>;
 
 function getFieldError(field: AnyFieldApi): ReactNode {
   const errors = field.state.meta.errors;
 
   if (errors.length === 0 || !field.state.meta.isTouched) return null;
+
   // Безопасно достаем текст ошибки
-
-  // return (
-  //   errors
-  //     .map((err) => (typeof err === "string" ? err : err?.message || ""))
-  //     // .join("\n");
-  //     .join(", ")
-  // );
-
   return (
     <ul className="">
       {errors.map((err, index) => (
@@ -61,12 +64,18 @@ const BankCard = ({ onSubmitData }: FormProps) => {
 
   const bankCardForm = useForm({
     defaultValues: {
-      name: "",
+      userName: "",
       cvc: "",
-    } as BankCardSchemaType,
+      month: "1",
+      year: CURRENT_YEAR,
+      firstSet: "",
+      secondSet: "",
+      thirdSet: "",
+      fourthSet: "",
+      additionalSet: "",
+    },
 
     validators: {
-      // onChange: bankCardSchema,
       onChangeAsync: bankCardSchema,
       onChangeAsyncDebounceMs: 500,
     },
@@ -79,38 +88,32 @@ const BankCard = ({ onSubmitData }: FormProps) => {
     },
   });
 
+  // Подписываемся на значения через useStore
+  const formValues = useStore(bankCardForm.store, (state) => state.values);
+
   const [cardType, setCardType] = useState(Globe);
 
-  const currentYear = String(new Date().getFullYear());
-
-  // Собираем все значения в единый объект
-  const [formData, setFormData] = useState({
-    userName: "",
-    cvc: "",
-    month: "1",
-    year: currentYear,
-    firstSet: "",
-    secondSet: "",
-    thirdSet: "",
-    fourthSet: "",
-  });
-
-  // Универсальная функция для обновления любого поля
-  const fieldChangeHandler = (field: string, value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
+  const updateField = (field: keyof BankCardSchemaType, value: string) => {
+    bankCardForm.setFieldValue(field, value);
+    bankCardForm.setFieldMeta(field, (prev) => ({ ...prev, isTouched: true }));
   };
+
+  // const canSubmit = useStore(bankCardForm.store, (state) => state.canSubmit);
+  // const isDirty = useStore(bankCardForm.store, (state) => state.isDirty);
 
   const submitHandler = (event: FormEvent) => {
     event.preventDefault();
     // Передаём собранный набор данных в верхний компонент
-    onSubmitData(formData);
+    const currentValues = bankCardForm.state.values;
+    onSubmitData(currentValues);
     bankCardForm.handleSubmit();
   };
 
-  const isAllFilled = Object.values(formData).every(Boolean);
+  // Если все же нужна кастомная проверка всех полей кроме одного:
+  const isAllFilled = useStore(bankCardForm.store, (state) => {
+    const { additionalSet, ...rest } = state.values;
+    return Object.values(rest).every(Boolean);
+  });
 
   return (
     <div>
@@ -132,32 +135,30 @@ const BankCard = ({ onSubmitData }: FormProps) => {
           <CardLogo cardType={cardType} />
 
           <CardNumber
-            numberSets={formData}
-            getNumberSet={fieldChangeHandler}
             setCardType={setCardType}
+            // Передаем "живые" значения из стора
+            values={formValues}
+            // Передаем метод обновления напрямую
+            onFieldChange={updateField}
           />
 
           <div className="flex justify-between gap-2">
             <bankCardForm.Field
-              name="name"
+              name="userName"
               children={(field) => (
                 <HolderName
-                  userName={formData.userName}
-                  // userName={formData.userName}
-                  getName={(value) => {
-                    fieldChangeHandler("userName", value); // Обновляет поле ввода
-                    field.handleChange(value); // ТРИГГЕР ВАЛИДАЦИИ ФОРМЫ!
-                  }}
+                  userName={formValues.userName}
+                  onFieldChange={updateField}
                   error={getFieldError(field)} // Передаем ошибку вниз
                 />
               )}
             />
 
             <Expiration
-              month={formData.month}
-              year={formData.year}
-              getMonth={(value) => fieldChangeHandler("month", value)}
-              getYear={(value) => fieldChangeHandler("year", value)}
+              month={formValues.month}
+              year={formValues.year}
+              // Передаем метод обновления напрямую
+              onFieldChange={updateField}
             />
           </div>
         </div>
@@ -179,11 +180,8 @@ const BankCard = ({ onSubmitData }: FormProps) => {
             name="cvc"
             children={(field) => (
               <CardVerificationCode
-                cvc={formData.cvc}
-                getCvc={(value) => {
-                  fieldChangeHandler("cvc", value); // Обновляет поле ввода
-                  field.handleChange(value); // ТРИГГЕР ВАЛИДАЦИИ ФОРМЫ!
-                }}
+                cvc={formValues.cvc}
+                onFieldChange={updateField}
                 error={getFieldError(field)} // Передаем ошибку вниз
               />
             )}
