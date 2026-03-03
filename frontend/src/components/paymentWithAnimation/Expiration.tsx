@@ -1,5 +1,5 @@
 import { CURRENT_YEAR } from "@/lib/utils.ts";
-import { type BankCardSchemaType } from "./BankCard.tsx";
+import { type BankCardSchemaType } from "./BankCardWithAnimation.tsx";
 import { type RefObject } from "react";
 
 interface Props {
@@ -47,11 +47,9 @@ const Expiration = ({
           required
           value={month}
           ref={monthRef} // Привязываем реф из родителя
+          // onChange={(e) => getMonth(e.target.value)}
           onChange={(e) => {
             onFieldChange("month", e.target.value);
-
-            // Как только выбрали месяц — прыгаем на год
-            yearRef.current?.focus();
           }}
           className="bg-white rounded-xs text-myMainColorDarker px-1 sm:p-1
           rounded-xs appearance-none text-[0.5rem]
@@ -74,11 +72,9 @@ const Expiration = ({
           required
           value={year}
           ref={yearRef}
+          // onChange={(e) => getYear(e.target.value)}
           onChange={(e) => {
             onFieldChange("year", e.target.value);
-
-            // Как только выбрали год — прыгаем на CVC
-            nextRef.current?.focus();
           }}
           className="bg-white rounded-xs text-myMainColorDarker px-1 sm:p-1
           rounded-xs appearance-none text-[0.5rem]

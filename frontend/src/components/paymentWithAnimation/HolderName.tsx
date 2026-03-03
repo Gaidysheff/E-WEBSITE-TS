@@ -4,7 +4,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { type BankCardSchemaType } from "./BankCard.tsx";
+import { type BankCardSchemaType } from "./BankCardWithAnimation.tsx";
 import { type ReactNode, type RefObject } from "react";
 
 interface Props {
@@ -35,14 +35,13 @@ const HolderName = ({
         {/* Открываем тултип, только если есть текст ошибки */}
         <Tooltip open={!!error}>
           <TooltipTrigger asChild>
+            {/* ИСХОДНЫЙ ИНПУТ */}
             <input
               id="card-name"
               type="text"
               value={userName}
               ref={inputRef} // Привязываем реф из родителя
-              onChange={(e) =>
-                onFieldChange("userName", e.target.value.toUpperCase())
-              }
+              onChange={(e) => onFieldChange("userName", e.target.value)}
               required
               className="bg-white text-myMainColorDarker rounded-xs p-1
         text-[0.5rem] 2xsm:text-[0.525rem] xsm:text-[0.6562rem] sm:text-sm

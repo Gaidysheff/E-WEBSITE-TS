@@ -24,19 +24,24 @@ const bankCardSchema = z.object({
     // Ensures the input is a string and not empty
     .min(2, { message: "Name must be at least 2 characters" })
     // Ensures minimum length
-    .regex(/^[a-zA-Z\s]+$/, "String must contain only letters (a-z, A-Z)"),
+    .regex(/^[a-zA-Z\s]+$/, "Only latin letters"),
   // Ensures Latin letters
   cvc: z
     .string()
     .regex(/^\d+$/, { message: "cvc must contain only digits" })
-    .max(3, { message: "cvc must be not more that 3 digits" }),
-  month: z.string(),
-  year: z.string(),
-  firstSet: z.string(),
-  secondSet: z.string(),
-  thirdSet: z.string(),
-  fourthSet: z.string(),
-  additionalSet: z.string(),
+    .length(3, "CVC must be 3 digits"), // Ровно 3
+  month: z.string().min(1),
+  year: z.string().min(4),
+  // Для каждого блока карты требуем ровно 4 цифры
+  firstSet: z.string().min(1).length(4, "4 digits required"),
+  secondSet: z.string().min(1).length(4, "4 digits required"),
+  thirdSet: z.string().min(1).length(4, "4 digits required"),
+  fourthSet: z.string().min(1).length(4, "4 digits required"),
+  additionalSet: z
+    .string()
+    .refine((val) => val.length === 0 || val.length === 3, {
+      message: "Must be 3 digits if used",
+    }), // А это поле может быть пустым (для 16 цифр) или иметь 3 цифры (для 19)
 });
 
 // Optional: Infer the TypeScript type from the schema for full type safety
@@ -49,7 +54,10 @@ function getFieldError(field: AnyFieldApi): ReactNode {
 
   // Безопасно достаем текст ошибки
   return (
-    <ul className="">
+    <ul
+      className="text-[0.5rem] 2xsm:text-[0.7rem] xsm:text-[0.9rem]
+      sm:text-[1.1rem]"
+    >
       {errors.map((err, index) => (
         <li key={index}>
           {typeof err === "string" ? err : err?.message || ""}
@@ -67,7 +75,7 @@ const BankCard = ({ onSubmitData }: FormProps) => {
       userName: "",
       cvc: "",
       month: "1",
-      year: CURRENT_YEAR,
+      year: String(CURRENT_YEAR),
       firstSet: "",
       secondSet: "",
       thirdSet: "",
@@ -76,8 +84,12 @@ const BankCard = ({ onSubmitData }: FormProps) => {
     },
 
     validators: {
-      onChangeAsync: bankCardSchema,
-      onChangeAsyncDebounceMs: 500,
+      onChange: bankCardSchema,
+      // onChangeAsync: bankCardSchema,
+      // onChangeAsyncDebounceMs: 500,
+
+      // ВАЖНО: валидируем схему при монтировании компонента
+      onMount: bankCardSchema,
     },
 
     onSubmit: async ({ value }) => {
@@ -91,15 +103,38 @@ const BankCard = ({ onSubmitData }: FormProps) => {
   // Подписываемся на значения через useStore
   const formValues = useStore(bankCardForm.store, (state) => state.values);
 
-  const [cardType, setCardType] = useState(Globe);
+  // Создаем "пульты управления" для каждого смыслового блока
+  const firstSetRef = useRef<HTMLInputElement>(null);
+  const secondSetRef = useRef<HTMLInputElement>(null);
+  const thirdSetRef = useRef<HTMLInputElement>(null);
+  const fourthSetRef = useRef<HTMLInputElement>(null);
+  const userNameRef = useRef<HTMLInputElement>(null);
+  const monthRef = useRef<HTMLSelectElement>(null);
+  const yearRef = useRef<HTMLSelectElement>(null);
+  const cvcRef = useRef<HTMLInputElement>(null);
+
+  // Стейт для анимации переворота
+  // const [isFlipped, setIsFlipped] = useState(false);
+
+  const [cardType, setCardType] = useState<string>(Globe);
 
   const updateField = (field: keyof BankCardSchemaType, value: string) => {
+    // 1. Обновляем значение.
     bankCardForm.setFieldValue(field, value);
+    // 2. Явно помечаем поле как "тронутое" и вызываем валидацию всей формы
     bankCardForm.setFieldMeta(field, (prev) => ({ ...prev, isTouched: true }));
+    // 3. ПРИНУДИТЕЛЬНЫЙ ВЫЗОВ ВАЛИДАЦИИ (Секрет мгновенной активации кнопки)
+    // Это заставит canSubmit обновиться сразу после ввода последней цифры
+    bankCardForm.validate("change");
   };
 
-  // const canSubmit = useStore(bankCardForm.store, (state) => state.canSubmit);
-  // const isDirty = useStore(bankCardForm.store, (state) => state.isDirty);
+  // Подписываемся на встроенные переменные через useStore
+  const isValidating = useStore(bankCardForm.store, (s) => s.isValidating);
+  const canSubmit = useStore(bankCardForm.store, (state) => state.canSubmit);
+  const isDirty = useStore(bankCardForm.store, (state) => state.isDirty);
+
+  // Итоговое условие активации кнопки:
+  const isButtonDisabled = !isDirty || !canSubmit || isValidating;
 
   const submitHandler = (event: FormEvent) => {
     event.preventDefault();
@@ -110,14 +145,18 @@ const BankCard = ({ onSubmitData }: FormProps) => {
   };
 
   // Если все же нужна кастомная проверка всех полей кроме одного:
-  const isAllFilled = useStore(bankCardForm.store, (state) => {
-    const { additionalSet, ...rest } = state.values;
-    return Object.values(rest).every(Boolean);
-  });
+  // const isAllFilled = useStore(bankCardForm.store, (state) => {
+  //   const { additionalSet, ...rest } = state.values;
+  //   return Object.values(rest).every(Boolean);
+  // });
 
   return (
     <div>
-      <form className="text-white relative" onSubmit={submitHandler}>
+      <form
+        className="text-white relative"
+        onSubmit={submitHandler}
+        autoComplete="off"
+      >
         {/* --------- Front side of the card --------- */}
         <div
           className="bg-myMainColorDark border-2 border-myMainColorDarker
@@ -135,6 +174,10 @@ const BankCard = ({ onSubmitData }: FormProps) => {
           <CardLogo cardType={cardType} />
 
           <CardNumber
+            // Передаем массив рефов для внутренней навигации (1-4 блоки)
+            inputRefs={[firstSetRef, secondSetRef, thirdSetRef, fourthSetRef]}
+            // Ссылка на следующий элемент ПОСЛЕ номера карты
+            nextRef={userNameRef}
             setCardType={setCardType}
             // Передаем "живые" значения из стора
             values={formValues}
@@ -147,6 +190,8 @@ const BankCard = ({ onSubmitData }: FormProps) => {
               name="userName"
               children={(field) => (
                 <HolderName
+                  inputRef={userNameRef} // Передаем реф конкретно этому полю
+                  nextRef={monthRef} // После имени идем на месяц
                   userName={formValues.userName}
                   onFieldChange={updateField}
                   error={getFieldError(field)} // Передаем ошибку вниз
@@ -155,6 +200,9 @@ const BankCard = ({ onSubmitData }: FormProps) => {
             />
 
             <Expiration
+              monthRef={monthRef}
+              yearRef={yearRef}
+              nextRef={cvcRef} // После года идем на CVC (на оборот)
               month={formValues.month}
               year={formValues.year}
               // Передаем метод обновления напрямую
@@ -180,6 +228,7 @@ const BankCard = ({ onSubmitData }: FormProps) => {
             name="cvc"
             children={(field) => (
               <CardVerificationCode
+                inputRef={cvcRef}
                 cvc={formValues.cvc}
                 onFieldChange={updateField}
                 error={getFieldError(field)} // Передаем ошибку вниз
@@ -192,7 +241,8 @@ const BankCard = ({ onSubmitData }: FormProps) => {
         -mr-[2rem] 2xsm:-mr-[2.4rem] xsm:-mr-[3rem] sm:-mr-[4rem]"
         >
           <Button
-            disabled={!isAllFilled}
+            // disabled={!canSubmit}
+            disabled={isButtonDisabled}
             handleClick={submitHandler}
             className="checkout-btn"
           >

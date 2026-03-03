@@ -1,4 +1,5 @@
-import BankCard from "@/components/payment/BankCard.tsx";
+import BankCard from "@/components/payment/BankCard";
+import BankCardWithAnimation from "@/components/paymentWithAnimation/BankCardWithAnimation";
 import CloudPayments from "@/components/svgImages/CloudPayments";
 import { createLazyFileRoute } from "@tanstack/react-router";
 
@@ -10,10 +11,28 @@ export const Route = createLazyFileRoute(
 
 function Payment() {
   const CardDataHandler = (CardData: Record<string, string>) => {
-    const cardNumber = `${CardData.firstSet}${CardData.secondSet}${CardData.thirdSet}${CardData.fourthSet}`;
+    // 1. Массив и join (Самый чистый способ)
+    const cardNumber = [
+      CardData.firstSet,
+      CardData.secondSet,
+      CardData.thirdSet,
+      CardData.fourthSet,
+      CardData.additionalSet,
+    ].join(""); // Склеит всё в одну строку без пробелов
+
+    // 2. Деструктуризация (Если нужно исключить лишнее)
+    const { userName, month, year, cvc, ...numberSets } = CardData;
+    // numberSets теперь содержит только firstSet, secondSet и т.д.
+
+    const cardNumber2 = Object.values(numberSets).join("");
+
+    // 3. Простое склеивание
+    const cardNumber3 = `${CardData.firstSet}${CardData.secondSet}${CardData.thirdSet}${CardData.fourthSet}${CardData.additionalSet}`;
 
     console.log("🚀 ~ CardDataHandler ~ cardNumber:", cardNumber);
     console.log("🚀 ~ CardDataHandler ~ CardData:", CardData);
+    console.log("🚀 ~ CardDataHandler ~ cardNumber2:", cardNumber2);
+    console.log("🚀 ~ CardDataHandler ~ cardNumber3:", cardNumber3);
   };
 
   return (
@@ -33,6 +52,9 @@ function Payment() {
       </div>
       <div className="my-10 sm:my-20">
         <BankCard onSubmitData={CardDataHandler} />
+      </div>
+      <div className="my-10 sm:my-20">
+        <BankCardWithAnimation onSubmitData={CardDataHandler} />
       </div>
     </div>
   );

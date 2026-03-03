@@ -1,4 +1,4 @@
-import React, { useEffect, useState, type RefObject } from "react";
+import React, { useEffect, useRef, type RefObject } from "react";
 import {
   Tooltip,
   TooltipContent,
@@ -17,7 +17,7 @@ import Mir from "@/assets/images/payments/mir.svg";
 import RuPay from "@/assets/images/payments/RuPay.svg";
 import UnionPay from "@/assets/images/payments/UnionPay.svg";
 import Visa from "@/assets/images/payments/Visa.svg";
-import { type BankCardSchemaType } from "./BankCard.tsx";
+import { type BankCardSchemaType } from "./BankCardWithAnimation.tsx";
 
 interface Props {
   values: BankCardSchemaType; // Используем тип из схемы
@@ -37,8 +37,6 @@ const CardNumber = ({
   // const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   const fields = ["firstSet", "secondSet", "thirdSet", "fourthSet"] as const;
-
-  const [isTooltipOpen, setIsTooltipOpen] = useState<boolean>(false);
 
   // Эффект смены логотипа реагирует ТОЛЬКО на изменение первых 4 цифр
   useEffect(() => {
@@ -223,53 +221,58 @@ const CardNumber = ({
           ))}
         </div>
         {/* Дополнительный инпут (CVC/Additional) */}
-        <div className="flex mx-auto">
-          <Tooltip
-            open={isTooltipOpen} // Теперь мы сами решаем, когда его показывать
-            onOpenChange={setIsTooltipOpen}
-          >
-            <TooltipTrigger asChild>
-              <div>
-                <input
-                  type="tel"
-                  inputMode="numeric"
-                  aria-label={"Additional 3 digits"}
-                  value={values.additionalSet}
-                  onFocus={() => setIsTooltipOpen(true)}
-                  // Открываем при клике/фокусе
-                  onBlur={() => setIsTooltipOpen(false)}
-                  // Закрываем при уходе
-                  onMouseEnter={() => setIsTooltipOpen(true)}
-                  // Оставляем hover для десктопа
-                  onMouseLeave={() => setIsTooltipOpen(false)}
-                  onChange={(e) => {
-                    const val = e.target.value.replace(/\D/g, "").slice(0, 3);
-                    onFieldChange("additionalSet", val);
 
-                    // Если нужно, чтобы при наборе текста тултип исчезал:
-                    if (val.length > 0) setIsTooltipOpen(false);
-                  }}
-                  pattern="[0-9]{3}"
-                  className="bg-gray-400 font-mono rounded-xs p-1 w-[5ch] sm:w-[4ch]
-                    text-[0.5rem] 2xsm:text-[0.525rem] xsm:text-[0.66rem] sm:text-sm
-                    h-[1rem] 2xsm:h-[1.2rem] xsm:h-[1.65rem] sm:h-[2.2rem]
-                    focus:outline-gray-400 focus:outline-1 focus:outline-offset-1
-                    2xsm:focus:outline-2 2xsm:focus:outline-offset-2
-                    sm:focus:outline-3 sm:focus:outline-offset-3 text-center"
-                />
-              </div>
-            </TooltipTrigger>
-            <TooltipContent
-              side="top"
-              avoidCollisions={true}
-              // boundary={document.body}
-              className="text-[0.5rem] 2xsm:text-[0.7rem] xsm:text-[0.9rem]
-              sm:text-[1.1rem]"
-            >
-              <p>If your card number has 19 digits,</p>
-              <p>please, enter additional 3 digits over here.</p>
-            </TooltipContent>
-          </Tooltip>
+        <div className="flex mx-auto">
+          {/* =================================================== */}
+          <TooltipProvider>
+            <Tooltip disableHoverableContent={false} open={true}>
+              <TooltipTrigger asChild>
+                <span>
+                  <input
+                    type="tel"
+                    inputMode="numeric"
+                    aria-label={"Additional 3 digits"}
+                    value={values.additionalSet}
+                    onChange={(e) => {
+                      const val = e.target.value.replace(/\D/g, "").slice(0, 3);
+                      onFieldChange("additionalSet", val);
+                    }}
+                    pattern="[0-9]{3}"
+                    className="bg-gray-400 font-mono rounded-xs p-1 w-[5ch] sm:w-[4ch]
+                  text-[0.5rem] 2xsm:text-[0.525rem] xsm:text-[0.66rem] sm:text-sm
+                  h-[1rem] 2xsm:h-[1.2rem] xsm:h-[1.65rem] sm:h-[2.2rem]
+                  focus:outline-gray-400 focus:outline-1 focus:outline-offset-1
+                  2xsm:focus:outline-2 2xsm:focus:outline-offset-2
+                  sm:focus:outline-3 sm:focus:outline-offset-3 text-center"
+                  />
+                </span>
+              </TooltipTrigger>
+              <TooltipContent side="top">
+                <p>
+                  If your card number has 19 digits, please, enter additional 3
+                  digits over here.
+                </p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+          {/* =================================================== */}
+          <input
+            type="tel"
+            inputMode="numeric"
+            aria-label={"Additional 3 digits"}
+            value={values.additionalSet}
+            onChange={(e) => {
+              const val = e.target.value.replace(/\D/g, "").slice(0, 3);
+              onFieldChange("additionalSet", val);
+            }}
+            pattern="[0-9]{3}"
+            className="bg-gray-400 font-mono rounded-xs p-1 w-[5ch] sm:w-[4ch]
+                  text-[0.5rem] 2xsm:text-[0.525rem] xsm:text-[0.66rem] sm:text-sm
+                  h-[1rem] 2xsm:h-[1.2rem] xsm:h-[1.65rem] sm:h-[2.2rem]
+                  focus:outline-gray-400 focus:outline-1 focus:outline-offset-1
+                  2xsm:focus:outline-2 2xsm:focus:outline-offset-2
+                  sm:focus:outline-3 sm:focus:outline-offset-3 text-center"
+          />
         </div>
       </div>
     </fieldset>

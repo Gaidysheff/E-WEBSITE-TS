@@ -39,4 +39,4 @@ export function generateRandomString(length = 10) {
   return result;
 }
 
-export const CURRENT_YEAR = String(new Date().getFullYear());
+export const CURRENT_YEAR = new Date().getFullYear();

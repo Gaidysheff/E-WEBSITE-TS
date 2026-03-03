@@ -4,13 +4,15 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { type BankCardSchemaType } from "./BankCard.tsx";
-import { type ReactNode, type RefObject } from "react";
+import { type BankCardSchemaType } from "./BankCardWithAnimation.tsx";
+import { type ReactNode, type RefObject, type SetStateAction } from "react";
 
 interface Props {
   cvc: string;
   inputRef: RefObject<HTMLInputElement | null>;
   onFieldChange: (field: keyof BankCardSchemaType, value: string) => void;
+  setIsFlipped: React.Dispatch<SetStateAction<boolean>>;
+
   error?: ReactNode | null; // Новый пропс для ошибки
 }
 
@@ -18,6 +20,7 @@ const CardVerificationCode = ({
   cvc,
   onFieldChange,
   inputRef,
+  setIsFlipped,
   error,
 }: Props) => {
   return (
@@ -45,6 +48,9 @@ const CardVerificationCode = ({
               id="cvc"
               value={cvc}
               ref={inputRef} // Привязываем реф из родителя
+              // Когда фокус тут — карта переворачивается
+              onFocus={() => setIsFlipped(true)}
+              onBlur={() => setIsFlipped(false)}
               onChange={(e) => onFieldChange("cvc", e.target.value)}
               required
               className="bg-white text-myMainColorDarker rounded-xs sm:p-1
