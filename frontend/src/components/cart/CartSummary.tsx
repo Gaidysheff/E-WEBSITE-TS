@@ -154,7 +154,7 @@ const CartSummary = ({ total }: Props) => {
         {initiatePaymentLoader ? (
           <div>
             <div className="inline-flex items-center">
-              <span>Redirecting to</span>
+              <span>Redirecting to ...</span>
               <span className="h-[20px] ml-2">
                 <CloudPayments />
               </span>

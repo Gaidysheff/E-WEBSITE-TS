@@ -10,11 +10,12 @@ import HolderName from "./HolderName.tsx";
 import Button from "@/components/uiComponents/Button";
 // import { useNavigate } from "@tanstack/react-router";
 import { useState, useRef, type FormEvent, type ReactNode } from "react";
-
+import { useCart } from "@/store/CartContext.tsx";
 import { CURRENT_YEAR } from "@/lib/utils.ts";
+import { Spinner } from "@/components/ui/spinner";
 
 interface FormProps {
-  onSubmitData: (data: Record<string, string>) => void;
+  onSubmitData: (data: Record<string, string>) => Promise<any>;
 }
 
 const bankCardSchema = z.object({
@@ -93,10 +94,15 @@ const BankCard = ({ onSubmitData }: FormProps) => {
     },
 
     onSubmit: async ({ value }) => {
-      // Do something with data
-      console.log("🚀 ~ BankCard ~ value:", value);
-      alert(JSON.stringify(value, null, 2));
-      // navigate({ to: `/` });
+      // 1. TanStack Form сам поставит isSubmitting в true
+      // Кнопка переключится в "Processing...", пока этот await не завершится
+      try {
+        await onSubmitData(value);
+      } catch (err) {
+        console.error("Payment failed", err);
+        // Ошибка здесь вернет кнопку в обычное состояние
+      }
+      // 2. После завершения async функции isSubmitting вернется в false
     },
   });
 
@@ -129,18 +135,16 @@ const BankCard = ({ onSubmitData }: FormProps) => {
   };
 
   // Подписываемся на встроенные переменные через useStore
-  const isValidating = useStore(bankCardForm.store, (s) => s.isValidating);
+  const isSubmitting = useStore(bankCardForm.store, (s) => s.isSubmitting);
   const canSubmit = useStore(bankCardForm.store, (state) => state.canSubmit);
-  const isDirty = useStore(bankCardForm.store, (state) => state.isDirty);
+  // const isValidating = useStore(bankCardForm.store, (s) => s.isValidating);
+  // const isDirty = useStore(bankCardForm.store, (state) => state.isDirty);
 
   // Итоговое условие активации кнопки:
-  const isButtonDisabled = !isDirty || !canSubmit || isValidating;
+  // const isButtonDisabled = !isDirty || !canSubmit || isValidating;
 
   const submitHandler = (event: FormEvent) => {
     event.preventDefault();
-    // Передаём собранный набор данных в верхний компонент
-    const currentValues = bankCardForm.state.values;
-    onSubmitData(currentValues);
     bankCardForm.handleSubmit();
   };
 
@@ -241,12 +245,22 @@ const BankCard = ({ onSubmitData }: FormProps) => {
         -mr-[2rem] 2xsm:-mr-[2.4rem] xsm:-mr-[3rem] sm:-mr-[4rem]"
         >
           <Button
-            // disabled={!canSubmit}
-            disabled={isButtonDisabled}
+            disabled={!canSubmit || isSubmitting}
+            //  Важно: isSubmitting приоритетнее, чем проверка на заполненность
+            // disabled={isButtonDisabled || isSubmitting}
             handleClick={submitHandler}
             className="checkout-btn"
           >
-            Pay
+            {isSubmitting ? (
+              <div className="flex justify-center">
+                <p className="mr-5">Processing...</p>
+                <Spinner className="size-5 text-red-500" />
+              </div>
+            ) : !canSubmit ? (
+              "Fill in the card details to Pay"
+            ) : (
+              "Pay $100.00"
+            )}
           </Button>
         </div>
       </form>
