@@ -217,3 +217,8 @@ STRIPE_PUBLIC_KEY = os.getenv("STRIPE_PUBLIC_KEY")
 WEBHOOK_SECRET = os.getenv("WEBHOOK_SECRET")
 
 BASE_URL_FRONTEND = os.getenv("BASE_URL_FRONTEND")
+
+# =================== Cloud Payments =======================
+
+CLOUD_PAYMENTS_API_SECRET_KEY = os.getenv("CLOUD_PAYMENTS_API_SECRET_KEY")
+CLOUD_PAYMENTS_PUBLIC_ID = os.getenv("CLOUD_PAYMENTS_PUBLIC_ID")

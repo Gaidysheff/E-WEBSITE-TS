@@ -6,8 +6,9 @@ import {
   type ReactNode,
 } from "react";
 import { generateRandomString } from "@/lib/utils.ts";
-import { CART_NUMBER_OF_ITEMS_URL } from "@/api/endpoints.ts";
+import { CARTITEMS_WITH_TOTAL_URL } from "@/api/endpoints.ts";
 import api from "@/api/api.ts";
+import { type Cartitem } from "@/lib/types.ts";
 
 interface CartProviderProps {
   children: ReactNode;
@@ -16,11 +17,10 @@ interface CartProviderProps {
 interface CartContextType {
   cartCode: string;
   cartItemsCount: number;
-  // setCartItemsCount: (value: number) => void;
   setCartItemsCount: React.Dispatch<React.SetStateAction<number>>;
   clearCartCode: () => void;
-  // isLoading: boolean;
-  // error: unknown | null;
+  items: Cartitem[];
+  totalPrice: number;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -28,32 +28,37 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export const CartContextProvider = ({ children }: CartProviderProps) => {
   const [cartCode, setCartCode] = useState<string>("");
   const [cartItemsCount, setCartItemsCount] = useState<number>(0);
+  const [items, setItems] = useState<Cartitem[]>([]);
+  const [totalPrice, setTotalPrice] = useState<number>(0); // Теперь это стейт
 
-  // const [isLoading, setIsLoading] = useState<boolean>(true);
-  // const [error, setError] = useState<unknown | null>(null);
-
-  // ----------- Number of Items in the Cart ------------------------
-
-  const getCartItemsCount = async () => {
+  // ----------- Один универсальный запрос для корзины ------------------------
+  const fetchFullCartData = async (code: string) => {
     try {
-      await api
-        .get(`${CART_NUMBER_OF_ITEMS_URL}?cart_code=${cartCode}`)
-        .then((response) => {
-          // console.log("🚀 ~ getCartItemsCount ~ response:", response);
-          if (typeof response !== "undefined") {
-            setCartItemsCount(response.data.num_of_items);
-            return response;
-          }
-        });
+      const response = await api.get(
+        `${CARTITEMS_WITH_TOTAL_URL}?cart_code=${code}`,
+      );
+
+      const { items, total_cart_price } = response.data;
+
+      setItems(items);
+      setTotalPrice(total_cart_price);
+
+      // Считаем количество элементов на основе длины массива или суммы quantity
+      const count = items.reduce(
+        (acc: number, item: Cartitem) => acc + item.quantity,
+        0,
+      );
+      setCartItemsCount(count);
     } catch (error) {
-      if (error instanceof Error) {
-        throw new Error(error.message);
-      }
-      throw new Error("An unknown error occured");
+      console.error("Failed to fetch cart data:", error);
+      // Если корзина не найдена (404), обнуляем данные
+      setItems([]);
+      setTotalPrice(0);
+      setCartItemsCount(0);
     }
   };
 
-  // -----------------------------------------------------------------
+  // 1. Инициализация кода при загрузке
   useEffect(() => {
     let code = localStorage.getItem("cartcode");
     if (!code) {
@@ -63,24 +68,35 @@ export const CartContextProvider = ({ children }: CartProviderProps) => {
     setCartCode(code);
   }, []);
 
+  // 2. Загрузка данных при изменении кода
   useEffect(() => {
     if (cartCode) {
-      getCartItemsCount();
+      fetchFullCartData(cartCode);
     }
   }, [cartCode]);
+
+  // ----------------------------
 
   const clearCartCode = () => {
     localStorage.removeItem("cartcode");
     setCartCode("");
+    setItems([]);
+    setTotalPrice(0);
+    setCartItemsCount(0);
   };
+
+  // const clearCartCode = () => {
+  //   localStorage.removeItem("cartcode");
+  //   setCartCode("");
+  // };
 
   const value = {
     cartCode,
     cartItemsCount,
     setCartItemsCount,
     clearCartCode,
-    // isLoading,
-    // error,
+    items,
+    totalPrice,
   };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

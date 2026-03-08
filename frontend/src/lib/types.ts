@@ -91,6 +91,13 @@ export type Cartitem = {
   sub_total: number;
 };
 
+// export type CartItem = {
+//   id: number;
+//   product: Product;
+//   quantity: number;
+//   total: number;
+// };
+
 export type CartItemsWithTotal = {
   id: number;
   cart_code: string | undefined;

@@ -1,7 +1,7 @@
 import api from "@/api/api";
 import { env } from "@/lib/env";
 import { type User } from "@/lib/types";
-
+import { useCart } from "@/store/CartContext.tsx";
 import { toast } from "react-toastify";
 
 const BASE_URL = env.VITE_API_URL;
@@ -36,27 +36,27 @@ export const register = async (value: Auth) => {
 };
 
 export const login = async (value: Auth) => {
+  const cartCode = localStorage.getItem("cartcode");
+  const loginData = {
+    email: value.email,
+    password: value.password,
+    cart_code: cartCode,
+  };
   try {
-    await api
-      .post(LOGIN_URL, {
-        email: value.email,
-        password: value.password,
-      })
-      .then((response) => {
-        // console.log("🚀 ~ Login ~ Response:", response.data);
-        localStorage.setItem("Token", response.data.token);
-        toast.success("You have been successfully authorized 👋!");
-        // -------- Delay for showing toaster ------------
-        const reloadDelay = () => {
-          window.location.reload();
-        };
-        setTimeout(reloadDelay, 3000);
-      });
+    await api.post(LOGIN_URL, loginData).then((response) => {
+      localStorage.setItem("Token", response.data.token);
+      toast.success("You have been successfully authorized 👋!");
+      // -------- Delay for showing toaster ------------
+      const reloadDelay = () => {
+        window.location.reload();
+      };
+      setTimeout(reloadDelay, 3000);
+    });
   } catch (error) {
     console.log("🚀 ~ Register ~ error:", error);
     toast.error(
       "Login has failed, please try again, or reset your password 🤚 🚨",
-      { autoClose: 10000, hideProgressBar: true }
+      { autoClose: 10000, hideProgressBar: true },
     );
   }
 };
@@ -88,7 +88,7 @@ export const passwordResetRequest = async (value: Reset) => {
         toast.success(
           "If your email exists you have received an email with \
           instructions for resetting the password",
-          { autoClose: 60000, hideProgressBar: true }
+          { autoClose: 60000, hideProgressBar: true },
         );
       });
   } catch (error) {
@@ -110,14 +110,14 @@ export const passwordConfirm = async (value: PassConfirm, token: string) => {
         //   console.log("🚀 ~ Login ~ Response:", response.data);
         toast.success(
           "Your password reset was successful, \
-          you will be directed to the login page in a second 👋!"
+          you will be directed to the login page in a second 👋!",
         );
       });
   } catch (error) {
     console.log("🚀 ~ Register ~ error:", error);
     toast.error(
       "Login has failed, please try again, or reset your password 🤚 🚨",
-      { autoClose: 10000, hideProgressBar: true }
+      { autoClose: 10000, hideProgressBar: true },
     );
   }
 };

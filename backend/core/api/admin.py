@@ -53,6 +53,7 @@ class CartAdmin(admin.ModelAdmin):
     list_display = (
         "id",
         "cart_code",
+        "user",
     )
 
 

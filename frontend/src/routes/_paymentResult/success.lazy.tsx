@@ -1,15 +1,41 @@
 import { Link, createLazyFileRoute } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+
+import Confetti from "react-confetti";
 
 export const Route = createLazyFileRoute("/_paymentResult/success")({
   component: Success,
 });
 
 export function Success() {
+  const [windowSize, setWindowSize] = useState({
+    width: 0,
+    height: 0,
+  });
+
+  const handleWindowSize = () => {
+    setWindowSize({
+      width: window.innerWidth,
+      height: window.innerHeight,
+    });
+    // console.log(
+    //   "🚀 ~ handleWindowSize ~ setWindowSize:",
+    //   window.innerWidth,
+    //   window.innerHeight,
+    // );
+  };
+
+  useEffect(() => {
+    window.onresize = () => handleWindowSize();
+  }, []);
+
   return (
     <section
       className="bg-gradient-to-br from-green-50 to-green-100 px-6 py-20
       text-center h-screen flex items-center"
     >
+      <Confetti width={windowSize.width} height={windowSize.height} />
+
       <div className="max-w-3xl mx-auto space-y-8">
         <h1
           className="text-4xl md:text-5xl font-semibold text-green-900
@@ -39,6 +65,7 @@ export function Success() {
             Continue Shopping
           </Link>
         </div>
+        {/* <ReactCanvasConfetti refConfetti={getInstance} style={canvasStyles} /> */}
       </div>
     </section>
   );

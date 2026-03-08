@@ -85,6 +85,9 @@ class Cart(models.Model):
     cart_code = models.CharField(max_length=11, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="carts"
+    )
 
     def __str__(self):
         return self.cart_code
@@ -94,6 +97,10 @@ class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name="cartitems")
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="item")
     quantity = models.IntegerField(default=1)
+
+    @property
+    def total_price(self):
+        return self.product.price * self.quantity
 
     def __str__(self):
         return f"{self.quantity} x {self.product.name} in cart {self.cart.cart_code}"

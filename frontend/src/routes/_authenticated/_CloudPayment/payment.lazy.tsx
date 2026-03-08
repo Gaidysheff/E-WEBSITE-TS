@@ -1,16 +1,11 @@
 import BankCard from "@/components/payment/BankCard";
-import BankCardWithAnimation from "@/components/paymentWithAnimation/BankCardWithAnimation";
 import CloudPayments from "@/components/svgImages/CloudPayments";
 import { createLazyFileRoute } from "@tanstack/react-router";
+import { paymentActionCP } from "@/api/actions.ts";
+import { useCart } from "@/store/CartContext.tsx";
 import { useState } from "react";
 
-// interface CloudPayments {
-//   Checkout: new (options: { publicId: string }) => {
-//     createPaymentCryptogram: (values: any) => Promise<string>;
-//   };
-// }
-
-// declare const cp: CloudPayments;
+// import BankCardWithAnimation from "@/components/paymentWithAnimation/BankCardWithAnimation";
 
 export const Route = createLazyFileRoute(
   "/_authenticated/_CloudPayment/payment",
@@ -18,17 +13,21 @@ export const Route = createLazyFileRoute(
   component: Payment,
 });
 
-const ERROR_MESSAGES: Record<string, string> = {
-  CardNumber_Invalid: "Карта не проходит проверку (алгоритм Луна)",
-  Cvv_Invalid: "Некорректный CVC/CVV код",
-  ExpDateMonth_Invalid: "Проверьте месяц истечения",
-  ExpDateYear_Invalid: "Проверьте год истечения",
-  // Добавляем только те, что могут проскочить через нашу Zod-валидацию
-};
+// const ERROR_MESSAGES: Record<string, string> = {
+//   CardNumber_Invalid: "Карта не проходит проверку (алгоритм Луна)",
+//   Cvv_Invalid: "Некорректный CVC/CVV код",
+//   ExpDateMonth_Invalid: "Проверьте месяц истечения",
+//   ExpDateYear_Invalid: "Проверьте год истечения",
+//   // Добавляем только те, что могут проскочить через нашу Zod-валидацию
+// };
 
 function Payment() {
   const [inputError, setInputError] = useState<string>("");
   console.log("🚀 ~ CardDataHandler ~ inputError:", inputError);
+
+  const { items, totalPrice } = useCart();
+  console.log("🚀 ~ CardDataHandler ~ totalPrice:", totalPrice);
+  console.log("🚀 ~ CardDataHandler ~ items:", items);
 
   const CardDataHandler = (CardData: Record<string, string>) => {
     return new Promise((resolve, reject) => {
@@ -61,22 +60,37 @@ function Payment() {
 
       checkout
         .createPaymentCryptogram(fieldValues)
-        .then((cryptogram: string) => {
-          // Здесь отправляем криптограмму на ваш бэкенд для совершения платежа
+        .then(async (cryptogram: string) => {
+          // Криптограмма готова!
           console.log("Криптограмма успешно создана:", cryptogram);
-          resolve(cryptogram); // Завершаем успешно
+
+          // Теперь собираем финальный пакет
+          const paymentData = {
+            amount: 123,
+            currency: "RUB",
+            name: CardData.userName, // Берем реальное имя из формы
+            cryptogram: cryptogram, // Используем НАСТОЯЩУЮ криптограмму
+            invoiceId: "11111",
+            description: "something",
+          };
+
+          // resolve(cryptogram); // Завершаем успешно
+          try {
+            // 2. Отправляем в Django и ждем ответа
+            const result = await paymentActionCP(paymentData);
+
+            if (result.Success) {
+              resolve(result); // Кнопка разблокируется, всё супер
+            } else {
+              reject(result.Message); // Показываем ошибку от банка
+            }
+          } catch (apiError) {
+            reject(apiError);
+          }
         })
-        .catch((errors: Record<string, string>) => {
-          // Здесь обрабатываем ошибки (например, неверный номер карты)
-          console.error("Ошибка создания криптограммы:", errors);
-
-          // Ищем первую попавшуюся ошибку в нашем словаре
-          const firstErrorCode = Object.values(errors)[0];
-          const message =
-            ERROR_MESSAGES[firstErrorCode] || "Ошибка проверки карты";
-
-          setInputError(message);
-          reject(errors); // Завершаем с ошибкой, чтобы кнопка разблокировалась
+        .catch((errors) => {
+          // Ошибки самого скрипта checkout.js (неверный номер и т.д.)
+          reject(errors);
         });
     });
   };
@@ -104,9 +118,9 @@ function Payment() {
         )}
         <BankCard onSubmitData={CardDataHandler} />
       </div>
-      <div className="my-10 sm:my-20">
+      {/* <div className="my-10 sm:my-20">
         <BankCardWithAnimation onSubmitData={CardDataHandler} />
-      </div>
+      </div> */}
     </div>
   );
 }

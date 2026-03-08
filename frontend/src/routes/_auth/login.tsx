@@ -65,9 +65,6 @@ export function Login() {
     },
 
     onSubmit: async ({ value }) => {
-      // Do something with data
-      // alert(JSON.stringify(value, null, 2));
-      console.log("🚀 ~ Login ~ value:", value);
       login(value);
       navigate({ to: `/` });
     },

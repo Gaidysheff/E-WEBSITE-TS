@@ -4,6 +4,7 @@ import {
   CARTITEM_UPDATE_QUANTITY_URL,
   CART_ADD_URL,
   CHECKOUT_URL,
+  CLOUD_PAYMENTS_URL,
   REVIEW_ADD_URL,
   REVIEW_DELETE_URL,
   REVIEW_UPDATE_URL,
@@ -40,6 +41,21 @@ type AddressHandler = (addressData: {
   state: string;
   phone: string;
 }) => Promise<void>;
+
+type CloudPaymentsHandler = (paymentData: {
+  amount: number;
+  currency: string;
+  name: string;
+  cryptogram: string;
+  invoiceId: string;
+  description: string;
+}) => Promise<CPResponse>;
+
+type CPResponse = {
+  Success: boolean;
+  Message?: string;
+  Model?: any; // Здесь могут быть данные для 3DS
+};
 
 // ===================== Add Review =========================
 
@@ -355,5 +371,18 @@ export const addAddressAction: AddressHandler = async (addressData) => {
     }
     toast.error("An unknown error occured");
     throw new Error("An unknown error occured");
+  }
+};
+
+// =================== CloudPayments (CP) ======================
+
+export const paymentActionCP: CloudPaymentsHandler = async (paymentData) => {
+  try {
+    const response = await api.post(CLOUD_PAYMENTS_URL, paymentData);
+    return response.data; // Возвращаем данные от Django (Success: true и т.д.)
+  } catch (error: any) {
+    throw new Error(
+      error.response?.data?.message || "An unknown error occured",
+    );
   }
 };

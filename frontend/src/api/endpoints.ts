@@ -24,7 +24,7 @@ export const WISHLISTS_GET_URL = `${BASE_URL}/api/my_wishlists?email=`;
 
 export const CART_ADD_URL = `${BASE_URL}/api/add_to_cart/`;
 export const CART_PRODUCT_ADDED_URL = `${BASE_URL}/api/product_in_cart`;
-export const CART_NUMBER_OF_ITEMS_URL = `${BASE_URL}/api/get_cart_stat`;
+// export const CART_NUMBER_OF_ITEMS_URL = `${BASE_URL}/api/get_cart_stat`;
 export const CART_UPDATE_URL = `${BASE_URL}/api/update_cart/`;
 export const CART_DELETE_URL = `${BASE_URL}/api/delete_cart/`;
 export const CART_GET_URL = `${BASE_URL}/api/get_cart/`;
@@ -32,12 +32,16 @@ export const CART_GET_URL = `${BASE_URL}/api/get_cart/`;
 export const CARTITEM_UPDATE_QUANTITY_URL = `${BASE_URL}/api/update_cartitem_quantity/`;
 export const CARTITEM_DELETE_URL = `${BASE_URL}/api/delete_cartitem/`;
 
+export const CARTITEMS_WITH_TOTAL_URL = `${BASE_URL}/api/cart_items_with_total/`;
+
+export const ADDRESS_ADD_URL = `${BASE_URL}/api/add_address/`;
+export const ADDRESS_GET_URL = `${BASE_URL}/api/get_address?email=`;
+
 export const CHECKOUT_URL = `${BASE_URL}/api/create_checkout_session/`;
 
 export const ORDER_GET_URL = `${BASE_URL}/api/get_orders?email=`;
 
-export const ADDRESS_ADD_URL = `${BASE_URL}/api/add_address/`;
-export const ADDRESS_GET_URL = `${BASE_URL}/api/get_address?email=`;
+export const CLOUD_PAYMENTS_URL = `${BASE_URL}/api/process_from_cloud_payments/`;
 
 // ======================= API Requests =================================
 

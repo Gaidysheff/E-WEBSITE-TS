@@ -1,8 +1,11 @@
 import stripe
 from django.conf import settings
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from django.contrib.auth import get_user_model
 from django.db.models import Q
+
+import requests
+from requests.auth import HTTPBasicAuth
 
 from rest_framework.response import Response
 from rest_framework import status
@@ -34,7 +37,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework import permissions
 
 from django.http import HttpResponse
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_exempt  # Если React на другом порту
 
 User = get_user_model()
 
@@ -136,15 +139,15 @@ def get_cart(request, cart_code):
     return Response({"error": "Cart not found."}, status=status.HTTP_404_NOT_FOUND)
 
 
-@api_view(["GET"])
-def get_cart_stat(request):
-    cart_code = request.query_params.get("cart_code")
-    cart = Cart.objects.filter(cart_code=cart_code).first()
+# @api_view(["GET"])
+# def get_cart_stat(request):
+#     cart_code = request.query_params.get("cart_code")
+#     cart = Cart.objects.filter(cart_code=cart_code).first()
 
-    if cart:
-        serializer = SimpleCartSerializer(cart)
-        return Response(serializer.data)
-    return Response({"error": "Cart not found."}, status=status.HTTP_404_NOT_FOUND)
+#     if cart:
+#         serializer = SimpleCartSerializer(cart)
+#         return Response(serializer.data)
+#     return Response({"error": "Cart not found."}, status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(["GET"])
@@ -185,6 +188,44 @@ def delete_cartitem(request, pk):
     cartitem.delete()
 
     return Response("Cartitem deleted successfully!", status=204)
+
+
+@api_view(["GET"])
+def cart_items_with_total(request):
+    # Получаем cart_code из параметров URL: ?cart_code=abc
+    cart_code = request.query_params.get("cart_code")
+
+    # --------- это для привязки корзины к User (Строгий метод -------------)
+    # cart = get_object_or_404(Cart, cart_code=cart_code)
+
+    # # Если у корзины есть владелец, проверяем, что это тот же человек
+    # if cart.user and cart.user != request.user:
+    #     return Response({"detail": "Not authorized"}, status=403)
+    # -----------------------------------------------------------------
+
+    # if not cart_code:
+    #     return Response(
+    #         {"error": "cart_code is required"}, status=status.HTTP_400_BAD_REQUEST
+    #     )
+
+    # Фильтруем через связь ForeignKey:
+    # cart (поле в CartItem) -> cart_code (поле в Cart)
+    cart_items = CartItem.objects.filter(cart__cart_code=cart_code)
+
+    if cart_items.exists():
+        # Передаем queryset и флаг many=True
+        serializer = CartItemSerializer(cart_items, many=True)
+
+        # Считаем общий итог всей корзины на бэкенде (так надежнее)
+        total_cart_price = sum(item.total_price for item in cart_items)
+
+        return Response(
+            {"items": serializer.data, "total_cart_price": total_cart_price}
+        )
+
+    return Response(
+        {"error": "Cart is empty or not found."}, status=status.HTTP_404_NOT_FOUND
+    )
 
 
 # ========================= REVIEW ================================
@@ -486,3 +527,65 @@ def get_address(request):
         serializer = CustomerAddressSerializer(address)
         return Response(serializer.data, status=status.HTTP_200_OK)
     return Response({"error": "Address not found"}, status=200)
+
+
+# ======================= proceed with CloudPayments =========================
+
+
+# @csrf_exempt  # если приходит ошибку 403 при POST-запросе
+@api_view(["POST"])
+def process_payment(request):
+    # 1. Находим корзину (например, по сессии или пользователю)
+    # Предположим, у вас есть способ получить текущую корзину
+    cart = Cart.objects.get(user=request.user, is_active=True)
+
+    # 2. Считаем итоговую сумму на сервере
+    total_amount = sum(item.total_price for item in cart.cartitems.all())
+
+    # print("DATA RECEIVED:", request.data)  # Посмотрите в консоль Django
+
+    if not request.data:
+        return Response({"error": "Empty body"}, status=400)
+    # Данные для CloudPayments API
+    # (поля должны начинаться с Большой буквы - это важно для CP)
+    payload = {
+        "Amount": float(total_amount),  # Берем честную сумму из БД,
+        # "Amount": request.data.get("amount"),
+        "Currency": request.data.get("currency", "RUB"),
+        "Name": request.data.get("name"),
+        "CardCryptogramPacket": request.data.get("cryptogram"),
+        "InvoiceId": request.data.get("invoiceId"),
+        "Description": request.data.get("description"),
+    }
+
+    # 3. Делаем запрос на правильный URL
+    url = "https://api.cloudpayments.ru/payments/cards/charge"
+
+    # Запрос к CloudPayments (используйте свои API Key и Public ID)
+
+    auth = HTTPBasicAuth(
+        settings.CLOUD_PAYMENTS_PUBLIC_ID, settings.CLOUD_PAYMENTS_API_SECRET_KEY
+    )
+
+    try:
+        response = requests.post(url, json=payload, auth=auth, timeout=10)
+        # Всегда ставьте таймаут для внешних API
+
+        cp_data = response.json()
+
+        if cp_data.get("Success"):
+            print("Платёж одобрен!")
+        else:
+            # Если Success: false, причина будет в Message
+            print(f"Отказ: {cp_data.get('Message')}")
+
+        return Response(cp_data, status=response.status_code)
+
+        # # Печатаем ответ от CP в консоль для отладки
+        # print("CP RESPONSE STATUS:", response.status_code)
+        # print("CP RESPONSE BODY:", response.text)
+
+        # # 4. Возвращаем ответ от CloudPayments фронтенду (Response от DRF)
+        # return Response(response.json(), status=response.status_code)
+    except requests.exceptions.RequestException as e:
+        return Response({"error": str(e)}, status=500)
