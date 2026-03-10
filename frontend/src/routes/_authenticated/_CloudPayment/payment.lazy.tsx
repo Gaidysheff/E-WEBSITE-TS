@@ -1,11 +1,10 @@
 import BankCard from "@/components/payment/BankCard";
+import BankCardWithAnimation from "@/components/paymentWithAnimation/BankCardWithAnimation";
 import CloudPayments from "@/components/svgImages/CloudPayments";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { paymentActionCP } from "@/api/actions.ts";
 import { useCart } from "@/store/CartContext.tsx";
 import { useState } from "react";
-
-// import BankCardWithAnimation from "@/components/paymentWithAnimation/BankCardWithAnimation";
 
 export const Route = createLazyFileRoute(
   "/_authenticated/_CloudPayment/payment",
@@ -23,7 +22,7 @@ export const Route = createLazyFileRoute(
 
 function Payment() {
   const [inputError, setInputError] = useState<string>("");
-  console.log("🚀 ~ CardDataHandler ~ inputError:", inputError);
+  // console.log("🚀 ~ CardDataHandler ~ inputError:", inputError);
 
   const { items, totalPrice } = useCart();
   console.log("🚀 ~ CardDataHandler ~ totalPrice:", totalPrice);
@@ -42,8 +41,8 @@ function Payment() {
         CardData.additionalSet,
       ].join(""); // Склеит всё в одну строку без пробелов
 
-      console.log("🚀 ~ CardDataHandler ~ cardNumber:", cardNumber);
-      console.log("🚀 ~ CardDataHandler ~ CardData:", CardData);
+      // console.log("🚀 ~ CardDataHandler ~ cardNumber:", cardNumber);
+      // console.log("🚀 ~ CardDataHandler ~ CardData:", CardData);
 
       // ================== Код от CloudPayments =============================
 
@@ -118,9 +117,9 @@ function Payment() {
         )}
         <BankCard onSubmitData={CardDataHandler} />
       </div>
-      {/* <div className="my-10 sm:my-20">
+      <div className="my-10 sm:my-20">
         <BankCardWithAnimation onSubmitData={CardDataHandler} />
-      </div> */}
+      </div>
     </div>
   );
 }

@@ -1,11 +1,10 @@
 import { type FormEvent } from "react";
 
 type Props = {
-  className: string;
+  className?: string;
   children: React.ReactNode;
-  disabled: boolean;
-  handleClick: (event: FormEvent) => void;
-  // handleClick: VoidFunction;
+  disabled?: boolean;
+  handleClick?: (event: FormEvent) => void;
 };
 
 const Button = ({ className, children, disabled, handleClick }: Props) => {
