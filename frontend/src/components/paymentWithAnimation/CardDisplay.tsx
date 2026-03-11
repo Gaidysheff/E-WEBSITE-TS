@@ -8,9 +8,24 @@ import { cn } from "@/lib/utils.ts";
 type Props = {
   isFlipped: boolean;
   cardType: string;
+  formValues: {
+    cardNumber: string;
+    userName: string;
+    cvc: string;
+    month: string;
+    year: string;
+  };
+  isNumberFocused: boolean;
+  isUserNameFocused: boolean;
 };
 
-const CardDisplay = ({ isFlipped, cardType }: Props) => {
+const CardDisplay = ({
+  isFlipped,
+  cardType,
+  formValues,
+  isNumberFocused,
+  isUserNameFocused,
+}: Props) => {
   return (
     <div
       className={cn(
@@ -31,9 +46,14 @@ const CardDisplay = ({ isFlipped, cardType }: Props) => {
           after:-bottom-[520px] after:-left-[200px] card-front"
       >
         <CardLogo cardType={cardType} />
-        <CardNumber />
+
+        <CardNumber value={formValues.cardNumber} isFocused={isNumberFocused} />
+
         <div className="flex justify-between gap-2">
-          <HolderName />
+          <HolderName
+            value={formValues.userName}
+            isFocused={isUserNameFocused}
+          />
           <Expiration />
         </div>
       </div>

@@ -12,6 +12,7 @@ import { type Cartitem } from "@/lib/types.ts";
 
 interface CartProviderProps {
   children: ReactNode;
+  refreshCart: () => void;
 }
 
 interface CartContextType {
@@ -90,6 +91,10 @@ export const CartContextProvider = ({ children }: CartProviderProps) => {
   //   setCartCode("");
   // };
 
+  const refreshCart = () => {
+    if (cartCode) fetchFullCartData(cartCode);
+  };
+
   const value = {
     cartCode,
     cartItemsCount,
@@ -97,6 +102,7 @@ export const CartContextProvider = ({ children }: CartProviderProps) => {
     clearCartCode,
     items,
     totalPrice,
+    refreshCart,
   };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

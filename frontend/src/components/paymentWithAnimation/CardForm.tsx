@@ -29,8 +29,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { CURRENT_YEAR } from "@/lib/utils.ts";
 import { Input } from "@/components/ui/input";
-import { z } from "zod";
-import { useForm, useStore, type AnyFieldApi } from "@tanstack/react-form";
+
 import {
   useState,
   useRef,
@@ -41,107 +40,61 @@ import {
   useEffect,
 } from "react";
 
+import { useStore, type ReactFormExtendedApi } from "@tanstack/react-form";
+import {
+  type BankCardSchemaType,
+  FieldInfo,
+} from "./BankCardWithAnimation.tsx";
+import { type AnyReactForm } from "@/lib/types.ts";
+
 interface FormProps {
   onSubmitData: (data: Record<string, string>) => Promise<any>;
   setIsFlipped: Dispatch<SetStateAction<boolean>>;
   setCardType: Dispatch<SetStateAction<string>>;
+  onFieldChange: (field: keyof BankCardSchemaType, value: string) => void;
+  bankCardForm: AnyReactForm<BankCardSchemaType>;
 }
 
-const bankCardSchema = z.object({
-  cardNumber: z
-    .string()
-    .regex(/^\d+$/, { message: "cvc must contain only digits" })
-    .refine((val) => val.length === 16 || val.length === 19, {
-      message: "Must be 16 or 19 digits ",
-    }),
-  userName: z
-    .string()
-    .min(1, { message: "Name is required" })
-    // Ensures the input is a string and not empty
-    .min(2, { message: "Name must be at least 2 characters" })
-    // Ensures minimum length
-    .regex(/^[a-zA-Z\s]+$/, "Only latin letters"),
-  // Ensures Latin letters
-  month: z.string().min(1),
-  year: z.string().min(4),
-  cvc: z
-    .string()
-    .regex(/^\d+$/, { message: "cvc must contain only digits" })
-    .length(3, "CVC must be 3 digits"), // Ровно 3
-});
+const CardForm = ({
+  bankCardForm,
+  onSubmitData,
+  setIsFlipped,
+  setCardType,
+  onFieldChange,
+}: FormProps) => {
+  // Подписываемся на значения через useStore
+  const formValues = useStore(bankCardForm.store, (state) => state.values);
 
-// Optional: Infer the TypeScript type from the schema for full type safety
-export type BankCardSchemaType = z.infer<typeof bankCardSchema>;
+  // const bankCardForm = useForm({
+  //   defaultValues: {
+  //     cardNumber: "",
+  //     userName: "",
+  //     cvc: "",
+  //     month: "1",
+  //     year: String(CURRENT_YEAR),
+  //   },
 
-function getFieldError(field: AnyFieldApi): ReactNode {
-  const errors = field.state.meta.errors;
+  //   validators: {
+  //     onChange: bankCardSchema,
+  //     // onChangeAsync: bankCardSchema,
+  //     // onChangeAsyncDebounceMs: 500,
 
-  if (errors.length === 0 || !field.state.meta.isTouched) return null;
+  //     // ВАЖНО: валидируем схему при монтировании компонента
+  //     onMount: bankCardSchema,
+  //   },
 
-  // Безопасно достаем текст ошибки
-  return (
-    <ul
-      className="text-[0.5rem] 2xsm:text-[0.7rem] xsm:text-[0.9rem]
-      sm:text-[1.1rem]"
-    >
-      {errors.map((err, index) => (
-        <li key={index}>
-          {typeof err === "string" ? err : err?.message || ""}
-        </li>
-      ))}
-    </ul>
-  );
-}
-
-function FieldInfo({ field }: { field: AnyFieldApi }) {
-  return (
-    <>
-      {field.state.meta.isTouched && !field.state.meta.isValid ? (
-        <em
-          className={
-            field.state.meta.errors.length ? "text-destructive text-sm" : ""
-          }
-        >
-          {field.state.meta.errors.map((err) => err.message)[0]}
-          {/* {field.state.meta.errors.map((err) => err.message).join(",")} */}
-        </em>
-      ) : null}
-      {field.state.meta.isValidating ? "Validating..." : null}
-    </>
-  );
-}
-
-const CardForm = ({ onSubmitData, setIsFlipped, setCardType }: FormProps) => {
-  const bankCardForm = useForm({
-    defaultValues: {
-      cardNumber: "",
-      userName: "",
-      cvc: "",
-      month: "1",
-      year: String(CURRENT_YEAR),
-    },
-
-    validators: {
-      onChange: bankCardSchema,
-      // onChangeAsync: bankCardSchema,
-      // onChangeAsyncDebounceMs: 500,
-
-      // ВАЖНО: валидируем схему при монтировании компонента
-      onMount: bankCardSchema,
-    },
-
-    onSubmit: async ({ value }) => {
-      // 1. TanStack Form сам поставит isSubmitting в true
-      // Кнопка переключится в "Processing...", пока этот await не завершится
-      try {
-        await onSubmitData(value);
-      } catch (err) {
-        console.error("Payment failed", err);
-        // Ошибка здесь вернет кнопку в обычное состояние
-      }
-      // 2. После завершения async функции isSubmitting вернется в false
-    },
-  });
+  //   onSubmit: async ({ value }) => {
+  //     // 1. TanStack Form сам поставит isSubmitting в true
+  //     // Кнопка переключится в "Processing...", пока этот await не завершится
+  //     try {
+  //       await onSubmitData(value);
+  //     } catch (err) {
+  //       console.error("Payment failed", err);
+  //       // Ошибка здесь вернет кнопку в обычное состояние
+  //     }
+  //     // 2. После завершения async функции isSubmitting вернется в false
+  //   },
+  // });
 
   // Создаем массив годов прямо перед рендером
   const dynamicYears = Array.from({ length: 11 }, (_, i) =>
@@ -153,9 +106,6 @@ const CardForm = ({ onSubmitData, setIsFlipped, setCardType }: FormProps) => {
   const months = Array.from({ length: 12 }, (_, i) =>
     String(i + 1).padStart(2, "0"),
   );
-
-  // Подписываемся на значения через useStore
-  const formValues = useStore(bankCardForm.store, (state) => state.values);
 
   useEffect(() => {
     const number = formValues.cardNumber;
@@ -224,7 +174,11 @@ const CardForm = ({ onSubmitData, setIsFlipped, setCardType }: FormProps) => {
                   id="cardNumber"
                   type="tel"
                   value={field.state.value}
-                  onChange={(e) => field.handleChange(e.target.value)}
+                  onChange={(e) => {
+                    field.handleChange(e.target.value);
+                    const val = e.target.value.replace(/\D/g, "");
+                    onFieldChange("cardNumber", val);
+                  }}
                   onClick={() => setIsFlipped(false)}
                   inputMode="numeric"
                   placeholder="16 or 19 digits"
@@ -245,7 +199,12 @@ const CardForm = ({ onSubmitData, setIsFlipped, setCardType }: FormProps) => {
                   id="userName"
                   type="text"
                   value={field.state.value}
-                  onChange={(e) => field.handleChange(e.target.value)}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    field.handleChange(val);
+                    onFieldChange("userName", val);
+                  }}
+                  // onChange={(e) => field.handleChange(e.target.value)}
                   onClick={() => setIsFlipped(false)}
                   placeholder="card holder's name"
                   required
@@ -325,9 +284,14 @@ const CardForm = ({ onSubmitData, setIsFlipped, setCardType }: FormProps) => {
             <Button type="reset" variant="outline">
               Reset
             </Button>
-            <Button type="submit" disabled={false}>
-              Submit
-            </Button>
+            <bankCardForm.Subscribe
+              selector={(state) => [state.canSubmit, state.isSubmitting]}
+              children={([canSubmit, isSubmitting]) => (
+                <Button type="submit" disabled={!canSubmit || isSubmitting}>
+                  {isSubmitting ? "..." : "Pay"}
+                </Button>
+              )}
+            />
           </Field>
         </FieldGroup>
       </form>

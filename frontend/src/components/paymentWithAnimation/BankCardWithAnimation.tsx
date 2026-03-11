@@ -16,6 +16,12 @@ interface FormProps {
 }
 
 const bankCardSchema = z.object({
+  cardNumber: z
+    .string()
+    .regex(/^\d+$/, { message: "number must contain only digits" })
+    .refine((val) => val.length === 16 || val.length === 19, {
+      message: "Must be 16 or 19 digits ",
+    }),
   userName: z
     .string()
     .min(1, { message: "Name is required" })
@@ -24,21 +30,34 @@ const bankCardSchema = z.object({
     // Ensures minimum length
     .regex(/^[a-zA-Z\s]+$/, "String must contain only letters (a-z, A-Z)"),
   // Ensures Latin letters
+  month: z.string().min(1),
+  year: z.string().min(4),
   cvc: z
     .string()
     .regex(/^\d+$/, { message: "cvc must contain only digits" })
-    .max(3, { message: "cvc must be not more that 3 digits" }),
-  month: z.string(),
-  year: z.string(),
-  firstSet: z.string(),
-  secondSet: z.string(),
-  thirdSet: z.string(),
-  fourthSet: z.string(),
-  additionalSet: z.string(),
+    .length(3, "CVC must be 3 digits"), // Ровно 3
 });
 
 // Optional: Infer the TypeScript type from the schema for full type safety
 export type BankCardSchemaType = z.infer<typeof bankCardSchema>;
+
+export function FieldInfo({ field }: { field: AnyFieldApi }) {
+  return (
+    <>
+      {field.state.meta.isTouched && !field.state.meta.isValid ? (
+        <em
+          className={
+            field.state.meta.errors.length ? "text-destructive text-sm" : ""
+          }
+        >
+          {field.state.meta.errors.map((err) => err.message)[0]}
+          {/* {field.state.meta.errors.map((err) => err.message).join(",")} */}
+        </em>
+      ) : null}
+      {field.state.meta.isValidating ? "Validating..." : null}
+    </>
+  );
+}
 
 // function getFieldError(field: AnyFieldApi): ReactNode {
 //   const errors = field.state.meta.errors;
@@ -59,21 +78,17 @@ export type BankCardSchemaType = z.infer<typeof bankCardSchema>;
 
 const BankCardWithAnimation = ({ onSubmitData }: FormProps) => {
   // const navigate = useNavigate();
-
   const bankCardForm = useForm({
     defaultValues: {
+      cardNumber: "",
       userName: "",
       cvc: "",
       month: "1",
       year: String(CURRENT_YEAR),
-      firstSet: "",
-      secondSet: "",
-      thirdSet: "",
-      fourthSet: "",
-      additionalSet: "",
-    },
+    } as BankCardSchemaType,
 
     validators: {
+      // onChange: bankCardSchema,
       onChangeAsync: bankCardSchema,
       onChangeAsyncDebounceMs: 500,
     },
@@ -81,60 +96,87 @@ const BankCardWithAnimation = ({ onSubmitData }: FormProps) => {
     onSubmit: async ({ value }) => {
       // Do something with data
       console.log("🚀 ~ BankCard ~ value:", value);
-      alert(JSON.stringify(value, null, 2));
+      // alert(JSON.stringify(value, null, 2));
       // navigate({ to: `/` });
     },
   });
 
-  // Подписываемся на значения через useStore
+  // Подписываемся на значения через useStore (Вариант-1)
   const formValues = useStore(bankCardForm.store, (state) => state.values);
 
-  // Создаем "пульты управления" для каждого смыслового блока
-  const firstSetRef = useRef<HTMLInputElement>(null);
-  const secondSetRef = useRef<HTMLInputElement>(null);
-  const thirdSetRef = useRef<HTMLInputElement>(null);
-  const fourthSetRef = useRef<HTMLInputElement>(null);
-  const userNameRef = useRef<HTMLInputElement>(null);
-  const monthRef = useRef<HTMLSelectElement>(null);
-  const yearRef = useRef<HTMLSelectElement>(null);
-  const cvcRef = useRef<HTMLInputElement>(null);
+  // Подписываемся на "живое" значение номера карты (Вариант-2)
+  // const cardNumber = useStore(
+  //   bankCardForm.store,
+  //   (state) => state.values.cardNumber,
+  // );
 
   // Стейт для анимации переворота
   const [isFlipped, setIsFlipped] = useState<boolean>(false);
 
   const [cardType, setCardType] = useState<string>(Globe);
 
-  const updateField = (field: keyof BankCardSchemaType, value: string) => {
-    bankCardForm.setFieldValue(field, value);
-    bankCardForm.setFieldMeta(field, (prev) => ({ ...prev, isTouched: true }));
-  };
+  const [isNumberFocused, setIsNumberFocused] = useState<boolean>(false);
+  const [isUserNameFocused, setIsUserNameFocused] = useState<boolean>(false);
 
-  // const canSubmit = useStore(bankCardForm.store, (state) => state.canSubmit);
-  // const isDirty = useStore(bankCardForm.store, (state) => state.isDirty);
+  const updateField = (field: keyof BankCardSchemaType, value: string) => {
+    // 1. Обновляем значение.
+    bankCardForm.setFieldValue(field, value);
+    // 2. Явно помечаем поле как "тронутое" и вызываем валидацию всей формы
+    bankCardForm.setFieldMeta(field, (prev) => ({ ...prev, isTouched: true }));
+    // 3. ПРИНУДИТЕЛЬНЫЙ ВЫЗОВ ВАЛИДАЦИИ (Секрет мгновенной активации кнопки)
+    // Это заставит canSubmit обновиться сразу после ввода последней цифры
+    bankCardForm.validate("change");
+  };
 
   const submitHandler = (event: FormEvent) => {
     event.preventDefault();
-    // Передаём собранный набор данных в верхний компонент
-    const currentValues = bankCardForm.state.values;
-    onSubmitData(currentValues);
     bankCardForm.handleSubmit();
   };
-
-  // Если все же нужна кастомная проверка всех полей кроме одного:
-  const isAllFilled = useStore(bankCardForm.store, (state) => {
-    const { additionalSet, ...rest } = state.values;
-    return Object.values(rest).every(Boolean);
-  });
 
   return (
     <div className="grid grid-rows-2 lg:grid-cols-2 gap-6 lg:-mb-60">
       {/* --------- Card Display --------- */}
-      <CardDisplay isFlipped={isFlipped} cardType={cardType} />
+      <CardDisplay
+        isFlipped={isFlipped}
+        cardType={cardType}
+        formValues={formValues}
+        isNumberFocused={isNumberFocused}
+        isUserNameFocused={isUserNameFocused}
+      />
+      {/* Настоящий скрытый инпут поверх всей карты или под ней */}
+      <input
+        type="tel"
+        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+        maxLength={19}
+        onFocus={() => setIsNumberFocused(true)}
+        onBlur={() => setIsNumberFocused(false)}
+        value={formValues.cardNumber}
+        onChange={(e) => {
+          const val = e.target.value.replace(/\D/g, "");
+          updateField("cardNumber", val);
+          // bankCardForm.setFieldValue("cardNumber", value);
+          // это тот же update
+        }}
+      />
+      <input
+        type="tel"
+        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+        maxLength={30}
+        onFocus={() => setIsUserNameFocused(true)}
+        onBlur={() => setIsUserNameFocused(false)}
+        value={formValues.userName}
+        onChange={(e) => {
+          const val = e.target.value;
+          updateField("userName", val);
+        }}
+      />
       {/* --------- Card Form --------- */}
       <CardForm
+        bankCardForm={bankCardForm}
         onSubmitData={onSubmitData}
         setIsFlipped={setIsFlipped}
         setCardType={setCardType}
+        onFieldChange={updateField}
       />
     </div>
   );
