@@ -4,8 +4,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { type BankCardSchemaType } from "./BankCard.tsx";
 import { type ReactNode, type RefObject } from "react";
+import { type BankCardSchemaType } from "./BankCard.tsx";
 
 interface Props {
   cvc: string;
@@ -58,12 +58,7 @@ const CardVerificationCode = ({
           </TooltipTrigger>
 
           {/* Контент тултипа */}
-          <TooltipContent
-            side="top"
-            // className="bg-black text-white"
-          >
-            {error}
-          </TooltipContent>
+          <TooltipContent side="top">{error}</TooltipContent>
         </Tooltip>
       </TooltipProvider>
     </div>

@@ -150,6 +150,13 @@ export type AddressWithError = Address & {
 export type ThemeSwitch = "light" | "dark";
 // export type ThemeSwitch = "light" | "dark" | null;
 
+// ----------------------------------------------------------
+
+export interface PaymentResponse {
+  Success: boolean;
+  Message?: string;
+}
+
 // ==================== Deep Partial ===========================
 
 export type DeepPartial<T> = { [P in keyof T]?: _DeepPartial<T[P]> };

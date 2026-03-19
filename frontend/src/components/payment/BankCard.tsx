@@ -1,18 +1,15 @@
 import Globe from "@/assets/images/payments/Globe.svg";
 import { useForm, useStore, type AnyFieldApi } from "@tanstack/react-form";
-// import { useStore } from "@tanstack/react-form";
+import Button from "@/components/uiComponents/Button";
 import { z } from "zod";
 import CardLogo from "./CardLogo.tsx";
 import CardNumber from "./CardNumber.tsx";
 import CardVerificationCode from "./CardVerificationCode.tsx";
 import Expiration from "./Expiration.tsx";
 import HolderName from "./HolderName.tsx";
-import Button from "@/components/uiComponents/Button";
-// import { useNavigate } from "@tanstack/react-router";
-import { useState, useRef, type FormEvent, type ReactNode } from "react";
-import { useCart } from "@/store/CartContext.tsx";
-import { CURRENT_YEAR } from "@/lib/utils.ts";
 import { Spinner } from "@/components/ui/spinner";
+import { CURRENT_YEAR } from "@/lib/utils.ts";
+import { useRef, useState, type FormEvent, type ReactNode } from "react";
 
 interface FormProps {
   onSubmitData: (data: Record<string, string>) => Promise<any>;
@@ -22,11 +19,8 @@ const bankCardSchema = z.object({
   userName: z
     .string()
     .min(1, { message: "Name is required" })
-    // Ensures the input is a string and not empty
     .min(2, { message: "Name must be at least 2 characters" })
-    // Ensures minimum length
     .regex(/^[a-zA-Z\s]+$/, "Only latin letters"),
-  // Ensures Latin letters
   cvc: z
     .string()
     .regex(/^\d+$/, { message: "cvc must contain only digits" })
@@ -69,8 +63,6 @@ function getFieldError(field: AnyFieldApi): ReactNode {
 }
 
 const BankCard = ({ onSubmitData }: FormProps) => {
-  // const navigate = useNavigate();
-
   const bankCardForm = useForm({
     defaultValues: {
       userName: "",
@@ -120,7 +112,6 @@ const BankCard = ({ onSubmitData }: FormProps) => {
   const cvcRef = useRef<HTMLInputElement>(null);
 
   // Стейт для анимации переворота
-  // const [isFlipped, setIsFlipped] = useState(false);
 
   const [cardType, setCardType] = useState<string>(Globe);
 
@@ -137,11 +128,6 @@ const BankCard = ({ onSubmitData }: FormProps) => {
   // Подписываемся на встроенные переменные через useStore
   const isSubmitting = useStore(bankCardForm.store, (s) => s.isSubmitting);
   const canSubmit = useStore(bankCardForm.store, (state) => state.canSubmit);
-  // const isValidating = useStore(bankCardForm.store, (s) => s.isValidating);
-  // const isDirty = useStore(bankCardForm.store, (state) => state.isDirty);
-
-  // Итоговое условие активации кнопки:
-  // const isButtonDisabled = !isDirty || !canSubmit || isValidating;
 
   const submitHandler = (event: FormEvent) => {
     event.preventDefault();

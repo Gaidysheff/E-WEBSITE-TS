@@ -575,6 +575,9 @@ def process_payment(request):
 
         if cp_data.get("Success"):
             print("Платёж одобрен!")
+
+            # Находим и удаляем корзину, так как заказ оплачен
+            Cart.objects.filter(cart_code=data.get("cart_code")).delete()
         else:
             # Если Success: false, причина будет в Message
             print(f"Отказ: {cp_data.get('Message')}")

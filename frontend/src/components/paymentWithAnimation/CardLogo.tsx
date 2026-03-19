@@ -6,10 +6,9 @@ interface Props {
 
 const CardLogo = ({ cardType }: Props) => {
   return (
-    <div className="flex justify-between items-center mb-auto">
+    <div className="flex justify-between items-center mb-7">
       <img
-        className="grow-0 w-auto
-        h-[1.25rem] 2xsm:h-[1.5rem] xsm:h-[1.875rem] sm:h-[2.5rem]"
+        className="grow-0 w-auto h-[2.5rem]"
         src={CardChip}
         alt="Card chip"
       />
@@ -17,7 +16,7 @@ const CardLogo = ({ cardType }: Props) => {
       <img
         data-logo
         src={cardType}
-        className="h-[1.25rem] 2xsm:h-[1.5rem] xsm:h-[1.875rem] sm:h-[2.5rem]
+        className="h-[1.25rem] h-[2.5rem]
         w-auto"
         alt="Card Logo"
       />

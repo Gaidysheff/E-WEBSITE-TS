@@ -81,6 +81,8 @@ export const CartContextProvider = ({ children }: CartProviderProps) => {
   const clearCartCode = () => {
     localStorage.removeItem("cartcode");
     setCartCode("");
+    // Чтобы иконка корзины в шапке (счетчик) обнулилась мгновенно
+    // после оплаты без window.location.reload()
     setItems([]);
     setTotalPrice(0);
     setCartItemsCount(0);

@@ -10,14 +10,10 @@ import Mir from "@/assets/images/payments/mir.svg";
 import RuPay from "@/assets/images/payments/RuPay.svg";
 import UnionPay from "@/assets/images/payments/UnionPay.svg";
 import Visa from "@/assets/images/payments/Visa.svg";
+import { useCart } from "@/store/CartContext.tsx";
+import type { AnyFieldApi } from "@tanstack/react-form";
 
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import {
   Select,
   SelectContent,
@@ -27,74 +23,68 @@ import {
 } from "@/components/ui/select";
 
 import { Button } from "@/components/ui/button";
-import { CURRENT_YEAR } from "@/lib/utils.ts";
 import { Input } from "@/components/ui/input";
+import { CURRENT_YEAR } from "@/lib/utils.ts";
 
 import {
-  useState,
-  useRef,
-  type FormEvent,
-  type ReactNode,
-  type Dispatch,
-  type SetStateAction,
   useEffect,
+  type Dispatch,
+  type FormEvent,
+  type SetStateAction,
 } from "react";
 
-import { useStore, type ReactFormExtendedApi } from "@tanstack/react-form";
-import {
-  type BankCardSchemaType,
-  FieldInfo,
-} from "./BankCardWithAnimation.tsx";
 import { type AnyReactForm } from "@/lib/types.ts";
+import { useStore } from "@tanstack/react-form";
+import { Link } from "@tanstack/react-router";
+import {
+  FieldInfo,
+  type BankCardSchemaType,
+} from "./BankCardWithAnimation.tsx";
 
 interface FormProps {
-  onSubmitData: (data: Record<string, string>) => Promise<any>;
   setIsFlipped: Dispatch<SetStateAction<boolean>>;
   setCardType: Dispatch<SetStateAction<string>>;
   onFieldChange: (field: keyof BankCardSchemaType, value: string) => void;
   bankCardForm: AnyReactForm<BankCardSchemaType>;
+  onSubmit: (event: FormEvent<Element>) => void;
+}
+
+export function CvcBubbleError({ field }: { field: AnyFieldApi }) {
+  const error = field.state.meta.errors[0]?.message;
+
+  if (!field.state.meta.isTouched || !error) return null;
+
+  return (
+    <div
+      className="absolute -top-2 left-1/2 -translate-x-1/2 z-50 
+    animate-in fade-in slide-in-from-bottom-2 duration-500"
+    >
+      <div
+        className="bg-destructive text-white text-sm px-2 py-1
+      rounded-md whitespace-nowrap shadow-lg relative"
+      >
+        {error}
+        {/* Маленький треугольник (хвостик) снизу */}
+        <div
+          className="absolute -bottom-1 w-2 h-2 bg-destructive rotate-45
+        left-1/2 -translate-x-1/2"
+        />
+      </div>
+    </div>
+  );
 }
 
 const CardForm = ({
   bankCardForm,
-  onSubmitData,
+  onSubmit,
   setIsFlipped,
   setCardType,
   onFieldChange,
 }: FormProps) => {
+  const { cartCode } = useCart();
+
   // Подписываемся на значения через useStore
   const formValues = useStore(bankCardForm.store, (state) => state.values);
-
-  // const bankCardForm = useForm({
-  //   defaultValues: {
-  //     cardNumber: "",
-  //     userName: "",
-  //     cvc: "",
-  //     month: "1",
-  //     year: String(CURRENT_YEAR),
-  //   },
-
-  //   validators: {
-  //     onChange: bankCardSchema,
-  //     // onChangeAsync: bankCardSchema,
-  //     // onChangeAsyncDebounceMs: 500,
-
-  //     // ВАЖНО: валидируем схему при монтировании компонента
-  //     onMount: bankCardSchema,
-  //   },
-
-  //   onSubmit: async ({ value }) => {
-  //     // 1. TanStack Form сам поставит isSubmitting в true
-  //     // Кнопка переключится в "Processing...", пока этот await не завершится
-  //     try {
-  //       await onSubmitData(value);
-  //     } catch (err) {
-  //       console.error("Payment failed", err);
-  //       // Ошибка здесь вернет кнопку в обычное состояние
-  //     }
-  //     // 2. После завершения async функции isSubmitting вернется в false
-  //   },
-  // });
 
   // Создаем массив годов прямо перед рендером
   const dynamicYears = Array.from({ length: 11 }, (_, i) =>
@@ -163,7 +153,7 @@ const CardForm = ({
 
   return (
     <div className="">
-      <form className="w-full" autoComplete="off">
+      <form className="w-full" autoComplete="off" onSubmit={onSubmit}>
         <FieldGroup>
           <bankCardForm.Field
             name="cardNumber"
@@ -172,17 +162,24 @@ const CardForm = ({
                 <FieldLabel htmlFor="cardNumber">Number</FieldLabel>
                 <Input
                   id="cardNumber"
+                  autoComplete="cc-number"
                   type="tel"
                   value={field.state.value}
                   onChange={(e) => {
-                    field.handleChange(e.target.value);
                     const val = e.target.value.replace(/\D/g, "");
-                    onFieldChange("cardNumber", val);
+                    if (val.length <= 19) {
+                      onFieldChange("cardNumber", val);
+                    }
                   }}
+                  // Подсвечиваем только если есть ошибка
+                  // и пользователь уже вошёл конкретно в это поле ввода
+                  errors={
+                    field.state.meta.isTouched ? field.state.meta.errors : []
+                  }
                   onClick={() => setIsFlipped(false)}
                   inputMode="numeric"
                   placeholder="16 or 19 digits"
-                  pattern={`[0-9]${16 | 19}`}
+                  pattern="(\d{16}|\d{19})"
                   required
                 />
                 <FieldInfo field={field} />
@@ -197,14 +194,20 @@ const CardForm = ({
                 <FieldLabel htmlFor="userName">Name</FieldLabel>
                 <Input
                   id="userName"
+                  autoComplete="cc-name"
                   type="text"
                   value={field.state.value}
                   onChange={(e) => {
                     const val = e.target.value;
+                    // Обновляем в TanStack Form
                     field.handleChange(val);
+                    // Синхронизируем с нашим общим обработчиком (для карты-дисплея)
                     onFieldChange("userName", val);
                   }}
-                  // onChange={(e) => field.handleChange(e.target.value)}
+                  // Подсвечиваем только если есть ошибка И пользователь уже ушел из поля (blur)
+                  errors={
+                    field.state.meta.isTouched ? field.state.meta.errors : []
+                  }
                   onClick={() => setIsFlipped(false)}
                   placeholder="card holder's name"
                   required
@@ -214,75 +217,141 @@ const CardForm = ({
             )}
           />
 
-          <div className="grid grid-cols-5 gap-4">
+          <div className="grid grid-cols-4 xsm:grid-cols-5 gap-4">
             <div className="">
-              <Field>
-                <div>
-                  <FieldLabel htmlFor="form-month">Month</FieldLabel>
-                  <Select defaultValue="01">
-                    <SelectTrigger id="form-month">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {/* Рендерим месяцы через map */}
-                      {months.map((m) => (
-                        <SelectItem key={m} value={m}>
-                          {m}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </Field>
+              <bankCardForm.Field
+                name="month"
+                children={(field) => (
+                  <Field>
+                    <div>
+                      <FieldLabel htmlFor="form-month">Month</FieldLabel>
+                      {/* 1. value связываем со стейтом формы */}
+                      {/* 2. onValueChange заменяет нам стандартный onChange */}
+                      <Select
+                        value={field.state.value || "01"}
+                        onValueChange={(val) => {
+                          // Обновляем в TanStack Form
+                          field.handleChange(val);
+                          // Синхронизируем с нашим общим обработчиком (для карты-дисплея)
+                          onFieldChange("month", val);
+                        }}
+                        // Когда открываем список - убеждаемся, что карта лицом к нам
+                        onOpenChange={(open) => {
+                          if (open) setIsFlipped(false);
+                        }}
+                      >
+                        <SelectTrigger
+                          id="form-month"
+                          onBlur={field.handleBlur}
+                          // value и onChange здесь НЕ НУЖНЫ, они должны быть в корне <Select>
+                        >
+                          <SelectValue placeholder="MM" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {months.map((m) => (
+                            <SelectItem key={m} value={m}>
+                              {m}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      {/* Не забываем выводить ошибки, если они есть */}
+                      <FieldInfo field={field} />
+                    </div>
+                  </Field>
+                )}
+              />
             </div>
-            <div className="col-span-2">
-              <Field>
-                <div>
-                  <FieldLabel htmlFor="form-year">Year</FieldLabel>
-                  <Select defaultValue="2026">
-                    <SelectTrigger id="form-year">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {/* Рендерим годы через map */}
-                      {dynamicYears.map((dynamicYear) => (
-                        <SelectItem key={dynamicYear} value={dynamicYear}>
-                          {dynamicYear}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </Field>
+            <div className="xsm:col-span-2">
+              <bankCardForm.Field
+                name="year"
+                children={(field) => (
+                  <Field>
+                    <div>
+                      <FieldLabel htmlFor="form-year">Year</FieldLabel>
+                      {/* 1. value связываем со стейтом формы */}
+                      {/* 2. onValueChange заменяет нам стандартный onChange */}
+                      <Select
+                        value={field.state.value || String(CURRENT_YEAR)}
+                        onValueChange={(val) => {
+                          // Обновляем в TanStack Form
+                          field.handleChange(val);
+                          // Синхронизируем с вашим общим обработчиком (для карты-дисплея)
+                          onFieldChange("year", val);
+                        }}
+                        // Когда открываем список - убеждаемся, что карта лицом к нам
+                        onOpenChange={(open) => {
+                          if (open) setIsFlipped(false);
+                        }}
+                      >
+                        <SelectTrigger
+                          id="form-year"
+                          onBlur={field.handleBlur}
+                          // value и onChange здесь НЕ НУЖНЫ, они должны быть в корне <Select>
+                        >
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {/* Рендерим годы через map */}
+                          {dynamicYears.map((dynamicYear) => (
+                            <SelectItem key={dynamicYear} value={dynamicYear}>
+                              {dynamicYear}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      {/* Не забываем выводить ошибки, если они есть */}
+                      <FieldInfo field={field} />
+                    </div>
+                  </Field>
+                )}
+              />
             </div>
             <span></span>
-            <div className="w-[4rem] flex justify-end">
+            <div className="w-[4rem]">
               <bankCardForm.Field
                 name="cvc"
                 children={(field) => (
-                  <div className="w-[2.6rem]">
+                  <div className="w-full flex flex-col items-end relative">
                     <FieldLabel htmlFor="cvc">
-                      <p className="w-full text-center">CVC</p>
+                      <p className="w-full">CVC/CVV/CVP</p>
                     </FieldLabel>
                     <Input
+                      className="text-center"
                       id="cvc"
-                      type="password"
+                      autoComplete="cc-cvc"
+                      type="tel"
                       value={field.state.value}
-                      onChange={(e) => field.handleChange(e.target.value)}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        // Обновляем в TanStack Form
+                        field.handleChange(val);
+                        // Синхронизируем с нашим общим обработчиком
+                        // (для карты-дисплея)
+                        onFieldChange("cvc", val);
+                      }}
+                      // Подсвечиваем только если есть ошибка И пользователь уже ушел из поля (blur)
+                      errors={
+                        field.state.meta.isTouched
+                          ? field.state.meta.errors
+                          : []
+                      }
                       onClick={() => setIsFlipped(true)}
                       placeholder=""
                       inputMode="numeric"
                       maxLength={3}
                     />
-                    <FieldInfo field={field} />
+                    <CvcBubbleError field={field} />
                   </div>
                 )}
               />
             </div>
           </div>
           <Field orientation="horizontal">
-            <Button type="reset" variant="outline">
-              Reset
+            <Button type="button" variant="outline" asChild>
+              <Link from="/" to={`cart/${cartCode}`}>
+                Cancel
+              </Link>
             </Button>
             <bankCardForm.Subscribe
               selector={(state) => [state.canSubmit, state.isSubmitting]}

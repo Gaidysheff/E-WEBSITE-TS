@@ -1,11 +1,8 @@
-import React, { useEffect, useRef, type RefObject } from "react";
-
 interface Props {
   value: string;
-  isFocused: boolean;
 }
 
-const CardNumber = ({ value = "", isFocused }: Props) => {
+const CardNumber = ({ value = "" }: Props) => {
   // value = "" - Гарантируем, что работаем со строкой без пробелов
 
   // Создаем массив из 16 элементов для рендера
@@ -15,13 +12,14 @@ const CardNumber = ({ value = "", isFocused }: Props) => {
   const cleanValue = value.toString().replace(/\s/g, "");
 
   return (
-    <div
-      className="text-white uppercase text-[0.5rem] 2xsm:text-[0.525rem]
-          xsm:text-[0.6562rem] sm:text-sm mb-10"
-    >
+    <div className="text-white uppercase text-sm mb-7 relative">
       {/* Bullets for numbers */}
       {/* ==================================================================== */}
-      <div className="relative flex gap-5 font-mono text-2xl">
+      <div
+        className="absolute inset-0 bg-white/50 blur-xl rounded-full
+        animate-pulse"
+      ></div>
+      <div className="relative flex gap-5 text-lg font-[CreditCard] z-10">
         {/* 1. Группируем по 4 для визуального удобства */}
         {[0, 4, 8, 12].map((startIndex) => (
           <div key={startIndex} className="flex gap-2">
@@ -32,16 +30,14 @@ const CardNumber = ({ value = "", isFocused }: Props) => {
               return (
                 <div
                   key={i}
-                  className={`w-2 h-9 flex items-center justify-center border-b-2
-                    transition-all duration-300 ${
-                      isFocused ? "border-white" : "border-gray-500 opacity-50"
-                    }`}
+                  className="w-2 h-9 flex items-center justify-center
+                    transition-all duration-300"
                 >
                   {/* Если цифра есть — показываем её, если нет — буллет */}
                   <span
                     className={
                       hasDigit
-                        ? "animate-in fade-in zoom-in duration-300"
+                        ? "animate-in fade-in zoom-in duration-300 embossed-text"
                         : "opacity-30"
                     }
                   >
@@ -62,8 +58,8 @@ const CardNumber = ({ value = "", isFocused }: Props) => {
               .map((digit: any, i: number) => (
                 <div
                   key={i}
-                  className="w-2 h-9 flex items-center justify-center border-b-2
-                  border-orange-400 text-orange-400"
+                  className="w-2 h-9 flex items-center justify-center
+                  embossed-text"
                 >
                   {digit}
                 </div>

@@ -34,7 +34,6 @@ const Expiration = ({
         Expiration
       </legend>
       <label
-        // htmlFor="expiration-month"
         className="uppercase text-[0.5rem] 2xsm:text-[0.525rem]
         xsm:text-[0.66rem] sm:text-sm"
       >
@@ -42,7 +41,6 @@ const Expiration = ({
       </label>
       <div className="flex gap-1 sm:gap-2">
         <select
-          // id="expiration-month"
           aria-label="Expiration Month"
           required
           value={month}
@@ -69,14 +67,12 @@ const Expiration = ({
           ))}
         </select>
         <select
-          // id="expiration-year"
           aria-label="Expiration Year"
           required
           value={year}
           ref={yearRef}
           onChange={(e) => {
             onFieldChange("year", e.target.value);
-
             // Как только выбрали год — прыгаем на CVC
             nextRef.current?.focus();
           }}

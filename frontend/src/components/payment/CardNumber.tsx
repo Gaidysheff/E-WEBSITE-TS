@@ -1,10 +1,3 @@
-import React, { useEffect, useState, type RefObject } from "react";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import AmEx from "@/assets/images/payments/american-express.svg";
 import China_T_Union from "@/assets/images/payments/China_T-union.svg";
 import DinersClub from "@/assets/images/payments/diners-club.svg";
@@ -17,6 +10,12 @@ import Mir from "@/assets/images/payments/mir.svg";
 import RuPay from "@/assets/images/payments/RuPay.svg";
 import UnionPay from "@/assets/images/payments/UnionPay.svg";
 import Visa from "@/assets/images/payments/Visa.svg";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import React, { useEffect, useState, type RefObject } from "react";
 import { type BankCardSchemaType } from "./BankCard.tsx";
 
 interface Props {
@@ -34,8 +33,6 @@ const CardNumber = ({
   onFieldChange,
   setCardType,
 }: Props) => {
-  // const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
-
   const fields = ["firstSet", "secondSet", "thirdSet", "fourthSet"] as const;
 
   const [isTooltipOpen, setIsTooltipOpen] = useState<boolean>(false);
@@ -104,10 +101,6 @@ const CardNumber = ({
 
     // Вызываем переданный метод обновления
     onFieldChange(fields[index], val);
-
-    // if (val.length === 4 && index < 3) {
-    //   inputRefs.current[index + 1]?.focus();
-    // }
 
     // Если ввели 4 цифры
     if (val.length === 4) {

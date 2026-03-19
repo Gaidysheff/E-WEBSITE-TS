@@ -2,8 +2,6 @@ import CardChip from "@/assets/images/payments/card-chip.svg";
 
 interface Props {
   cardType: string;
-
-  // cardType: any;
 }
 
 const CardLogo = ({ cardType }: Props) => {
