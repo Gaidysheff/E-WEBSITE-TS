@@ -19,7 +19,7 @@ const HolderName = ({
   userName,
   onFieldChange,
   inputRef,
-  nextRef,
+  // nextRef,
   error,
 }: Props) => {
   return (

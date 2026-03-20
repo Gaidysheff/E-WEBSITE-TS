@@ -1,7 +1,7 @@
 import api from "@/api/api";
 import { env } from "@/lib/env";
 import { type User } from "@/lib/types";
-import { useCart } from "@/store/CartContext.tsx";
+// import { useCart } from "@/store/CartContext.tsx";
 import { toast } from "react-toastify";
 
 const BASE_URL = env.VITE_API_URL;

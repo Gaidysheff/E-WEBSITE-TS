@@ -13,7 +13,7 @@ export const Route = createLazyFileRoute(
 });
 
 function Payment() {
-  const [inputError, setInputError] = useState<string>("");
+  const [inputError, setInputError] = useState<string | undefined>("");
   // console.log("🚀 ~ CardDataHandler ~ inputError:", inputError);
 
   const { items, totalPrice } = useCart();
@@ -76,6 +76,7 @@ function Payment() {
             if (result.Success) {
               resolve(result); // Кнопка разблокируется, всё супер
             } else {
+              setInputError(result.Message);
               reject(result.Message); // Показываем ошибку от банка
             }
           } catch (apiError) {

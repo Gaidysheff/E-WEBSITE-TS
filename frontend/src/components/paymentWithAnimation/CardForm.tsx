@@ -1,15 +1,15 @@
 import AmEx from "@/assets/images/payments/american-express.svg";
-import China_T_Union from "@/assets/images/payments/China_T-union.svg";
+import China_T_Union from "@/assets/images/payments/china_t-union.svg";
 import DinersClub from "@/assets/images/payments/diners-club.svg";
-import Discover from "@/assets/images/payments/Discover.svg";
-import Globe from "@/assets/images/payments/Globe.svg";
-import JCB from "@/assets/images/payments/JCB.svg";
-import Maestro from "@/assets/images/payments/Maestro.svg";
-import Master from "@/assets/images/payments/MasterCardWithFill.svg";
+import Discover from "@/assets/images/payments/discover.svg";
+import Globe from "@/assets/images/payments/globe.svg";
+import JCB from "@/assets/images/payments/jcb.svg";
+import Maestro from "@/assets/images/payments/maestro.svg";
+import Master from "@/assets/images/payments/master_card_with_fill.svg";
 import Mir from "@/assets/images/payments/mir.svg";
-import RuPay from "@/assets/images/payments/RuPay.svg";
-import UnionPay from "@/assets/images/payments/UnionPay.svg";
-import Visa from "@/assets/images/payments/Visa.svg";
+import RuPay from "@/assets/images/payments/ru_pay.svg";
+import UnionPay from "@/assets/images/payments/union_pay.svg";
+import Visa from "@/assets/images/payments/visa.svg";
 import { useCart } from "@/store/CartContext.tsx";
 import type { AnyFieldApi } from "@tanstack/react-form";
 
@@ -24,7 +24,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { CURRENT_YEAR } from "@/lib/utils.ts";
+import { CURRENT_YEAR } from "@/lib/utilities.ts";
 
 import {
   useEffect,

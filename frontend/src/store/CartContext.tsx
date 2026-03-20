@@ -5,14 +5,13 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { generateRandomString } from "@/lib/utils.ts";
+import { generateRandomString } from "@/lib/utilities.ts";
 import { CARTITEMS_WITH_TOTAL_URL } from "@/api/endpoints.ts";
 import api from "@/api/api.ts";
 import { type Cartitem } from "@/lib/types.ts";
 
 interface CartProviderProps {
   children: ReactNode;
-  refreshCart: () => void;
 }
 
 interface CartContextType {
@@ -22,6 +21,7 @@ interface CartContextType {
   clearCartCode: () => void;
   items: Cartitem[];
   totalPrice: number;
+  refreshCart: () => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);

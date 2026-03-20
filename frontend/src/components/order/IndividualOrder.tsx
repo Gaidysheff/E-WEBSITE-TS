@@ -1,6 +1,6 @@
 import MiniProductCard from "./MiniProductCard";
 import { type Order } from "@/lib/types.ts";
-import { timeAgo } from "@/lib/utils.ts";
+import { timeAgo } from "@/lib/utilities.ts";
 
 interface Props {
   order: Order;

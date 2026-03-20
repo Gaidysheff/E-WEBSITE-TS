@@ -1,4 +1,4 @@
-import { CURRENT_YEAR } from "@/lib/utils.ts";
+import { CURRENT_YEAR } from "@/lib/utilities.ts";
 import { type BankCardSchemaType } from "./BankCard.tsx";
 import { type RefObject } from "react";
 

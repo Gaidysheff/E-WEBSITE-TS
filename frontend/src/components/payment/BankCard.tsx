@@ -8,7 +8,7 @@ import CardVerificationCode from "./CardVerificationCode.tsx";
 import Expiration from "./Expiration.tsx";
 import HolderName from "./HolderName.tsx";
 import { Spinner } from "@/components/ui/spinner";
-import { CURRENT_YEAR } from "@/lib/utils.ts";
+import { CURRENT_YEAR } from "@/lib/utilities.ts";
 import { useRef, useState, type FormEvent, type ReactNode } from "react";
 
 interface FormProps {

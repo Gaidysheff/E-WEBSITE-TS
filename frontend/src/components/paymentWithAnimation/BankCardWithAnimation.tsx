@@ -1,4 +1,4 @@
-import Globe from "@/assets/images/payments/Globe.svg";
+import Globe from "@/assets/images/payments/globe.svg";
 import { useForm, useStore, type AnyFieldApi } from "@tanstack/react-form";
 
 import { z } from "zod";
@@ -6,7 +6,7 @@ import "./style.css";
 
 import { useEffect, useState, type FormEvent } from "react";
 
-import { CURRENT_YEAR } from "@/lib/utils.ts";
+import { CURRENT_YEAR } from "@/lib/utilities.ts";
 import CardDisplay from "./CardDisplay.tsx";
 import CardForm from "./CardForm.tsx";
 
