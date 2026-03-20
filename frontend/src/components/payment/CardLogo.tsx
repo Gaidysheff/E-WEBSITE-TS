@@ -1,4 +1,4 @@
-import CardChip from "@/assets/images/payments/card-chip.svg";
+import CardChip from "@/assets/images/payment/card-chip.svg";
 
 interface Props {
   cardType: string;

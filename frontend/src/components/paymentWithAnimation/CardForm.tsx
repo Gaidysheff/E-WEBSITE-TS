@@ -12,7 +12,13 @@ import UnionPay from "@/assets/images/payment/union_pay.svg";
 import Visa from "@/assets/images/payment/visa.svg";
 import { useCart } from "@/store/CartContext.tsx";
 import type { AnyFieldApi } from "@tanstack/react-form";
-
+import { Info } from "lucide-react";
+import {
+  TooltipProvider,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import {
   Select,
@@ -313,8 +319,32 @@ const CardForm = ({
                 name="cvc"
                 children={(field) => (
                   <div className="w-full flex flex-col items-end relative">
-                    <FieldLabel htmlFor="cvc">
-                      <p className="w-full">CVC/CVV/CVP</p>
+                    {/* <FieldLabel htmlFor="cvc">
+                      <p className="w-full whitespace-nowrap">CVC/CVV/CVP</p>
+                    </FieldLabel> */}
+                    <FieldLabel
+                      htmlFor="cvc"
+                      className="flex items-center gap-1"
+                    >
+                      CVC/CVV/CVP
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Info
+                              className="size-3.5 text-myMainColor
+                              opacity-50 cursor-help hover:opacity-100
+                              transition-opacity"
+                            />
+                          </TooltipTrigger>
+                          <TooltipContent
+                            side="top"
+                            className="max-w-[200px] text-xs"
+                          >
+                            Это 3-значный код безопасности на обратной стороне
+                            вашей карты.
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
                     </FieldLabel>
                     <Input
                       className="text-center"
