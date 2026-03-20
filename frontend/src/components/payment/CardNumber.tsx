@@ -1,15 +1,15 @@
-import AmEx from "@/assets/images/payments/american-express.svg";
-import China_T_Union from "@/assets/images/payments/china_t-union.svg";
-import DinersClub from "@/assets/images/payments/diners-club.svg";
-import Discover from "@/assets/images/payments/discover.svg";
-import Globe from "@/assets/images/payments/globe.svg";
-import JCB from "@/assets/images/payments/jcb.svg";
-import Maestro from "@/assets/images/payments/maestro.svg";
-import Master from "@/assets/images/payments/master_card_with_fill.svg";
-import Mir from "@/assets/images/payments/mir.svg";
-import RuPay from "@/assets/images/payments/ru_pay.svg";
-import UnionPay from "@/assets/images/payments/union_pay.svg";
-import Visa from "@/assets/images/payments/visa.svg";
+import AmEx from "@/assets/images/payment/american-express.svg";
+import China_T_Union from "@/assets/images/payment/china_t-union.svg";
+import DinersClub from "@/assets/images/payment/diners-club.svg";
+import Discover from "@/assets/images/payment/discover.svg";
+import Globe from "@/assets/images/payment/globe.svg";
+import JCB from "@/assets/images/payment/jcb.svg";
+import Maestro from "@/assets/images/payment/maestro.svg";
+import Master from "@/assets/images/payment/master_card_with_fill.svg";
+import Mir from "@/assets/images/payment/mir.svg";
+import RuPay from "@/assets/images/payment/ru_pay.svg";
+import UnionPay from "@/assets/images/payment/union_pay.svg";
+import Visa from "@/assets/images/payment/visa.svg";
 import {
   Tooltip,
   TooltipContent,

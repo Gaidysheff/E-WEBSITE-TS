@@ -1,4 +1,4 @@
-import Globe from "@/assets/images/payments/globe.svg";
+import Globe from "@/assets/images/payment/globe.svg";
 import { useForm, useStore, type AnyFieldApi } from "@tanstack/react-form";
 
 import { z } from "zod";
