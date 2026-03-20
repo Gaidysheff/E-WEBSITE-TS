@@ -22,6 +22,7 @@ function TestComponent() {
         </TooltipTrigger>
         <TooltipContent>
           <p>Add to library</p>
+          <p>Add to library</p>
         </TooltipContent>
       </Tooltip>
     </>
