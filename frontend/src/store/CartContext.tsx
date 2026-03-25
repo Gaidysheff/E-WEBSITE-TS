@@ -39,7 +39,7 @@ export const CartContextProvider = ({ children }: CartProviderProps) => {
         `${CARTITEMS_WITH_TOTAL_URL}?cart_code=${code}`,
       );
 
-      const { items, total_cart_price } = response.data;
+      const { items, total_cart_price } = response?.data;
 
       setItems(items);
       setTotalPrice(total_cart_price);

@@ -154,7 +154,7 @@ const BankCardWithAnimation = ({ onSubmitData }: FormProps) => {
 
       <div className=" z-2 flex justify-center items-center overflow-hidden w-full h-auto sm:h-[16.5rem]">
         <div
-          className="origin-center transition-transform
+          className="origin-center transition-transform 
           scale-[0.6] 2xsm:scale-[0.72] xsm:scale-[0.95] sm:scale-100"
         >
           <CardDisplay

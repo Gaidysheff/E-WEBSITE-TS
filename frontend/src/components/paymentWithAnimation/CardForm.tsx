@@ -326,7 +326,7 @@ const CardForm = ({
                       htmlFor="cvc"
                       className="flex items-center gap-1"
                     >
-                      CVC/CVV/CVP
+                      <p className="w-full whitespace-nowrap">CVC/CVV/CVP</p>
                       <TooltipProvider>
                         <Tooltip>
                           <TooltipTrigger asChild>

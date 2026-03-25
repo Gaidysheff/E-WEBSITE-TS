@@ -64,7 +64,7 @@ const CardDisplay = ({
       </div>
       {/* --------- Back side of the card --------- */}
       <div
-        className="backface-hidden absolute absolute inset-0 w-full h-full rotate-y-180
+        className="backface-hidden absolute inset-0 w-full h-full rotate-y-180
             bg-myMainColorDark border-2 border-myMainColorDarker rounded-2xl p-8
             flex flex-col gap-2 z-1 overflow-hidden relative
             before:content-[''] before:absolute before:h-[600px] before:w-[600px]
