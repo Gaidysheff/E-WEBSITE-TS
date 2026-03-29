@@ -76,7 +76,8 @@ admin.site.register(Wishlist, WishlistAdmin)
 
 class OrderAdmin(admin.ModelAdmin):
     list_display = (
-        "stripe_checkout_id",
+        "checkout_id",
+        # "stripe_checkout_id",
         "amount",
         "currency",
         "customer_email",

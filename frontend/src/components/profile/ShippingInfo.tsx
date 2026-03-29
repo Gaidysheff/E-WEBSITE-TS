@@ -1,17 +1,16 @@
 import { BASE_URL } from "@/api/api.ts";
-import { useUser } from "@/store/UserContext.tsx";
-import { type AddressWithError } from "@/lib/types.ts";
 import { Spinner } from "@/components/ui/spinner";
 import { MapPinHouse } from "lucide-react";
 
+import { type UserLoggedIn } from "@/lib/types.ts";
 interface Props {
-  address: AddressWithError | null | undefined;
-  isPending: boolean;
+  user: UserLoggedIn | undefined;
+  isLoading: boolean;
 }
 
-const ShippingInfo = ({ address, isPending }: Props) => {
-  const user = useUser();
+const ShippingInfo = ({ user, isLoading }: Props) => {
   const email = typeof user === "undefined" ? "" : user.email;
+  const address = user?.address;
   const imgURL = `${BASE_URL}${user?.image}`;
 
   return (
@@ -26,7 +25,7 @@ const ShippingInfo = ({ address, isPending }: Props) => {
       </div>
       <div className="col-span-2 flex flex-col">
         <div className="text-2xl font-semibold my-3">Your Shipping Info</div>
-        {isPending ? (
+        {isLoading ? (
           <Spinner className="size-20 text-red-500 mx-auto" />
         ) : (
           <div>
@@ -34,7 +33,7 @@ const ShippingInfo = ({ address, isPending }: Props) => {
               <div className="">Email</div>
               <div className="col-span-2">{email}</div>
             </div>
-            {!!address?.error ? (
+            {!address?.street ? (
               <div className="w-full p-6 text-center bg-gray-50 rounded-lg">
                 <div className="flex flex-col items-center space-y-4">
                   <div className="bg-white p-4 rounded-full shadow">

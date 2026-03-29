@@ -13,11 +13,16 @@ import {
 import { CURRENT_USER_URL } from "@/api/endpoints.ts";
 import api from "@/api/api.ts";
 
-// type UserPartial = Partial<User>;
-// type UserDeepPartial = DeepPartial<User>;
 export type UserLoggedIn = AugmentedRequired<DeepPartial<User>, "email">;
 
-const UserContext = createContext<UserLoggedIn | undefined>(undefined);
+// Создаем тип для значения контекста
+interface UserContextType {
+  user: UserLoggedIn | undefined;
+  setUser: React.Dispatch<React.SetStateAction<UserLoggedIn | undefined>>;
+  isLoading: boolean; // Полезно, чтобы не отправлять платеж, пока юзер грузится
+}
+
+const UserContext = createContext<UserContextType | undefined>(undefined);
 
 interface UserProviderProps {
   children: ReactNode;
@@ -25,15 +30,18 @@ interface UserProviderProps {
 
 export const UserContextProvider = ({ children }: UserProviderProps) => {
   const [user, setUser] = useState<UserLoggedIn | undefined>();
+  // console.log("🚀 ~ UserContextProvider ~ user:", user);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const getUser = async () => {
       const token = localStorage.getItem("Token");
       if (token) {
         try {
+          // const response = await api.get(CURRENT_USER_URL);
+          // setUser(response.data); // Если поля совпадают с UserLoggedIn
+          // console.log("🚀 ~ getUser ~ data:", response?.data);
           await api.get(CURRENT_USER_URL).then((response) => {
-            // console.log("🚀 ~ getUser ~ Response:", response);
-
             const loadedData = {
               id: response.data.id,
               email: response.data.email,
@@ -41,21 +49,34 @@ export const UserContextProvider = ({ children }: UserProviderProps) => {
               last_name: response.data.last_name,
               birthday: response.data.birthday,
               image: response.data.image,
+              address: response.data.address,
+              // { street, city, phone ... } или null
             };
-
             setUser(loadedData);
           });
         } catch (error) {
-          console.log("🚀 ~ Register ~ error:", error);
+          console.log("🚀 ~ Ошибка загрузки пользователя", error);
         }
       }
-      return;
+      setIsLoading(false);
+      // return;
     };
 
     getUser();
   }, []);
 
-  return <UserContext.Provider value={user}>{children}</UserContext.Provider>;
+  return (
+    <UserContext.Provider value={{ user, setUser, isLoading }}>
+      {children}
+    </UserContext.Provider>
+  );
 };
 
-export const useUser = () => useContext(UserContext);
+// export const useUser = () => useContext(UserContext);
+export const useUser = () => {
+  const context = useContext(UserContext);
+  if (context === undefined) {
+    throw new Error("useUser must be used within a UserContextProvider");
+  }
+  return context;
+};

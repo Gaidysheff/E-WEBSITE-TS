@@ -31,7 +31,7 @@ const CustomerReviews = ({ product, isAuthorized, reviews }: Props) => {
   const very_good_rating = product.very_good_review;
   const excellent_rating = product.excellent_review;
 
-  const user = useUser();
+  const { user } = useUser();
 
   const userAlreadyHaveReview = reviews.some(
     (review) => review.user.email === user?.email,

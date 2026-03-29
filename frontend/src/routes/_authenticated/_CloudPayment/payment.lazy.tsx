@@ -3,9 +3,12 @@ import BankCardWithAnimation from "@/components/paymentWithAnimation/BankCardWit
 import CloudPayments from "@/components/svgImages/CloudPayments";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { paymentActionCP } from "@/api/actions.ts";
-import { useCart } from "@/store/CartContext.tsx";
 import { useState } from "react";
 import { type PaymentResponse } from "@/lib/types.ts";
+
+import { useCart } from "@/store/CartContext.tsx";
+import { useUser } from "@/store/UserContext.tsx";
+
 export const Route = createLazyFileRoute(
   "/_authenticated/_CloudPayment/payment",
 )({
@@ -17,8 +20,7 @@ function Payment() {
   // console.log("🚀 ~ CardDataHandler ~ inputError:", inputError);
 
   const { items, totalPrice } = useCart();
-  console.log("🚀 ~ CardDataHandler ~ totalPrice:", totalPrice);
-  console.log("🚀 ~ CardDataHandler ~ items:", items);
+  const { user, isLoading } = useUser();
 
   const CardDataHandler = (CardData: Record<string, string>) => {
     return new Promise((resolve, reject) => {
@@ -58,7 +60,7 @@ function Payment() {
 
           // Теперь собираем финальный пакет
           const paymentData = {
-            amount: 123,
+            amount: totalPrice,
             currency: "RUB",
             name: CardData.userName, // Берем реальное имя из формы
             cryptogram: cryptogram, // Используем НАСТОЯЩУЮ криптограмму
@@ -94,6 +96,30 @@ function Payment() {
     return new Promise((resolve, reject) => {
       // Возвращаем Promise
 
+      if (isLoading) return; // Ждем загрузки профиля
+
+      const userEmail = user?.email || "guest@example.com";
+      const userPhone = user?.address?.phone;
+      const fullName = `${user?.first_name} ${user?.last_name}`;
+      const orderAddress = `${user?.address?.state}, ${user?.address?.city}, ${user?.address?.street}`;
+
+      // 1. Собираем данные для чека (Customer & Items)
+      // Эти данные обычно приходят из контекста корзины или профиля
+      const customerReceipt = {
+        Items: items.map((item) => ({
+          label: item.product.name, // Наименование товара
+          price: item.product.price, // Цена за единицу
+          quantity: item.quantity, // Количество
+          amount: item.product.price * item.quantity, // Сумма по позиции
+          vat: 22, // Ставка НДС (если есть)
+          method: 0, // Признак способа расчета (полная оплата)
+          object: 0, // Признак предмета расчета (товар)
+        })),
+        email: userEmail, // Обязательно для электронного чека
+        phone: userPhone, // Обязательно, если нет email
+        taxationSystem: 0, // Система налогообложения магазина
+      };
+
       // ================== Код от CloudPayments =============================
       const checkout = new cp.Checkout({
         publicId: "test_api_000000000000000002",
@@ -112,35 +138,42 @@ function Payment() {
           // Криптограмма готова!
           console.log("Криптограмма успешно создана:", cryptogram);
 
-          // Теперь собираем финальный пакет
+          // 2. Формируем финальный объект для нашего Бэкенда
           const paymentData = {
-            amount: 123,
+            amount: totalPrice, // Из useCart
             currency: "RUB",
-            name: CardData.userName, // Берем реальное имя из формы
+            name: CardData.userName, // Для банковского эквайринга (латиница)
             cryptogram: cryptogram, // Используем НАСТОЯЩУЮ криптограмму
-            invoiceId: "11111",
-            description: "something",
+            invoiceId: `INV-${Date.now()}`, // Генерация ID заказа
+            description: `Оплата заказа в магазине`,
+            // Добавляем данные для фискализации
+            jsonData: JSON.stringify({
+              customerReceipt, // Облачная касса возьмет данные отсюда
+              userContact: fullName, // Настоящее имя из профиля
+              address: orderAddress, // Адрес доставки
+            }),
           };
 
-          // resolve(cryptogram); // Завершаем успешно
           try {
-            // 2. Отправляем в Django и ждем ответа
             const result = (await paymentActionCP(
               paymentData,
             )) as PaymentResponse;
 
             if (result.Success) {
-              resolve(result); // Кнопка разблокируется, всё супер
+              resolve(result); // Успех: перенаправляем на страницу "Спасибо"
+            } else if (result.Message === "Need3dSecure") {
+              // Имитация 3D Secure (если транзакция требует подтверждения SMS)
+              handle3DSecure(result.AcsUrl, result.PaReq, result.TransactionId);
             } else {
-              reject(result.Message); // Показываем ошибку от банка
+              reject(result.Message); // Ошибка: например, "Недостаточно средств"
             }
           } catch (apiError) {
-            reject(apiError);
+            reject("Ошибка связи с сервером");
           }
         })
         .catch((errors) => {
-          // Ошибки самого скрипта checkout.js (неверный номер и т.д.)
-          reject(errors);
+          console.log("🚀 ~ CardWithAnimationDataHandler ~ errors:", errors);
+          reject("Ошибка валидации карты на стороне шлюза");
         });
     });
   };

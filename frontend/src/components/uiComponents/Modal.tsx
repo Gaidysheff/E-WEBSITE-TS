@@ -8,15 +8,19 @@ import {
 } from "@/components/ui/dialog";
 
 import { PenIcon } from "lucide-react";
+// import { type Dispatch, type SetStateAction } from "react";
+import { type PureAddress } from "@/lib/types.ts";
 
-import { type Address } from "@/lib/types.ts";
+import { type Dispatch, type SetStateAction } from "react";
 
 type Props = {
   children: React.ReactNode;
-  userAlreadyHaveReview: boolean;
-  updateReviewModal: boolean;
-  addressForm: boolean;
-  address: Address | null | undefined;
+  userAlreadyHaveReview?: boolean;
+  updateReviewModal?: boolean;
+  addressForm?: boolean;
+  address?: PureAddress | null | undefined;
+  isModalOpen: boolean;
+  setIsModalOpen: Dispatch<SetStateAction<boolean>>;
 };
 
 const Modal = ({
@@ -25,13 +29,15 @@ const Modal = ({
   updateReviewModal,
   addressForm,
   address,
+  isModalOpen,
+  setIsModalOpen,
 }: Props) => {
   if (userAlreadyHaveReview) {
     return null;
   }
 
   return (
-    <Dialog>
+    <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
       <DialogTrigger
         asChild
         // className="default-btn max-sm:text-sm max-sm:px-4 my-6"
@@ -49,8 +55,9 @@ const Modal = ({
           <button
             type="button"
             className="default-btn max-sm:text-sm max-sm:px-4 my-6 mx-auto"
+            onClick={() => setIsModalOpen(true)} // Явно открываем
           >
-            {address?.city ? "Update Address" : "Add Address"}
+            {address?.id ? "Update Address" : "Add Address"}
           </button>
         ) : (
           <button

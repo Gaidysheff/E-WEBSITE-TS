@@ -14,7 +14,7 @@ type Props = {
 const NavItems = ({ mobile }: Props) => {
   const { cartItemsCount, cartCode } = useCart();
 
-  const user = useUser();
+  const { user } = useUser();
 
   const imgURL = `${BASE_URL}${user?.image}`;
 

@@ -1,4 +1,5 @@
 import AddressForm from "@/components/order/AddressForm.tsx";
+import AddressFormTanstack from "@/components/order/AddressFormTanstack.tsx";
 import { BASE_URL } from "@/api/api";
 import Modal from "@/components/uiComponents/Modal.tsx";
 import Orders from "@/components/order/Orders";
@@ -9,6 +10,7 @@ import getAddressOptions from "@/api/queryOptions/getAddressOptions.ts";
 import usePageSEO from "@/hooks/usePageSEO.ts";
 import { useQuery } from "@tanstack/react-query";
 import { useRouterState } from "@tanstack/react-router";
+import { useState } from "react";
 import { useUser } from "@/store/UserContext.tsx";
 
 // import { Spinner } from "@/components/ui/spinner";
@@ -18,10 +20,14 @@ export const Route = createLazyFileRoute("/_authenticated/profile")({
 });
 
 function ProfilePage() {
-  const user = useUser();
-  const email = typeof user === "undefined" ? "" : user.email;
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
-  const { data: address, isPending } = useQuery(getAddressOptions(email));
+  const { user, isLoading } = useUser();
+
+  const address = user?.address;
+
+  // const email = typeof user === "undefined" ? "" : user.email;
+  // const { data: address, isPending } = useQuery(getAddressOptions(email));
 
   const routerState = useRouterState();
   const currentPathname = routerState.location.pathname;
@@ -35,15 +41,19 @@ function ProfilePage() {
     <>
       <link rel="canonical" href={`${BASE_URL}${currentPathname}`} />
 
-      <ShippingInfo address={address} isPending={isPending} />
+      <ShippingInfo user={user} isLoading={isLoading} />
 
       <Modal
-        userAlreadyHaveReview={false}
-        updateReviewModal={false}
         addressForm
         address={address}
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
       >
-        <AddressForm address={address} />
+        <AddressFormTanstack
+          address={address}
+          // isModalOpen={isModalOpen}
+          setIsModalOpen={setIsModalOpen}
+        />
       </Modal>
 
       {/* {isPending && <Spinner className="size-30 text-red-500 mx-auto" />} */}

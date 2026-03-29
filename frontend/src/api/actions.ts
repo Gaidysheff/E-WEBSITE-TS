@@ -40,7 +40,7 @@ type AddressHandler = (addressData: {
   city: string;
   state: string;
   phone: string;
-}) => Promise<void>;
+}) => Promise<any>;
 
 type CloudPaymentsHandler = (paymentData: {
   amount: number;
@@ -350,20 +350,13 @@ export const initiatePaymentAction: PaymentHandler = async (paymentObject) => {
 
 // =================== Add Address ======================
 
-export const addAddressAction: AddressHandler = async (addressData) => {
-  // --------------- Fetching delay ----------------------
-  // await new Promise((resolve) => setTimeout(resolve, 4000));
-  // -----------------------------------------------------
+export const addAddressAction: AddressHandler = async (addressData: any) => {
   try {
-    await api.post(ADDRESS_ADD_URL, addressData).then((response) => {
-      // console.log("🚀 ~ addAddressAction ~ response:", response);
-      if (response?.status === 200) {
-        toast.success("Your shipping address has been saved!");
-      } else {
-        toast.error("Something went wrong");
-      }
-      return response;
-    });
+    const response = await api.post(ADDRESS_ADD_URL, addressData);
+    if (response?.status === 200 || response?.status === 201) {
+      toast.success("Your shipping address has been saved!");
+      return response.data; // ВОЗВРАЩАЕМ ДАННЫЕ
+    }
   } catch (error) {
     if (error instanceof Error) {
       toast.error(error.message);

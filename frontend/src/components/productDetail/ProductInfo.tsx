@@ -22,7 +22,7 @@ interface Props {
 }
 
 const ProductInfo = ({ product, isAuthorized }: Props) => {
-  const user = useUser();
+  const { user } = useUser();
   const email = typeof user === "undefined" ? "" : user.email;
 
   const { cartCode, setCartItemsCount } = useCart();

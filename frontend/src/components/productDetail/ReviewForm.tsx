@@ -37,7 +37,7 @@ const ReviewForm = ({ product, review, updateReviewForm }: Props) => {
   // console.log("🚀 product ReviewForm:", product);
   const { id, slug } = product;
   const [customerReview, setCustomerReview] = useState("");
-  const user = useUser();
+  const { user } = useUser();
 
   const [reviewBtnLoader, setReviewBtnLoader] = useState<boolean>(false);
 

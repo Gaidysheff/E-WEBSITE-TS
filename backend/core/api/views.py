@@ -433,7 +433,8 @@ def fulfill_checkout(session, cart_code):
     amount_in_currency = amount_in_cents / 100
 
     order = Order.objects.create(
-        stripe_checkout_id=session["id"],
+        checkout_id=session["id"],
+        # stripe_checkout_id=session["id"],
         amount=amount_in_currency,
         # amount=session["amount_total"],
         currency=session["currency"],

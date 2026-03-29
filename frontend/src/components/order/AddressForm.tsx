@@ -24,7 +24,7 @@ const AddressForm = ({ address }: Props) => {
 
   const [btnLoader, setBtnLoader] = useState<boolean>(false);
 
-  const user = useUser();
+  const { user } = useUser();
   const email = typeof user === "undefined" ? "" : user.email;
 
   const disableButtonHandler = () => {

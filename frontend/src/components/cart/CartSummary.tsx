@@ -24,7 +24,7 @@ const CartSummary = ({ total }: Props) => {
 
   const isAuthorized = !!localStorage.getItem("Token");
 
-  const user: UserLoggedIn | undefined = useUser();
+  const { user } = useUser();
   const email = typeof user === "undefined" ? "" : user.email;
 
   const { cartCode } = useCart();

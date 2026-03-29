@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 import { PackageSearch } from "lucide-react";
 
 const OrderContainer = () => {
-  const user: UserLoggedIn | undefined = useUser();
+  const { user } = useUser();
   const email = typeof user === "undefined" ? "" : user.email;
 
   const { data: orders, error, isPending } = useQuery(getOrdersOptions(email));

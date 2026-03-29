@@ -8,7 +8,7 @@ interface Props {
 }
 
 const ReviewCardContainer = ({ reviews, product }: Props) => {
-  const user = useUser();
+  const { user } = useUser();
 
   return (
     <>

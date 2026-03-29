@@ -7,7 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useUser } from "@/store/UserContext.tsx";
 
 const Wishlist = () => {
-  const user = useUser();
+  const { user } = useUser();
   const email = typeof user === "undefined" ? "" : user.email;
 
   const {

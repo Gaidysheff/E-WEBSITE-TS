@@ -11,6 +11,7 @@ export type User = {
     street: string;
     city: string;
     state: string;
+    phone: string;
   };
 };
 
@@ -114,7 +115,8 @@ export type OrderItem = {
 
 export type Order = {
   id: number;
-  stripe_checkout_id: string;
+  checkout_id: string;
+  // stripe_checkout_id: string;
   amount: number;
   // currency: string;
   // customer_email: string;
@@ -132,6 +134,13 @@ export type WishList = {
 };
 
 // -------- Address ----------
+export type PureAddress = {
+  id?: string;
+  street?: string;
+  state?: string;
+  city?: string;
+  phone?: string;
+};
 export type Address = {
   id: string;
   customer: User;

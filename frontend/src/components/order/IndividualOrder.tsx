@@ -25,7 +25,8 @@ const IndividualOrder = ({ order }: Props) => {
         >
           ORDER ID:{" "}
           <span className="text-green-600 font-semibold">
-            {order.stripe_checkout_id.slice(0, 22)}
+            {order.checkout_id.slice(0, 22)}
+            {/* {order.stripe_checkout_id.slice(0, 22)} */}
           </span>
         </p>
         <small className="text-primaryDark text-xs sm:text-sm">
