@@ -154,6 +154,22 @@ export type AddressWithError = Address & {
   error?: string;
 };
 
+// -------- Deliver ----------
+
+export type DeliveryType = "courier" | "pickup" | "post";
+
+export type DeliveryOption = {
+  id: DeliveryType;
+  title: string;
+  price: number;
+  time: string;
+  icon: any;
+};
+
+// -------- Payments ----------
+
+export type PaymentMethod = "card" | "sbp" | "yandex";
+
 // --------------------- Theme -------------------------
 
 export type ThemeSwitch = "light" | "dark";

@@ -35,6 +35,9 @@ const AuthenticatedUsersLazyRouteImport = createFileRoute(
 const AuthenticatedProfileLazyRouteImport = createFileRoute(
   '/_authenticated/profile',
 )()
+const AuthenticatedCheckoutLazyRouteImport = createFileRoute(
+  '/_authenticated/checkout',
+)()
 const AuthenticatedCartIndexLazyRouteImport = createFileRoute(
   '/_authenticated/cart/',
 )()
@@ -88,6 +91,14 @@ const AuthenticatedProfileLazyRoute =
     getParentRoute: () => AuthenticatedRoute,
   } as any).lazy(() =>
     import('./routes/_authenticated/profile.lazy').then((d) => d.Route),
+  )
+const AuthenticatedCheckoutLazyRoute =
+  AuthenticatedCheckoutLazyRouteImport.update({
+    id: '/checkout',
+    path: '/checkout',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any).lazy(() =>
+    import('./routes/_authenticated/checkout.lazy').then((d) => d.Route),
   )
 const ProductsProductSlugRoute = ProductsProductSlugRouteImport.update({
   id: '/products/$productSlug',
@@ -175,6 +186,7 @@ export interface FileRoutesByFullPath {
   '/search': typeof SearchSearchRoute
   '/categories/$categoryId': typeof CategoriesCategoryIdRoute
   '/products/$productSlug': typeof ProductsProductSlugRoute
+  '/checkout': typeof AuthenticatedCheckoutLazyRoute
   '/profile': typeof AuthenticatedProfileLazyRoute
   '/users': typeof AuthenticatedUsersLazyRoute
   '/failed': typeof PaymentResultFailedLazyRoute
@@ -194,6 +206,7 @@ export interface FileRoutesByTo {
   '/search': typeof SearchSearchRoute
   '/categories/$categoryId': typeof CategoriesCategoryIdRoute
   '/products/$productSlug': typeof ProductsProductSlugRoute
+  '/checkout': typeof AuthenticatedCheckoutLazyRoute
   '/profile': typeof AuthenticatedProfileLazyRoute
   '/users': typeof AuthenticatedUsersLazyRoute
   '/failed': typeof PaymentResultFailedLazyRoute
@@ -215,6 +228,7 @@ export interface FileRoutesById {
   '/_search/search': typeof SearchSearchRoute
   '/categories/$categoryId': typeof CategoriesCategoryIdRoute
   '/products/$productSlug': typeof ProductsProductSlugRoute
+  '/_authenticated/checkout': typeof AuthenticatedCheckoutLazyRoute
   '/_authenticated/profile': typeof AuthenticatedProfileLazyRoute
   '/_authenticated/users': typeof AuthenticatedUsersLazyRoute
   '/_paymentResult/failed': typeof PaymentResultFailedLazyRoute
@@ -236,6 +250,7 @@ export interface FileRouteTypes {
     | '/search'
     | '/categories/$categoryId'
     | '/products/$productSlug'
+    | '/checkout'
     | '/profile'
     | '/users'
     | '/failed'
@@ -255,6 +270,7 @@ export interface FileRouteTypes {
     | '/search'
     | '/categories/$categoryId'
     | '/products/$productSlug'
+    | '/checkout'
     | '/profile'
     | '/users'
     | '/failed'
@@ -275,6 +291,7 @@ export interface FileRouteTypes {
     | '/_search/search'
     | '/categories/$categoryId'
     | '/products/$productSlug'
+    | '/_authenticated/checkout'
     | '/_authenticated/profile'
     | '/_authenticated/users'
     | '/_paymentResult/failed'
@@ -350,6 +367,13 @@ declare module '@tanstack/react-router' {
       path: '/profile'
       fullPath: '/profile'
       preLoaderRoute: typeof AuthenticatedProfileLazyRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/checkout': {
+      id: '/_authenticated/checkout'
+      path: '/checkout'
+      fullPath: '/checkout'
+      preLoaderRoute: typeof AuthenticatedCheckoutLazyRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/products/$productSlug': {
@@ -434,6 +458,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteChildren {
   AuthenticatedUsers_tanstackRoute: typeof AuthenticatedUsers_tanstackRoute
+  AuthenticatedCheckoutLazyRoute: typeof AuthenticatedCheckoutLazyRoute
   AuthenticatedProfileLazyRoute: typeof AuthenticatedProfileLazyRoute
   AuthenticatedUsersLazyRoute: typeof AuthenticatedUsersLazyRoute
   AuthenticatedCloudPaymentPaymentLazyRoute: typeof AuthenticatedCloudPaymentPaymentLazyRoute
@@ -443,6 +468,7 @@ interface AuthenticatedRouteChildren {
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedUsers_tanstackRoute: AuthenticatedUsers_tanstackRoute,
+  AuthenticatedCheckoutLazyRoute: AuthenticatedCheckoutLazyRoute,
   AuthenticatedProfileLazyRoute: AuthenticatedProfileLazyRoute,
   AuthenticatedUsersLazyRoute: AuthenticatedUsersLazyRoute,
   AuthenticatedCloudPaymentPaymentLazyRoute:

@@ -149,13 +149,13 @@ const BankCardWithAnimation = ({ onSubmitData }: FormProps) => {
   }, [isFlipped]);
 
   return (
-    <div className="grid 2xl:grid-cols-2 gap-2 xsm:gap-6 lg:gap-10">
+    <div className="grid 2xl:grid-cols-2 gap-1 xsm:gap-6 lg:gap-10">
       {/* --------- Card Display --------- */}
 
-      <div className=" z-2 flex justify-center items-center overflow-hidden w-full h-auto sm:h-[16.5rem]">
+      <div className="relative z-2 flex justify-center items-center overflow-hidden w-full h-auto sm:h-[16.5rem]">
         <div
           className="origin-center transition-transform 
-          scale-[0.6] 2xsm:scale-[0.72] xsm:scale-[0.95] sm:scale-100"
+          scale-[0.55] 2xsm:scale-[0.72] xsm:scale-[0.95] sm:scale-100"
         >
           <CardDisplay
             isFlipped={isFlipped}
@@ -217,7 +217,7 @@ const BankCardWithAnimation = ({ onSubmitData }: FormProps) => {
         }}
       />
       {/* --------- Card Form --------- */}
-      <div className="scale-[0.8] 2xsm:scale-[0.85] xsm:scale-100">
+      <div className="scale-[0.95] 2xsm:scale-[0.97] xsm:scale-100">
         <CardForm
           onSubmit={submitHandler}
           bankCardForm={bankCardForm}

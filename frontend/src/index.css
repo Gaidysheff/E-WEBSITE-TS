@@ -327,7 +327,7 @@ html {
   }
 
   .checkout-btn {
-    @apply w-full mt-5 py-3 bg-primaryDark border-2 border-primaryDark rounded-md 
+    @apply w-full min-w-[300px] mt-5 py-3 bg-primaryDark border-2 border-primaryDark rounded-md 
             text-xs 2xsm:text-base sm:text-lg lg:text-sm text-primaryLight
             hover:bg-primary hover:scale-105 transition disabled:opacity-50
             drop-shadow-[3px_3px_5px_rgba(0,0,0,0.5)]

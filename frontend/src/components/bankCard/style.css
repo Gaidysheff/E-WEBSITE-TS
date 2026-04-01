@@ -1,0 +1,133 @@
+/* =========== Эффект выдавливания на пластике ================ */
+
+.embossed-text {
+  text-shadow:
+    -1px -1px 1px rgba(255, 255, 255, 0.6),
+    /* Свет */ 1px 1px 1px rgba(0, 0, 0, 0.7); /* Тень */
+  /* Для большего реализма можно добавить градиент в цвет шрифта */
+  background: linear-gradient(180deg, #fff 0%, #ccc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.embossed-text-light {
+  text-shadow:
+    -0.5px -0.5px 0.5px rgba(255, 255, 255, 0.6),
+    /* Свет */ 0.5px 0.5px 0.5px rgba(0, 0, 0, 0.7); /* Тень */
+  /* Для большего реализма можно добавить градиент в цвет шрифта */
+  background: linear-gradient(180deg, #fff 0%, #ccc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ============= Эффект блика (Card Shine) ================= */
+
+@keyframes shine {
+  0% {
+    transform: translateX(-100%) skewX(-30deg);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.5;
+  }
+  70% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateX(700%) skewX(-30deg);
+    opacity: 0;
+  }
+}
+
+.card-container {
+}
+
+.card-shine {
+  pointer-events: none; /* Чтобы не мешал кликам */
+  position: absolute !important;
+  top: 0;
+  left: 0;
+  width: 60px;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(255, 255, 255, 0.5),
+    transparent
+  );
+  transform: translateX(-200%) skewX(-30deg); /* Начальная точка вне видимости */
+  opacity: 0;
+  /* В покое он невидим */
+  z-index: 9;
+}
+
+/* Блик запускается при наведении на карту */
+.card-container:hover .card-shine {
+  animation: shine 1.2s ease-in-out;
+}
+
+/* ============= Эффект "Сияние" ===================== */
+@keyframes pulse-glow {
+  0% {
+    box-shadow: 0 0 5px rgba(var(--main-color-rgb), 0.4);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(var(--main-color-rgb), 0.8);
+  }
+  100% {
+    box-shadow: 0 0 5px rgba(var(--main-color-rgb), 0.4);
+  }
+}
+
+.active-glow {
+  outline: 2px solid rgba(255, 255, 255, 0.5);
+  border-radius: 8px;
+  animation: pulse-glow 2s infinite;
+  background: rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+/* ============= Эффект блика (Card Shine) ================= */
+
+.shining {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.5s;
+  z-index: 100;
+}
+
+.shining:after {
+  content: "";
+  width: 100%;
+  height: 200%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0.3;
+  filter: blur;
+
+  background: linear-gradient(
+    to right,
+    transparent,
+    transparent 0%,
+    rgb(0, 0, 0, 0.3) 50%,
+    rgba(0, 0, 0, 0.3) 60%,
+    transparent 100%
+  );
+  transform: translate(-100%, -25%) rotate(25deg);
+  transition: transform 0.55s;
+}
+
+.shining:hover:after {
+  transform: translate(100%, -25%) rotate(25deg);
+  animation: blick 1.5s infinite;
+}
+
+@keyframes blick {
+  from {
+    transform: translateX(-100%) skewX(-25deg);
+  }
+  to {
+    transform: translateX(100%) skewX(-25deg);
+  }
+}

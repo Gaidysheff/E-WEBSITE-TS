@@ -1,14 +1,15 @@
 import { BASE_URL } from "@/api/api.ts";
 import { Spinner } from "@/components/ui/spinner";
 import { MapPinHouse } from "lucide-react";
-
+import { cn } from "@/lib/utils";
 import { type UserLoggedIn } from "@/lib/types.ts";
 interface Props {
   user: UserLoggedIn | undefined;
   isLoading: boolean;
+  forCheckoutPage?: boolean;
 }
 
-const ShippingInfo = ({ user, isLoading }: Props) => {
+const ShippingInfo = ({ user, isLoading, forCheckoutPage }: Props) => {
   const email = typeof user === "undefined" ? "" : user.email;
   const address = user?.address;
   const imgURL = `${BASE_URL}${user?.image}`;
@@ -18,11 +19,12 @@ const ShippingInfo = ({ user, isLoading }: Props) => {
       className="sm:grid sm:grid-cols-3 gap-4 mt-5
       items-center justify-center"
     >
-      <div className="">
+      <div className={cn("", forCheckoutPage && "hidden")}>
         {user?.image && (
           <img src={imgURL} className="w-50 mx-auto" alt="User's image" />
         )}
       </div>
+
       <div className="col-span-2 flex flex-col">
         <div className="text-2xl font-semibold my-3">Your Shipping Info</div>
         {isLoading ? (

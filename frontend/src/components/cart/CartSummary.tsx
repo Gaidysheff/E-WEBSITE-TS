@@ -8,6 +8,7 @@ import StripeIcon from "@/components/svgImages/StripeIcon.tsx";
 import CloudPayments from "@/components/svgImages/CloudPaymentsForButton";
 import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
+import { ListChecks } from "lucide-react";
 
 interface Props {
   total: number;
@@ -15,6 +16,7 @@ interface Props {
 
 const CartSummary = ({ total }: Props) => {
   const navigate = useNavigate();
+
   const [initiatePaymentLoader, setInitiatePaymentLoader] =
     useState<boolean>(false);
 
@@ -117,7 +119,7 @@ const CartSummary = ({ total }: Props) => {
         </p>
       </div>
 
-      <Button
+      {/* <Button
         disabled={!isAuthorized || cartSubTotal < 0.01 || initiatePaymentLoader}
         handleClick={initiatePaymentHandler}
         className="checkout-btn"
@@ -165,6 +167,28 @@ const CartSummary = ({ total }: Props) => {
             <span>Proceed with</span>
             <span className="h-[20px] ml-2">
               <CloudPayments />
+            </span>
+          </div>
+        )}
+      </Button> */}
+      <Button
+        disabled={cartSubTotal < 0.01 || initiatePaymentLoader}
+        handleClick={() => {
+          navigate({ to: "/checkout" });
+        }}
+        className="checkout-btn"
+      >
+        {initiatePaymentLoader ? (
+          <div>
+            <div className="inline-flex items-center">
+              <span>Redirecting to ...</span>
+            </div>
+          </div>
+        ) : (
+          <div className="inline-flex items-center">
+            <span className="mr-2">Proceed with Checklist</span>
+            <span>
+              <ListChecks className="size-[24px]" />
             </span>
           </div>
         )}

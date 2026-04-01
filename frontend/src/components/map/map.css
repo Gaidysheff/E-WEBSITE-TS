@@ -1,0 +1,48 @@
+.wrapper {
+  /* border-radius: 1rem; */
+  border-width: 5px;
+}
+
+[class*="ground-pane"] {
+  filter: grayscale(1) !important;
+}
+
+[class*="copyright_logo_no"] {
+  display: none !important;
+}
+
+[class*="copyright"] {
+  filter: grayscale(1) !important;
+}
+
+[class*="gototech"] {
+  display: none !important;
+}
+
+.driver-card {
+  width: 90%;
+  height: auto;
+}
+/* имейте ввиду, что больше 400px будет показано с прокруткой */
+
+[class*="balloon"] {
+  box-shadow: none !important;
+  border-radius: 1rem;
+  color: white;
+}
+
+[class*="balloon__content"] {
+  background: var(--color-myMainColor) !important;
+  margin: 0 !important;
+}
+
+[class*="balloon__layout"] {
+  background: var(--color-myMainColor) !important;
+  border: none !important;
+}
+
+.balloon-header {
+  width: auto;
+  font-weight: bold;
+  text-decoration: underline;
+}
