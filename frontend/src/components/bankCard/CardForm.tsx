@@ -42,10 +42,8 @@ import {
 import { type AnyReactForm } from "@/lib/types.ts";
 import { useStore } from "@tanstack/react-form";
 import { Link } from "@tanstack/react-router";
-import {
-  FieldInfo,
-  type BankCardSchemaType,
-} from "./BankCardWithAnimation.tsx";
+import { FieldInfo } from "./BankCardWithAnimation.tsx";
+import { type BankCardSchemaType } from "@/components/bankCard/bankCardSchema.ts";
 
 interface FormProps {
   setIsFlipped: Dispatch<SetStateAction<boolean>>;
@@ -378,7 +376,16 @@ const CardForm = ({
             </div>
           </div>
           <Field orientation="horizontal">
-            <Button type="button" variant="outline" asChild>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => bankCardForm.reset()}
+              className="text-[10px] text-gray-400 hover:text-red-500
+              transition-colors uppercase tracking-widest mt-2"
+            >
+              Clear card details
+            </Button>
+            {/* <Button type="button" variant="outline" asChild>
               <Link from="/" to={`cart/${cartCode}`}>
                 Cancel
               </Link>
@@ -390,7 +397,7 @@ const CardForm = ({
                   {isSubmitting ? "..." : "Pay"}
                 </Button>
               )}
-            />
+            /> */}
           </Field>
         </FieldGroup>
       </form>

@@ -35,7 +35,6 @@ const CheckoutSection = ({
         </div>
         {isCompleted && (
           <span className="text-green-500 text-sm font-medium flex items-center gap-1">
-            {/* <CheckCircle className="size-4" /> Done */}
             <BadgeCheck className="size-6" /> Done
           </span>
         )}

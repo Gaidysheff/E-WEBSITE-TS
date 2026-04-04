@@ -6,7 +6,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-
+import { cn } from "@/lib/utils.ts";
 import { PenIcon } from "lucide-react";
 // import { type Dispatch, type SetStateAction } from "react";
 import { type PureAddress } from "@/lib/types.ts";
@@ -18,6 +18,7 @@ type Props = {
   userAlreadyHaveReview?: boolean;
   updateReviewModal?: boolean;
   addressForm?: boolean;
+  iframe?: boolean;
   address?: PureAddress | null | undefined;
   isModalOpen: boolean;
   setIsModalOpen: Dispatch<SetStateAction<boolean>>;
@@ -31,6 +32,7 @@ const Modal = ({
   address,
   isModalOpen,
   setIsModalOpen,
+  iframe,
 }: Props) => {
   if (userAlreadyHaveReview) {
     return null;
@@ -59,20 +61,43 @@ const Modal = ({
           >
             {address?.street ? "Update Address" : "Add Address"}
           </button>
-        ) : (
+        ) : !iframe ? (
           <button
             type="button"
             className="default-btn max-sm:text-sm max-sm:px-4 my-6"
           >
             Click to add a review
           </button>
-        )}
+        ) : null}
       </DialogTrigger>
-      <DialogContent aria-describedby={undefined} className="p-2">
-        <DialogHeader>
-          <DialogTitle className="hidden">Are you absolutely sure?</DialogTitle>
-          <DialogDescription asChild>{children}</DialogDescription>
-        </DialogHeader>
+      <DialogContent
+        aria-describedby={undefined}
+        className={cn(
+          "",
+          iframe ? "sm:max-w-[500px] p-0 overflow-hidden" : "p-2",
+        )}
+      >
+        {iframe && (
+          <div className="w-full h-[550px] flex flex-col">
+            <iframe
+              name="3ds-frame"
+              title="3ds-frame"
+              className="w-full flex-grow border-none"
+            />
+            {/* Форма тоже должна быть здесь, чтобы target="3ds-frame" сработал */}
+            {children}
+          </div>
+        )}
+        {!iframe && (
+          <>
+            <DialogHeader>
+              <DialogTitle className="hidden">
+                Are you absolutely sure?
+              </DialogTitle>
+              <DialogDescription asChild>{children}</DialogDescription>
+            </DialogHeader>
+          </>
+        )}
       </DialogContent>
     </Dialog>
   );

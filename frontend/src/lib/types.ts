@@ -177,9 +177,12 @@ export type ThemeSwitch = "light" | "dark";
 
 // ----------------------------------------------------------
 
-export interface PaymentResponse {
-  Success: boolean;
+export interface CPResponse {
+  Success?: boolean;
   Message?: string;
+  TransactionId: string;
+  AcsUrl: string;
+  PaReq: string;
 }
 
 // ==================== Deep Partial ===========================

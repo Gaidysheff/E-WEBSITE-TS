@@ -536,21 +536,26 @@ def get_address(request):
 # @csrf_exempt  # если приходит ошибку 403 при POST-запросе
 @api_view(["POST"])
 def process_payment(request):
+    # print("CHECK-CART:", request.data.get("cart_code"))
+    # print("CHECK-USER:", request.user)
     # 1. Находим корзину (например, по сессии или пользователю)
     # Предположим, у вас есть способ получить текущую корзину
-    cart = Cart.objects.get(user=request.user, is_active=True)
+    cart = Cart.objects.get(user=request.user)
+    # cart = Cart.objects.get(user=request.user, is_active=True)
 
-    # 2. Считаем итоговую сумму на сервере
-    total_amount = sum(item.total_price for item in cart.cartitems.all())
-
-    # print("DATA RECEIVED:", request.data)  # Посмотрите в консоль Django
+    # total_amount = sum(item.total_price for item in cart.cartitems.all())
+    if cart:
+        # 2. Считаем итоговую сумму на сервере
+        total_amount = sum(item.total_price for item in cart.cartitems.all())
 
     if not request.data:
         return Response({"error": "Empty body"}, status=400)
+
     # Данные для CloudPayments API
     # (поля должны начинаться с Большой буквы - это важно для CP)
     payload = {
         "Amount": float(total_amount),  # Берем честную сумму из БД,
+        # "Amount": int(total_amount * 100) / 100,  # Берем честную сумму из БД,
         # "Amount": request.data.get("amount"),
         "Currency": request.data.get("currency", "RUB"),
         "Name": request.data.get("name"),
@@ -558,6 +563,8 @@ def process_payment(request):
         "InvoiceId": request.data.get("invoiceId"),
         "Description": request.data.get("description"),
     }
+
+    print("CHECK-payload:", payload)
 
     # 3. Делаем запрос на правильный URL
     url = "https://api.cloudpayments.ru/payments/cards/charge"
@@ -568,9 +575,23 @@ def process_payment(request):
         settings.CLOUD_PAYMENTS_PUBLIC_ID, settings.CLOUD_PAYMENTS_API_SECRET_KEY
     )
 
+    # ----------------- Вариант без подключения CP Payments ----------------
+    # try:
+    #     response = requests.post(url, json=payload, auth=auth, timeout=10)
+    #     print(f"DEBUG: Status {response.status_code}, Content: {response.text}")
+
+    #     if response.status_code == 401:
+    #         return Response({"error": "Invalid API Credentials (401)"}, status=401)
+
+    #     cp_data = response.json()
+    # except ValueError:
+    #     return Response({"error": "Invalid JSON from CloudPayments"}, status=500)
+
+    # ----------------- далее при подключении CP Payments ----------------
     try:
         response = requests.post(url, json=payload, auth=auth, timeout=10)
         # Всегда ставьте таймаут для внешних API
+        print(f"DEBUG: Status {response.status_code}, Content: {response.text}")
 
         cp_data = response.json()
 
@@ -578,7 +599,7 @@ def process_payment(request):
             print("Платёж одобрен!")
 
             # Находим и удаляем корзину, так как заказ оплачен
-            Cart.objects.filter(cart_code=data.get("cart_code")).delete()
+            Cart.objects.filter(cart_code=request.data.get("cart_code")).delete()
         else:
             # Если Success: false, причина будет в Message
             print(f"Отказ: {cp_data.get('Message')}")

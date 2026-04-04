@@ -1,14 +1,28 @@
 import "./map.css";
 
 import { Map, Placemark, YMaps } from "@pbe/react-yandex-maps";
+import { useEffect, useState } from "react";
 
 import office from "@/assets/contacts/officeOZON.png";
 
 const YandexMap = () => {
+  const [mapIconColor, setMapIconColor] = useState("#000000");
+
+  useEffect(() => {
+    // Вытаскиваем реальный HEX из вычисленных стилей документа
+    const color = getComputedStyle(document.documentElement)
+      .getPropertyValue("--color-myMainColor")
+      .trim();
+
+    // Если браузер вернул oklch, нам нужно сконвертировать его или
+    // просто использовать заранее подготовленную переменную с HEX.
+    setMapIconColor(color);
+  }, []);
+
   return (
     <>
       <section className="container" data-aos="flip-up" id="contacts">
-        <div className="border-4 border-primaryLight w-[80%] mx-auto">
+        <div className="border-4 border-myMainColor/50 w-[80%] mx-auto relative z-10">
           <YMaps>
             <Map
               state={{
@@ -28,26 +42,19 @@ const YandexMap = () => {
               <Placemark
                 modules={["geoObject.addon.balloon"]}
                 defaultGeometry={[56.803445340602664, 60.59119948099013]}
-                // properties={{
-                //   balloonContentHeader: "Екатеринбург, ул. Печатников д.1",
-                //   balloonContentBody:
-                //     "Вход в K.ést.perfume с торца. Входная группа совместна с Wildberries",
-                // }}
                 options={{
-                  // iconLayout: "default#image",
-                  // iconImageHref: `${ marker }`,
-                  preset: "islands#redDotIcon",
-                  // iconImageSize: [30, 30],
-                  // iconImageOffset: [0, 0],
-                  // preset: "islands#circleIcon", // список темплейтов на сайте яндекса
-                  // iconColor: "green", // цвет иконки, можно также задавать в hex
+                  // preset: "islands#redDotIcon",
+
+                  iconColor: mapIconColor,
                 }}
                 properties={{
-                  iconContent: "2", // пару символов помещается
-                  hintContent: "<b>кликнуть, чтобы посмотреть комментарий</b>",
-                  // создаём пустой элемент с заданными размерами
-                  balloonContent:
-                    '<div id="driver-2" class="driver-card"><div class="balloon-header">Екатеринбург, ул. Печатников д.1</div><div>Вход в K.ést.perfume с торца здания. Входная группа совместна с Wildberries</div></div>',
+                  hintContent: "Наш магазин",
+                  balloonContent: `
+                  <div class="p-2 text-white">
+                    <strong class="block mb-1">Екатеринбург</strong>
+                    <p class="text-xs">ул. Печатников д.1, вход с торца</p>
+                  </div>
+                `,
                 }}
                 // onClick={() => {
                 //   // ставим в очередь промисов, чтобы сработало после отрисовки балуна
@@ -61,7 +68,7 @@ const YandexMap = () => {
         </div>
       </section>
       <section className="bg-gray-300 mt-[-100px] md:mt-[-170px]">
-        <div className="w-full">
+        <div className="w-full grayscale">
           <img
             src={office}
             alt=""

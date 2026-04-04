@@ -163,7 +163,7 @@ function Payment() {
               resolve(result); // Успех: перенаправляем на страницу "Спасибо"
             } else if (result.Message === "Need3dSecure") {
               // Имитация 3D Secure (если транзакция требует подтверждения SMS)
-              handle3DSecure(result.AcsUrl, result.PaReq, result.TransactionId);
+              // handle3DSecure(result.AcsUrl, result.PaReq, result.TransactionId);
             } else {
               reject(result.Message); // Ошибка: например, "Недостаточно средств"
             }

@@ -1,41 +1,16 @@
 import Globe from "@/assets/images/payment/globe.svg";
-import { useForm, useStore, type AnyFieldApi } from "@tanstack/react-form";
-
-import { z } from "zod";
+import { type BankCardSchemaType } from "@/components/bankCard/bankCardSchema.ts";
+import { type AnyReactForm } from "@/lib/types.ts";
+import { useStore, type AnyFieldApi } from "@tanstack/react-form";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import "./style.css";
 
-import { useEffect, useRef, useState, type FormEvent } from "react";
-
-import { CURRENT_YEAR } from "@/lib/utilities.ts";
 import CardDisplay from "./CardDisplay.tsx";
 import CardForm from "./CardForm.tsx";
 
 interface FormProps {
-  onSubmitData: (data: Record<string, string>) => Promise<any>;
+  bankCardForm: AnyReactForm<BankCardSchemaType>;
 }
-
-const bankCardSchema = z.object({
-  cardNumber: z
-    .string()
-    .regex(/^\d+$/, { message: "number must contain only digits" })
-    .refine((val) => val.length === 16 || val.length === 19, {
-      message: "Must be 16 or 19 digits",
-    }),
-  userName: z
-    .string()
-    .min(1, { message: "Name is required" })
-    .min(2, { message: "Name must be at least 2 characters" })
-    .regex(/^[a-zA-Z\s]+$/, "String must contain only Latin letters"),
-  month: z.string().min(1),
-  year: z.string().min(4),
-  cvc: z
-    .string()
-    .regex(/^\d+$/, { message: "cvc must contain only digits" })
-    .length(3, "CVC must be 3 digits"),
-});
-
-// Optional: Infer the TypeScript type from the schema for full type safety
-export type BankCardSchemaType = z.infer<typeof bankCardSchema>;
 
 export function FieldInfo({ field }: { field: AnyFieldApi }) {
   return (
@@ -55,35 +30,7 @@ export function FieldInfo({ field }: { field: AnyFieldApi }) {
   );
 }
 
-const BankCardWithAnimation = ({ onSubmitData }: FormProps) => {
-  const bankCardForm = useForm({
-    defaultValues: {
-      cardNumber: "",
-      userName: "",
-      cvc: "",
-      month: "01",
-      year: String(CURRENT_YEAR),
-    } as BankCardSchemaType,
-
-    validators: {
-      onChangeAsync: bankCardSchema,
-      onChangeAsyncDebounceMs: 500,
-      onMount: bankCardSchema, // ПРИНУДИТЕЛЬНАЯ ПРОВЕРКА ПРИ ЗАГРУЗКЕ
-    },
-
-    onSubmit: async ({ value }) => {
-      // 1. TanStack Form сам поставит isSubmitting в true
-      // Кнопка переключится в "Processing...", пока этот await не завершится
-      try {
-        await onSubmitData(value);
-      } catch (err) {
-        console.error("Payment failed", err);
-        // Ошибка здесь вернет кнопку в обычное состояние
-      }
-      // 2. После завершения async функции isSubmitting вернется в false
-    },
-  });
-
+const BankCardWithAnimation = ({ bankCardForm }: FormProps) => {
   // Подписываемся на значения через useStore (Вариант-1)
   const formValues = useStore(bankCardForm.store, (state) => state.values);
 
