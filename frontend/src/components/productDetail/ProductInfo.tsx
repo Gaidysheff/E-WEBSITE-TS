@@ -23,7 +23,10 @@ interface Props {
 
 const ProductInfo = ({ product, isAuthorized }: Props) => {
   const { user } = useUser();
+  console.log("🚀 ~ ProductInfo ~ user:", user);
+
   const email = typeof user === "undefined" ? "" : user.email;
+  // const userId: number | undefined = user?.id;
 
   const { cartCode, setCartItemsCount } = useCart();
 
@@ -40,7 +43,9 @@ const ProductInfo = ({ product, isAuthorized }: Props) => {
     setAddToCartLoader(true);
 
     const formData = new FormData();
-    formData.set("cart_code", cartCode ? cartCode : "");
+    formData.set("cart_code", cartCode);
+    // formData.set("user", userId);
+    // formData.set("cart_code", cartCode ? cartCode : "");
     formData.set("product_id", String(product.id));
 
     addToCartAction(formData);

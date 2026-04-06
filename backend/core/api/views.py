@@ -1,3 +1,5 @@
+from django.db import transaction
+
 import stripe
 from django.conf import settings
 from django.shortcuts import get_object_or_404, render
@@ -116,8 +118,14 @@ def category_detail(request, slug):
 def add_to_cart(request):
     cart_code = request.data.get("cart_code")
     product_id = request.data.get("product_id")
+    # user = request.data.get("user")
 
     cart, created = Cart.objects.get_or_create(cart_code=cart_code)
+    # cart, created = Cart.objects.get_or_create(cart_code=cart_code, user=user)
+    if created:
+        print("Новая корзина создана")
+    else:
+        print("Корзина уже существовала")
     product = Product.objects.get(id=product_id)
 
     cartitem, created = CartItem.objects.get_or_create(product=product, cart=cart)
@@ -539,23 +547,26 @@ def process_payment(request):
     # print("CHECK-CART:", request.data.get("cart_code"))
     # print("CHECK-USER:", request.user)
     # 1. Находим корзину (например, по сессии или пользователю)
-    # Предположим, у вас есть способ получить текущую корзину
-    cart = Cart.objects.get(user=request.user)
-    # cart = Cart.objects.get(user=request.user, is_active=True)
 
-    # total_amount = sum(item.total_price for item in cart.cartitems.all())
-    if cart:
+    # cart = Cart.objects.get(user=request.user)
+    try:
+        cart = Cart.objects.get(user=request.user)
+    except Cart.DoesNotExist:
+        return Response({"error": "Cart not found"}, status=404)
+
         # 2. Считаем итоговую сумму на сервере
-        total_amount = sum(item.total_price for item in cart.cartitems.all())
+    total_amount = sum(item.total_price for item in cart.cartitems.all())
+    # if cart:
+    #     total_amount = sum(item.total_price for item in cart.cartitems.all())
 
     if not request.data:
         return Response({"error": "Empty body"}, status=400)
 
     # Данные для CloudPayments API
-    # (поля должны начинаться с Большой буквы - это важно для CP)
+    # (!!! поля должны начинаться с Большой буквы - это важно для CP)
     payload = {
-        "Amount": float(total_amount),  # Берем честную сумму из БД,
-        # "Amount": int(total_amount * 100) / 100,  # Берем честную сумму из БД,
+        # "Amount": float(total_amount),  # Берем честную сумму из БД,
+        "Amount": int(total_amount * 100) / 100,  # Берем честную сумму из БД,
         # "Amount": request.data.get("amount"),
         "Currency": request.data.get("currency", "RUB"),
         "Name": request.data.get("name"),
@@ -564,7 +575,7 @@ def process_payment(request):
         "Description": request.data.get("description"),
     }
 
-    print("CHECK-payload:", payload)
+    # print("CHECK-payload:", payload)
 
     # 3. Делаем запрос на правильный URL
     url = "https://api.cloudpayments.ru/payments/cards/charge"
@@ -575,42 +586,47 @@ def process_payment(request):
         settings.CLOUD_PAYMENTS_PUBLIC_ID, settings.CLOUD_PAYMENTS_API_SECRET_KEY
     )
 
-    # ----------------- Вариант без подключения CP Payments ----------------
-    # try:
-    #     response = requests.post(url, json=payload, auth=auth, timeout=10)
-    #     print(f"DEBUG: Status {response.status_code}, Content: {response.text}")
-
-    #     if response.status_code == 401:
-    #         return Response({"error": "Invalid API Credentials (401)"}, status=401)
-
-    #     cp_data = response.json()
-    # except ValueError:
-    #     return Response({"error": "Invalid JSON from CloudPayments"}, status=500)
-
-    # ----------------- далее при подключении CP Payments ----------------
     try:
         response = requests.post(url, json=payload, auth=auth, timeout=10)
         # Всегда ставьте таймаут для внешних API
         print(f"DEBUG: Status {response.status_code}, Content: {response.text}")
 
-        cp_data = response.json()
+        # Имитируем успех, если получили 401 (нет ключей) или 200 (есть ключи)
+        if response.status_code in [200, 401]:
+            # if response.status_code == 200: когда реально подписан на CP
+            with transaction.atomic():
+                # 2. Создаем основной заказ
+                order = Order.objects.create(
+                    checkout_id=request.data.get("invoiceId", f"INV-{cart.id}"),
+                    amount=total_amount,
+                    currency="RUB",
+                    customer_email=request.user.email,
+                    status="Paid",  # Ставим Paid, так как мы в режиме эмуляции успеха
+                )
 
-        if cp_data.get("Success"):
-            print("Платёж одобрен!")
+                # 3. Переносим товары из корзины в OrderItem
+                for item in cart.cartitems.all():
+                    OrderItem.objects.create(
+                        order=order, product=item.product, quantity=item.quantity
+                    )
 
-            # Находим и удаляем корзину, так как заказ оплачен
-            Cart.objects.filter(cart_code=request.data.get("cart_code")).delete()
-        else:
-            # Если Success: false, причина будет в Message
-            print(f"Отказ: {cp_data.get('Message')}")
+                # 4. Удаляем корзину
+                cart.delete()
 
-        return Response(cp_data, status=response.status_code)
+            return Response(
+                {
+                    "Success": True,
+                    "Message": "Order created (Dev Mode)",
+                    "TransactionId": order.checkout_id,
+                },
+                status=200,
+            )
 
-        # # Печатаем ответ от CP в консоль для отладки
-        # print("CP RESPONSE STATUS:", response.status_code)
-        # print("CP RESPONSE BODY:", response.text)
+        return Response(
+            {"Success": False, "Message": "Payment Failed"}, status=response.status_code
+        )
 
-        # # 4. Возвращаем ответ от CloudPayments фронтенду (Response от DRF)
-        # return Response(response.json(), status=response.status_code)
-    except requests.exceptions.RequestException as e:
+    except Cart.DoesNotExist:
+        return Response({"error": "Cart not found"}, status=404)
+    except Exception as e:
         return Response({"error": str(e)}, status=500)

@@ -18,7 +18,7 @@ interface CartContextType {
   cartCode: string;
   cartItemsCount: number;
   setCartItemsCount: React.Dispatch<React.SetStateAction<number>>;
-  clearCartCode: () => void;
+  clearCart: () => void;
   items: Cartitem[];
   totalPrice: number;
   refreshCart: () => void;
@@ -78,7 +78,7 @@ export const CartContextProvider = ({ children }: CartProviderProps) => {
 
   // ----------------------------
 
-  const clearCartCode = () => {
+  const clearCart = () => {
     localStorage.removeItem("cartcode");
     setCartCode("");
     // Чтобы иконка корзины в шапке (счетчик) обнулилась мгновенно
@@ -88,7 +88,7 @@ export const CartContextProvider = ({ children }: CartProviderProps) => {
     setCartItemsCount(0);
   };
 
-  // const clearCartCode = () => {
+  // const clearCart = () => {
   //   localStorage.removeItem("cartcode");
   //   setCartCode("");
   // };
@@ -101,7 +101,7 @@ export const CartContextProvider = ({ children }: CartProviderProps) => {
     cartCode,
     cartItemsCount,
     setCartItemsCount,
-    clearCartCode,
+    clearCart,
     items,
     totalPrice,
     refreshCart,

@@ -13,7 +13,7 @@ import {
 
 import api from "@/api/api.ts";
 import { toast } from "react-toastify";
-
+import { type CPResponse, type PureAddress } from "@/lib/types";
 // import {
 //   CART_DELETE_URL,
 //   CART_GET_URL,
@@ -40,7 +40,7 @@ type AddressHandler = (addressData: {
   city: string;
   state: string;
   phone: string;
-}) => Promise<any>;
+}) => Promise<PureAddress>;
 
 type CloudPaymentsHandler = (paymentData: {
   amount: number;
@@ -51,11 +51,11 @@ type CloudPaymentsHandler = (paymentData: {
   description: string;
 }) => Promise<CPResponse>;
 
-type CPResponse = {
-  Success: boolean;
-  Message?: string;
-  Model?: any; // Здесь могут быть данные для 3DS
-};
+// type CPResponse = {
+//   Success: boolean;
+//   Message?: string;
+//   Model?: any; // Здесь могут быть данные для 3DS
+// };
 
 // ===================== Add Review =========================
 
@@ -168,8 +168,12 @@ export const deleteReviewAction: FormSubmitHandler = async (formData) => {
 export const addToCartAction: FormSubmitHandler = async (formData) => {
   const product_id = formData.get("product_id");
   const cart_code = formData.get("cart_code");
+  // const user = formData.get("user");
 
   const cartObject = { product_id, cart_code };
+  // const cartObject = { product_id, cart_code, user };
+
+  console.log("🚀 ~ addToCartAction ~ cartObject:", cartObject);
 
   // --------------- Fetching delay ----------------------
   // await new Promise((resolve) => setTimeout(resolve, 4000));
@@ -177,6 +181,7 @@ export const addToCartAction: FormSubmitHandler = async (formData) => {
 
   try {
     await api.post(CART_ADD_URL, cartObject).then((response) => {
+      // console.log("🚀 ~ addToCartAction ~ response:", response);
       if (response?.status === 200) {
         toast.success("Selected item added successfully!");
       } else {
@@ -187,7 +192,7 @@ export const addToCartAction: FormSubmitHandler = async (formData) => {
       const reloadDelay = () => {
         window.location.reload();
       };
-      setTimeout(reloadDelay, 3000);
+      setTimeout(reloadDelay, 5000);
 
       return response;
     });
@@ -350,7 +355,9 @@ export const initiatePaymentAction: PaymentHandler = async (paymentObject) => {
 
 // =================== Add Address ======================
 
-export const addAddressAction: AddressHandler = async (addressData: any) => {
+export const addAddressAction: AddressHandler = async (
+  addressData: PureAddress,
+) => {
   try {
     const response = await api.post(ADDRESS_ADD_URL, addressData);
     if (response?.status === 200 || response?.status === 201) {

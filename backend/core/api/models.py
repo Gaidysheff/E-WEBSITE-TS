@@ -188,9 +188,6 @@ class OrderItem(models.Model):
         # return f"Order {self.product.name} - {self.order.stripe_checkout_id}"
 
 
-# Newly Added
-
-
 class CustomerAddress(models.Model):
     customer = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="address"

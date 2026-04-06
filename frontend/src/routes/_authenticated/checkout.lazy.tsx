@@ -49,7 +49,7 @@ function CheckoutPage() {
 
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("card");
 
-  const { items, totalPrice, cartCode } = useCart();
+  const { items, totalPrice, cartCode, clearCart } = useCart();
   const { user, isLoading } = useUser();
 
   const address = user?.address;
@@ -74,21 +74,14 @@ function CheckoutPage() {
       // onChangeAsync: bankCardSchema,
       // onChangeAsyncDebounceMs: 500,
 
-      // 1. Валидируем при загрузке (чтобы кнопка знала статус сразу)
+      // Валидируем при загрузке (чтобы кнопка знала статус сразу)
       onMount: bankCardSchema, // ПРИНУДИТЕЛЬНАЯ ПРОВЕРКА ПРИ ЗАГРУЗКЕ
-      // 2. Валидируем при каждом вводе символа
-      // onChange: bankCardSchema,
     },
 
     onSubmit: async ({ value }) => {
       // 1. TanStack Form сам поставит isSubmitting в true
       // Кнопка переключится в "Processing...", пока этот await не завершится
       try {
-        // await new Promise((resolve) => setTimeout(resolve, 3000));
-
-        // await CardDataHandler(value); // Вызываем обработчик оплаты
-        console.log("Submit started"); // Проверьте в консоли
-        console.log("Submit finished");
         await CardDataHandler(value); // Обязательно await, иначе isSubmitting сразу станет false
       } catch (err) {
         console.error("Caught in onSubmit:", err);
@@ -99,23 +92,9 @@ function CheckoutPage() {
   });
 
   // ------------------ Валидация --------------------------
-  // const canPay =
-  //   (paymentMethod === "card" ? bankCardForm.state.canSubmit : true) &&
-  //   (!!user?.address?.street || delivery.id === "pickup");
 
   // 1. Проверка адреса (если не самовывоз)
   const isAddressReady = delivery.id === "pickup" || !!user?.address?.street;
-
-  // 2. Проверка карты (если выбран метод "card")
-  // Мы берем состояние canSubmit из объекта bankCardForm,
-  // который подняли в родителя
-  // const isPaymentReady =
-  //   paymentMethod === "card"
-  //     ? bankCardForm.state.canSubmit && !bankCardForm.state.isSubmitting
-  //     : true; // Для СБП/Яндекса пока считаем true
-
-  // // Итоговое состояние кнопки
-  // const canPay = isAddressReady && isPaymentReady && !isLoading;
 
   // -------- Сценарий 3D Secure (Эмуляция) ---------
 
@@ -205,19 +184,6 @@ function CheckoutPage() {
         taxationSystem: 0, // Система налогообложения магазина
       };
 
-      // ================ Эмуляция =====================
-      if (CardData.userName === "SUCCESS TEST") {
-        new Promise((res) => setTimeout(res, 2000));
-        navigate({ to: "/success" });
-        return resolve({ Success: true });
-      }
-
-      if (CardData.userName === "FAIL TEST") {
-        new Promise((res) => setTimeout(res, 2000));
-        toast.error("Имитация ошибки: Карта отклонена");
-        return reject("Declined");
-      }
-
       // ================== Код от CloudPayments =============================
       const checkout = new cp.Checkout({
         publicId: "test_api_000000000000000001",
@@ -235,6 +201,21 @@ function CheckoutPage() {
         .then(async (cryptogram: string) => {
           // Криптограмма готова!
           console.log("Криптограмма успешно создана:", cryptogram);
+
+          // ================ Эмуляция =====================
+          if (CardData.userName === "SUCCESS TEST") {
+            new Promise((res) => setTimeout(res, 2000));
+            navigate({ to: "/success", search: { cryptogram } });
+            return resolve({ Success: true });
+          }
+
+          if (CardData.userName === "FAIL TEST") {
+            new Promise((res) => setTimeout(res, 2000));
+            toast.error("Имитация ошибки: Карта отклонена");
+            return reject("Declined");
+          }
+
+          // ==================================================
 
           // 2. Формируем финальный объект для нашего Бэкенда
           const paymentData = {
@@ -258,7 +239,13 @@ function CheckoutPage() {
 
             if (result.Success) {
               toast.success("Payment successful!");
-              navigate({ to: "/success" }); // Улетаем на страницу успеха
+
+              clearCart(); // Метод из useCart()
+
+              navigate({
+                to: "/success", // Улетаем на страницу успеха
+                search: { orderId: result.TransactionId }, // Передаем ID
+              });
               resolve(result); // Успех: перенаправляем на страницу "Спасибо"
             } else if (result.Message === "Need3dSecure") {
               // Имитация 3D Secure (если транзакция требует подтверждения SMS)
@@ -550,7 +537,7 @@ function CheckoutPage() {
           <input
             type="hidden"
             name="TermUrl"
-            value={`${BASE_URL} + URL_ОБРАБОТЧИКА_3DS `}
+            value={`${BASE_URL}/api/payments/post3ds/`}
           />
         </form>
       </Modal>
