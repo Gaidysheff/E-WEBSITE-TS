@@ -36,11 +36,11 @@ export const register = async (value: Auth) => {
 };
 
 export const login = async (value: Auth) => {
-  const cartCode = localStorage.getItem("cartcode");
+  // const cartCode = localStorage.getItem("cartcode");
   const loginData = {
     email: value.email,
     password: value.password,
-    cart_code: cartCode,
+    // cart_code: cartCode,
   };
   try {
     await api.post(LOGIN_URL, loginData).then((response) => {

@@ -37,10 +37,24 @@ def update_product_rating_on_delete(sender, instance, **kwargs):
 @receiver(post_save, sender=Order)
 def send_order_emails(sender, instance, created, **kwargs):
     if created and instance.status == "Paid":
+        # Собираем список товаров для текста письма
+        items = instance.items.all()  # Обратное отношение от OrderItem
+        items_text = "\n".join(
+            [f"- {item.product.name} x {item.quantity}" for item in items]
+        )
+
+        message = f"""
+        Здравствуйте! Ваш заказ #{instance.checkout_id} успешно оплачен.
+        
+        Состав заказа:
+        {items_text}
+        
+        Итого: {instance.amount} {instance.currency}
+        """
         # 1. Письмо клиенту
         send_mail(
-            f"Заказ #{instance.checkout_id} оплачен",
-            f"Спасибо за покупку! Сумма заказа: {instance.amount} {instance.currency}.",
+            f"Заказ #{instance.checkout_id} принят",
+            message,
             "noreply@yourshop.ru",  # почта магазина
             [instance.customer_email],  # почта клиента
             fail_silently=True,

@@ -112,21 +112,33 @@ def category_detail(request, slug):
 
 
 # =============================== CART =============================
-
-
 @api_view(["POST"])
 def add_to_cart(request):
     cart_code = request.data.get("cart_code")
     product_id = request.data.get("product_id")
-    # user = request.data.get("user")
 
-    cart, created = Cart.objects.get_or_create(cart_code=cart_code)
-    # cart, created = Cart.objects.get_or_create(cart_code=cart_code, user=user)
+    # 1. Определяем владельца (может быть None для гостей)
+    user = request.user if request.user.is_authenticated else None
+
+    # 2. Ищем или создаем корзину
+    # Используем defaults, чтобы при создании применился user
+    cart, created = Cart.objects.get_or_create(
+        cart_code=cart_code, defaults={"user": user}
+    )
+
+    # Если корзина уже была (гостевая), а юзер залогинился — привязываем
+    if not cart.user and user:
+        cart.user = user
+        cart.save()
+
+    product = get_object_or_404(Product, id=product_id)
+    # -----------------------
     if created:
         print("Новая корзина создана")
     else:
         print("Корзина уже существовала")
-    product = Product.objects.get(id=product_id)
+    # -----------------------
+    # product = Product.objects.get(id=product_id)
 
     cartitem, created = CartItem.objects.get_or_create(product=product, cart=cart)
     cartitem.quantity = 1

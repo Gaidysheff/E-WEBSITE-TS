@@ -24,38 +24,33 @@ class LoginViewset(viewsets.ViewSet):
             email = serializer.validated_data["email"]
             password = serializer.validated_data["password"]
 
+            # Это для мягкой привязки корзины к пользователю
+            # ----------------------------------
             # Достаем cart_code из ТЕЛА запроса (request.data)
-            cart_code = request.data.get("cart_code")
+            # cart_code = request.data.get("cart_code")
 
             user = authenticate(request, email=email, password=password)
 
             if user:
 
                 # --- ЛОГИКА ПРИВЯЗКИ КОРЗИНЫ ---
-                if cart_code:
-                    try:
+                # if cart_code:
+                #     try:
 
-                        #     cart = Cart.objects.get(cart_code=cart_code)
-                        #     # Присваиваем пользователя корзине
-                        #     cart.user = user
-                        #     cart.save()
-                        # except Cart.DoesNotExist:
-                        #     pass  # Если корзины нет, ничего не делаем
+                #         # 1. Находим "гостевую" корзину
+                #         guest_cart = Cart.objects.get(cart_code=cart_code)
 
-                        # 1. Находим "гостевую" корзину
-                        guest_cart = Cart.objects.get(cart_code=cart_code)
+                #         # 2. Проверяем, нет ли у этого юзера уже какой-то другой корзины
+                #         # (Чтобы не было ситуации, когда у юзера 2 открытые корзины)
+                #         Cart.objects.filter(user=user).exclude(
+                #             cart_code=cart_code
+                #         ).delete()
 
-                        # 2. Проверяем, нет ли у этого юзера уже какой-то другой корзины
-                        # (Чтобы не было ситуации, когда у юзера 2 открытые корзины)
-                        Cart.objects.filter(user=user).exclude(
-                            cart_code=cart_code
-                        ).delete()
-
-                        # 3. Привязываем гостевую корзину к юзеру
-                        guest_cart.user = user
-                        guest_cart.save()
-                    except Cart.DoesNotExist:
-                        pass  # Если корзины с таким кодом нет — игнорируем
+                #         # 3. Привязываем гостевую корзину к юзеру
+                #         guest_cart.user = user
+                #         guest_cart.save()
+                #     except Cart.DoesNotExist:
+                #         pass  # Если корзины с таким кодом нет — игнорируем
                 # -------------------------------
 
                 _, token = AuthToken.objects.create(user)
