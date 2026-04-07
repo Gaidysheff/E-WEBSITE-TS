@@ -45,7 +45,9 @@ export const Route = createLazyFileRoute("/_authenticated/checkout")({
 function CheckoutPage() {
   const [delivery, setDelivery] = useState<DeliveryOption>(options[0]); // По умолчанию самовывоз
 
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  // const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isAddressModalOpen, setIsAddressModalOpen] = useState<boolean>(false);
+  const [is3DSModalOpen, setIs3DSModalOpen] = useState<boolean>(false);
 
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("card");
 
@@ -84,6 +86,10 @@ function CheckoutPage() {
       try {
         await CardDataHandler(value); // Обязательно await, иначе isSubmitting сразу станет false
       } catch (err) {
+        // Выводим toast пользователю, чтобы он видел ошибку шлюза
+        toast.error(
+          typeof err === "string" ? err : "Payment Error. Check card details.",
+        );
         console.error("Caught in onSubmit:", err);
         // Ошибка здесь вернет кнопку в обычное состояние
       }
@@ -96,7 +102,7 @@ function CheckoutPage() {
   // 1. Проверка адреса (если не самовывоз)
   const isAddressReady = delivery.id === "pickup" || !!user?.address?.street;
 
-  // -------- Сценарий 3D Secure (Эмуляция) ---------
+  // -------- Сценарий Реализации 3D Secure (Эмуляция) ---------
 
   const [threeDSData, setThreeDSData] = useState<{
     acsUrl: string;
@@ -130,24 +136,17 @@ function CheckoutPage() {
     });
 
     document.body.appendChild(form);
-    setIsModalOpen(true); // Ваша модалка
+    setIs3DSModalOpen(true); // модалка с формой в iframe
     form.submit();
     document.body.removeChild(form);
     setThreeDSData({ acsUrl, paReq, transactionId });
   };
 
-  // ----------------- Реализация 3D Secure ---------------------
-
-  // const handle3DSecure = (url: string, paReq: string, md: string) => {
-  //   setThreeDSData({ url, paReq, md });
-  //   setIsModalOpen(true); // Ваша модалка
-  // };
-  // -----------------------------------------------------------
   const CardDataHandler = (CardData: Record<string, string>) => {
     return new Promise((resolve, reject) => {
       // Возвращаем Promise
 
-      console.log("Начинаем имитацию оплаты...");
+      // console.log("Начинаем имитацию оплаты...");
 
       // Искусственная пауза 3 секунды
       // new Promise((res) => setTimeout(res, 3000));
@@ -184,6 +183,16 @@ function CheckoutPage() {
         taxationSystem: 0, // Система налогообложения магазина
       };
 
+      // ================ Эмуляция =====================
+
+      if (CardData.userName === "FAIL TEST") {
+        new Promise((res) => setTimeout(res, 2000));
+        toast.error("Имитация ошибки: Карта отклонена");
+        return reject("Declined");
+      }
+
+      // ==================================================
+
       // ================== Код от CloudPayments =============================
       const checkout = new cp.Checkout({
         publicId: "test_api_000000000000000001",
@@ -209,11 +218,11 @@ function CheckoutPage() {
             return resolve({ Success: true });
           }
 
-          if (CardData.userName === "FAIL TEST") {
-            new Promise((res) => setTimeout(res, 2000));
-            toast.error("Имитация ошибки: Карта отклонена");
-            return reject("Declined");
-          }
+          // if (CardData.userName === "FAIL TEST") {
+          //   new Promise((res) => setTimeout(res, 2000));
+          //   toast.error("Имитация ошибки: Карта отклонена");
+          //   return reject("Declined");
+          // }
 
           // ==================================================
 
@@ -245,6 +254,7 @@ function CheckoutPage() {
               navigate({
                 to: "/success", // Улетаем на страницу успеха
                 search: { orderId: result.TransactionId }, // Передаем ID
+                // search: { orderId: result.TransactionId, cryptogram }, // Передаем ID
               });
               resolve(result); // Успех: перенаправляем на страницу "Спасибо"
             } else if (result.Message === "Need3dSecure") {
@@ -281,14 +291,31 @@ function CheckoutPage() {
   const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
-    if (isModalOpen && threeDSData && formRef.current) {
+    if (is3DSModalOpen && threeDSData && formRef.current) {
       // Небольшая задержка, чтобы iframe успел инициализироваться в DOM
       const timer = setTimeout(() => {
         formRef.current?.submit();
       }, 300);
       return () => clearTimeout(timer);
     }
-  }, [isModalOpen, threeDSData]);
+  }, [is3DSModalOpen, threeDSData]);
+
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      if (event.data === "3ds-success") {
+        setIs3DSModalOpen(false);
+        clearCart(); // Очищаем корзину
+        navigate({ to: "/success" });
+      }
+      if (event.data === "3ds-fail") {
+        setIs3DSModalOpen(false);
+        toast.error("3D Secure verification failed");
+      }
+    };
+
+    window.addEventListener("message", handleMessage);
+    return () => window.removeEventListener("message", handleMessage);
+  }, []);
 
   return (
     <div
@@ -310,12 +337,12 @@ function CheckoutPage() {
           <Modal
             addressForm
             address={address}
-            isModalOpen={isModalOpen}
-            setIsModalOpen={setIsModalOpen}
+            isModalOpen={isAddressModalOpen}
+            setIsModalOpen={setIsAddressModalOpen}
           >
             <AddressFormTanstack
               address={address}
-              setIsModalOpen={setIsModalOpen}
+              setIsModalOpen={setIsAddressModalOpen}
             />
           </Modal>
         </CheckoutSection>
@@ -521,7 +548,12 @@ function CheckoutPage() {
         </div>
       </div>
       {/* {bankCardForm.state.isSubmitting && <PaymentLoader />} */}
-      <Modal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} iframe>
+
+      <Modal
+        isModalOpen={is3DSModalOpen}
+        setIsModalOpen={setIs3DSModalOpen}
+        iframe
+      >
         <form
           method="POST"
           target="3ds-frame"

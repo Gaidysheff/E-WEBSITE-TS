@@ -40,36 +40,35 @@ const Modal = ({
 
   return (
     <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-      <DialogTrigger
-        asChild
-        // className="default-btn max-sm:text-sm max-sm:px-4 my-6"
-      >
-        {/* Click to add a review */}
-        {updateReviewModal ? (
-          <button
-            type="button"
-            className="bg-primaryLight p-2 rounded-md cursor-pointer
+      {!iframe && (
+        <DialogTrigger asChild>
+          {updateReviewModal ? (
+            <button
+              type="button"
+              className="bg-primaryLight p-2 rounded-md cursor-pointer
             transition-all hover:bg-gray-300"
-          >
-            <PenIcon className="size-5 text-primaryDark" />
-          </button>
-        ) : addressForm ? (
-          <button
-            type="button"
-            className="default-btn max-sm:text-sm max-sm:px-4 my-6 mx-auto"
-            onClick={() => setIsModalOpen(true)} // Явно открываем
-          >
-            {address?.street ? "Update Address" : "Add Address"}
-          </button>
-        ) : !iframe ? (
-          <button
-            type="button"
-            className="default-btn max-sm:text-sm max-sm:px-4 my-6"
-          >
-            Click to add a review
-          </button>
-        ) : null}
-      </DialogTrigger>
+            >
+              <PenIcon className="size-5 text-primaryDark" />
+            </button>
+          ) : addressForm ? (
+            <button
+              type="button"
+              className="default-btn max-sm:text-sm max-sm:px-4 my-6 mx-auto"
+              onClick={() => setIsModalOpen(true)} // Явно открываем
+            >
+              {address?.street ? "Update Address" : "Add Address"}
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="default-btn max-sm:text-sm max-sm:px-4 my-6"
+            >
+              Click to add a review
+            </button>
+          )}
+        </DialogTrigger>
+      )}
+
       <DialogContent
         aria-describedby={undefined}
         className={cn(
@@ -88,6 +87,7 @@ const Modal = ({
             {children}
           </div>
         )}
+        {/* {addressForm && <div>{children}</div>} */}
         {!iframe && (
           <>
             <DialogHeader>

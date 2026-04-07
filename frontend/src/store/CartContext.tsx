@@ -54,8 +54,15 @@ export const CartContextProvider = ({ children }: CartProviderProps) => {
         0,
       );
       setCartItemsCount(count);
-    } catch (error) {
-      console.error("Failed to fetch cart data:", error);
+    } catch (error: any) {
+      // console.error("Failed to fetch cart data:", error);
+
+      if (error.response?.status === 404) {
+        // Корзина удалена (после оплаты). Генерируем новую.
+        const newCode = generateRandomString();
+        localStorage.setItem("cart_code", newCode);
+        setCartCode(newCode);
+      }
       // Если корзина не найдена (404), обнуляем данные
       setItems([]);
       setTotalPrice(0);

@@ -2,6 +2,7 @@ import { Link, createLazyFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 
 import Confetti from "react-confetti";
+import SuccessSkeleton from "@/components/paymentResult/SuccessSkeleton.tsx";
 import useWindowSize from "react-use/lib/useWindowSize";
 
 export const Route = createLazyFileRoute("/_paymentResult/success")({
@@ -9,7 +10,12 @@ export const Route = createLazyFileRoute("/_paymentResult/success")({
 });
 
 export function Success() {
-  const { orderId, cryptogram } = Route.useSearch();
+  const [loading, setLoading] = useState<boolean>(true);
+
+  const { orderId, cryptogram } = Route.useSearch() as {
+    orderId?: string;
+    cryptogram?: string;
+  };
 
   // const { width, height } = useWindowSize();
   // const [showConfetti, setShowConfetti] = useState(false);
@@ -40,6 +46,14 @@ export function Success() {
   useEffect(() => {
     window.onresize = () => handleWindowSize();
   }, []);
+
+  useEffect(() => {
+    // Имитируем небольшую задержку для красоты или ждем данных
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading) return <SuccessSkeleton />;
 
   return (
     <section

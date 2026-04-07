@@ -23,7 +23,6 @@ interface Props {
 
 const ProductInfo = ({ product, isAuthorized }: Props) => {
   const { user } = useUser();
-  console.log("🚀 ~ ProductInfo ~ user:", user);
 
   const email = typeof user === "undefined" ? "" : user.email;
   // const userId: number | undefined = user?.id;
@@ -33,7 +32,6 @@ const ProductInfo = ({ product, isAuthorized }: Props) => {
   const [addToCartLoader, setAddToCartLoader] = useState<boolean>(false);
   const [isAddedToCart, setIsAddedToCart] = useState<boolean>(false);
   const [isAddedToWishlist, setIsAddedToWishlist] = useState<boolean>(false);
-  // console.log("🚀 ~ ProductInfo ~ isAddedToWishlist:", isAddedToWishlist);
 
   const [isLoadingWishlist, setIsLoadingWishlist] = useState<boolean>(false);
 
@@ -70,7 +68,6 @@ const ProductInfo = ({ product, isAuthorized }: Props) => {
         )
         .then((response) => {
           setIsAddedToCart(response.data.product_in_cart);
-          // console.log("🚀 ~ handleIsProductInCart ~ response:", response);
           return response;
         });
     } catch (error) {

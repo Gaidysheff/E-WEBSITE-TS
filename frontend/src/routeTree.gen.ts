@@ -16,6 +16,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProductsProductSlugRouteImport } from './routes/products/$productSlug'
 import { Route as CategoriesCategoryIdRouteImport } from './routes/categories/$categoryId'
 import { Route as SearchSearchRouteImport } from './routes/_search/search'
+import { Route as PaymentResultSuccessRouteImport } from './routes/_paymentResult/success'
 import { Route as AuthenticatedUsers_tanstackRouteImport } from './routes/_authenticated/users_tanstack'
 import { Route as AuthRegisterRouteImport } from './routes/_auth/register'
 import { Route as AuthPasswordResetRequestRouteImport } from './routes/_auth/passwordResetRequest'
@@ -23,9 +24,6 @@ import { Route as AuthLoginRouteImport } from './routes/_auth/login'
 import { Route as AuthPasswordResetTokenRouteImport } from './routes/_auth/password-reset/$token'
 
 const TestTestLazyRouteImport = createFileRoute('/_test/test')()
-const PaymentResultSuccessLazyRouteImport = createFileRoute(
-  '/_paymentResult/success',
-)()
 const PaymentResultFailedLazyRouteImport = createFileRoute(
   '/_paymentResult/failed',
 )()
@@ -62,14 +60,6 @@ const TestTestLazyRoute = TestTestLazyRouteImport.update({
   path: '/test',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/_test/test.lazy').then((d) => d.Route))
-const PaymentResultSuccessLazyRoute =
-  PaymentResultSuccessLazyRouteImport.update({
-    id: '/_paymentResult/success',
-    path: '/success',
-    getParentRoute: () => rootRouteImport,
-  } as any).lazy(() =>
-    import('./routes/_paymentResult/success.lazy').then((d) => d.Route),
-  )
 const PaymentResultFailedLazyRoute = PaymentResultFailedLazyRouteImport.update({
   id: '/_paymentResult/failed',
   path: '/failed',
@@ -120,6 +110,13 @@ const SearchSearchRoute = SearchSearchRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() =>
   import('./routes/_search/search.lazy').then((d) => d.Route),
+)
+const PaymentResultSuccessRoute = PaymentResultSuccessRouteImport.update({
+  id: '/_paymentResult/success',
+  path: '/success',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() =>
+  import('./routes/_paymentResult/success.lazy').then((d) => d.Route),
 )
 const AuthenticatedUsers_tanstackRoute =
   AuthenticatedUsers_tanstackRouteImport.update({
@@ -183,6 +180,7 @@ export interface FileRoutesByFullPath {
   '/passwordResetRequest': typeof AuthPasswordResetRequestRoute
   '/register': typeof AuthRegisterRoute
   '/users_tanstack': typeof AuthenticatedUsers_tanstackRoute
+  '/success': typeof PaymentResultSuccessRoute
   '/search': typeof SearchSearchRoute
   '/categories/$categoryId': typeof CategoriesCategoryIdRoute
   '/products/$productSlug': typeof ProductsProductSlugRoute
@@ -190,7 +188,6 @@ export interface FileRoutesByFullPath {
   '/profile': typeof AuthenticatedProfileLazyRoute
   '/users': typeof AuthenticatedUsersLazyRoute
   '/failed': typeof PaymentResultFailedLazyRoute
-  '/success': typeof PaymentResultSuccessLazyRoute
   '/test': typeof TestTestLazyRoute
   '/password-reset/$token': typeof AuthPasswordResetTokenRoute
   '/payment': typeof AuthenticatedCloudPaymentPaymentLazyRoute
@@ -203,6 +200,7 @@ export interface FileRoutesByTo {
   '/passwordResetRequest': typeof AuthPasswordResetRequestRoute
   '/register': typeof AuthRegisterRoute
   '/users_tanstack': typeof AuthenticatedUsers_tanstackRoute
+  '/success': typeof PaymentResultSuccessRoute
   '/search': typeof SearchSearchRoute
   '/categories/$categoryId': typeof CategoriesCategoryIdRoute
   '/products/$productSlug': typeof ProductsProductSlugRoute
@@ -210,7 +208,6 @@ export interface FileRoutesByTo {
   '/profile': typeof AuthenticatedProfileLazyRoute
   '/users': typeof AuthenticatedUsersLazyRoute
   '/failed': typeof PaymentResultFailedLazyRoute
-  '/success': typeof PaymentResultSuccessLazyRoute
   '/test': typeof TestTestLazyRoute
   '/password-reset/$token': typeof AuthPasswordResetTokenRoute
   '/payment': typeof AuthenticatedCloudPaymentPaymentLazyRoute
@@ -225,6 +222,7 @@ export interface FileRoutesById {
   '/_auth/passwordResetRequest': typeof AuthPasswordResetRequestRoute
   '/_auth/register': typeof AuthRegisterRoute
   '/_authenticated/users_tanstack': typeof AuthenticatedUsers_tanstackRoute
+  '/_paymentResult/success': typeof PaymentResultSuccessRoute
   '/_search/search': typeof SearchSearchRoute
   '/categories/$categoryId': typeof CategoriesCategoryIdRoute
   '/products/$productSlug': typeof ProductsProductSlugRoute
@@ -232,7 +230,6 @@ export interface FileRoutesById {
   '/_authenticated/profile': typeof AuthenticatedProfileLazyRoute
   '/_authenticated/users': typeof AuthenticatedUsersLazyRoute
   '/_paymentResult/failed': typeof PaymentResultFailedLazyRoute
-  '/_paymentResult/success': typeof PaymentResultSuccessLazyRoute
   '/_test/test': typeof TestTestLazyRoute
   '/_auth/password-reset/$token': typeof AuthPasswordResetTokenRoute
   '/_authenticated/_CloudPayment/payment': typeof AuthenticatedCloudPaymentPaymentLazyRoute
@@ -247,6 +244,7 @@ export interface FileRouteTypes {
     | '/passwordResetRequest'
     | '/register'
     | '/users_tanstack'
+    | '/success'
     | '/search'
     | '/categories/$categoryId'
     | '/products/$productSlug'
@@ -254,7 +252,6 @@ export interface FileRouteTypes {
     | '/profile'
     | '/users'
     | '/failed'
-    | '/success'
     | '/test'
     | '/password-reset/$token'
     | '/payment'
@@ -267,6 +264,7 @@ export interface FileRouteTypes {
     | '/passwordResetRequest'
     | '/register'
     | '/users_tanstack'
+    | '/success'
     | '/search'
     | '/categories/$categoryId'
     | '/products/$productSlug'
@@ -274,7 +272,6 @@ export interface FileRouteTypes {
     | '/profile'
     | '/users'
     | '/failed'
-    | '/success'
     | '/test'
     | '/password-reset/$token'
     | '/payment'
@@ -288,6 +285,7 @@ export interface FileRouteTypes {
     | '/_auth/passwordResetRequest'
     | '/_auth/register'
     | '/_authenticated/users_tanstack'
+    | '/_paymentResult/success'
     | '/_search/search'
     | '/categories/$categoryId'
     | '/products/$productSlug'
@@ -295,7 +293,6 @@ export interface FileRouteTypes {
     | '/_authenticated/profile'
     | '/_authenticated/users'
     | '/_paymentResult/failed'
-    | '/_paymentResult/success'
     | '/_test/test'
     | '/_auth/password-reset/$token'
     | '/_authenticated/_CloudPayment/payment'
@@ -309,11 +306,11 @@ export interface RootRouteChildren {
   AuthLoginRoute: typeof AuthLoginRoute
   AuthPasswordResetRequestRoute: typeof AuthPasswordResetRequestRoute
   AuthRegisterRoute: typeof AuthRegisterRoute
+  PaymentResultSuccessRoute: typeof PaymentResultSuccessRoute
   SearchSearchRoute: typeof SearchSearchRoute
   CategoriesCategoryIdRoute: typeof CategoriesCategoryIdRoute
   ProductsProductSlugRoute: typeof ProductsProductSlugRoute
   PaymentResultFailedLazyRoute: typeof PaymentResultFailedLazyRoute
-  PaymentResultSuccessLazyRoute: typeof PaymentResultSuccessLazyRoute
   TestTestLazyRoute: typeof TestTestLazyRoute
   AuthPasswordResetTokenRoute: typeof AuthPasswordResetTokenRoute
 }
@@ -339,13 +336,6 @@ declare module '@tanstack/react-router' {
       path: '/test'
       fullPath: '/test'
       preLoaderRoute: typeof TestTestLazyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_paymentResult/success': {
-      id: '/_paymentResult/success'
-      path: '/success'
-      fullPath: '/success'
-      preLoaderRoute: typeof PaymentResultSuccessLazyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_paymentResult/failed': {
@@ -395,6 +385,13 @@ declare module '@tanstack/react-router' {
       path: '/search'
       fullPath: '/search'
       preLoaderRoute: typeof SearchSearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_paymentResult/success': {
+      id: '/_paymentResult/success'
+      path: '/success'
+      fullPath: '/success'
+      preLoaderRoute: typeof PaymentResultSuccessRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/users_tanstack': {
@@ -487,11 +484,11 @@ const rootRouteChildren: RootRouteChildren = {
   AuthLoginRoute: AuthLoginRoute,
   AuthPasswordResetRequestRoute: AuthPasswordResetRequestRoute,
   AuthRegisterRoute: AuthRegisterRoute,
+  PaymentResultSuccessRoute: PaymentResultSuccessRoute,
   SearchSearchRoute: SearchSearchRoute,
   CategoriesCategoryIdRoute: CategoriesCategoryIdRoute,
   ProductsProductSlugRoute: ProductsProductSlugRoute,
   PaymentResultFailedLazyRoute: PaymentResultFailedLazyRoute,
-  PaymentResultSuccessLazyRoute: PaymentResultSuccessLazyRoute,
   TestTestLazyRoute: TestTestLazyRoute,
   AuthPasswordResetTokenRoute: AuthPasswordResetTokenRoute,
 }

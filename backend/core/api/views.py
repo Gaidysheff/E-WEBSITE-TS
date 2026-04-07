@@ -133,10 +133,10 @@ def add_to_cart(request):
 
     product = get_object_or_404(Product, id=product_id)
     # -----------------------
-    if created:
-        print("Новая корзина создана")
-    else:
-        print("Корзина уже существовала")
+    # if created:
+    #     print("Новая корзина создана")
+    # else:
+    #     print("Корзина уже существовала")
     # -----------------------
     # product = Product.objects.get(id=product_id)
 
@@ -222,30 +222,31 @@ def cart_items_with_total(request):
     # if cart.user and cart.user != request.user:
     #     return Response({"detail": "Not authorized"}, status=403)
     # -----------------------------------------------------------------
-
     # if not cart_code:
     #     return Response(
     #         {"error": "cart_code is required"}, status=status.HTTP_400_BAD_REQUEST
     #     )
+    # -----------------------------------------------------------------
 
     # Фильтруем через связь ForeignKey:
     # cart (поле в CartItem) -> cart_code (поле в Cart)
     cart_items = CartItem.objects.filter(cart__cart_code=cart_code)
 
-    if cart_items.exists():
-        # Передаем queryset и флаг many=True
-        serializer = CartItemSerializer(cart_items, many=True)
+    # Вместо if cart_items.exists() просто возвращаем данные
+    # Передаем queryset и флаг many=True
+    serializer = CartItemSerializer(cart_items, many=True)
+    # Считаем общий итог всей корзины на бэкенде (так надежнее)
+    total_cart_price = sum(item.total_price for item in cart_items)
 
-        # Считаем общий итог всей корзины на бэкенде (так надежнее)
-        total_cart_price = sum(item.total_price for item in cart_items)
-
-        return Response(
-            {"items": serializer.data, "total_cart_price": total_cart_price}
-        )
-
+    # Если товаров нет, вернется {"items": [], "total_cart_price": 0} и статус 200
     return Response(
-        {"error": "Cart is empty or not found."}, status=status.HTTP_404_NOT_FOUND
+        {"items": serializer.data, "total_cart_price": total_cart_price},
+        status=status.HTTP_200_OK,
     )
+
+    # return Response(
+    #     {"error": "Cart is empty or not found."}, status=status.HTTP_404_NOT_FOUND
+    # )
 
 
 # ========================= REVIEW ================================
@@ -604,6 +605,7 @@ def process_payment(request):
         print(f"DEBUG: Status {response.status_code}, Content: {response.text}")
 
         # Имитируем успех, если получили 401 (нет ключей) или 200 (есть ключи)
+        # В реальном коде заменить на =200
         if response.status_code in [200, 401]:
             # if response.status_code == 200: когда реально подписан на CP
             with transaction.atomic():
@@ -630,6 +632,7 @@ def process_payment(request):
                     "Success": True,
                     "Message": "Order created (Dev Mode)",
                     "TransactionId": order.checkout_id,
+                    # "cart_deleted": True,  # Сигнал фронтенду
                 },
                 status=200,
             )
@@ -642,3 +645,69 @@ def process_payment(request):
         return Response({"error": "Cart not found"}, status=404)
     except Exception as e:
         return Response({"error": str(e)}, status=500)
+
+
+# -----------------------------------------------------------------
+
+
+@api_view(["POST"])
+def post3ds(request):
+    transaction_id = request.data.get("MD")  # ID транзакции от банка
+    pa_res = request.data.get("PaRes")  # Результат проверки СМС
+
+    # В реальности здесь идет запрос к CloudPayments:
+    # requests.post(".../payments/cards/post3ds", data={"TransactionId": transaction_id, "PaRes": pa_res})
+
+    # Эмулируем успех (как бы ответ с сервера):
+    try:
+        if transaction_id & pa_res:
+            with transaction.atomic():
+
+                try:
+                    cart = Cart.objects.get(user=request.user)
+                except Cart.DoesNotExist:
+                    return Response({"error": "Cart not found"}, status=404)
+
+                    # 2. Считаем итоговую сумму на сервере
+                total_amount = sum(item.total_price for item in cart.cartitems.all())
+
+                order = Order.objects.create(
+                    checkout_id=request.data.get("invoiceId", f"INV-{cart.id}"),
+                    amount=total_amount,
+                    currency="RUB",
+                    customer_email=request.user.email,
+                    status="Paid",
+                )
+
+                for item in cart.cartitems.all():
+                    OrderItem.objects.create(
+                        order=order, product=item.product, quantity=item.quantity
+                    )
+
+                # 4. Удаляем корзину
+                cart.delete()
+
+            return Response(
+                {
+                    "Success": True,
+                    "Message": "Order created (Dev Mode)",
+                    "TransactionId": order.checkout_id,
+                },
+                status=200,
+            )
+
+        # После успеха нужно перенаправить пользователя обратно на фронтенд
+        # Т.к. это POST от банка, мы возвращаем HTML с редиректом
+        return HttpResponse(
+            f"""
+            <html>
+                <body onload="window.parent.postMessage('3ds-success', '*');">
+                    Redirecting...
+                </body>
+            </html>
+        """
+        )
+    except Exception as e:
+        return HttpResponse(
+            f'<html><body onload=\'window.parent.postMessage("3ds-fail", "*");\'>Error</body></html>'
+        )
