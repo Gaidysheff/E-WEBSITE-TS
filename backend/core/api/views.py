@@ -117,32 +117,43 @@ def add_to_cart(request):
     cart_code = request.data.get("cart_code")
     product_id = request.data.get("product_id")
 
-    # 1. Определяем владельца (может быть None для гостей)
-    user = request.user if request.user.is_authenticated else None
+    # 1. Ищем корзину или создаём по коду
+    cart, created = Cart.objects.get_or_create(cart_code=cart_code)
 
-    # 2. Ищем или создаем корзину
-    # Используем defaults, чтобы при создании применился user
-    cart, created = Cart.objects.get_or_create(
-        cart_code=cart_code, defaults={"user": user}
-    )
-
-    # Если корзина уже была (гостевая), а юзер залогинился — привязываем
-    if not cart.user and user:
-        cart.user = user
+    # 2. Если пользователь залогинен, а корзина еще "ничья" или чужая — привязываем
+    if request.user.is_authenticated and cart.user is None:
+        # if cart.user != request.user:
+        cart.user = request.user
         cart.save()
 
     product = get_object_or_404(Product, id=product_id)
-    # -----------------------
-    # if created:
-    #     print("Новая корзина создана")
-    # else:
-    #     print("Корзина уже существовала")
-    # -----------------------
-    # product = Product.objects.get(id=product_id)
-
-    cartitem, created = CartItem.objects.get_or_create(product=product, cart=cart)
-    cartitem.quantity = 1
+    # 3. Добавляем товар
+    cartitem, item_created = CartItem.objects.get_or_create(product=product, cart=cart)
+    if not item_created:
+        cartitem.quantity += 1
+    else:
+        cartitem.quantity = 1
     cartitem.save()
+
+    # # ---------------- Предыдущая логика -------------------
+    # # 1. Определяем владельца (может быть None для гостей)
+    # user = request.user if request.user.is_authenticated else None
+
+    # # 2. Ищем или создаем корзину
+    # # Используем defaults, чтобы при создании применился user
+    # cart, created = Cart.objects.get_or_create(
+    #     cart_code=cart_code, defaults={"user": user}
+    # )
+
+    # # Если корзина уже была (гостевая), а юзер залогинился — привязываем
+    # if not cart.user and user:
+    #     cart.user = user
+    #     cart.save()
+
+    # cartitem, created = CartItem.objects.get_or_create(product=product, cart=cart)
+    # cartitem.quantity = 1
+    # cartitem.save()
+    # -------------------------------------------------------
 
     serializer = CartSerializer(cart)
     return Response(serializer.data)
@@ -152,11 +163,18 @@ def add_to_cart(request):
 def get_cart(request, cart_code):
     cart = Cart.objects.filter(cart_code=cart_code).first()
 
-    if cart:
-        serializer = CartSerializer(cart)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    if not cart:
+        # Вместо 404 возвращаем структуру пустой корзины, чтобы фронтенд не падал
+        return Response({"items": [], "total_cart_price": 0}, status=200)
 
-    return Response({"error": "Cart not found."}, status=status.HTTP_404_NOT_FOUND)
+    serializer = CartSerializer(cart)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+    # if cart:
+    #     serializer = CartSerializer(cart)
+    #     return Response(serializer.data, status=status.HTTP_200_OK)
+
+    # return Response({"error": "Cart not found."}, status=status.HTTP_404_NOT_FOUND)
 
 
 # @api_view(["GET"])

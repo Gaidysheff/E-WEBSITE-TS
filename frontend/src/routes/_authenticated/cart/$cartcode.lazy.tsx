@@ -82,7 +82,10 @@ function CartItemPage() {
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const cartitems_count = cartItems.length;
+  // const cartitems_count =
+  //   cartItems && cartItems.length > 0 ? cartItems.length : 0;
+  // то же самое, только лаконичнее, используя Optional Chaining
+  const cartitems_count = cartItems?.length ?? 0;
 
   // ===================== Get Cart =========================
 

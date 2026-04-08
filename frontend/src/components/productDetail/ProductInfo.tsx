@@ -27,7 +27,7 @@ const ProductInfo = ({ product, isAuthorized }: Props) => {
   const email = typeof user === "undefined" ? "" : user.email;
   // const userId: number | undefined = user?.id;
 
-  const { cartCode, setCartItemsCount } = useCart();
+  const { cartCode, setCartItemsCount, refreshCart } = useCart();
 
   const [addToCartLoader, setAddToCartLoader] = useState<boolean>(false);
   const [isAddedToCart, setIsAddedToCart] = useState<boolean>(false);
@@ -37,26 +37,34 @@ const ProductInfo = ({ product, isAuthorized }: Props) => {
 
   // ----------- Add Product to the Cart ------------------------
 
-  const handleAddToCart = () => {
+  const handleAddToCart = async () => {
     setAddToCartLoader(true);
 
     const formData = new FormData();
     formData.set("cart_code", cartCode);
-    // formData.set("user", userId);
-    // formData.set("cart_code", cartCode ? cartCode : "");
     formData.set("product_id", String(product.id));
 
-    addToCartAction(formData);
+    // addToCartAction(formData);
+
+    try {
+      await addToCartAction(formData);
+      toast.success("Selected item added successfully!");
+      refreshCart(); // Обновляем данные в стейте без перезагрузки всей страницы!
+    } catch (err) {
+      toast.error("Something went wrong");
+    }
 
     setIsAddedToCart(true);
 
     setCartItemsCount((current: number) => current + 1);
 
+    setAddToCartLoader(false);
+
     // ------ Delay for disabling the button ---------
-    const reloadDelay = () => {
-      setAddToCartLoader(false);
-    };
-    setTimeout(reloadDelay, 3000);
+    // const reloadDelay = () => {
+    //   setAddToCartLoader(false);
+    // };
+    // setTimeout(reloadDelay, 3000);
   };
 
   // ----------- Is the Product in the Cart ? ------------------------

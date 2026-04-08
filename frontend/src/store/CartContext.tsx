@@ -39,8 +39,6 @@ export const CartContextProvider = ({ children }: CartProviderProps) => {
         `${CARTITEMS_WITH_TOTAL_URL}?cart_code=${code}`,
       );
 
-      // const { items, total_cart_price } = response?.data;
-
       // Добавляем проверку на существование данных
       const items = response?.data?.items || [];
       const total_cart_price = response?.data?.total_cart_price || 0;
@@ -99,11 +97,6 @@ export const CartContextProvider = ({ children }: CartProviderProps) => {
     setCartItemsCount(0);
   };
 
-  // const clearCart = () => {
-  //   localStorage.removeItem("cartcode");
-  //   setCartCode("");
-  // };
-
   const refreshCart = () => {
     if (cartCode) fetchFullCartData(cartCode);
   };
@@ -120,8 +113,6 @@ export const CartContextProvider = ({ children }: CartProviderProps) => {
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 };
-
-// export const useCart = () => useContext(CartContext)
 
 export const useCart = () => {
   const context = useContext(CartContext);

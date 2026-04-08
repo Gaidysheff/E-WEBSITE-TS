@@ -62,6 +62,38 @@ class LoginViewset(viewsets.ViewSet):
         else:
             return Response(serializer.errors, status=400)
 
+    def merge_carts(user, guest_cart_code):
+        try:
+            # Корзина, которая сейчас в браузере у гостя
+            guest_cart = Cart.objects.get(cart_code=guest_cart_code)
+
+            # Ищем, есть ли у юзера уже какая-то активная корзина в БД
+            user_cart = Cart.objects.filter(user=user).first()
+
+            if user_cart and user_cart != guest_cart:
+                # Переносим товары из гостевой в основную
+                for item in guest_cart.cartitems.all():
+                    # Проверяем, нет ли такого товара уже в основной корзине
+                    existing_item = user_cart.cartitems.filter(
+                        product=item.product
+                    ).first()
+                    if existing_item:
+                        existing_item.quantity += item.quantity
+                        existing_item.save()
+                        item.delete()
+                    else:
+                        item.cart = user_cart
+                        item.save()
+                guest_cart.delete()
+                return user_cart.cart_code
+            else:
+                # Если у юзера не было корзины, просто привязываем гостевую
+                guest_cart.user = user
+                guest_cart.save()
+                return guest_cart.cart_code
+        except Cart.DoesNotExist:
+            return guest_cart_code
+
 
 class RegisterViewset(viewsets.ViewSet):
     permission_classes = [permissions.AllowAny]

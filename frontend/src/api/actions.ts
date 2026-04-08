@@ -22,7 +22,7 @@ import { type CPResponse, type PureAddress } from "@/lib/types";
 //   PRODUCT_SEARCH_URL,
 // } from "@/api/endpoints.ts";
 
-type FormSubmitHandler = (formData: FormData) => Promise<void>;
+type FormSubmitHandler = (formData: FormData) => Promise<any>;
 
 type FormSubmitupdateCartItemHandler = (
   formData: FormData,
@@ -164,44 +164,50 @@ export const deleteReviewAction: FormSubmitHandler = async (formData) => {
 };
 
 // ===================== Add to Cart =========================
-
 export const addToCartAction: FormSubmitHandler = async (formData) => {
-  const product_id = formData.get("product_id");
-  const cart_code = formData.get("cart_code");
-  // const user = formData.get("user");
+  // const product_id = formData.get("product_id");
+  // const cart_code = formData.get("cart_code");
 
-  const cartObject = { product_id, cart_code };
-  // const cartObject = { product_id, cart_code, user };
+  // const cartObject = { product_id, cart_code };
 
-  console.log("🚀 ~ addToCartAction ~ cartObject:", cartObject);
+  const cartObject = {
+    product_id: formData.get("product_id"),
+    cart_code: formData.get("cart_code"),
+  };
 
   // --------------- Fetching delay ----------------------
   // await new Promise((resolve) => setTimeout(resolve, 4000));
   // -----------------------------------------------------
 
   try {
-    await api.post(CART_ADD_URL, cartObject).then((response) => {
-      // console.log("🚀 ~ addToCartAction ~ response:", response);
-      if (response?.status === 200) {
-        toast.success("Selected item added successfully!");
-      } else {
-        toast.error("Something went wrong");
-      }
-
-      // ------ Delay for reloading while showing toaster ---------
-      const reloadDelay = () => {
-        window.location.reload();
-      };
-      setTimeout(reloadDelay, 5000);
-
-      return response;
-    });
+    const response = await api.post(CART_ADD_URL, cartObject);
+    return response; // Просто возвращаем ответ
   } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(error.message);
-    }
-    throw new Error("An unknown error occured");
+    throw new Error("Failed to add item");
   }
+  // try {
+  //   await api.post(CART_ADD_URL, cartObject).then((response) => {
+  //     console.log("🚀 ~ addToCartAction ~ response:", response);
+  //     if (response?.status === 200) {
+  //       toast.success("Selected item added successfully!");
+  //     } else {
+  //       toast.error("Something went wrong");
+  //     }
+
+  //     // ------ Delay for reloading while showing toaster ---------
+  //     const reloadDelay = () => {
+  //       window.location.reload();
+  //     };
+  //     setTimeout(reloadDelay, 5000);
+
+  //     return response;
+  //   });
+  // } catch (error) {
+  //   if (error instanceof Error) {
+  //     throw new Error(error.message);
+  //   }
+  //   throw new Error("An unknown error occured");
+  // }
 };
 
 // // ===================== is Product in Cart =========================
