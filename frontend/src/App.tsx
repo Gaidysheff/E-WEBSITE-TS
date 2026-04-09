@@ -3,17 +3,19 @@ import { RouterProvider, createRouter } from "@tanstack/react-router";
 import Error404notFound from "@/components/error/Error404notFound.tsx";
 import { routeTree } from "./routeTree.gen";
 
-// Register things for typesafety
+// Регистрируем типы
 // declare module "@tanstack/react-router" {
 //   interface Register {
 //     router: typeof router;
 //   }
 // }
 
-// const HashHistory = createHashHistory();
+// const auth = { isAuthenticated: !!localStorage.getItem("Token") };
+// Логика проверки авторизации (наличие токена)
 
 const router = createRouter({
   routeTree,
+  // context: { auth },
   defaultNotFoundComponent: () => {
     return <Error404notFound />;
   },
@@ -23,8 +25,6 @@ const router = createRouter({
   defaultPendingMinMs: 2000,
   // that ensures a pending component is displayed for at least a certain amount
   // of time, even if the data loads quickly
-
-  // history: HashHistory,
 });
 
 function App() {

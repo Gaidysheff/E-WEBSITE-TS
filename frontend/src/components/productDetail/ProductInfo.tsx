@@ -12,7 +12,11 @@ import api from "@/api/api.ts";
 import WishlistTooltip from "@/components/uiComponents/WishlistTooltip.tsx";
 
 import { useUser } from "@/store/UserContext.tsx";
-import { addToCartAction, wishlistAddAndDeleteAction } from "@/api/actions.ts";
+import {
+  addToCartAction,
+  isProductInCartAction,
+  wishlistAddAndDeleteAction,
+} from "@/api/actions.ts";
 
 import { toast } from "react-toastify";
 
@@ -44,17 +48,15 @@ const ProductInfo = ({ product, isAuthorized }: Props) => {
     formData.set("cart_code", cartCode);
     formData.set("product_id", String(product.id));
 
-    // addToCartAction(formData);
-
     try {
       await addToCartAction(formData);
       toast.success("Selected item added successfully!");
       refreshCart(); // Обновляем данные в стейте без перезагрузки всей страницы!
-    } catch (err) {
+
+      setIsAddedToCart(true);
+    } catch (error) {
       toast.error("Something went wrong");
     }
-
-    setIsAddedToCart(true);
 
     setCartItemsCount((current: number) => current + 1);
 
@@ -67,22 +69,17 @@ const ProductInfo = ({ product, isAuthorized }: Props) => {
     // setTimeout(reloadDelay, 3000);
   };
 
-  // ----------- Is the Product in the Cart ? ------------------------
+  // ----------- Is Product in the Cart ? ------------------------
+
   const handleIsProductInCart = async () => {
     try {
-      await api
-        .get(
-          `${CART_PRODUCT_ADDED_URL}?cart_code=${cartCode}&product_id=${product.id}`,
-        )
-        .then((response) => {
-          setIsAddedToCart(response.data.product_in_cart);
-          return response;
-        });
+      const response = await isProductInCartAction(
+        cartCode,
+        String(product.id),
+      );
+      setIsAddedToCart(response.data.product_in_cart);
     } catch (error) {
-      if (error instanceof Error) {
-        throw new Error(error.message);
-      }
-      throw new Error("An unknown error occured");
+      console.log("🚀 ~ handleIsProductInCart ~ error:", error);
     }
   };
 

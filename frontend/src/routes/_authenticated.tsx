@@ -1,17 +1,19 @@
-import { Outlet, createFileRoute, useNavigate } from "@tanstack/react-router";
-
-// import { Login } from "./_auth/login.jsx";
+import { Outlet, createFileRoute, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_authenticated")({
-  component: () => {
-    const navigate = useNavigate();
+  beforeLoad: ({ location }) => {
+    // Проверяем именно наличие токена
+    const isAuthenticated = !!localStorage.getItem("Token");
 
-    const token = localStorage.getItem("Token");
-
-    // return token ? <Outlet /> : <Login />;
-    // This version of Login is framed by NavBar and Footer
-
-    return token ? <Outlet /> : navigate({ to: `/login` });
-    // This version of Login is NOT framed by NavBar and Footer
+    if (!isAuthenticated) {
+      throw redirect({
+        to: "/login",
+        search: {
+          redirect: location.href,
+        },
+      });
+    }
   },
+  // Компонент теперь максимально простой
+  component: () => <Outlet />,
 });

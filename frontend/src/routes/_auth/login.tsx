@@ -7,11 +7,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
+import {
+  Link,
+  createFileRoute,
+  useNavigate,
+  useSearch,
+} from "@tanstack/react-router";
 
 import type { AnyFieldApi } from "@tanstack/react-form";
 import { BASE_URL } from "@/api/api";
-// import { type User } from "@/lib/types.ts";
 import { Button } from "@/components/ui/button";
 import Google from "@/assets/images/shared/google.png";
 import { Input } from "@/components/ui/input";
@@ -20,9 +24,13 @@ import { login } from "@/api/endpoints_auth";
 import { useForm } from "@tanstack/react-form";
 import { z } from "zod";
 
-// import { type FormEvent } from "react";
-
 export const Route = createFileRoute("/_auth/login")({
+  validateSearch: (search: Record<string, unknown>) => {
+    return {
+      // Всегда возвращаем объект, даже если он пустой
+      redirect: (search.redirect as string) || undefined,
+    };
+  },
   component: Login,
 });
 
@@ -31,7 +39,6 @@ const LoginSchema = z.object({
   password: z.string().min(4, "Password must be at least 4 characters"),
 });
 
-// type Login = Pick<User, "email" | "password">;
 type Login = z.infer<typeof LoginSchema>;
 
 function FieldInfo({ field }: { field: AnyFieldApi }) {
@@ -53,6 +60,14 @@ function FieldInfo({ field }: { field: AnyFieldApi }) {
 
 export function Login() {
   const navigate = useNavigate();
+  // const search: any = Route.useSearch();
+  // const search: any = useSearch({ from: "/_auth/login" }); // Достаем search params
+  const search: any = useSearch({ strict: false });
+
+  const onLoginSuccess = () => {
+    const targetPath = (search.redirect || "/profile") as any;
+    navigate({ to: targetPath });
+  };
 
   const form = useForm({
     defaultValues: {
@@ -65,16 +80,11 @@ export function Login() {
     },
 
     onSubmit: async ({ value }) => {
-      login(value);
-      navigate({ to: `/` });
+      await login(value); // Убедитесь, что логин завершен перед переходом
+      // navigate({ to: `/` });
+      onLoginSuccess();
     },
   });
-
-  // const submitHandler = (event: FormEvent<HTMLFormElement>) => {
-  //   event.preventDefault();
-  //   event.stopPropagation();
-  //   console.log("🚀 ~ Login ~ value: submitHandler");
-  // };
 
   return (
     <>
@@ -98,7 +108,6 @@ export function Login() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            {/* <form onSubmit={submitHandler}> */}
             <form
               onSubmit={(event) => {
                 event.preventDefault();

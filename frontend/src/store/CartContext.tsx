@@ -1,5 +1,6 @@
 import {
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useState,
@@ -97,9 +98,9 @@ export const CartContextProvider = ({ children }: CartProviderProps) => {
     setCartItemsCount(0);
   };
 
-  const refreshCart = () => {
+  const refreshCart = useCallback(() => {
     if (cartCode) fetchFullCartData(cartCode);
-  };
+  }, [cartCode]);
 
   const value = {
     cartCode,

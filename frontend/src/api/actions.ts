@@ -9,6 +9,7 @@ import {
   REVIEW_DELETE_URL,
   REVIEW_UPDATE_URL,
   WISHLIST_ADD_AND_DELETE_URL,
+  CART_PRODUCT_ADDED_URL,
 } from "@/api/endpoints.ts";
 
 import api from "@/api/api.ts";
@@ -50,6 +51,11 @@ type CloudPaymentsHandler = (paymentData: {
   invoiceId: string;
   description: string;
 }) => Promise<CPResponse>;
+
+export type IsProductInCartType = (
+  cartCode: string,
+  productName: string,
+) => Promise<any>;
 
 // type CPResponse = {
 //   Success: boolean;
@@ -165,11 +171,6 @@ export const deleteReviewAction: FormSubmitHandler = async (formData) => {
 
 // ===================== Add to Cart =========================
 export const addToCartAction: FormSubmitHandler = async (formData) => {
-  // const product_id = formData.get("product_id");
-  // const cart_code = formData.get("cart_code");
-
-  // const cartObject = { product_id, cart_code };
-
   const cartObject = {
     product_id: formData.get("product_id"),
     cart_code: formData.get("cart_code"),
@@ -185,45 +186,25 @@ export const addToCartAction: FormSubmitHandler = async (formData) => {
   } catch (error) {
     throw new Error("Failed to add item");
   }
-  // try {
-  //   await api.post(CART_ADD_URL, cartObject).then((response) => {
-  //     console.log("🚀 ~ addToCartAction ~ response:", response);
-  //     if (response?.status === 200) {
-  //       toast.success("Selected item added successfully!");
-  //     } else {
-  //       toast.error("Something went wrong");
-  //     }
-
-  //     // ------ Delay for reloading while showing toaster ---------
-  //     const reloadDelay = () => {
-  //       window.location.reload();
-  //     };
-  //     setTimeout(reloadDelay, 5000);
-
-  //     return response;
-  //   });
-  // } catch (error) {
-  //   if (error instanceof Error) {
-  //     throw new Error(error.message);
-  //   }
-  //   throw new Error("An unknown error occured");
-  // }
 };
 
-// // ===================== is Product in Cart =========================
+// ===================== is Product in Cart =========================
 
-// export const isProductInCartAction = async () => {
-//   try {
-//     await api.get(CART_PRODUCT_ADDED_URL).then((response) => {
-//       return response;
-//     });
-//   } catch (error) {
-//     if (error instanceof Error) {
-//       throw new Error(error.message);
-//     }
-//     throw new Error("An unknown error occured");
-//   }
-// };
+export const isProductInCartAction: IsProductInCartType = async (
+  cartCode,
+  productId,
+) => {
+  try {
+    const response = await api.get(
+      `${CART_PRODUCT_ADDED_URL}?cart_code=${cartCode}&product_id=${productId}`,
+    );
+    return response;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+  }
+};
 
 // ================== Update CartItem Quantity ====================
 

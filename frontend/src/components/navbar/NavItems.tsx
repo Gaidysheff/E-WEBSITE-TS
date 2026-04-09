@@ -95,7 +95,7 @@ const NavItems = ({ mobile }: Props) => {
         </div>
       )}
 
-      <Link from="/" to={`cart/${cartCode}`} reloadDocument={true}>
+      <Link from="/" to={`cart/${cartCode}`}>
         <div
           className="relative flex items-center h-[60px] w-[60px]
             justify-center cursor-pointer group/cart hover:scale-110"
