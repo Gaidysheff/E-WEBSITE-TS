@@ -14,9 +14,9 @@ import { Trash2 } from "lucide-react";
 import { X } from "lucide-react";
 
 interface Props {
-  handleDeleteReview: VoidFunction;
-  deleteCartItemHandler: VoidFunction;
-  deleteCartitem: boolean;
+  handleDeleteReview?: VoidFunction;
+  deleteCartItemHandler?: VoidFunction;
+  deleteCartitem?: boolean;
 }
 const DeleteModal = ({
   handleDeleteReview,

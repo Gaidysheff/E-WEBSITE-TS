@@ -27,7 +27,7 @@ export const CART_PRODUCT_ADDED_URL = `${BASE_URL}/api/product_in_cart`;
 // export const CART_NUMBER_OF_ITEMS_URL = `${BASE_URL}/api/get_cart_stat`;
 export const CART_UPDATE_URL = `${BASE_URL}/api/update_cart/`;
 export const CART_DELETE_URL = `${BASE_URL}/api/delete_cart/`;
-export const CART_GET_URL = `${BASE_URL}/api/get_cart/`;
+// export const CART_GET_URL = `${BASE_URL}/api/get_cart/`;
 
 export const CARTITEM_UPDATE_QUANTITY_URL = `${BASE_URL}/api/update_cartitem_quantity/`;
 export const CARTITEM_DELETE_URL = `${BASE_URL}/api/delete_cartitem/`;

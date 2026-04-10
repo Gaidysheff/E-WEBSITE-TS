@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 import {
   Link,
   createFileRoute,
@@ -20,6 +21,7 @@ import { Button } from "@/components/ui/button";
 import Google from "@/assets/images/shared/google.png";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { MoveLeft } from "lucide-react";
 import { login } from "@/api/endpoints_auth";
 import { useForm } from "@tanstack/react-form";
 import { z } from "zod";
@@ -59,6 +61,8 @@ function FieldInfo({ field }: { field: AnyFieldApi }) {
 }
 
 export function Login() {
+  const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+
   const navigate = useNavigate();
   // const search: any = Route.useSearch();
   // const search: any = useSearch({ from: "/_auth/login" }); // Достаем search params
@@ -102,6 +106,15 @@ export function Login() {
       >
         <Card className="w-[90%] max-w-sm m-auto">
           <CardHeader>
+            <Link
+              to="/"
+              className="flex items-center gap-2 text-sm text-gray-500
+              hover:text-primary transition-colors mb-6"
+            >
+              <MoveLeft size={16} />
+              Back to Store
+            </Link>
+
             <CardTitle className="text-2xl">Login to your account</CardTitle>
             <CardDescription>
               Enter your email below to login to your account
@@ -177,7 +190,7 @@ export function Login() {
             >
               Login
             </Button>
-            <Button variant="outline" className="w-full">
+            {/* <Button variant="outline" className="w-full">
               <img
                 src={Google}
                 alt="Google Icon"
@@ -186,7 +199,31 @@ export function Login() {
                 className="mr-3"
               />
               Continue with Google
-            </Button>
+            </Button> */}
+
+            <GoogleOAuthProvider clientId={googleClientId}>
+              <div className="mt-6">
+                <div className="relative mb-4">
+                  <div className="absolute inset-0 flex items-center">
+                    <span className="w-full border-t" />
+                  </div>
+                  <div className="relative flex justify-center text-xs uppercase">
+                    <span className="bg-white px-2 text-muted-foreground">
+                      Or continue with
+                    </span>
+                  </div>
+                </div>
+                <GoogleLogin
+                  onSuccess={(credentialResponse) => {
+                    console.log(credentialResponse);
+                    // Отправляем credentialResponse.credential на бэкенд для валидации
+                  }}
+                  onError={() => {
+                    console.log("Login Failed");
+                  }}
+                />
+              </div>
+            </GoogleOAuthProvider>
           </CardFooter>
         </Card>
       </section>

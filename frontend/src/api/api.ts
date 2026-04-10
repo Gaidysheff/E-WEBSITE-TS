@@ -30,8 +30,12 @@ api.interceptors.response.use(
     if (error.response && error.response.status === 401) {
       localStorage.removeItem("Token");
       // window.location.href = "/login";
+      // Здесь можно добавить navigate('/login') если нужно
     }
-  }
+
+    // ВАЖНО: пробрасываем ошибку дальше, чтобы её поймал catch в компоненте
+    return Promise.reject(error);
+  },
 );
 
 export default api;

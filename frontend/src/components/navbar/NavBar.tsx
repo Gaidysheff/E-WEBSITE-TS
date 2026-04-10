@@ -24,7 +24,7 @@ const NavBar = () => {
         <div className="container">
           <div className="flex justify-between items-center main-max-width">
             <div className="w-full flex justify-between items-center">
-              <Link to="/" reloadDocument={true}>
+              <Link to="/">
                 <h1
                   className="text-2xl font-extrabold text-primaryDark
                   hover:text-primaryDark/50 hover:scale-110

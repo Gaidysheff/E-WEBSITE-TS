@@ -13,6 +13,7 @@ import {
 } from "@/api/endpoints.ts";
 
 import api from "@/api/api.ts";
+
 import { toast } from "react-toastify";
 import { type CPResponse, type PureAddress } from "@/lib/types";
 // import {
@@ -25,10 +26,10 @@ import { type CPResponse, type PureAddress } from "@/lib/types";
 
 type FormSubmitHandler = (formData: FormData) => Promise<any>;
 
-type FormSubmitupdateCartItemHandler = (
-  formData: FormData,
-  productName: string,
-) => Promise<void>;
+// type UpdateCartItemHandler = (
+//   formData: FormData,
+//   productName: string,
+// ) => Promise<void>;
 
 type PaymentHandler = (paymentObject: {
   cart_code: string;
@@ -183,8 +184,8 @@ export const addToCartAction: FormSubmitHandler = async (formData) => {
   try {
     const response = await api.post(CART_ADD_URL, cartObject);
     return response; // Просто возвращаем ответ
-  } catch (error) {
-    throw new Error("Failed to add item");
+  } catch (error: any) {
+    throw error;
   }
 };
 
@@ -208,65 +209,59 @@ export const isProductInCartAction: IsProductInCartType = async (
 
 // ================== Update CartItem Quantity ====================
 
-export const updateCartItemAction: FormSubmitupdateCartItemHandler = async (
-  formData,
-  productName,
-) => {
-  const item_id = Number(formData.get("cartitem_id"));
-  const quantity = Number(formData.get("quantity"));
-
-  const cartObject = { item_id, quantity };
+export const updateCartItemAction: FormSubmitHandler = async (formData) => {
+  const cartObject = {
+    item_id: Number(formData.get("cartitem_id")),
+    quantity: Number(formData.get("quantity")),
+  };
 
   try {
-    await api.put(CARTITEM_UPDATE_QUANTITY_URL, cartObject).then((response) => {
-      // console.log("🚀 ~ updateCartItemAction ~ response:", response);
-
-      if (typeof response !== "undefined") {
-        toast.success(`Item - ${productName}'s quantity has been updated`, {
-          autoClose: 2000,
-        });
-      } else {
-        toast.error("Something went wrong");
-      }
-
-      return response;
-    });
-  } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(error.message);
-    }
-    throw new Error("An unknown error occured");
+    const response = await api.put(CARTITEM_UPDATE_QUANTITY_URL, cartObject);
+    return response;
+  } catch (error: any) {
+    throw error;
   }
 };
 
 // ================ Delete CartItem from the Cart =================
 
-export const deleteCartItemAction: FormSubmitupdateCartItemHandler = async (
-  formData,
-  productName,
-) => {
+export const deleteCartItemAction: FormSubmitHandler = async (formData) => {
   const item_id = Number(formData.get("item_id"));
 
   try {
-    await api.delete(`${CARTITEM_DELETE_URL}${item_id}/`).then((response) => {
-      // console.log("🚀 ~ updateCartItemAction ~ response:", response);
-
-      if (typeof response !== "undefined") {
-        toast.success(`Item - ${productName}'s quantity has been updated`, {
-          autoClose: 2000,
-        });
-      } else {
-        toast.error("Something went wrong");
-      }
-      return response;
-    });
+    const response = await api.delete(`${CARTITEM_DELETE_URL}${item_id}/`);
+    return response;
   } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(error.message);
-    }
-    throw new Error("An unknown error occured");
+    throw new Error("Failed to delete item");
   }
 };
+
+// export const deleteCartItemAction: UpdateCartItemHandler = async (
+//   formData,
+//   productName,
+// ) => {
+//   const item_id = Number(formData.get("item_id"));
+
+//   try {
+//     await api.delete(`${CARTITEM_DELETE_URL}${item_id}/`).then((response) => {
+//       // console.log("🚀 ~ updateCartItemAction ~ response:", response);
+
+//       if (typeof response !== "undefined") {
+//         toast.success(`Item - ${productName}'s quantity has been updated`, {
+//           autoClose: 2000,
+//         });
+//       } else {
+//         toast.error("Something went wrong");
+//       }
+//       return response;
+//     });
+//   } catch (error) {
+//     if (error instanceof Error) {
+//       throw new Error(error.message);
+//     }
+//     throw new Error("An unknown error occured");
+//   }
+// };
 
 // ===================== Get Cart =========================
 

@@ -1,127 +1,32 @@
-import CartItem from "@/components/cart/CartItem";
-import CartSummary from "@/components/cart/CartSummary";
-import Error from "@/components/error/Error.tsx";
-// import Error404notFound from "@/components/error/Error404notFound.tsx";
-// import { toast } from "react-toastify";
-// import { type CartItemsWithTotal, type Cartitem } from "@/lib/types.ts";
-import { type Cartitem } from "@/lib/types.ts";
-// import { type ErrorComponentProps } from "@tanstack/react-router";
-import api from "@/api/api.ts";
-import { CART_GET_URL } from "@/api/endpoints.ts";
-import { useEffect, useState } from "react";
-import {
-  useNavigate,
-  useRouterState,
-  createLazyFileRoute,
-} from "@tanstack/react-router";
-import { BASE_URL } from "@/api/api";
-import usePageSEO from "@/hooks/usePageSEO.ts";
+import { createLazyFileRoute, useRouterState } from "@tanstack/react-router";
 
+import { BASE_URL } from "@/api/api";
+import CartItem from "@/components/cart/CartItem";
 import CartItemSkeleton from "@/components/cart/CartItemSkeleton.tsx";
+import CartSummary from "@/components/cart/CartSummary";
 import CartSummarySkeleton from "@/components/cart/CartSummarySkeleton.tsx";
+import { useCart } from "@/store/CartContext.tsx";
+import { useEffect } from "react";
+import usePageSEO from "@/hooks/usePageSEO.ts";
 
 export const Route = createLazyFileRoute("/_authenticated/cart/$cartcode")({
   component: CartItemPage,
-
-  // loader: async ({ params: { cartcode } }) => {
-  //   const navigate = useNavigate();
-  //   try {
-  //     const getCart = await api.get<CartItems>(`${CART_GET_URL}${cartcode}`);
-
-  //     return {
-  //       _cartitems: getCart.data.cartitems,
-  //       _cart_total: getCart.data.cart_total,
-  //     };
-  //   } catch (error: unknown) {
-  //     console.log("🚀 ~ error:", error);
-  //     if (error instanceof Error) {
-  //       if (
-  //         (error as any).message.includes("Cannot read properties of undefined")
-  //         // error.message ==
-  //         // "Cannot read properties of undefined (reading "data")"
-  //       ) {
-  //         // navigate({ to: `/cart` });
-  //       }
-  //       console.log("🚀 ~ FIND ERROR:", (error as any).message);
-  //     }
-  //     throw Error();
-  //   }
-  // },
-
-  // pendingComponent: () => {},
-
-  // errorComponent: (error: ErrorComponentProps) => {
-  //   const navigate = useNavigate();
-  //   console.log("🚀 ~ error:", error);
-
-  //   if (
-  //     (error as any).message.includes("Cannot read properties of undefined")
-  //     // error.message ==
-  //     // "Cannot read properties of undefined (reading "data")"
-  //   ) {
-  //     navigate({ to: `/cart` });
-  //   }
-  //   console.log("🚀 ~ FIND ERROR:", (error as any).message);
-
-  //   // toast.error("Something went wrong");
-  //   // return <Error404notFound />;
-  //   // throw Error();
-  // },
 });
 
 function CartItemPage() {
   const { cartcode } = Route.useParams();
 
+  const { items, totalPrice, refreshCart, isLoading } = useCart();
+
+  const cartitems_count = items?.length ?? 0;
+
   const routerState = useRouterState();
   const currentPathname = routerState.location.pathname;
 
-  const navigate = useNavigate();
-
-  const [cartItems, setCartItems] = useState<Cartitem[]>([]);
-  const [cartTotal, setCartTotal] = useState<number>(0);
-
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  // const cartitems_count =
-  //   cartItems && cartItems.length > 0 ? cartItems.length : 0;
-  // то же самое, только лаконичнее, используя Optional Chaining
-  const cartitems_count = cartItems?.length ?? 0;
-
-  // ===================== Get Cart =========================
-
-  const getCart = async (cart_code: string) => {
-    setIsLoading(true);
-    // --------------- Fetching delay ----------------------
-    // await new Promise((resolve) => setTimeout(resolve, 4000));
-    // -----------------------------------------------------
-
-    try {
-      await api.get(`${CART_GET_URL}${cart_code}`).then((response) => {
-        // console.log("🚀 ~ getCartAction ~ response:", response);
-
-        if (typeof response === "undefined") {
-          navigate({ to: `/cart` });
-        } else {
-          setCartItems(response.data.cartitems);
-          setCartTotal(response.data.cart_total);
-        }
-      });
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        console.error("🚀 ~  ERROR:", error);
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
+  // При загрузке страницы проверяем, актуальны ли данные
   useEffect(() => {
-    getCart(cartcode);
-  }, []);
-
-  // const { _cartitems, _cart_total } = Route.useLoaderData();
-  // const cartitems: Cartitem[] = _cartitems;
-  // const cart_total: number = _cart_total;
+    refreshCart();
+  }, [cartcode]); // если код корзины в URL сменится, обновим данные
 
   usePageSEO({
     title: "Eshop | Cart",
@@ -132,8 +37,6 @@ function CartItemPage() {
   return (
     <>
       <>
-        {/* <link rel="icon" type="image/svg+xml" href="/shopping-basket.ico" /> */}
-
         <link
           rel="icon"
           type="image/png"
@@ -149,13 +52,6 @@ function CartItemPage() {
         />
 
         <link rel="canonical" href={`${BASE_URL}${currentPathname}`} />
-
-        {/* <link rel="canonical" href={`${BASE_URL}/cart/${cartcode}`} /> */}
-
-        {/* <meta property="og:title" content="Eshop | OG:Title" />
-        <meta property="og:description" content="This is OG:Description" />
-        <meta property="og:image" content={"${Image}"} />
-        <meta property="og:url" content={`${BASE_URL}/cart`} /> */}
       </>
       <section className="py-9">
         <h1 className="font-semibold text-2xl text-primaryDark mb-6">Cart</h1>
@@ -171,10 +67,8 @@ function CartItemPage() {
             >
               {isLoading ? (
                 <CartItemSkeleton cards={2} />
-              ) : cartitems_count > 0 ? (
-                cartItems.map((cartItem) => (
-                  <CartItem key={cartItem.id} cartItem={cartItem} />
-                ))
+              ) : cartitems_count ? (
+                items.map((item) => <CartItem key={item.id} cartItem={item} />)
               ) : (
                 <p className="text-center text-gray-500 py-10">
                   Your cart is empty.
@@ -187,7 +81,7 @@ function CartItemPage() {
           {isLoading ? (
             <CartSummarySkeleton />
           ) : (
-            <CartSummary total={cartTotal} />
+            <CartSummary total={totalPrice} />
           )}
         </div>
       </section>

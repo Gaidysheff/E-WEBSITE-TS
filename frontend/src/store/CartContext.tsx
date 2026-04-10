@@ -23,6 +23,7 @@ interface CartContextType {
   items: Cartitem[];
   totalPrice: number;
   refreshCart: () => void;
+  isLoading: boolean;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -33,8 +34,11 @@ export const CartContextProvider = ({ children }: CartProviderProps) => {
   const [items, setItems] = useState<Cartitem[]>([]);
   const [totalPrice, setTotalPrice] = useState<number>(0); // Теперь это стейт
 
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   // ----------- Один универсальный запрос для корзины ------------------------
   const fetchFullCartData = async (code: string) => {
+    setIsLoading(true);
     try {
       const response = await api.get(
         `${CARTITEMS_WITH_TOTAL_URL}?cart_code=${code}`,
@@ -67,6 +71,7 @@ export const CartContextProvider = ({ children }: CartProviderProps) => {
       setTotalPrice(0);
       setCartItemsCount(0);
     }
+    setIsLoading(false);
   };
 
   // 1. Инициализация кода при загрузке
@@ -110,6 +115,7 @@ export const CartContextProvider = ({ children }: CartProviderProps) => {
     items,
     totalPrice,
     refreshCart,
+    isLoading,
   };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

@@ -29,7 +29,6 @@ const ProductInfo = ({ product, isAuthorized }: Props) => {
   const { user } = useUser();
 
   const email = typeof user === "undefined" ? "" : user.email;
-  // const userId: number | undefined = user?.id;
 
   const { cartCode, setCartItemsCount, refreshCart } = useCart();
 
@@ -40,7 +39,6 @@ const ProductInfo = ({ product, isAuthorized }: Props) => {
   const [isLoadingWishlist, setIsLoadingWishlist] = useState<boolean>(false);
 
   // ----------- Add Product to the Cart ------------------------
-
   const handleAddToCart = async () => {
     setAddToCartLoader(true);
 
@@ -52,16 +50,14 @@ const ProductInfo = ({ product, isAuthorized }: Props) => {
       await addToCartAction(formData);
       toast.success("Selected item added successfully!");
       refreshCart(); // Обновляем данные в стейте без перезагрузки всей страницы!
-
+      setCartItemsCount((current: number) => current + 1);
       setIsAddedToCart(true);
     } catch (error) {
       toast.error("Something went wrong");
+    } finally {
+      // Выключаем лоадер и при успехе, и при ошибке
+      setAddToCartLoader(false);
     }
-
-    setCartItemsCount((current: number) => current + 1);
-
-    setAddToCartLoader(false);
-
     // ------ Delay for disabling the button ---------
     // const reloadDelay = () => {
     //   setAddToCartLoader(false);

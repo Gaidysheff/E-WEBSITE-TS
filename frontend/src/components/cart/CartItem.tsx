@@ -4,24 +4,22 @@ import Button from "@/components/uiComponents/Button";
 import { type Cartitem } from "@/lib/types.ts";
 import { BASE_URL } from "@/api/api.ts";
 import { NumericFormat } from "react-number-format";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { updateCartItemAction, deleteCartItemAction } from "@/api/actions.ts";
 import DeleteModal from "@/components/uiComponents/DeleteModal.tsx";
 import { useCart } from "@/store/CartContext.tsx";
+import { toast } from "react-toastify";
 
 interface Props {
   cartItem: Cartitem;
 }
 
 const CartItem = ({ cartItem }: Props) => {
-  const { setCartItemsCount } = useCart();
+  const { setCartItemsCount, refreshCart } = useCart();
 
-  const sub_total = cartItem.sub_total;
+  const subTotal = cartItem.sub_total;
 
   const [quantity, setQuantity] = useState<number>(cartItem.quantity);
-
-  const [cartItemUpdateLoader, setCartItemUpdateLoader] =
-    useState<boolean>(false);
 
   const increaseQuantityHandler = () => {
     setQuantity((current) => current + 1);
@@ -31,45 +29,74 @@ const CartItem = ({ cartItem }: Props) => {
     setQuantity((current) => current - 1);
   };
 
+  const [cartItemUpdateLoader, setCartItemUpdateLoader] =
+    useState<boolean>(false);
+
   // ================== Update CartItem Quantity ====================
 
-  const updateCartItemHandler = () => {
+  const updateCartItemHandler = async () => {
     setCartItemUpdateLoader(true);
 
     const formData = new FormData();
     formData.set("cartitem_id", String(cartItem.id));
     formData.set("quantity", String(quantity));
-
     const productName = cartItem.product.name;
 
-    updateCartItemAction(formData, productName);
-
-    // -------- Delay for reloading page ------------
-    const reloadDelay = () => {
-      window.location.reload();
+    try {
+      await updateCartItemAction(formData);
+      toast.success(`Item - ${productName}'s quantity has been updated`);
+      // toast.success("Selected item updated successfully!");
+      refreshCart();
+    } catch (error) {
+      toast.error("Update failed. Please try again.");
+    } finally {
+      // Выключаем лоадер и при успехе, и при ошибке
       setCartItemUpdateLoader(false);
-    };
-    setTimeout(reloadDelay, 2000);
+    }
   };
 
   // ================ Delete CartItem from the Cart =================
 
-  const deleteCartItemHandler = () => {
+  const deleteCartItemHandler = async () => {
     const formData = new FormData();
     formData.set("item_id", String(cartItem.id));
 
     const productName = cartItem.product.name;
 
-    deleteCartItemAction(formData, productName);
+    try {
+      await deleteCartItemAction(formData);
+      toast.success(`Item - ${productName} has been deleted`);
+      // toast.success("Selected item deleted successfully!");
 
-    setCartItemsCount((current) => current - cartItem.quantity);
+      setCartItemsCount((current) => current - cartItem.quantity);
 
-    // -------- Delay for reloading page ------------
-    const reloadDelay = () => {
-      window.location.reload();
-    };
-    setTimeout(reloadDelay, 2000);
+      refreshCart();
+    } catch (error) {
+      toast.error("Something went wrong");
+    }
   };
+
+  // const deleteCartItemHandler = () => {
+  //   const formData = new FormData();
+  //   formData.set("item_id", String(cartItem.id));
+
+  //   const productName = cartItem.product.name;
+
+  //   deleteCartItemAction(formData, productName);
+
+  //   setCartItemsCount((current) => current - cartItem.quantity);
+
+  //   // -------- Delay for reloading page ------------
+  //   const reloadDelay = () => {
+  //     window.location.reload();
+  //   };
+  //   setTimeout(reloadDelay, 2000);
+  // };
+
+  useEffect(() => {
+    setQuantity(cartItem.quantity);
+    // setSubTotal(cartItem.sub_total);
+  }, [cartItem.quantity]); // Если в БД изменилось количество, обновляем ползунок
 
   return (
     <div
@@ -160,7 +187,7 @@ const CartItem = ({ cartItem }: Props) => {
           >
             {/* ${formattedSubTotal} */}
             <NumericFormat
-              value={sub_total}
+              value={subTotal}
               displayType={"text"}
               decimalScale={2}
               fixedDecimalScale
@@ -173,17 +200,9 @@ const CartItem = ({ cartItem }: Props) => {
 
           {/* Remove Item Button */}
           <DeleteModal
-            handleDeleteReview={() => {}}
             deleteCartItemHandler={deleteCartItemHandler}
             deleteCartitem={true}
           />
-          {/* <button
-            type="button"
-            className="p-1 2xsm:p-2 rounded-md bg-red-500/20 hover:bg-red-100 
-                transition text-red-500 border border-red-300 cursor-pointer"
-          >
-            <X className="w-[15px] h-[15px] 2xsm:w-5 2xsm:h-5" />
-          </button> */}
         </div>
       </div>
       {/* Update Cart Button */}

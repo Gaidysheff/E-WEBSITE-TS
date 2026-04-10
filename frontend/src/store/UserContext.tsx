@@ -31,10 +31,11 @@ interface UserProviderProps {
 export const UserContextProvider = ({ children }: UserProviderProps) => {
   const [user, setUser] = useState<UserLoggedIn | undefined>();
   // console.log("🚀 ~ UserContextProvider ~ user:", user);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const getUser = async () => {
+      setIsLoading(true);
       const token = localStorage.getItem("Token");
       if (token) {
         try {

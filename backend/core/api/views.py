@@ -159,22 +159,22 @@ def add_to_cart(request):
     return Response(serializer.data)
 
 
-@api_view(["GET"])
-def get_cart(request, cart_code):
-    cart = Cart.objects.filter(cart_code=cart_code).first()
+# @api_view(["GET"])
+# def get_cart(request, cart_code):
+#     cart = Cart.objects.filter(cart_code=cart_code).first()
 
-    if not cart:
-        # Вместо 404 возвращаем структуру пустой корзины, чтобы фронтенд не падал
-        return Response({"items": [], "total_cart_price": 0}, status=200)
+#     if not cart:
+#         # Вместо 404 возвращаем структуру пустой корзины, чтобы фронтенд не падал
+#         return Response({"items": [], "total_cart_price": 0}, status=200)
 
-    serializer = CartSerializer(cart)
-    return Response(serializer.data, status=status.HTTP_200_OK)
+#     serializer = CartSerializer(cart)
+#     return Response(serializer.data, status=status.HTTP_200_OK)
 
-    # if cart:
-    #     serializer = CartSerializer(cart)
-    #     return Response(serializer.data, status=status.HTTP_200_OK)
+# if cart:
+#     serializer = CartSerializer(cart)
+#     return Response(serializer.data, status=status.HTTP_200_OK)
 
-    # return Response({"error": "Cart not found."}, status=status.HTTP_404_NOT_FOUND)
+# return Response({"error": "Cart not found."}, status=status.HTTP_404_NOT_FOUND)
 
 
 # @api_view(["GET"])
