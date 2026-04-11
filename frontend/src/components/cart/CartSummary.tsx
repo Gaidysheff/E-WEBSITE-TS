@@ -1,14 +1,17 @@
+import { BASE_URL } from "@/api/api.ts";
 import Button from "@/components/uiComponents/Button";
-import { NumericFormat } from "react-number-format";
-import { initiatePaymentAction } from "@/api/actions.ts";
-import { useCart } from "@/store/CartContext.tsx";
-import { useUser } from "@/store/UserContext.tsx";
-import { type UserLoggedIn } from "@/lib/types.ts";
-import StripeIcon from "@/components/svgImages/StripeIcon.tsx";
-import CloudPayments from "@/components/svgImages/CloudPaymentsForButton";
-import { useState } from "react";
-import { useNavigate } from "@tanstack/react-router";
 import { ListChecks } from "lucide-react";
+import { NumericFormat } from "react-number-format";
+import { useCart } from "@/store/CartContext.tsx";
+import { useNavigate } from "@tanstack/react-router";
+
+// ----------------- Version for STRIPE -----------------------
+// import { initiatePaymentAction } from "@/api/actions.ts";
+// import { useUser } from "@/store/UserContext.tsx";
+// import { type UserLoggedIn } from "@/lib/types.ts";
+// import StripeIcon from "@/components/svgImages/StripeIcon.tsx";
+// import CloudPayments from "@/components/svgImages/CloudPaymentsForButton";
+// import { useState } from "react";
 
 interface Props {
   total: number;
@@ -17,36 +20,39 @@ interface Props {
 const CartSummary = ({ total }: Props) => {
   const navigate = useNavigate();
 
-  const [initiatePaymentLoader, setInitiatePaymentLoader] =
-    useState<boolean>(false);
+  const { items, cartItemsCount } = useCart();
 
-  const tax = 5;
-  const cartSubTotal = total;
-  const cartTotal = cartSubTotal + tax;
+  // ----------------- Version for STRIPE -----------------------
+  // const [initiatePaymentLoader, setInitiatePaymentLoader] =
+  //   useState<boolean>(false);
 
-  const isAuthorized = !!localStorage.getItem("Token");
+  // const tax = 5;
+  // const cartSubTotal = total;
+  // const cartTotal = cartSubTotal + tax;
 
-  const { user } = useUser();
-  const email = typeof user === "undefined" ? "" : user.email;
+  // const isAuthorized = !!localStorage.getItem("Token");
 
-  const { cartCode } = useCart();
+  // const { user } = useUser();
+  // const email = typeof user === "undefined" ? "" : user.email;
 
-  const paymentObject = { email, cart_code: cartCode };
+  // const { cartCode } = useCart();
 
-  const initiatePaymentHandler = () => {
-    setInitiatePaymentLoader(true);
-    initiatePaymentAction(paymentObject);
-    setInitiatePaymentLoader(false);
-    // ------ Delay for loading --------
-    // const reloadDelay = () => {
-    //   setInitiatePaymentLoader(false);
-    // };
-    // setTimeout(reloadDelay, 7000);
-  };
+  // const paymentObject = { email, cart_code: cartCode };
 
-  const proceedCloudPaymentHandler = () => {
-    navigate({ to: "/payment" });
-  };
+  // const initiatePaymentHandler = () => {
+  //   setInitiatePaymentLoader(true);
+  //   initiatePaymentAction(paymentObject);
+  //   setInitiatePaymentLoader(false);
+  //   // ------ Delay for loading --------
+  //   // const reloadDelay = () => {
+  //   //   setInitiatePaymentLoader(false);
+  //   // };
+  //   // setTimeout(reloadDelay, 7000);
+  // };
+
+  // const proceedCloudPaymentHandler = () => {
+  //   navigate({ to: "/payment" });
+  // };
 
   return (
     <div
@@ -57,31 +63,53 @@ const CartSummary = ({ total }: Props) => {
         Order Summary
       </h2>
 
+      {/* Images of selected Products  */}
+      <div className="flex gap-2">
+        {items.map((item) => (
+          <div key={item.id} className="relative w-10 h-10">
+            <img
+              src={`${BASE_URL}${item.product.image}`}
+              alt="item-img"
+              className="rounded-lg object-cover w-full h-full"
+            />
+            {/* Индикатор количества поверх картинки */}
+            {item.quantity > 1 && (
+              <span
+                className="absolute -top-2 -right-2 bg-primaryDark
+                text-[10px] w-5 h-5 flex items-center justify-center
+                rounded-full border-2 border-white text-white dark:text-black"
+              >
+                {item.quantity}
+              </span>
+            )}
+          </div>
+        ))}
+      </div>
+
       <div className="w-full flex items-center justify-between py-2">
         <p className="text-primary text-sm 2xsm:text-base sm:text-lg">
-          Subtotal
+          Number of selected goods
         </p>
         <p className="text-sm 2xsm:text-lg text-primaryDark font-semibold">
           {/* $100.00 */}
           <NumericFormat
-            value={cartSubTotal}
+            value={cartItemsCount}
             displayType={"text"}
-            decimalScale={2}
+            decimalScale={0}
             fixedDecimalScale
             thousandSeparator=" "
             decimalSeparator="."
-            prefix={"$ "}
+            // prefix={"$ "}
             // suffix={" ₽"}
           />
         </p>
       </div>
 
-      <div className="w-full flex items-center justify-between py-2">
+      {/* <div className="w-full flex items-center justify-between py-2">
         <p className="text-primary text-sm 2xsm:text-base sm:text-lg ">
           Estimated Tax
         </p>
         <p className="text-sm 2xsm:text-lg text-primaryDark font-semibold">
-          {/* $5.00 */}
           <NumericFormat
             value={tax}
             displayType={"text"}
@@ -93,7 +121,7 @@ const CartSummary = ({ total }: Props) => {
             // suffix={" ₽"}
           />
         </p>
-      </div>
+      </div> */}
 
       <hr className="my-4 border-primary" />
 
@@ -105,9 +133,8 @@ const CartSummary = ({ total }: Props) => {
           Total
         </p>
         <p className="text-sm 2xsm:text-lg font-bold text-primaryDark">
-          {/* $1280.00 */}
           <NumericFormat
-            value={cartTotal}
+            value={total}
             displayType={"text"}
             decimalScale={2}
             fixedDecimalScale
@@ -172,26 +199,18 @@ const CartSummary = ({ total }: Props) => {
         )}
       </Button> */}
       <Button
-        disabled={cartSubTotal < 0.01 || initiatePaymentLoader}
+        disabled={total < 0.01}
         handleClick={() => {
           navigate({ to: "/checkout" });
         }}
         className="checkout-btn"
       >
-        {initiatePaymentLoader ? (
-          <div>
-            <div className="inline-flex items-center">
-              <span>Redirecting to ...</span>
-            </div>
-          </div>
-        ) : (
-          <div className="inline-flex items-center">
-            <span className="mr-2">Proceed with Checklist</span>
-            <span>
-              <ListChecks className="size-[24px]" />
-            </span>
-          </div>
-        )}
+        <div className="inline-flex items-center">
+          <span className="mr-2">Proceed with Checklist</span>
+          <span>
+            <ListChecks className="size-[24px]" />
+          </span>
+        </div>
       </Button>
     </div>
   );

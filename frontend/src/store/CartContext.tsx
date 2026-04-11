@@ -10,13 +10,14 @@ import { generateRandomString } from "@/lib/utilities.ts";
 import { CARTITEMS_WITH_TOTAL_URL } from "@/api/endpoints.ts";
 import api from "@/api/api.ts";
 import { type Cartitem } from "@/lib/types.ts";
-
+import { GET_USER_CARTCODE_URL } from "@/api/endpoints_auth.ts";
 interface CartProviderProps {
   children: ReactNode;
 }
 
 interface CartContextType {
   cartCode: string;
+  setCartCode: React.Dispatch<React.SetStateAction<string>>;
   cartItemsCount: number;
   setCartItemsCount: React.Dispatch<React.SetStateAction<number>>;
   clearCart: () => void;
@@ -24,11 +25,14 @@ interface CartContextType {
   totalPrice: number;
   refreshCart: () => void;
   isLoading: boolean;
+  updateLocalQuantity: (itemId: number, newQuantity: number) => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartContextProvider = ({ children }: CartProviderProps) => {
+  const isAuthenticated = !!localStorage.getItem("Token");
+
   const [cartCode, setCartCode] = useState<string>("");
   const [cartItemsCount, setCartItemsCount] = useState<number>(0);
   const [items, setItems] = useState<Cartitem[]>([]);
@@ -76,10 +80,10 @@ export const CartContextProvider = ({ children }: CartProviderProps) => {
 
   // 1. Инициализация кода при загрузке
   useEffect(() => {
-    let code = localStorage.getItem("cartcode");
+    let code = localStorage.getItem("cart_code");
     if (!code) {
       code = generateRandomString();
-      localStorage.setItem("cartcode", code);
+      localStorage.setItem("cart_code", code);
     }
     setCartCode(code);
   }, []);
@@ -91,10 +95,8 @@ export const CartContextProvider = ({ children }: CartProviderProps) => {
     }
   }, [cartCode]);
 
-  // ----------------------------
-
   const clearCart = () => {
-    localStorage.removeItem("cartcode");
+    localStorage.removeItem("cart_code");
     setCartCode("");
     // Чтобы иконка корзины в шапке (счетчик) обнулилась мгновенно
     // после оплаты без window.location.reload()
@@ -107,8 +109,34 @@ export const CartContextProvider = ({ children }: CartProviderProps) => {
     if (cartCode) fetchFullCartData(cartCode);
   }, [cartCode]);
 
+  const updateLocalQuantity = (itemId: number, newQuantity: number) => {
+    setItems((prevItems) =>
+      prevItems.map((item) =>
+        item.id === itemId ? { ...item, quantity: newQuantity } : item,
+      ),
+    );
+  };
+  // ----------------------------
+
+  useEffect(() => {
+    const syncCart = async () => {
+      if (isAuthenticated) {
+        const response = await api.get(GET_USER_CARTCODE_URL);
+        const serverCartCode = response.data.cart_code;
+
+        if (serverCartCode !== localStorage.getItem("cart_code")) {
+          localStorage.setItem("cart_code", serverCartCode);
+          setCartCode(serverCartCode);
+          refreshCart(); // Перекачиваем товары для нового кода
+        }
+      }
+    };
+    syncCart();
+  }, [isAuthenticated]);
+
   const value = {
     cartCode,
+    setCartCode,
     cartItemsCount,
     setCartItemsCount,
     clearCart,
@@ -116,6 +144,7 @@ export const CartContextProvider = ({ children }: CartProviderProps) => {
     totalPrice,
     refreshCart,
     isLoading,
+    updateLocalQuantity,
   };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

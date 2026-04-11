@@ -1,5 +1,7 @@
 from django.conf import settings
 from django.db import models
+import random
+import string
 
 # from django.utils.text import slugify
 
@@ -81,8 +83,15 @@ class Product(models.Model):
     #     super().save(*args, **kwargs)
 
 
+def generate_random_string(length=10):
+    chars = string.ascii_letters + string.digits
+    return "".join(random.choices(chars, k=length))
+
+
 class Cart(models.Model):
-    cart_code = models.CharField(max_length=11, unique=True)
+    cart_code = models.CharField(
+        max_length=11, unique=True, default=generate_random_string
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(

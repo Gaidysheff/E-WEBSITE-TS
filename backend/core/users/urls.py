@@ -11,4 +11,5 @@ router.register("users", UserViewset, basename="users")
 urlpatterns = [
     path("", include(router.urls)),
     path("current-user/", CurrentUserView.as_view(), name="current_user"),
+    path("get_user_cart_code/", get_user_cart_code, name="get_user_cart_code"),
 ]

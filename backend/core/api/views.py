@@ -575,15 +575,19 @@ def get_address(request):
 # @csrf_exempt  # если приходит ошибку 403 при POST-запросе
 @api_view(["POST"])
 def process_payment(request):
-    # print("CHECK-CART:", request.data.get("cart_code"))
-    # print("CHECK-USER:", request.user)
-    # 1. Находим корзину (например, по сессии или пользователю)
+    # Получаем данные из запроса
+    cart_code = request.data.get("cart_code")
 
-    # cart = Cart.objects.get(user=request.user)
     try:
-        cart = Cart.objects.get(user=request.user)
+        # Ищем корзину, которая ПРИНАДЛЕЖИТ юзеру И имеет нужный КОД
+        if request.user.is_authenticated:
+            cart = Cart.objects.get(user=request.user, cart_code=cart_code)
+        else:
+            # Для гостевой оплаты (если вы её разрешаете)
+            cart = Cart.objects.get(cart_code=cart_code, user__isnull=True)
+
     except Cart.DoesNotExist:
-        return Response({"error": "Cart not found"}, status=404)
+        return Response({"error": "Cart not found or access denied"}, status=404)
 
         # 2. Считаем итоговую сумму на сервере
     total_amount = sum(item.total_price for item in cart.cartitems.all())

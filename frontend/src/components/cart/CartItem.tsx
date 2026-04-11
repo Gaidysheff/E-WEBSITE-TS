@@ -15,18 +15,24 @@ interface Props {
 }
 
 const CartItem = ({ cartItem }: Props) => {
-  const { setCartItemsCount, refreshCart } = useCart();
+  const { setCartItemsCount, refreshCart, updateLocalQuantity } = useCart();
 
   const subTotal = cartItem.sub_total;
 
   const [quantity, setQuantity] = useState<number>(cartItem.quantity);
 
   const increaseQuantityHandler = () => {
-    setQuantity((current) => current + 1);
+    // setQuantity((current) => current + 1);
+    const newQty = quantity + 1;
+    setQuantity(newQty);
+    updateLocalQuantity(cartItem.id, newQty); // Магия синхронизации
   };
 
   const decreaseQuantityHandler = () => {
-    setQuantity((current) => current - 1);
+    // setQuantity((current) => current - 1);
+    const newQty = quantity - 1;
+    setQuantity(newQty);
+    updateLocalQuantity(cartItem.id, newQty); // Магия синхронизации
   };
 
   const [cartItemUpdateLoader, setCartItemUpdateLoader] =

@@ -23,6 +23,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { MoveLeft } from "lucide-react";
 import { login } from "@/api/endpoints_auth";
+import { toast } from "react-toastify";
+import { useCart } from "@/store/CartContext.tsx";
 import { useForm } from "@tanstack/react-form";
 import { z } from "zod";
 
@@ -61,6 +63,8 @@ function FieldInfo({ field }: { field: AnyFieldApi }) {
 }
 
 export function Login() {
+  const { cartCode, setCartCode } = useCart();
+
   const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
   const navigate = useNavigate();
@@ -84,9 +88,33 @@ export function Login() {
     },
 
     onSubmit: async ({ value }) => {
-      await login(value); // Убедитесь, что логин завершен перед переходом
-      // navigate({ to: `/` });
-      onLoginSuccess();
+      try {
+        // 1. Добавляем текущий гостевой код в данные запроса
+        const loginData = {
+          ...value,
+          cart_code: cartCode, // <--- Передаем код бэкенду
+        };
+
+        const response = await login(loginData);
+
+        // 2. Если мы здесь, значит статус 200 (благодаря нашему перехватчику в api.ts)
+        toast.success("You have been successfully authorized 👋!");
+
+        localStorage.setItem("Token", response.data.token);
+
+        if (response.data.cart_code) {
+          localStorage.setItem("cart_code", response.data.cart_code);
+          setCartCode(response.data.cart_code);
+        }
+
+        onLoginSuccess();
+      } catch (error: any) {
+        // 3. Сюда попадем, если сервер вернул 401, 400 или 500
+        toast.error(
+          error.response?.data?.error ||
+            "Login has failed. Please check your credentials. 🤚 🚨",
+        );
+      }
     },
   });
 

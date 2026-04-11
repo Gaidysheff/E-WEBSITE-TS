@@ -4,7 +4,7 @@ import CloudPayments from "@/components/svgImages/CloudPayments";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { paymentActionCP } from "@/api/actions.ts";
 import { useState } from "react";
-import { type PaymentResponse } from "@/lib/types.ts";
+import { type CPResponse } from "@/lib/types.ts";
 
 import { useCart } from "@/store/CartContext.tsx";
 import { useUser } from "@/store/UserContext.tsx";
@@ -71,9 +71,7 @@ function Payment() {
           // resolve(cryptogram); // Завершаем успешно
           try {
             // 2. Отправляем в Django и ждем ответа
-            const result = (await paymentActionCP(
-              paymentData,
-            )) as PaymentResponse;
+            const result = (await paymentActionCP(paymentData)) as CPResponse;
 
             if (result.Success) {
               resolve(result); // Кнопка разблокируется, всё супер
@@ -155,9 +153,7 @@ function Payment() {
           };
 
           try {
-            const result = (await paymentActionCP(
-              paymentData,
-            )) as PaymentResponse;
+            const result = (await paymentActionCP(paymentData)) as CPResponse;
 
             if (result.Success) {
               resolve(result); // Успех: перенаправляем на страницу "Спасибо"

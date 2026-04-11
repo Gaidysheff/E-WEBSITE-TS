@@ -85,7 +85,7 @@ const CardForm = ({
   setCardType,
   onFieldChange,
 }: FormProps) => {
-  const { cartCode } = useCart();
+  // const { cartCode } = useCart();
 
   // Подписываемся на значения через useStore
   const formValues = useStore(bankCardForm.store, (state) => state.values);
