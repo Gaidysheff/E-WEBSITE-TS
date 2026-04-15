@@ -7,6 +7,7 @@ import usePageSEO from "@/hooks/usePageSEO.ts";
 import { BASE_URL } from "@/api/api";
 import { useRouterState } from "@tanstack/react-router";
 import { type ProductInDetails } from "@/lib/types.ts";
+import { useEffect, useState } from "react";
 
 interface LoaderData {
   product: ProductInDetails;
@@ -20,6 +21,7 @@ function IndividualProductComponent() {
   const { product } = Route.useLoaderData() as LoaderData;
 
   const reviews = product.reviews;
+  // const [reviews, setReviews] = useState([]);
 
   const similar_products = product.similar_products;
 
@@ -32,6 +34,8 @@ function IndividualProductComponent() {
     title: `Eshop | ${product.name}`,
     description: `This page presents the information about ${product.name}`,
   });
+
+  useEffect(() => {}, [product.reviews]);
 
   return (
     <>

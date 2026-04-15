@@ -11,6 +11,7 @@ import {
 } from "@/lib/types.ts";
 import DeleteModal from "@/components/uiComponents/DeleteModal.tsx";
 import { deleteReviewAction } from "@/api/actions.ts";
+import { useState } from "react";
 
 type Props = {
   review: Review;
@@ -19,6 +20,8 @@ type Props = {
 };
 
 const ReviewCard = ({ review, user, product }: Props) => {
+  const [isReviewFormOpen, setIsReviewFormOpen] = useState<boolean>(false);
+
   const starArray = [1, 2, 3, 4, 5];
 
   const handleDeleteReview = async () => {
@@ -52,11 +55,14 @@ const ReviewCard = ({ review, user, product }: Props) => {
                 addressForm={false}
                 updateReviewModal
                 address={null}
+                isModalOpen={isReviewFormOpen}
+                setIsModalOpen={setIsReviewFormOpen}
               >
                 <ReviewForm
                   updateReviewForm
                   review={review}
                   product={product}
+                  setIsReviewFormOpen={setIsReviewFormOpen}
                 />
               </Modal>
             </>

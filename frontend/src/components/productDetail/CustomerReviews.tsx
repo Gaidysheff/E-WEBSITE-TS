@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils.ts";
 import { Link } from "@tanstack/react-router";
 import { type ProductInDetails, type Review } from "@/lib/types.ts";
 import { useUser } from "@/store/UserContext.tsx";
+import { useState } from "react";
 
 type Props = {
   product: ProductInDetails;
@@ -15,13 +16,10 @@ type Props = {
 
 const CustomerReviews = ({ product, isAuthorized, reviews }: Props) => {
   const avgRating = product.rating?.average_rating ?? 0;
-  // console.log("🚀 ~ IndividualProductComponent ~ avgRating:", avgRating);
 
   const reviewCount = product.rating?.total_reviews ?? 0;
-  // console.log("🚀 ~ IndividualProductComponent ~ reviewCount:", reviewCount);
 
   const starRating = Math.floor(avgRating);
-  // console.log("🚀 ~ CustomerReviews ~ starRating:", starRating);
 
   const stars: number[] = [1, 2, 3, 4, 5];
 
@@ -30,6 +28,8 @@ const CustomerReviews = ({ product, isAuthorized, reviews }: Props) => {
   const good_rating = product.good_review;
   const very_good_rating = product.very_good_review;
   const excellent_rating = product.excellent_review;
+
+  const [isReviewFormOpen, setIsReviewFormOpen] = useState<boolean>(false);
 
   const { user } = useUser();
 
@@ -94,14 +94,12 @@ const CustomerReviews = ({ product, isAuthorized, reviews }: Props) => {
           {isAuthorized ? (
             <Modal
               userAlreadyHaveReview={userAlreadyHaveReview}
-              updateReviewModal={false}
-              addressForm={false}
-              address={null}
+              isModalOpen={isReviewFormOpen}
+              setIsModalOpen={setIsReviewFormOpen}
             >
               <ReviewForm
                 product={product}
-                updateReviewForm={false}
-                review={{} as Review}
+                setIsReviewFormOpen={setIsReviewFormOpen}
               />
             </Modal>
           ) : (

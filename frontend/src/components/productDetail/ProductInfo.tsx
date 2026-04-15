@@ -16,6 +16,7 @@ import {
   addToCartAction,
   isProductInCartAction,
   wishlistAddAndDeleteAction,
+  isProductInWishlistAction,
 } from "@/api/actions.ts";
 
 import { toast } from "react-toastify";
@@ -27,7 +28,6 @@ interface Props {
 
 const ProductInfo = ({ product, isAuthorized }: Props) => {
   const { user } = useUser();
-
   const email = typeof user === "undefined" ? "" : user.email;
 
   const { cartCode, setCartItemsCount, refreshCart } = useCart();
@@ -54,6 +54,7 @@ const ProductInfo = ({ product, isAuthorized }: Props) => {
       setIsAddedToCart(true);
     } catch (error) {
       toast.error("Something went wrong");
+      throw error;
     } finally {
       // Выключаем лоадер и при успехе, и при ошибке
       setAddToCartLoader(false);
@@ -84,27 +85,34 @@ const ProductInfo = ({ product, isAuthorized }: Props) => {
   }, [cartCode, product.id]);
 
   // ----------- WishList - Add & Delete ------------------------
-  const handleWishlistAddAndDelete = () => {
+  const handleWishlistAddAndDelete = async () => {
     setIsLoadingWishlist(true);
 
     const formData = new FormData();
-    formData.set("email", typeof email !== "undefined" ? email : "");
+    formData.set("email", email);
     formData.set("product_id", String(product.id));
 
-    wishlistAddAndDeleteAction(formData);
+    try {
+      await wishlistAddAndDeleteAction(formData);
+      setIsAddedToWishlist((current) => !current);
 
-    setIsAddedToWishlist((current) => !current);
-
-    if (isAddedToWishlist) {
-      toast.info("Item removed from your Wishlist successfully!");
-    } else {
-      toast.success("Item added to your Wishlist successfully!");
-    }
-    // -------- Delay for showing toaster ------------
-    const reloadDelay = () => {
+      if (isAddedToWishlist) {
+        toast.info("Item removed from your Wishlist successfully!");
+      } else {
+        toast.success("Item added to your Wishlist successfully!");
+      }
+    } catch (error) {
+      toast.error("Something went wrong");
+      throw error;
+    } finally {
       setIsLoadingWishlist(false);
-    };
-    setTimeout(reloadDelay, 3000);
+
+      // -------- Delay for showing toaster ------------
+      // const reloadDelay = () => {
+      //   setIsLoadingWishlist(false);
+      // };
+      // setTimeout(reloadDelay, 3000);
+    }
   };
 
   // ---------- Is the Product in the WishList ? -------------
@@ -112,19 +120,13 @@ const ProductInfo = ({ product, isAuthorized }: Props) => {
   const handleIsProductInWishlist = async () => {
     if (isAuthorized) {
       try {
-        await api
-          .get(
-            `${WISHLIST_PRODUCT_ADDED_URL}?email=${email}&product_id=${product.id}`,
-          )
-          .then((response) => {
-            setIsAddedToWishlist(response.data.product_in_wishlist);
-            return response;
-          });
+        const response = await isProductInWishlistAction(email, product.id);
+        setIsAddedToWishlist(response.data.product_in_wishlist);
+        return response;
       } catch (error) {
         if (error instanceof Error) {
           throw new Error(error.message);
         }
-        throw new Error("An unknown error occured");
       }
     }
   };

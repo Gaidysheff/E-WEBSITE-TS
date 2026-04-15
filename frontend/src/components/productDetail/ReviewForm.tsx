@@ -3,10 +3,12 @@ import { Star } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { type ProductInDetails, type Review } from "@/lib/types.ts";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import { useUser } from "@/store/UserContext.tsx";
 import { createReviewAction, updateReviewAction } from "@/api/actions.ts";
 import { type FormEvent } from "react";
+import { toast } from "react-toastify";
+import { useRouter } from "@tanstack/react-router";
 
 type HandleStars = {
   rating: number;
@@ -15,11 +17,17 @@ type HandleStars = {
 
 interface Props {
   product: ProductInDetails;
-  review: Review;
-  updateReviewForm: boolean;
+  review?: Review;
+  updateReviewForm?: boolean;
+  setIsReviewFormOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-const ReviewForm = ({ product, review, updateReviewForm }: Props) => {
+const ReviewForm = ({
+  product,
+  review,
+  updateReviewForm,
+  setIsReviewFormOpen,
+}: Props) => {
   const ratings = [
     { rating: 1, review: "Poor" },
     { rating: 2, review: "Fair" },
@@ -28,13 +36,14 @@ const ReviewForm = ({ product, review, updateReviewForm }: Props) => {
     { rating: 5, review: "Excellent" },
   ];
 
+  const router = useRouter();
+
   const [hoverRating, setHoverRating] = useState(0);
   const [hoverReview, setHoverReview] = useState("");
 
   const [clickedRating, setClickedRating] = useState(0);
   const [clickedReview, setClickedReview] = useState("");
 
-  // console.log("🚀 product ReviewForm:", product);
   const { id, slug } = product;
   const [customerReview, setCustomerReview] = useState("");
   const { user } = useUser();
@@ -42,7 +51,7 @@ const ReviewForm = ({ product, review, updateReviewForm }: Props) => {
   const [reviewBtnLoader, setReviewBtnLoader] = useState<boolean>(false);
 
   useEffect(() => {
-    if (updateReviewForm) {
+    if (updateReviewForm && !!review) {
       const { rating, review: reviewMessage } = review;
 
       setClickedRating(rating);
@@ -55,24 +64,33 @@ const ReviewForm = ({ product, review, updateReviewForm }: Props) => {
 
   // ===================== Add Review =========================
 
-  const handleCreateReview = (event: FormEvent<HTMLFormElement>) => {
+  const handleCreateReview = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     setReviewBtnLoader(true);
+    setIsReviewFormOpen(true);
+
+    if (!id || !user?.email || !clickedRating || !customerReview || !slug) {
+      toast.error("All fields are required");
+      throw new Error("All fields are required");
+    }
 
     const formData = new FormData();
     formData.set("product_id", String(id));
-    formData.set("slug", slug);
     formData.set("review", customerReview);
     formData.set("rating", String(clickedRating));
     formData.set("email", String(user?.email));
 
-    createReviewAction(formData);
-
-    const reloadDelay = () => {
-      setReviewBtnLoader(false);
-    };
-    setTimeout(reloadDelay, 3000);
+    try {
+      await createReviewAction(formData);
+      toast.success("Review added successfully!");
+      await router.invalidate(); // МАГИЯ: заставляет лоадеры текущей страницы перекачать данные
+    } catch (error) {
+      toast.error("Something went wrong");
+      throw error;
+    } finally {
+      setIsReviewFormOpen(false);
+    }
   };
 
   // ===================== Update Review =========================
@@ -159,7 +177,7 @@ const ReviewForm = ({ product, review, updateReviewForm }: Props) => {
             (customerReview && customerReview.trim()).length == 0 ||
             reviewBtnLoader
           }
-          handleClick={() => {}}
+          handleClick={() => handleCreateReview}
           className="bg-black text-white w-full py-2 rounded-lg 
           hover:bg-gray-900 transition
           disabled:opacity-50 disabled:cursor-not-allowed"

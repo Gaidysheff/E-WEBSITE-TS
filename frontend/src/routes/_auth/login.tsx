@@ -7,22 +7,23 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
+import { GoogleLogin, useGoogleLogin } from "@react-oauth/google";
 import {
   Link,
   createFileRoute,
   useNavigate,
   useSearch,
 } from "@tanstack/react-router";
+import { googleLoginAction, login } from "@/api/endpoints_auth";
 
 import type { AnyFieldApi } from "@tanstack/react-form";
 import { BASE_URL } from "@/api/api";
 import { Button } from "@/components/ui/button";
-import Google from "@/assets/images/shared/google.png";
+import { FcGoogle } from "react-icons/fc";
+// import Google from "@/assets/images/shared/google.png";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { MoveLeft } from "lucide-react";
-import { login } from "@/api/endpoints_auth";
 import { toast } from "react-toastify";
 import { useCart } from "@/store/CartContext.tsx";
 import { useForm } from "@tanstack/react-form";
@@ -64,8 +65,6 @@ function FieldInfo({ field }: { field: AnyFieldApi }) {
 
 export function Login() {
   const { cartCode, setCartCode } = useCart();
-
-  const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
   const navigate = useNavigate();
   // const search: any = Route.useSearch();
@@ -113,6 +112,26 @@ export function Login() {
         toast.error(
           error.response?.data?.error ||
             "Login has failed. Please check your credentials. 🤚 🚨",
+        );
+      }
+    },
+  });
+
+  const googleLogin = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      try {
+        // Отправляем только токен Google и код корзины
+        const response = await googleLoginAction(tokenResponse, cartCode);
+
+        // Дальше логика как при обычном логине
+        localStorage.setItem("Token", response.data.token);
+        localStorage.setItem("cart_code", response.data.cart_code);
+        setCartCode(response.data.cart_code);
+        toast.success("Welcome! Signed in with Google.");
+        onLoginSuccess();
+      } catch (error: any) {
+        toast.error(
+          error.response?.data?.error || "Google Authentication failed",
         );
       }
     },
@@ -213,45 +232,33 @@ export function Login() {
 
             <Button
               type="submit"
-              className="w-full"
+              className="w-full h-12 text-lg"
               onClick={form.handleSubmit}
             >
               Login
             </Button>
-            {/* <Button variant="outline" className="w-full">
-              <img
-                src={Google}
-                alt="Google Icon"
-                width={20}
-                height={20}
-                className="mr-3"
-              />
-              Continue with Google
-            </Button> */}
 
-            <GoogleOAuthProvider clientId={googleClientId}>
-              <div className="mt-6">
-                <div className="relative mb-4">
-                  <div className="absolute inset-0 flex items-center">
-                    <span className="w-full border-t" />
-                  </div>
-                  <div className="relative flex justify-center text-xs uppercase">
-                    <span className="bg-white px-2 text-muted-foreground">
-                      Or continue with
-                    </span>
-                  </div>
+            <div className="mt-6">
+              <div className="relative mb-4">
+                <div className="absolute inset-0 flex items-center">
+                  <span className="w-full border-t" />
                 </div>
-                <GoogleLogin
-                  onSuccess={(credentialResponse) => {
-                    console.log(credentialResponse);
-                    // Отправляем credentialResponse.credential на бэкенд для валидации
-                  }}
-                  onError={() => {
-                    console.log("Login Failed");
-                  }}
-                />
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-white px-2 text-muted-foreground">
+                    Or continue with
+                  </span>
+                </div>
               </div>
-            </GoogleOAuthProvider>
+            </div>
+
+            <Button
+              variant="outline"
+              className="w-full rounded-xl h-12"
+              onClick={() => googleLogin()}
+            >
+              <FcGoogle className="mr-2 size-6" />
+              Continue with Google
+            </Button>
           </CardFooter>
         </Card>
       </section>

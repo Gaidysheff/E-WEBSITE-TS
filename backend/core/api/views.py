@@ -233,23 +233,19 @@ def cart_items_with_total(request):
     # Получаем cart_code из параметров URL: ?cart_code=abc
     cart_code = request.query_params.get("cart_code")
 
-    # --------- это для привязки корзины к User (Строгий метод -------------)
-    # cart = get_object_or_404(Cart, cart_code=cart_code)
+    # Используем filter, чтобы не вызывать DoesNotExist
+    cart = Cart.objects.filter(cart_code=cart_code).first()
 
-    # # Если у корзины есть владелец, проверяем, что это тот же человек
-    # if cart.user and cart.user != request.user:
-    #     return Response({"detail": "Not authorized"}, status=403)
-    # -----------------------------------------------------------------
-    # if not cart_code:
-    #     return Response(
-    #         {"error": "cart_code is required"}, status=status.HTTP_400_BAD_REQUEST
-    #     )
-    # -----------------------------------------------------------------
+    if not cart:
+        return Response(
+            {"items": [], "total_cart_price": 0, "cart_items_count": 0}, status=200
+        )
 
     # Фильтруем через связь ForeignKey:
     # cart (поле в CartItem) -> cart_code (поле в Cart)
-    cart_items = CartItem.objects.filter(cart__cart_code=cart_code)
+    # cart_items = CartItem.objects.filter(cart__cart_code=cart_code)
 
+    cart_items = cart.cartitems.all()  # Используйте related_name
     # Вместо if cart_items.exists() просто возвращаем данные
     # Передаем queryset и флаг many=True
     serializer = CartItemSerializer(cart_items, many=True)

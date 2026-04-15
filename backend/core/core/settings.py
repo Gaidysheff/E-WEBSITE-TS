@@ -222,3 +222,9 @@ BASE_URL_FRONTEND = os.getenv("BASE_URL_FRONTEND")
 
 CLOUD_PAYMENTS_API_SECRET_KEY = os.getenv("CLOUD_PAYMENTS_API_SECRET_KEY")
 CLOUD_PAYMENTS_PUBLIC_ID = os.getenv("CLOUD_PAYMENTS_PUBLIC_ID")
+
+# ===================== for Social Auth =====================
+# Позволяет всплывающему окну общаться с вашим приложением
+SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin-allow-popups"
+# Необязательно, но полезно для работы с внешними ресурсами (Google, карты)
+SECURE_REFERRER_POLICY = "no-referrer-when-downgrade"

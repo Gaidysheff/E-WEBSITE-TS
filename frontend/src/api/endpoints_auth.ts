@@ -21,7 +21,7 @@ type PassConfirm = {
   password: string;
 };
 
-// ======================= API Requests =================================
+// ==================== Register =======================
 
 export const register = async (value: Auth) => {
   try {
@@ -38,6 +38,8 @@ export const register = async (value: Auth) => {
   }
 };
 
+// ===================== Login =========================
+
 export const login = async (value: AuthCart) => {
   const credentials = {
     email: value.email,
@@ -50,6 +52,20 @@ export const login = async (value: AuthCart) => {
   } catch (error) {
     throw error;
   }
+};
+
+// =================== Google Login =======================
+
+// Создаем функцию для отправки Google-данных на бэкенд
+export const googleLoginAction = async (
+  authResponse: any,
+  cartCode: string,
+) => {
+  const data = {
+    access_token: authResponse.access_token, // Токен от Google
+    cart_code: cartCode, // Твой cart_code для слияния корзин
+  };
+  return await api.post("/users/google-auth/", data);
 };
 
 // export const login = async (value: Auth) => {
@@ -78,6 +94,8 @@ export const login = async (value: AuthCart) => {
 //   }
 // };
 
+// ===================== Logout =========================
+
 export const logout = async () => {
   try {
     await api.post(LOGOUT_URL, {}).then(() => {
@@ -93,6 +111,8 @@ export const logout = async () => {
     console.log("🚀 ~ Register ~ error:", error);
   }
 };
+
+// ================== Password Reset ======================
 
 export const passwordResetRequest = async (value: Reset) => {
   try {
@@ -112,6 +132,8 @@ export const passwordResetRequest = async (value: Reset) => {
     console.log("🚀 ~ passwordResetRequest ~ error:", error);
   }
 };
+
+// ================== Password Confirm ======================
 
 export const passwordConfirm = async (value: PassConfirm, token: string) => {
   console.log("🚀 ~ passwordConfirm ~ value:", value);
