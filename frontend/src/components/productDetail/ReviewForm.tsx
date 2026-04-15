@@ -85,32 +85,39 @@ const ReviewForm = ({
       await createReviewAction(formData);
       toast.success("Review added successfully!");
       await router.invalidate(); // МАГИЯ: заставляет лоадеры текущей страницы перекачать данные
-    } catch (error) {
+    } catch (error: any) {
       toast.error("Something went wrong");
       throw error;
     } finally {
       setIsReviewFormOpen(false);
+      setReviewBtnLoader(false);
     }
   };
 
   // ===================== Update Review =========================
 
-  const handleUpdateReview = (event: FormEvent<HTMLFormElement>) => {
+  const handleUpdateReview = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     setReviewBtnLoader(true);
+    setIsReviewFormOpen(true);
 
     const formData = new FormData();
     formData.set("review", customerReview);
     formData.set("rating", String(clickedRating));
     formData.set("review_id", review ? String(review.id) : "");
 
-    updateReviewAction(formData);
-
-    const reloadDelay = () => {
+    try {
+      await updateReviewAction(formData);
+      toast.success("Review updated successfully!");
+      await router.invalidate();
+    } catch (error: any) {
+      toast.error("Something went wrong");
+      throw error;
+    } finally {
       setReviewBtnLoader(false);
-    };
-    setTimeout(reloadDelay, 3000);
+      setIsReviewFormOpen(false);
+    }
   };
 
   // ==========================================================
@@ -177,7 +184,11 @@ const ReviewForm = ({
             (customerReview && customerReview.trim()).length == 0 ||
             reviewBtnLoader
           }
-          handleClick={() => handleCreateReview}
+          handleClick={
+            updateReviewForm
+              ? () => handleUpdateReview
+              : () => handleCreateReview
+          }
           className="bg-black text-white w-full py-2 rounded-lg 
           hover:bg-gray-900 transition
           disabled:opacity-50 disabled:cursor-not-allowed"

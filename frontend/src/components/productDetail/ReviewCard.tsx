@@ -1,6 +1,5 @@
 import { Star } from "lucide-react";
 import { cn, timeAgo } from "@/lib/utils.js";
-// import Image from "@/assets/images/shared/profile_pic.jpg";
 import { BASE_URL } from "@/api/api.ts";
 import Modal from "@/components/uiComponents/Modal.tsx";
 import ReviewForm from "@/components/productDetail/ReviewForm.tsx";
@@ -12,6 +11,8 @@ import {
 import DeleteModal from "@/components/uiComponents/DeleteModal.tsx";
 import { deleteReviewAction } from "@/api/actions.ts";
 import { useState } from "react";
+import { toast } from "react-toastify";
+import { useRouter } from "@tanstack/react-router";
 
 type Props = {
   review: Review;
@@ -24,11 +25,22 @@ const ReviewCard = ({ review, user, product }: Props) => {
 
   const starArray = [1, 2, 3, 4, 5];
 
+  const router = useRouter();
+
+  // ===================== Delete Review =========================
+
   const handleDeleteReview = async () => {
     const formData = new FormData();
     formData.set("review_id", String(review.id));
 
-    deleteReviewAction(formData);
+    try {
+      await deleteReviewAction(formData);
+      toast.warning("Review deleted successfully!");
+      await router.invalidate();
+    } catch (error: any) {
+      toast.error("Something went wrong");
+      throw error;
+    }
   };
 
   return (
@@ -43,11 +55,7 @@ const ReviewCard = ({ review, user, product }: Props) => {
             <>
               {/* Trash button to delete review */}
 
-              <DeleteModal
-                handleDeleteReview={handleDeleteReview}
-                deleteCartItemHandler={() => {}}
-                deleteCartitem={false}
-              />
+              <DeleteModal handleDeleteReview={handleDeleteReview} />
 
               {/* Pen button to edit review */}
               <Modal

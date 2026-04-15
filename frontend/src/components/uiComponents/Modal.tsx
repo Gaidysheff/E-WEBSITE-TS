@@ -62,7 +62,7 @@ const Modal = ({
             <button
               type="button"
               className="default-btn max-sm:text-sm max-sm:px-4 my-6"
-              // onClick={() => setIsModalOpen(true)} // Явно открываем
+              onClick={() => setIsModalOpen(true)} // Явно открываем
             >
               Click to add a review
             </button>

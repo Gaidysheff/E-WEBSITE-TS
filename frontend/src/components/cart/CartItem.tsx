@@ -82,23 +82,6 @@ const CartItem = ({ cartItem }: Props) => {
     }
   };
 
-  // const deleteCartItemHandler = () => {
-  //   const formData = new FormData();
-  //   formData.set("item_id", String(cartItem.id));
-
-  //   const productName = cartItem.product.name;
-
-  //   deleteCartItemAction(formData, productName);
-
-  //   setCartItemsCount((current) => current - cartItem.quantity);
-
-  //   // -------- Delay for reloading page ------------
-  //   const reloadDelay = () => {
-  //     window.location.reload();
-  //   };
-  //   setTimeout(reloadDelay, 2000);
-  // };
-
   useEffect(() => {
     setQuantity(cartItem.quantity);
     // setSubTotal(cartItem.sub_total);
@@ -205,6 +188,7 @@ const CartItem = ({ cartItem }: Props) => {
           </p>
 
           {/* Remove Item Button */}
+
           <DeleteModal
             deleteCartItemHandler={deleteCartItemHandler}
             deleteCartitem={true}

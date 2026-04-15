@@ -80,7 +80,8 @@ class LoginViewset(viewsets.ViewSet):
                     else:
                         # Сценарий Б: Есть обе корзины. Нужно объединить.
                         if user_cart.id != guest_cart.id:
-                            self.merge_carts(user, guest_cart_code, user_cart)
+                            merge_carts(user, guest_cart_code, user_cart)
+                            # self.merge_carts(user, guest_cart_code, user_cart)
 
                 # 6. Если вообще никаких корзин не нашли (редкий случай), создаем новую
 

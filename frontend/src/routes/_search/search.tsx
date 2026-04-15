@@ -19,15 +19,14 @@ export const Route = createFileRoute("/_search/search")({
     // await new Promise((resolve) => setTimeout(resolve, 2000));
 
     // ---------- Product Search ----------
-    const response = await api.get(`${PRODUCT_SEARCH_URL}${query}`);
-    if (response?.status != 200) {
-      throw Error();
+    try {
+      const response = await api.get(`${PRODUCT_SEARCH_URL}${query}`);
+      return {
+        searchedProducts: response.data,
+      };
+    } catch (error: any) {
+      throw error;
     }
-    // ------------------------------------
-
-    return {
-      searchedProducts: response.data,
-    };
   },
 
   pendingComponent: () => <SearchSkeleton />,

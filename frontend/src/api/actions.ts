@@ -94,46 +94,6 @@ export const createReviewAction: FormSubmitHandler = async (formData) => {
   }
 };
 
-// export const createReviewAction: FormSubmitHandler = async (formData) => {
-//   const product_id = Number(formData.get("product_id"));
-//   const email = formData.get("email");
-//   const rating = Number(formData.get("rating"));
-//   const review = formData.get("review");
-//   const slug = formData.get("slug");
-
-//   if (!product_id || !email || !rating || !review || !slug) {
-//     toast.error("All fields are required");
-//     throw new Error("All fields are required");
-//   }
-
-//   const reviewObject = { product_id, email, rating, review };
-
-//   // --------------- Fetching delay ----------------------
-//   // await new Promise((resolve) => setTimeout(resolve, 3000));
-//   // -----------------------------------------------------
-
-//   try {
-//     const response = await api.post(REVIEW_ADD_URL, reviewObject);
-//     console.log("🚀 ~ createReviewAction ~ response:", response);
-
-//     if (response?.status === 200) {
-//       toast.success("Review added successfully!");
-//     } else {
-//       toast.error("Something went wrong");
-//     }
-//     // ------ Delay for reloading while showing toaster ---------
-//     const reloadDelay = () => {
-//       window.location.reload();
-//     };
-//     setTimeout(reloadDelay, 3000);
-
-//     return response;
-//   } catch (error) {
-//     if (error instanceof Error) {
-//       throw new Error(error.message);
-//     }
-//   }
-// };
 // ===================== Update Review =========================
 
 export const updateReviewAction: FormSubmitHandler = async (formData) => {
@@ -158,39 +118,6 @@ export const updateReviewAction: FormSubmitHandler = async (formData) => {
   }
 };
 
-// export const updateReviewAction: FormSubmitHandler = async (formData) => {
-//   const rating = Number(formData.get("rating"));
-//   const review = formData.get("review");
-//   const review_id = formData.get("review_id");
-
-//   const reviewObject = { rating, review };
-
-//   try {
-//     await api
-//       .put(`${REVIEW_UPDATE_URL}${review_id}/`, reviewObject)
-//       .then((response) => {
-//         // console.log("🚀 ~ updateReviewAction ~ review_id:", review_id);
-//         // console.log("🚀: updateReviewAction -> Response", response);
-//         if (response?.status === 200) {
-//           toast.success("Review updated successfully!");
-//         } else {
-//           toast.error("Something went wrong");
-//         }
-//         // ------ Delay for reloading while showing toaster ---------
-//         const reloadDelay = () => {
-//           window.location.reload();
-//         };
-//         setTimeout(reloadDelay, 3000);
-
-//         return response;
-//       });
-//   } catch (error) {
-//     if (error instanceof Error) {
-//       throw new Error(error.message);
-//     }
-//     throw new Error("An unknown error occured");
-//   }
-// };
 // ===================== Delete Review =========================
 
 export const deleteReviewAction: FormSubmitHandler = async (formData) => {
@@ -205,29 +132,6 @@ export const deleteReviewAction: FormSubmitHandler = async (formData) => {
     }
   }
 };
-
-// export const deleteReviewAction: FormSubmitHandler = async (formData) => {
-//   const review_id = formData.get("review_id");
-
-//   try {
-//     await api.delete(`${REVIEW_DELETE_URL}${review_id}/`).then((response) => {
-//       toast.warning("Review deleted successfully!");
-
-//       // ------ Delay for reloading while showing toaster ---------
-//       const reloadDelay = () => {
-//         window.location.reload();
-//       };
-//       setTimeout(reloadDelay, 3000);
-
-//       return response;
-//     });
-//   } catch (error) {
-//     if (error instanceof Error) {
-//       throw new Error(error.message);
-//     }
-//     throw new Error("An unknown error occured");
-//   }
-// };
 
 // ===================== Add to Cart =========================
 export const addToCartAction: FormSubmitHandler = async (formData) => {
@@ -324,7 +228,7 @@ export const wishlistAddAndDeleteAction: FormSubmitHandler = async (
   try {
     const response = await api.post(WISHLIST_ADD_AND_DELETE_URL, wishObject);
     return response;
-  } catch (error) {
+  } catch (error: any) {
     throw error;
   }
 };
@@ -340,7 +244,7 @@ export const isProductInWishlistAction: IsProductInWishlistType = async (
       `${WISHLIST_PRODUCT_ADDED_URL}?email=${email}&product_id=${productId}`,
     );
     return response;
-  } catch (error) {
+  } catch (error: any) {
     throw error;
   }
 };
@@ -367,7 +271,7 @@ export const initiatePaymentAction: PaymentHandler = async (paymentObject) => {
   }
 };
 
-// // =================== Get Orders ======================
+// =================== Get Orders ======================
 // export const getOrdersAction = async (email) => {
 //   if (email) {
 //     // --------------- Fetching delay ----------------------
@@ -393,25 +297,6 @@ export const addAddressAction: AddressHandler = async (
     }
   }
 };
-
-// export const addAddressAction: AddressHandler = async (
-//   addressData: PureAddress,
-// ) => {
-//   try {
-//     const response = await api.post(ADDRESS_ADD_URL, addressData);
-//     if (response?.status === 200 || response?.status === 201) {
-//       toast.success("Your shipping address has been saved!");
-//       return response.data; // ВОЗВРАЩАЕМ ДАННЫЕ
-//     }
-//   } catch (error) {
-//     if (error instanceof Error) {
-//       toast.error(error.message);
-//       throw new Error(error.message);
-//     }
-//     toast.error("An unknown error occured");
-//     throw new Error("An unknown error occured");
-//   }
-// };
 
 // =================== CloudPayments (CP) ======================
 
