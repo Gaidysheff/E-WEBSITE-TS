@@ -1,13 +1,12 @@
-import { createLazyFileRoute } from "@tanstack/react-router";
+import { BASE_URL } from "@/api/api";
 import CustomerReviews from "@/components/productDetail/CustomerReviews";
 import ProductInfo from "@/components/productDetail/ProductInfo";
-import ProductSection from "@/components/sectionProduct/ProductSection";
 import ReviewCardContainer from "@/components/productDetail/ReviewCardContainer";
+import ProductSection from "@/components/sectionProduct/ProductSection";
 import usePageSEO from "@/hooks/usePageSEO.ts";
-import { BASE_URL } from "@/api/api";
-import { useRouterState } from "@tanstack/react-router";
 import { type ProductInDetails } from "@/lib/types.ts";
-import { useEffect, useState } from "react";
+import { createLazyFileRoute, useRouterState } from "@tanstack/react-router";
+import { useEffect } from "react";
 
 interface LoaderData {
   product: ProductInDetails;

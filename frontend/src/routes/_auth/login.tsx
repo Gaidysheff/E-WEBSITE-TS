@@ -7,7 +7,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { GoogleLogin, useGoogleLogin } from "@react-oauth/google";
 import {
   Link,
   createFileRoute,
@@ -20,13 +19,13 @@ import type { AnyFieldApi } from "@tanstack/react-form";
 import { BASE_URL } from "@/api/api";
 import { Button } from "@/components/ui/button";
 import { FcGoogle } from "react-icons/fc";
-// import Google from "@/assets/images/shared/google.png";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { MoveLeft } from "lucide-react";
 import { toast } from "react-toastify";
 import { useCart } from "@/store/CartContext.tsx";
 import { useForm } from "@tanstack/react-form";
+import { useGoogleLogin } from "@react-oauth/google";
 import { z } from "zod";
 
 export const Route = createFileRoute("/_auth/login")({

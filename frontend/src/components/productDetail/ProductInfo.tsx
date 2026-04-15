@@ -1,23 +1,18 @@
-import Button from "@/components/uiComponents/Button";
-import { type Product } from "@/lib/types.ts";
 import { BASE_URL } from "@/api/api";
-import { NumericFormat } from "react-number-format";
+import Button from "@/components/uiComponents/Button";
+import WishlistTooltip from "@/components/uiComponents/WishlistTooltip.tsx";
+import { type Product } from "@/lib/types.ts";
 import { useCart } from "@/store/CartContext.tsx";
 import { useEffect, useState } from "react";
-import {
-  CART_PRODUCT_ADDED_URL,
-  WISHLIST_PRODUCT_ADDED_URL,
-} from "@/api/endpoints.ts";
-import api from "@/api/api.ts";
-import WishlistTooltip from "@/components/uiComponents/WishlistTooltip.tsx";
+import { NumericFormat } from "react-number-format";
 
-import { useUser } from "@/store/UserContext.tsx";
 import {
   addToCartAction,
   isProductInCartAction,
-  wishlistAddAndDeleteAction,
   isProductInWishlistAction,
+  wishlistAddAndDeleteAction,
 } from "@/api/actions.ts";
+import { useUser } from "@/store/UserContext.tsx";
 
 import { toast } from "react-toastify";
 

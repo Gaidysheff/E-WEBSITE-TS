@@ -1,5 +1,4 @@
 import { createLazyFileRoute, useRouterState } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
 
 import { BASE_URL } from "@/api/api";
 import CartItem from "@/components/cart/CartItem";
@@ -7,6 +6,7 @@ import CartItemSkeleton from "@/components/cart/CartItemSkeleton.tsx";
 import CartSummary from "@/components/cart/CartSummary";
 import CartSummarySkeleton from "@/components/cart/CartSummarySkeleton.tsx";
 import { useCart } from "@/store/CartContext.tsx";
+import { useEffect } from "react";
 import usePageSEO from "@/hooks/usePageSEO.ts";
 
 export const Route = createLazyFileRoute("/_authenticated/cart/$cartcode")({

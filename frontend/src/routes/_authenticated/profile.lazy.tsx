@@ -1,15 +1,12 @@
-import AddressForm from "@/components/order/AddressForm.tsx";
+import { createLazyFileRoute, useRouterState } from "@tanstack/react-router";
+
 import AddressFormTanstack from "@/components/order/AddressFormTanstack.tsx";
 import { BASE_URL } from "@/api/api";
 import Modal from "@/components/uiComponents/Modal.tsx";
 import Orders from "@/components/order/Orders";
 import ShippingInfo from "@/components/profile/ShippingInfo.tsx";
 import Wishlist from "@/components/wishlist/Wishlist";
-import { createLazyFileRoute } from "@tanstack/react-router";
-import getAddressOptions from "@/api/queryOptions/getAddressOptions.ts";
 import usePageSEO from "@/hooks/usePageSEO.ts";
-import { useQuery } from "@tanstack/react-query";
-import { useRouterState } from "@tanstack/react-router";
 import { useState } from "react";
 import { useUser } from "@/store/UserContext.tsx";
 

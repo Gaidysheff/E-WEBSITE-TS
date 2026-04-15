@@ -3,34 +3,21 @@ import {
   CARTITEM_DELETE_URL,
   CARTITEM_UPDATE_QUANTITY_URL,
   CART_ADD_URL,
+  CART_PRODUCT_ADDED_URL,
   CHECKOUT_URL,
   CLOUD_PAYMENTS_URL,
   REVIEW_ADD_URL,
   REVIEW_DELETE_URL,
   REVIEW_UPDATE_URL,
   WISHLIST_ADD_AND_DELETE_URL,
-  CART_PRODUCT_ADDED_URL,
   WISHLIST_PRODUCT_ADDED_URL,
 } from "@/api/endpoints.ts";
 
 import api from "@/api/api.ts";
 
-import { toast } from "react-toastify";
 import { type CPResponse, type PureAddress } from "@/lib/types";
-// import {
-//   CART_DELETE_URL,
-//   CART_GET_URL,
-//   CART_UPDATE_URL,
-//   ORDER_GET_URL,
-//   PRODUCT_SEARCH_URL,
-// } from "@/api/endpoints.ts";
 
 type FormSubmitHandler = (formData: FormData) => Promise<any>;
-
-// type UpdateCartItemHandler = (
-//   formData: FormData,
-//   productName: string,
-// ) => Promise<void>;
 
 type PaymentHandler = (paymentObject: {
   cart_code: string;
@@ -63,12 +50,6 @@ export type IsProductInWishlistType = (
   email: string,
   productId: number,
 ) => Promise<any>;
-
-// type CPResponse = {
-//   Success: boolean;
-//   Message?: string;
-//   Model?: any; // Здесь могут быть данные для 3DS
-// };
 
 // ===================== Add Review =========================
 

@@ -1,42 +1,35 @@
-import { createLazyFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { toast } from "react-toastify";
-import { BASE_URL } from "@/api/api.ts";
-import CheckoutSection from "@/components/checkout/CheckoutSection.tsx";
-import DeliveryOptions from "@/components/checkout/DeliveryOptions.tsx";
 import { paymentActionCP } from "@/api/actions.ts";
+import { BASE_URL } from "@/api/api.ts";
+import {
+  bankCardSchema,
+  type BankCardSchemaType,
+} from "@/components/bankCard/bankCardSchema.ts";
 import BankCardWithAnimation from "@/components/bankCard/BankCardWithAnimation.tsx";
-import { options } from "@/components/checkout/DeliveryOptions.tsx";
+import CheckoutSection from "@/components/checkout/CheckoutSection.tsx";
+import DeliveryOptions, {
+  options,
+} from "@/components/checkout/DeliveryOptions.tsx";
+import MiniCartItem from "@/components/checkout/MiniCartItem.tsx";
 import PaymentMethodToggle from "@/components/checkout/PaymentMethodToggle.tsx";
+import PaymentLoader from "@/components/loader/PaymentLoader.tsx";
 import YandexMap from "@/components/map/YandexMap.tsx";
 import AddressFormTanstack from "@/components/order/AddressFormTanstack.tsx";
 import ShippingInfo from "@/components/profile/ShippingInfo.tsx";
 import Modal from "@/components/uiComponents/Modal.tsx";
 import {
+  type CPResponse,
   type DeliveryOption,
   type PaymentMethod,
-  type CPResponse,
 } from "@/lib/types.ts";
+import { CURRENT_YEAR } from "@/lib/utilities.ts";
 import { useCart } from "@/store/CartContext.tsx";
 import { useUser } from "@/store/UserContext.tsx";
 import { useForm } from "@tanstack/react-form";
-import {
-  CreditCard,
-  MapPin,
-  Truck,
-  Zap,
-  PackageSearch,
-  Loader,
-} from "lucide-react";
+import { createLazyFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { CreditCard, MapPin, PackageSearch, Truck, Zap } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { NumericFormat } from "react-number-format";
-import MiniCartItem from "@/components/checkout/MiniCartItem.tsx";
-import {
-  bankCardSchema,
-  type BankCardSchemaType,
-} from "@/components/bankCard/bankCardSchema.ts";
-import { CURRENT_YEAR } from "@/lib/utilities.ts";
-import { Spinner } from "@/components/ui/spinner";
-import PaymentLoader from "@/components/loader/PaymentLoader.tsx";
+import { toast } from "react-toastify";
 
 export const Route = createLazyFileRoute("/_authenticated/checkout")({
   component: CheckoutPage,

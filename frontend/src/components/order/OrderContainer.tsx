@@ -1,11 +1,10 @@
 import IndividualOrder from "./IndividualOrder";
+import { PackageSearch } from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
 import getOrdersOptions from "@/api/queryOptions/getOrdersOptions.ts";
+import { toast } from "react-toastify";
 import { useQuery } from "@tanstack/react-query";
 import { useUser } from "@/store/UserContext.tsx";
-import { type UserLoggedIn } from "@/lib/types.ts";
-import { Spinner } from "@/components/ui/spinner";
-import { toast } from "react-toastify";
-import { PackageSearch } from "lucide-react";
 
 const OrderContainer = () => {
   const { user } = useUser();

@@ -10,15 +10,6 @@ import Mir from "@/assets/images/payment/mir.svg";
 import RuPay from "@/assets/images/payment/ru_pay.svg";
 import UnionPay from "@/assets/images/payment/union_pay.svg";
 import Visa from "@/assets/images/payment/visa.svg";
-import { useCart } from "@/store/CartContext.tsx";
-import type { AnyFieldApi } from "@tanstack/react-form";
-import { Info } from "lucide-react";
-import {
-  TooltipProvider,
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import {
   Select,
@@ -27,6 +18,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import type { AnyFieldApi } from "@tanstack/react-form";
+import { Info } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -39,11 +38,10 @@ import {
   type SetStateAction,
 } from "react";
 
+import { type BankCardSchemaType } from "@/components/bankCard/bankCardSchema.ts";
 import { type AnyReactForm } from "@/lib/types.ts";
 import { useStore } from "@tanstack/react-form";
-import { Link } from "@tanstack/react-router";
 import { FieldInfo } from "./BankCardWithAnimation.tsx";
-import { type BankCardSchemaType } from "@/components/bankCard/bankCardSchema.ts";
 
 interface FormProps {
   setIsFlipped: Dispatch<SetStateAction<boolean>>;
