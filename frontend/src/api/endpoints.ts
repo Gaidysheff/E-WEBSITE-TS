@@ -37,6 +37,8 @@ export const CARTITEMS_WITH_TOTAL_URL = `${BASE_URL}/api/cart_items_with_total/`
 export const ADDRESS_ADD_URL = `${BASE_URL}/api/add_address/`;
 export const ADDRESS_GET_URL = `${BASE_URL}/api/get_address?email=`;
 
+export const DELIVERY_OPTIONS_URL = `${BASE_URL}/api/delivery_options/`;
+
 export const CHECKOUT_URL = `${BASE_URL}/api/create_checkout_session/`;
 
 export const ORDER_GET_URL = `${BASE_URL}/api/get_orders?email=`;

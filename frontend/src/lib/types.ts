@@ -156,14 +156,25 @@ export type AddressWithError = Address & {
 
 // -------- Deliver ----------
 
-export type DeliveryType = "courier" | "pickup" | "post";
+// export type DeliveryType = "courier" | "pickup" | "post";
+
+// export type DeliveryOption = {
+//   id: DeliveryType;
+//   title: string;
+//   price: number;
+//   time: string;
+//   icon: any;
+// };
 
 export type DeliveryOption = {
-  id: DeliveryType;
-  title: string;
+  id: number; // Используем number для стандартного Django ID
+  name: string;
+  description: string;
   price: number;
-  time: string;
-  icon: any;
+  is_pickup: boolean;
+  // is_active: boolean;
+  // order: number;
+  icon: string | null; // DRF вернет URL картинки строкой или null
 };
 
 // -------- Payments ----------

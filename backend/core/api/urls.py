@@ -57,4 +57,9 @@ urlpatterns = [
         views.cart_items_with_total,
         name="cart_items_with_total",
     ),
+    path(
+        "delivery_options/",
+        views.delivery_options,
+        name="delivery_options",
+    ),
 ]

@@ -1,75 +1,60 @@
-import { Package, Store, Truck } from "lucide-react";
-
+import { BASE_URL } from "@/api/api";
+import { type DeliveryOption } from "@/lib/types.ts";
 import { cn } from "@/lib/utils";
-
-export type DeliveryType = "courier" | "pickup" | "post";
-
-type DeliveryOption = {
-  id: DeliveryType;
-  title: string;
-  price: number;
-  time: string;
-  icon: any;
-};
-
-export const options: DeliveryOption[] = [
-  { id: "pickup", title: "Self-Pickup", price: 0, time: "Today", icon: Store },
-  {
-    id: "courier",
-    title: "Courier Delivery",
-    price: 500,
-    time: "Tomorrow",
-    icon: Truck,
-  },
-  {
-    id: "post",
-    title: "Post / Boxberry",
-    price: 350,
-    time: "2-3 days",
-    icon: Package,
-  },
-];
+import DeliveryOptionsSkeleton from "./DeliveryOptionsSkeleton.tsx";
 
 interface Props {
-  selectedId: DeliveryType;
+  options: DeliveryOption[];
+  selectedId: number | undefined;
   onSelect: (option: DeliveryOption) => void;
+  loading: boolean;
 }
 
-const DeliveryOptions = ({ selectedId, onSelect }: Props) => {
-  return (
-    <div className="grid sm:grid-cols-3 gap-4">
-      {options.map((option) => {
-        const Icon = option.icon;
-        const isSelected = selectedId === option.id;
+const DeliveryOptions = ({ options, selectedId, onSelect, loading }: Props) => {
+  // const numberCards = options.length;
 
-        return (
-          <button
-            key={option.id}
-            type="button"
-            onClick={() => onSelect(option)}
-            className={cn(
-              "flex flex-col items-center gap-3 p-4 rounded-xl border-2 transition-all text-center",
-              isSelected
-                ? "border-myMainColor bg-primaryLight/10 shadow-md"
-                : "border-gray-100 hover:border-gray-300",
-            )}
-          >
-            <Icon
-              className={cn(
-                "size-6",
-                isSelected ? "text-primaryDark" : "text-gray-400",
-              )}
+  if (loading)
+    return (
+      <div className="grid sm:grid-cols-3 gap-4">
+        {/* <div className="flex justify-center flex-wrap gap-3"> */}
+        <DeliveryOptionsSkeleton cards={3} />
+        {/* <DeliveryOptionsSkeleton cards={numberCards} /> */}
+      </div>
+    );
+
+  return (
+    // <div className="grid sm:grid-cols-3 gap-4">
+
+    <div className="flex justify-center flex-wrap gap-3">
+      {options.map((option) => (
+        <button
+          key={option.id}
+          type="button"
+          onClick={() => onSelect(option)}
+          className={cn(
+            "flex flex-col items-center gap-3 p-4 rounded-xl border-2 transition-all text-center min-w-[150px]",
+            selectedId === option.id
+              ? "border-myMainColor bg-primaryLight/10 shadow-md"
+              : "border-gray-100 hover:border-gray-300",
+          )}
+        >
+          {/* Контент кнопки тот же самый */}
+          {option.icon && (
+            <img
+              src={`${BASE_URL}${option.icon}`}
+              alt={option.name}
+              className="h-8 object-contain"
             />
-            <div>
-              <div className="font-bold text-sm">{option.title}</div>
-              <div className="text-xs text-gray-500">{option.time}</div>
-            </div>
-            <div className="mt-auto font-bold text-primaryDark">
-              {option.price === 0 ? "Free" : `${option.price} ₽`}
-            </div>
-          </button>
-        );
-      })}
+          )}
+          <div>
+            <div className="font-bold text-sm">{option.name}</div>
+            <div className="text-xs text-gray-500">{option.description}</div>
+          </div>
+          <div className="mt-auto font-bold text-primaryDark">
+            {Number(option.price) === 0 ? "Free" : `${option.price} ₽`}
+          </div>
+        </button>
+      ))}
     </div>
   );
 };

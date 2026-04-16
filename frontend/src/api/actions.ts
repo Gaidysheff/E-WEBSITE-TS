@@ -11,6 +11,7 @@ import {
   REVIEW_UPDATE_URL,
   WISHLIST_ADD_AND_DELETE_URL,
   WISHLIST_PRODUCT_ADDED_URL,
+  DELIVERY_OPTIONS_URL,
 } from "@/api/endpoints.ts";
 
 import api from "@/api/api.ts";
@@ -289,5 +290,16 @@ export const paymentActionCP: CloudPaymentsHandler = async (paymentData) => {
     throw new Error(
       error.response?.data?.message || "An unknown error occured",
     );
+  }
+};
+
+// ================= get Delivery Options ====================
+
+export const getDeliveryOptionsAction = async () => {
+  try {
+    const response = await api.get(DELIVERY_OPTIONS_URL);
+    return response;
+  } catch (error: any) {
+    throw error;
   }
 };

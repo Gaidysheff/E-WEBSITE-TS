@@ -10,6 +10,7 @@ from .models import (
     Review,
     Wishlist,
     CustomerAddress,
+    DeliveryOption,
 )
 
 
@@ -111,3 +112,19 @@ class CustomerAddressAdmin(admin.ModelAdmin):
 
 
 admin.site.register(CustomerAddress, CustomerAddressAdmin)
+
+
+class DeliveryOptionAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "name",
+        "description",
+        "icon",
+        "price",
+        "is_active",
+        "is_pickup",
+        "order",
+    )
+
+
+admin.site.register(DeliveryOption, DeliveryOptionAdmin)

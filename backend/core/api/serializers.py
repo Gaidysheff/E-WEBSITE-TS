@@ -10,6 +10,7 @@ from .models import (
     ProductRating,
     Review,
     Wishlist,
+    DeliveryOption,
 )
 from users.serializers import UserSerializer
 
@@ -22,6 +23,7 @@ class CategoryListSerializer(serializers.ModelSerializer):
 
 class ProductListSerializer(serializers.ModelSerializer):
     category = CategoryListSerializer()
+    coerce_to_decimal = False
 
     class Meta:
         model = Product
@@ -56,6 +58,8 @@ class ProductDetailSerializer(serializers.ModelSerializer):
     excellent_review = serializers.SerializerMethodField()
 
     similar_products = serializers.SerializerMethodField()
+
+    coerce_to_decimal = False
 
     class Meta:
         model = Product
@@ -119,6 +123,7 @@ class CartItemSerializer(serializers.ModelSerializer):
     product = ProductListSerializer(read_only=True)
     sub_total = serializers.ReadOnlyField(source="total_price")
     # sub_total = serializers.SerializerMethodField()
+    coerce_to_decimal = False
 
     class Meta:
         model = CartItem
@@ -204,3 +209,19 @@ class SimpleCartSerializer(serializers.ModelSerializer):
     def get_num_of_items(self, cart):
         num_of_items = sum([item.quantity for item in cart.cartitems.all()])
         return num_of_items
+
+
+class DeliveryOptionSerializer(serializers.ModelSerializer):
+    coerce_to_decimal = False
+
+    class Meta:
+        model = DeliveryOption
+        fields = [
+            "id",
+            "name",
+            "description",
+            "icon",
+            "price",
+            "is_pickup",
+            # is_active, order
+        ]

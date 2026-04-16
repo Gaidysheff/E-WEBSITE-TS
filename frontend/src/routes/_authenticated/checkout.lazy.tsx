@@ -6,9 +6,11 @@ import {
 } from "@/components/bankCard/bankCardSchema.ts";
 import BankCardWithAnimation from "@/components/bankCard/BankCardWithAnimation.tsx";
 import CheckoutSection from "@/components/checkout/CheckoutSection.tsx";
-import DeliveryOptions, {
-  options,
-} from "@/components/checkout/DeliveryOptions.tsx";
+// import DeliveryOptions, {
+//   options,
+// } from "@/components/checkout/DeliveryOptions.tsx";
+import { getDeliveryOptionsAction } from "@/api/actions.ts";
+import DeliveryOptions from "@/components/checkout/DeliveryOptions.tsx";
 import MiniCartItem from "@/components/checkout/MiniCartItem.tsx";
 import PaymentMethodToggle from "@/components/checkout/PaymentMethodToggle.tsx";
 import PaymentLoader from "@/components/loader/PaymentLoader.tsx";
@@ -36,9 +38,6 @@ export const Route = createLazyFileRoute("/_authenticated/checkout")({
 });
 
 function CheckoutPage() {
-  const [delivery, setDelivery] = useState<DeliveryOption>(options[0]); // По умолчанию самовывоз
-
-  // const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isAddressModalOpen, setIsAddressModalOpen] = useState<boolean>(false);
   const [is3DSModalOpen, setIs3DSModalOpen] = useState<boolean>(false);
 
@@ -48,9 +47,41 @@ function CheckoutPage() {
   const { user, isLoading } = useUser();
 
   const address = user?.address;
-  const finalTotal = totalPrice + delivery.price;
 
   const navigate = useNavigate();
+
+  // ====================== DeliveryOptions ===========================
+
+  const [options, setOptions] = useState<DeliveryOption[]>([]);
+  const [delivery, setDelivery] = useState<DeliveryOption | null>(null);
+  const [loadingOptions, setLoadingOptions] = useState(true);
+
+  // 1. Загружаем опции один раз при монтировании чекаута
+  useEffect(() => {
+    const fetchOptions = async () => {
+      // --------------- Fetching delay ----------------------
+      // await new Promise((resolve) => setTimeout(resolve, 5000));
+      // -----------------------------------------------------
+      try {
+        const response = await getDeliveryOptionsAction();
+        setOptions(response.data);
+
+        // Сразу устанавливаем самовывоз по умолчанию
+        const pickup = response.data.find(
+          (opt: DeliveryOption) => opt.is_pickup,
+        );
+        setDelivery(pickup || response.data[0]);
+      } finally {
+        setLoadingOptions(false);
+      }
+    };
+    fetchOptions();
+  }, []);
+
+  // Остальная логика расчета цены
+  const finalTotal = totalPrice + (delivery?.price || 0);
+
+  // ======================================================================
 
   // ----------------- TanStack Form -----------------------
   // Создаем форму ЗДЕСЬ, чтобы иметь к ней полный доступ
@@ -93,7 +124,8 @@ function CheckoutPage() {
   // ------------------ Валидация --------------------------
 
   // 1. Проверка адреса (если не самовывоз)
-  const isAddressReady = delivery.id === "pickup" || !!user?.address?.street;
+  const isAddressReady =
+    delivery?.is_pickup === true || !!user?.address?.street;
 
   // -------- Сценарий Реализации 3D Secure (Эмуляция) ---------
 
@@ -166,11 +198,11 @@ function CheckoutPage() {
         email: userEmail, // Обязательно для электронного чека
         phone: userPhone, // Обязательно, если нет email
         totalAmount: finalTotal,
-        shippingMethod: delivery.id,
+        shippingMethod: delivery?.id,
         paymentMethod: paymentMethod,
         // Если это самовывоз, адрес берем из константы магазина
         shippingAddress:
-          delivery.id === "pickup"
+          delivery?.is_pickup === true
             ? "Self-pickup: Pechatnikov 1"
             : orderAddress,
         taxationSystem: 0, // Система налогообложения магазина
@@ -347,10 +379,12 @@ function CheckoutPage() {
           isCompleted
         >
           <DeliveryOptions
-            selectedId={delivery.id}
-            onSelect={(option) => setDelivery(option)}
+            options={options} // Передаем уже загруженные данные
+            selectedId={delivery?.id}
+            onSelect={setDelivery}
+            loading={loadingOptions} // Передаем состояние загрузки
           />
-          {delivery.id === "pickup" && (
+          {delivery?.is_pickup === true && (
             <div className="mt-6">
               <YandexMap />
             </div>
@@ -442,7 +476,7 @@ function CheckoutPage() {
               <span>Shipping</span>
               <span>
                 <NumericFormat
-                  value={delivery.price}
+                  value={delivery?.price}
                   displayType={"text"}
                   decimalScale={2}
                   fixedDecimalScale
@@ -527,7 +561,7 @@ function CheckoutPage() {
 
           {/* ---------------------------------------------------------- */}
 
-          {delivery.id === "pickup" &&
+          {delivery?.is_pickup === true &&
             paymentMethod === "card" &&
             !user?.address?.street && (
               <div

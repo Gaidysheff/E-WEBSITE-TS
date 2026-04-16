@@ -21,6 +21,7 @@ from .models import (
     Product,
     Review,
     Wishlist,
+    DeliveryOption,
 )
 from .serializers import (
     CartItemSerializer,
@@ -34,9 +35,12 @@ from .serializers import (
     ReviewSerializer,
     SimpleCartSerializer,
     WishlistSerializer,
+    DeliveryOptionSerializer,
 )
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework import permissions
+
+# from rest_framework import permissions
+from rest_framework.permissions import AllowAny
 
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt  # Если React на другом порту
@@ -55,8 +59,8 @@ BASE_URL_FRONTEND = settings.BASE_URL_FRONTEND
 
 
 @api_view(["GET"])
-# @permission_classes([permissions.AllowAny])
-# @permission_classes([permissions.IsAuthenticated])
+@permission_classes([AllowAny])
+# @permission_classes([IsAuthenticated])
 def featured_product_list(request):
     products = Product.objects.filter(featured=True)
     serializer = ProductListSerializer(products, many=True)
@@ -64,6 +68,7 @@ def featured_product_list(request):
 
 
 @api_view(["GET"])
+@permission_classes([AllowAny])
 def products_for_carousel(request):
     products = Product.objects.filter(carousel=True)
     serializer = ProductListSerializer(products, many=True)
@@ -71,6 +76,7 @@ def products_for_carousel(request):
 
 
 @api_view(["GET"])
+@permission_classes([AllowAny])
 def product_detail(request, slug):
     product = Product.objects.get(slug=slug)
     serializer = ProductDetailSerializer(product)
@@ -78,6 +84,7 @@ def product_detail(request, slug):
 
 
 @api_view(["GET"])
+@permission_classes([AllowAny])
 def product_search(request):
     query = request.query_params.get("query")
     # query = request.data.get("query")
@@ -97,7 +104,7 @@ def product_search(request):
 
 
 @api_view(["GET"])
-# @permission_classes([permissions.AllowAny])
+@permission_classes([AllowAny])
 def category_list(request):
     categories = Category.objects.all()
     serializer = CategoryListSerializer(categories, many=True)
@@ -105,6 +112,7 @@ def category_list(request):
 
 
 @api_view(["GET"])
+@permission_classes([AllowAny])
 def category_detail(request, slug):
     category = Category.objects.get(slug=slug)
     serializer = CategoryDetailSerializer(category)
@@ -229,6 +237,7 @@ def delete_cartitem(request, pk):
 
 
 @api_view(["GET"])
+@permission_classes([AllowAny])
 def cart_items_with_total(request):
     # Получаем cart_code из параметров URL: ?cart_code=abc
     cart_code = request.query_params.get("cart_code")
@@ -237,9 +246,7 @@ def cart_items_with_total(request):
     cart = Cart.objects.filter(cart_code=cart_code).first()
 
     if not cart:
-        return Response(
-            {"items": [], "total_cart_price": 0, "cart_items_count": 0}, status=200
-        )
+        return Response({"items": [], "total_cart_price": 0}, status=200)
 
     # Фильтруем через связь ForeignKey:
     # cart (поле в CartItem) -> cart_code (поле в Cart)
@@ -257,10 +264,6 @@ def cart_items_with_total(request):
         {"items": serializer.data, "total_cart_price": total_cart_price},
         status=status.HTTP_200_OK,
     )
-
-    # return Response(
-    #     {"error": "Cart is empty or not found."}, status=status.HTTP_404_NOT_FOUND
-    # )
 
 
 # ========================= REVIEW ================================
@@ -729,3 +732,11 @@ def post3ds(request):
         return HttpResponse(
             f'<html><body onload=\'window.parent.postMessage("3ds-fail", "*");\'>Error</body></html>'
         )
+
+
+@api_view(["GET"])
+@permission_classes([AllowAny])  # Тарифы должны видеть все
+def delivery_options(request):
+    options = DeliveryOption.objects.filter(is_active=True)
+    serializer = DeliveryOptionSerializer(options, many=True)
+    return Response(serializer.data)

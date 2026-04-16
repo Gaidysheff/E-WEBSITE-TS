@@ -55,7 +55,7 @@ export const CategoryContextProvider = ({ children }: CatProviderProps) => {
 
           setCategories(loadedData);
         });
-      } catch (error) {
+      } catch (error: any) {
         console.log("🚀 ~ Register ~ error:", error);
         setError(error);
       } finally {
