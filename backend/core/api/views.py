@@ -121,6 +121,7 @@ def category_detail(request, slug):
 
 # =============================== CART =============================
 @api_view(["POST"])
+@permission_classes([AllowAny])
 def add_to_cart(request):
     cart_code = request.data.get("cart_code")
     product_id = request.data.get("product_id")
@@ -197,6 +198,7 @@ def add_to_cart(request):
 
 
 @api_view(["GET"])
+@permission_classes([AllowAny])
 def product_in_cart(request):
     cart_code = request.query_params.get("cart_code")
     product_id = request.query_params.get("product_id")
