@@ -29,6 +29,8 @@ urlpatterns = [
     path("delete_cartitem/<int:pk>/", views.delete_cartitem, name="delete_cartitem"),
     path("add_to_wishlist/", views.add_to_wishlist, name="add_to_wishlist"),
     path("search", views.product_search, name="search"),
+    path("filtering", views.product_filtering, name="filtering"),
+    path("get_filter_metadata/", views.filter_metadata, name="filter_metadata"),
     path(
         "create_checkout_session/",
         views.create_checkout_session,

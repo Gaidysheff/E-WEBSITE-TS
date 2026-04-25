@@ -17,6 +17,7 @@ import { Route as ProductsProductSlugRouteImport } from './routes/products/$prod
 import { Route as CategoriesCategoryIdRouteImport } from './routes/categories/$categoryId'
 import { Route as SearchSearchRouteImport } from './routes/_search/search'
 import { Route as PaymentResultSuccessRouteImport } from './routes/_paymentResult/success'
+import { Route as FilterProductsRouteImport } from './routes/_filter/products'
 import { Route as AuthenticatedUsers_tanstackRouteImport } from './routes/_authenticated/users_tanstack'
 import { Route as AuthRegisterRouteImport } from './routes/_auth/register'
 import { Route as AuthPasswordResetRequestRouteImport } from './routes/_auth/passwordResetRequest'
@@ -118,6 +119,13 @@ const PaymentResultSuccessRoute = PaymentResultSuccessRouteImport.update({
 } as any).lazy(() =>
   import('./routes/_paymentResult/success.lazy').then((d) => d.Route),
 )
+const FilterProductsRoute = FilterProductsRouteImport.update({
+  id: '/_filter/products',
+  path: '/products',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() =>
+  import('./routes/_filter/products.lazy').then((d) => d.Route),
+)
 const AuthenticatedUsers_tanstackRoute =
   AuthenticatedUsers_tanstackRouteImport.update({
     id: '/users_tanstack',
@@ -180,6 +188,7 @@ export interface FileRoutesByFullPath {
   '/passwordResetRequest': typeof AuthPasswordResetRequestRoute
   '/register': typeof AuthRegisterRoute
   '/users_tanstack': typeof AuthenticatedUsers_tanstackRoute
+  '/products': typeof FilterProductsRoute
   '/success': typeof PaymentResultSuccessRoute
   '/search': typeof SearchSearchRoute
   '/categories/$categoryId': typeof CategoriesCategoryIdRoute
@@ -200,6 +209,7 @@ export interface FileRoutesByTo {
   '/passwordResetRequest': typeof AuthPasswordResetRequestRoute
   '/register': typeof AuthRegisterRoute
   '/users_tanstack': typeof AuthenticatedUsers_tanstackRoute
+  '/products': typeof FilterProductsRoute
   '/success': typeof PaymentResultSuccessRoute
   '/search': typeof SearchSearchRoute
   '/categories/$categoryId': typeof CategoriesCategoryIdRoute
@@ -222,6 +232,7 @@ export interface FileRoutesById {
   '/_auth/passwordResetRequest': typeof AuthPasswordResetRequestRoute
   '/_auth/register': typeof AuthRegisterRoute
   '/_authenticated/users_tanstack': typeof AuthenticatedUsers_tanstackRoute
+  '/_filter/products': typeof FilterProductsRoute
   '/_paymentResult/success': typeof PaymentResultSuccessRoute
   '/_search/search': typeof SearchSearchRoute
   '/categories/$categoryId': typeof CategoriesCategoryIdRoute
@@ -244,6 +255,7 @@ export interface FileRouteTypes {
     | '/passwordResetRequest'
     | '/register'
     | '/users_tanstack'
+    | '/products'
     | '/success'
     | '/search'
     | '/categories/$categoryId'
@@ -264,6 +276,7 @@ export interface FileRouteTypes {
     | '/passwordResetRequest'
     | '/register'
     | '/users_tanstack'
+    | '/products'
     | '/success'
     | '/search'
     | '/categories/$categoryId'
@@ -285,6 +298,7 @@ export interface FileRouteTypes {
     | '/_auth/passwordResetRequest'
     | '/_auth/register'
     | '/_authenticated/users_tanstack'
+    | '/_filter/products'
     | '/_paymentResult/success'
     | '/_search/search'
     | '/categories/$categoryId'
@@ -306,6 +320,7 @@ export interface RootRouteChildren {
   AuthLoginRoute: typeof AuthLoginRoute
   AuthPasswordResetRequestRoute: typeof AuthPasswordResetRequestRoute
   AuthRegisterRoute: typeof AuthRegisterRoute
+  FilterProductsRoute: typeof FilterProductsRoute
   PaymentResultSuccessRoute: typeof PaymentResultSuccessRoute
   SearchSearchRoute: typeof SearchSearchRoute
   CategoriesCategoryIdRoute: typeof CategoriesCategoryIdRoute
@@ -392,6 +407,13 @@ declare module '@tanstack/react-router' {
       path: '/success'
       fullPath: '/success'
       preLoaderRoute: typeof PaymentResultSuccessRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_filter/products': {
+      id: '/_filter/products'
+      path: '/products'
+      fullPath: '/products'
+      preLoaderRoute: typeof FilterProductsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/users_tanstack': {
@@ -484,6 +506,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthLoginRoute: AuthLoginRoute,
   AuthPasswordResetRequestRoute: AuthPasswordResetRequestRoute,
   AuthRegisterRoute: AuthRegisterRoute,
+  FilterProductsRoute: FilterProductsRoute,
   PaymentResultSuccessRoute: PaymentResultSuccessRoute,
   SearchSearchRoute: SearchSearchRoute,
   CategoriesCategoryIdRoute: CategoriesCategoryIdRoute,

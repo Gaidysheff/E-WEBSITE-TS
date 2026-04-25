@@ -4,7 +4,8 @@ import stripe
 from django.conf import settings
 from django.shortcuts import get_object_or_404, render
 from django.contrib.auth import get_user_model
-from django.db.models import Q
+
+from django.db.models import Q, Max
 
 import requests
 from requests.auth import HTTPBasicAuth
@@ -22,6 +23,8 @@ from .models import (
     Review,
     Wishlist,
     DeliveryOption,
+    Brand,
+    Color,
 )
 from .serializers import (
     CartItemSerializer,
@@ -98,6 +101,75 @@ def product_search(request):
     )
     serializer = ProductListSerializer(products, many=True)
     return Response(serializer.data)
+
+
+# ======================= Filtering =============================
+@api_view(["GET"])
+@permission_classes([AllowAny])
+def product_filtering(request):
+    search_query = request.query_params.get("search", "")
+    shape_query = request.query_params.get("shape", "")
+    brand_query = request.query_params.get("brand", "")
+    min_p = request.query_params.get("min_price")
+    max_p = request.query_params.get("max_price")
+
+    print("min_p", min_p)
+    print("max_p", max_p)
+
+    # Начинаем со всех товаров
+    products = Product.objects.all()
+
+    # Фильтруем по строке поиска
+    if search_query:
+        products = products.filter(
+            Q(name__icontains=search_query)
+            | Q(brand__icontains=search_query)
+            | Q(category__name__icontains=search_query)
+        )
+
+    # Добавляем фильтр по форме
+    if shape_query:
+        # products = products.filter(shape__icontains=shape_query)
+        products = products.filter(shape=shape_query)
+
+    # Добавляем фильтр по бренду
+    if brand_query:
+        # "4,6" -> [4, 6]
+        brand_ids = [int(x) for x in brand_query.split(",")]
+        products = products.filter(brand_id__in=brand_ids)
+
+    # Добавляем фильтр по цене
+
+    # if min_p and max_p:
+    #     products = products.filter(price__gte=min_p, price__lte=max_p)
+    # Если параметры есть, фильтруем. Если нет - пропускаем фильтр.
+    if min_p:
+        products = products.filter(price__gte=float(min_p))
+    if max_p:
+        products = products.filter(price__lte=float(max_p))
+
+    serializer = ProductListSerializer(products, many=True)
+    return Response(serializer.data)
+
+
+# ------------------- Filters --------------------------
+
+
+@api_view(["GET"])
+@permission_classes([AllowAny])
+def filter_metadata(request):
+    return Response(
+        {
+            "shapes": [
+                {"value": k, "label": v} for k, v in Product.SHAPE_CHOICES.items()
+            ],
+            "brands": Brand.objects.values(
+                "id", "name"
+            ),  # Если бренды в отдельной модели
+            "colors": Product.objects.values_list("color", flat=True).distinct(),
+            "max_price": Product.objects.aggregate(Max("price"))["price__max"] or 2000,
+        }
+    )
 
 
 # ========================= Category ===============================

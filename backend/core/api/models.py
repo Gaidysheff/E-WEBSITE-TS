@@ -6,6 +6,13 @@ import string
 # from django.utils.text import slugify
 
 
+# ------------------ Менеджеры для выбора "в наличии" ------------------
+class ProductAvailabilityManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(is_available=Product.Status.AVAILABLE)
+
+
+# ------------------------------------------------------------------------
 class Category(models.Model):
     name = models.CharField(max_length=255, unique=True, verbose_name="Название")
     slug = models.SlugField(
@@ -37,13 +44,88 @@ class Category(models.Model):
     #     super().save(*args, **kwargs)
 
 
-class Product(models.Model):
+class Brand(models.Model):
     name = models.CharField(max_length=255, unique=True, verbose_name="Название")
-    description = models.TextField(null=True, blank=True, verbose_name="Описание")
-    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Цена")
+    slug = models.SlugField(
+        max_length=255, unique=True, db_index=True, verbose_name="URL"
+    )
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "Brand"
+        verbose_name_plural = "Brands"
+        ordering = [
+            "name",
+        ]
+
+
+class Color(models.Model):
+    name = models.CharField(max_length=255, unique=True, verbose_name="Название")
+    slug = models.SlugField(
+        max_length=255, unique=True, db_index=True, verbose_name="URL"
+    )
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "Color"
+        verbose_name_plural = "Colors"
+        ordering = [
+            "name",
+        ]
+
+
+class Product(models.Model):
+    MALE = "M"
+    FEMALE = "F"
+    UNISEX = "U"
+    GENDER_CHOICES = {MALE: "для мужчин", FEMALE: "для женщин", UNISEX: "унисекс"}
+
+    CIRCULAR = "C"
+    QUADRATIC = "Q"
+    TRIANGULAR = "T"
+    SHAPE_CHOICES = {
+        CIRCULAR: "Circular",
+        QUADRATIC: "Quadratic",
+        TRIANGULAR: "Triangular",
+    }
+
+    class Status(models.IntegerChoices):
+        AVAILABLE = 1, "в наличии"
+        OUT = 0, "нет в наличии"
+
+    name = models.CharField(max_length=255, unique=True, verbose_name="Название")
     slug = models.SlugField(
         max_length=255, unique=True, db_index=True, verbose_name="Slug"
     )
+
+    brand = models.ForeignKey(
+        Brand,
+        on_delete=models.SET_DEFAULT,
+        # on_delete=models.SET_NULL,
+        # blank=True,
+        # null=True,
+        related_name="products",
+        default=Brand.objects.get(name="unknown").id,
+        verbose_name="Бренд",
+    )
+
+    color = models.ForeignKey(
+        Color,
+        on_delete=models.SET_DEFAULT,
+        # on_delete=models.SET_NULL,
+        # blank=True,
+        # null=True,
+        related_name="goods",
+        default=Color.objects.get(name="Белый").id,
+        verbose_name="Цвет",
+    )
+
+    description = models.TextField(null=True, blank=True, verbose_name="Описание")
+    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Цена")
     image = models.ImageField(
         upload_to="images_products/%Y/%m/%d/", blank=True, null=True
     )
@@ -58,6 +140,22 @@ class Product(models.Model):
         blank=True,
         null=True,
     )
+    gender = models.CharField(
+        max_length=2, choices=GENDER_CHOICES, default=UNISEX, verbose_name="Пол"
+    )
+
+    shape = models.CharField(
+        max_length=2, choices=SHAPE_CHOICES, default=QUADRATIC, verbose_name="Форма"
+    )
+
+    is_available = models.BooleanField(
+        choices=tuple(map(lambda x: (bool(x[0]), x[1]), Status.choices)),
+        default=Status.AVAILABLE,
+        verbose_name="Наличие",
+    )
+
+    objects = models.Manager()
+    available = ProductAvailabilityManager()
 
     def __str__(self):
         return self.name

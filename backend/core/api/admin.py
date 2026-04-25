@@ -11,16 +11,30 @@ from .models import (
     Wishlist,
     CustomerAddress,
     DeliveryOption,
+    Brand,
+    Color,
 )
+
+
+class nameSlugAdmin(admin.ModelAdmin):
+    prepopulated_fields = {"slug": ("name",)}
 
 
 class ProductAdmin(admin.ModelAdmin):
     list_display = [
         "id",
         "name",
+        "brand",
         "price",
         "featured",
         "carousel",
+        # "description",
+        "carousel",
+        "category",
+        "shape",
+        "color",
+        "gender",
+        "is_available",
     ]
     prepopulated_fields = {"slug": ("name",)}
 
@@ -128,3 +142,39 @@ class DeliveryOptionAdmin(admin.ModelAdmin):
 
 
 admin.site.register(DeliveryOption, DeliveryOptionAdmin)
+
+
+@admin.register(Brand)
+class BrandAdmin(admin.ModelAdmin):
+    prepopulated_fields = {"slug": ("name",)}
+    fields = [
+        "name",
+        "slug",
+    ]
+    list_display = [
+        "id",
+        "name",
+        "slug",
+    ]
+    list_display_links = [
+        "id",
+        "name",
+    ]
+
+
+@admin.register(Color)
+class ColorAdmin(admin.ModelAdmin):
+    prepopulated_fields = {"slug": ("name",)}
+    fields = [
+        "name",
+        "slug",
+    ]
+    list_display = [
+        "id",
+        "name",
+        "slug",
+    ]
+    list_display_links = [
+        "id",
+        "name",
+    ]
