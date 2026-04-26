@@ -22,6 +22,7 @@ interface ProductSearch {
   brand?: string;
   maxPrice?: number;
   minPrice?: number;
+  color?: string;
 }
 
 const FilterDrawer = (props: Props) => {
@@ -59,16 +60,33 @@ const FilterDrawer = (props: Props) => {
   };
 
   const handlePriceChange = (minPrice: number, maxPrice: number) => {
-    // const maxLimit = 3434;
-    // const max_p = maxPrice === maxLimit ? undefined : maxPrice;
     navigate({
       to: "/products",
       search: (prev: any) => ({
         ...prev,
         min_price: minPrice,
-        // max_price: max_p,
         max_price: maxPrice,
       }),
+      replace: true,
+    });
+  };
+
+  const handleColorChange = (colorIds: number[]) => {
+    navigate({
+      to: "/products",
+      search: (prev: any) => ({
+        ...prev,
+        // Если массив пуст — удаляем ключ из URL, иначе склеиваим через запятую
+        color: colorIds.length > 0 ? colorIds.join(",") : undefined,
+      }),
+      replace: true,
+    });
+  };
+
+  const handleReset = () => {
+    navigate({
+      to: "/products",
+      search: {}, // Пустой объект удалит ВСЕ параметры из URL
       replace: true,
     });
   };
@@ -100,10 +118,12 @@ const FilterDrawer = (props: Props) => {
               handleShapeChange={handleShapeChange}
               handleBrandChange={handleBrandChange}
               handlePriceChange={handlePriceChange}
+              handleColorChange={handleColorChange}
               currentShape={searchParams.shape}
               currentBrands={searchParams.brand}
               currentMinPrice={searchParams.minPrice}
               currentMaxPrice={searchParams.maxPrice}
+              currentColors={searchParams.color}
             />
           </div>
           <DrawerFooter>
@@ -111,6 +131,13 @@ const FilterDrawer = (props: Props) => {
             <DrawerClose asChild>
               <Button variant="outline">Cancel</Button>
             </DrawerClose>
+            <Button
+              variant="ghost"
+              onClick={handleReset}
+              className="text-red-500"
+            >
+              Reset All Filters
+            </Button>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>

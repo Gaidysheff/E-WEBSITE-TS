@@ -63,8 +63,12 @@ class Brand(models.Model):
 
 class Color(models.Model):
     name = models.CharField(max_length=255, unique=True, verbose_name="Название")
-    slug = models.SlugField(
-        max_length=255, unique=True, db_index=True, verbose_name="URL"
+    color_code = models.CharField(
+        max_length=20,
+        unique=True,
+        # blank=True,
+        # null=True,
+        verbose_name="Код цвета (HEX)",
     )
 
     def __str__(self):

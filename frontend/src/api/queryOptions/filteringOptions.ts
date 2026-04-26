@@ -7,6 +7,7 @@ interface Filters {
   brand?: string;
   min_price?: string;
   max_price?: string;
+  color?: string;
 }
 
 const filteringOptions = (
@@ -14,16 +15,21 @@ const filteringOptions = (
   brand: string,
   min_price: string,
   max_price: string,
+  color: string,
   search: string,
 ) => {
   return queryOptions({
-    queryKey: ["products", { shape, brand, min_price, max_price, search }],
+    queryKey: [
+      "products",
+      { shape, brand, min_price, max_price, color, search },
+    ],
     queryFn: () =>
       fetchProducts({
         shape,
         brand,
         min_price,
         max_price,
+        color,
         search,
       }),
     placeholderData: keepPreviousData,
@@ -41,6 +47,7 @@ const fetchProducts = async (options: Filters) => {
         brand: options.brand || undefined, // и ?brand=...
         min_price: options.min_price || undefined,
         max_price: options.max_price || undefined,
+        color: options.color || undefined,
       },
     });
     console.log("🚀 ~ fetchProducts ~ response:", response);

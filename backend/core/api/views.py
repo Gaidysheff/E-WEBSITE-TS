@@ -112,9 +112,10 @@ def product_filtering(request):
     brand_query = request.query_params.get("brand", "")
     min_p = request.query_params.get("min_price")
     max_p = request.query_params.get("max_price")
+    color_query = request.query_params.get("color")
 
-    print("min_p", min_p)
-    print("max_p", max_p)
+    # print("min_p", min_p)
+    # print("max_p", max_p)
 
     # Начинаем со всех товаров
     products = Product.objects.all()
@@ -143,18 +144,26 @@ def product_filtering(request):
     # if min_p and max_p:
     #     products = products.filter(price__gte=min_p, price__lte=max_p)
     # Если параметры есть, фильтруем. Если нет - пропускаем фильтр.
-    if min_p:
+
+    # Фильтруем только если значения переданы и они не пустые
+    if min_p and min_p != "undefined":
         products = products.filter(price__gte=float(min_p))
-    if max_p:
+
+    if max_p and max_p != "undefined":
+        # Если на фронте maxLimit, можем вообще не ограничивать сверху
+        # или ограничивать по присланному числу
         products = products.filter(price__lte=float(max_p))
+
+    # Добавляем фильтр по цвету
+    if color_query:
+        color_ids = [int(x) for x in color_query.split(",")]
+        products = products.filter(color_id__in=color_ids)
 
     serializer = ProductListSerializer(products, many=True)
     return Response(serializer.data)
 
 
 # ------------------- Filters --------------------------
-
-
 @api_view(["GET"])
 @permission_classes([AllowAny])
 def filter_metadata(request):
@@ -166,7 +175,8 @@ def filter_metadata(request):
             "brands": Brand.objects.values(
                 "id", "name"
             ),  # Если бренды в отдельной модели
-            "colors": Product.objects.values_list("color", flat=True).distinct(),
+            # "colors": Product.objects.values_list("color", flat=True).distinct(),
+            "colors": Color.objects.all().values("id", "name", "color_code"),
             "max_price": Product.objects.aggregate(Max("price"))["price__max"] or 2000,
         }
     )

@@ -30,7 +30,7 @@ const Introduction = () => {
         <img
           src={Logo}
           alt="Light Logo"
-          className="w-[90%] mx-auto dark:invert dark:brightness-200"
+          className="w-[90%] mx-auto grayscale dark:invert dark:brightness-200"
         />
       </div> */}
 

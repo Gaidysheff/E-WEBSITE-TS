@@ -164,17 +164,20 @@ class BrandAdmin(admin.ModelAdmin):
 
 @admin.register(Color)
 class ColorAdmin(admin.ModelAdmin):
-    prepopulated_fields = {"slug": ("name",)}
+    # prepopulated_fields = {"slug": ("name",)}
     fields = [
         "name",
-        "slug",
+        "color_code",
+        # "slug",
     ]
     list_display = [
         "id",
         "name",
-        "slug",
+        "color_code",
+        # "slug",
     ]
     list_display_links = [
         "id",
         "name",
+        "color_code",
     ]

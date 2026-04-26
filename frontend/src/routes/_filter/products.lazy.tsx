@@ -9,10 +9,11 @@ export const Route = createLazyFileRoute("/_filter/products")({
 });
 
 function RouteComponent() {
-  const { shape, brand, min_price, max_price, search } = Route.useSearch();
+  const { shape, brand, min_price, max_price, color, search } =
+    Route.useSearch();
 
   const { data, isFetching } = useQuery(
-    filteringOptions(shape, brand, min_price, max_price, search),
+    filteringOptions(shape, brand, min_price, max_price, color, search),
   );
   console.log("🚀 ~ RouteComponent ~ data:", data);
 

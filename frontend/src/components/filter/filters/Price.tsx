@@ -25,7 +25,14 @@ const Price = ({ minPrice, maxPrice, handlePriceChange, maxLimit }: Props) => {
     // Здесь же в будущем вызовем функцию обновления URL
   };
 
+  // Синхронизируем локальный стейт, когда приходят данные из БД
+  useEffect(() => {
+    // Если в URL нет параметров, ставим границы по умолчанию из мета-данных
+    setLocalRange([minPrice ?? 0, maxPrice ?? maxLimit]);
+  }, [maxLimit, minPrice, maxPrice]);
+
   const debouncedRange = useDebounce(localRange, 500);
+
   useEffect(() => {
     // Вызываем навигацию только когда дебаунс обновился
     handlePriceChange(debouncedRange[0], debouncedRange[1]);
@@ -44,6 +51,8 @@ const Price = ({ minPrice, maxPrice, handlePriceChange, maxLimit }: Props) => {
         // Останавливает жест Drawer-а
       >
         <Slider
+          // Используем key: когда maxLimit изменится, Slider перерисуется с нуля
+          key={maxLimit}
           value={localRange}
           min={0}
           max={maxLimit}

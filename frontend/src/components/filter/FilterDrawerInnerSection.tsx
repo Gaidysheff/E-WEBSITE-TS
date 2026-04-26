@@ -11,21 +11,24 @@ interface Props {
   handleShapeChange: (value: string) => void;
   handleBrandChange: (value: number[]) => void;
   handlePriceChange: (minValue: number, maxValue: number) => void;
+  handleColorChange: (value: number[]) => void;
   currentShape: string | undefined;
-  currentBrands: string | undefined;
-  // Строка из URL: "4,6" - 1 бренд или несколько в 1 строке
+  currentBrands: string | undefined; // Строка из URL: "4,6" - 1 бренд или несколько в 1 строке
   currentMinPrice: number | undefined;
   currentMaxPrice: number | undefined;
+  currentColors: string | undefined; // Из URL: "1,3,5"
 }
 
 const FilterDrawerInnerSection = ({
   handleShapeChange,
   handleBrandChange,
   handlePriceChange,
+  handleColorChange,
   currentShape,
   currentBrands,
   currentMinPrice,
   currentMaxPrice,
+  currentColors,
 }: Props) => {
   const { data: metadata, isLoading } = useQuery({
     queryKey: ["filter-metadata"],
@@ -63,7 +66,13 @@ const FilterDrawerInnerSection = ({
       />
 
       <Separator className="h-[1px] my-5" />
-      <Color options={metadata?.color} />
+
+      <Color
+        options={metadata?.colors}
+        currentColors={currentColors}
+        handleColorChange={handleColorChange}
+      />
+
       <Separator className="h-[1px] my-5" />
       <Searching search={metadata?.search} />
     </>
