@@ -1,34 +1,23 @@
 import api, { BASE_URL } from "@/api/api";
+import { type ProductSearch } from "@/lib/types";
 import { keepPreviousData, queryOptions } from "@tanstack/react-query";
-
-interface Filters {
-  shape?: string;
-  search?: string;
-  brand?: string;
-  min_price?: string;
-  max_price?: string;
-  color?: string;
-}
 
 const filteringOptions = (
   shape: string,
   brand: string,
-  min_price: string,
-  max_price: string,
+  minPrice: number,
+  maxPrice: number,
   color: string,
   search: string,
 ) => {
   return queryOptions({
-    queryKey: [
-      "products",
-      { shape, brand, min_price, max_price, color, search },
-    ],
+    queryKey: ["products", { shape, brand, minPrice, maxPrice, color, search }],
     queryFn: () =>
       fetchProducts({
         shape,
         brand,
-        min_price,
-        max_price,
+        minPrice,
+        maxPrice,
         color,
         search,
       }),
@@ -38,16 +27,16 @@ const filteringOptions = (
 
 export default filteringOptions;
 
-const fetchProducts = async (options: Filters) => {
+const fetchProducts = async (options: ProductSearch) => {
   try {
     const response = await api.get(`${BASE_URL}/api/filtering`, {
       params: {
-        search: options.search || undefined, // Django получит ?search=...
         shape: options.shape || undefined, // и ?shape=...
         brand: options.brand || undefined, // и ?brand=...
-        min_price: options.min_price || undefined,
-        max_price: options.max_price || undefined,
+        min_price: options.minPrice || undefined,
+        max_price: options.maxPrice || undefined,
         color: options.color || undefined,
+        search: options.search || undefined, // Django получит ?search=...
       },
     });
     console.log("🚀 ~ fetchProducts ~ response:", response);

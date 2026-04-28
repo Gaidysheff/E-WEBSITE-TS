@@ -11,8 +11,22 @@ from .models import (
     Review,
     Wishlist,
     DeliveryOption,
+    Brand,
+    Color,
 )
 from users.serializers import UserSerializer
+
+
+class BrandListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Brand
+        fields = ["id", "name", "slug"]
+
+
+class ColorListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Color
+        fields = ["id", "name", "color_code"]
 
 
 class CategoryListSerializer(serializers.ModelSerializer):
@@ -22,7 +36,9 @@ class CategoryListSerializer(serializers.ModelSerializer):
 
 
 class ProductListSerializer(serializers.ModelSerializer):
-    category = CategoryListSerializer()
+    category = CategoryListSerializer(read_only=True)
+    brand = BrandListSerializer(read_only=True)
+    color = ColorListSerializer(read_only=True)
     coerce_to_decimal = False
 
     class Meta:
@@ -47,8 +63,8 @@ class ProductRatingSerializer(serializers.ModelSerializer):
 
 class ProductDetailSerializer(serializers.ModelSerializer):
 
-    # Newly Added
-
+    brand = BrandListSerializer(read_only=True)
+    color = ColorListSerializer(read_only=True)
     reviews = ReviewSerializer(read_only=True, many=True)
     rating = ProductRatingSerializer(read_only=True)
     poor_review = serializers.SerializerMethodField()
@@ -66,10 +82,18 @@ class ProductDetailSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "name",
-            "description",
             "slug",
-            "image",
+            "brand",
+            "color",
+            "description",
             "price",
+            "image",
+            "featured",
+            "carousel",
+            "category",
+            "gender",
+            "shape",
+            "is_available",
             "reviews",
             "rating",
             "similar_products",
@@ -79,8 +103,6 @@ class ProductDetailSerializer(serializers.ModelSerializer):
             "very_good_review",
             "excellent_review",
         ]
-
-    # Newly Added
 
     def get_similar_products(self, product):
         products = Product.objects.filter(category=product.category).exclude(

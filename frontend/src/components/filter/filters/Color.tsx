@@ -1,5 +1,4 @@
 import { cn } from "@/lib/utils.ts";
-import { useMemo } from "react";
 
 interface Props {
   options: { id: number; name: string; color_code: string }[];
@@ -9,14 +8,7 @@ interface Props {
 
 const Color = ({ options, currentColors, handleColorChange }: Props) => {
   console.log("🚀 ~ Color ~ options:", options);
-  // const selectedColors = useMemo(
-  //   () => (currentColors ? currentColors.split(",").map(Number) : []),
-  //   [currentColors],
-  // );
 
-  // 1. Вычисляем массив прямо здесь.
-  // Как только currentColors (из URL) или options (из API) изменятся,
-  // React сам перезапустит эту функцию и перерисует кнопки.
   const selectedColors = currentColors
     ? currentColors.split(",").map(Number)
     : [];
@@ -44,7 +36,7 @@ const Color = ({ options, currentColors, handleColorChange }: Props) => {
   return (
     <>
       <div className="font-semibold my-2">Colors</div>
-      <div className="flex flex-wrap gap-3 my-4 isolation: isolate">
+      <div className="flex flex-wrap gap-3 my-4">
         {options.map((color) => (
           <button
             type="button"
@@ -69,7 +61,7 @@ const Color = ({ options, currentColors, handleColorChange }: Props) => {
             {selectedColors.includes(color.id) && (
               <span
                 className="absolute inset-0 flex items-center justify-center
-                text-white text-xs drop-shadow-md"
+                text-white text-xs text-shadow-lg text-shadow-gray-500"
               >
                 ✓
               </span>

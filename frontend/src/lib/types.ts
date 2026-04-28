@@ -33,12 +33,18 @@ export type CategoryWithProducts = Category & { products: Product[] };
 export type Product = {
   id: number;
   name: string;
+  slug: string;
+  brand: string;
+  color: string;
   description: string;
   price: number;
-  slug: string;
   image: string;
   featured: boolean;
+  carousel: boolean;
   category: Category;
+  gender: string;
+  shape: string;
+  is_available: boolean;
 };
 
 export type Review = {
@@ -70,6 +76,23 @@ export type ProductInDetails = Product &
   Evaluation & { rating: Rating } & { reviews: Review[] } & {
     similar_products: Product[];
   };
+
+export type ProductSearch = {
+  shape: string;
+  search: string;
+  brand: string;
+  maxPrice: number;
+  minPrice: number;
+  color: string;
+};
+export type ProductUrlSearch = {
+  shape: string;
+  search: string;
+  brand: string;
+  max_price: number;
+  min_price: number;
+  color: string;
+};
 
 // ------- Cart -----------
 

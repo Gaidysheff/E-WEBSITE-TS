@@ -35,12 +35,18 @@ const ProductSection = ({
           loadedData.push({
             id: res[key].id,
             name: res[key].name,
+            slug: res[key].slug,
+            brand: res[key].brand,
+            color: res[key].color,
             description: res[key].description,
             price: res[key].price,
-            slug: res[key].slug,
             image: res[key].image,
             featured: res[key].featured,
+            carousel: res[key].carousel,
             category: res[key].category.name,
+            gender: res[key].gender,
+            shape: res[key].shape,
+            is_available: res[key].is_available,
           });
         }
 

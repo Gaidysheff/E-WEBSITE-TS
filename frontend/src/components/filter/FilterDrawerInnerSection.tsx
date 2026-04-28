@@ -12,14 +12,17 @@ interface Props {
   handleBrandChange: (value: number[]) => void;
   handlePriceChange: (minValue: number, maxValue: number) => void;
   handleColorChange: (value: number[]) => void;
+  handleSearchChange: (value: string) => void;
   currentShape: string | undefined;
   currentBrands: string | undefined; // Строка из URL: "4,6" - 1 бренд или несколько в 1 строке
   currentMinPrice: number | undefined;
   currentMaxPrice: number | undefined;
   currentColors: string | undefined; // Из URL: "1,3,5"
+  currentSearch: string | undefined;
 }
 
 const FilterDrawerInnerSection = ({
+  handleSearchChange,
   handleShapeChange,
   handleBrandChange,
   handlePriceChange,
@@ -29,6 +32,7 @@ const FilterDrawerInnerSection = ({
   currentMinPrice,
   currentMaxPrice,
   currentColors,
+  currentSearch,
 }: Props) => {
   const { data: metadata, isLoading } = useQuery({
     queryKey: ["filter-metadata"],
@@ -74,7 +78,10 @@ const FilterDrawerInnerSection = ({
       />
 
       <Separator className="h-[1px] my-5" />
-      <Searching search={metadata?.search} />
+      <Searching
+        currentSearch={currentSearch}
+        handleSearchChange={handleSearchChange}
+      />
     </>
   );
 };

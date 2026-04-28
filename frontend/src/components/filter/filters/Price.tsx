@@ -31,7 +31,7 @@ const Price = ({ minPrice, maxPrice, handlePriceChange, maxLimit }: Props) => {
     setLocalRange([minPrice ?? 0, maxPrice ?? maxLimit]);
   }, [maxLimit, minPrice, maxPrice]);
 
-  const debouncedRange = useDebounce(localRange, 500);
+  const debouncedRange = useDebounce(localRange, 500) as number[];
 
   useEffect(() => {
     // Вызываем навигацию только когда дебаунс обновился

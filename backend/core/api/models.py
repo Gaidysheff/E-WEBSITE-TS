@@ -3,6 +3,9 @@ from django.db import models
 import random
 import string
 
+from colorfield.fields import ColorField
+
+
 # from django.utils.text import slugify
 
 
@@ -63,12 +66,9 @@ class Brand(models.Model):
 
 class Color(models.Model):
     name = models.CharField(max_length=255, unique=True, verbose_name="Название")
-    color_code = models.CharField(
-        max_length=20,
-        unique=True,
-        # blank=True,
-        # null=True,
-        verbose_name="Код цвета (HEX)",
+    color_code = ColorField(
+        default="#FF0000",
+        verbose_name="Выберите цвет",
     )
 
     def __str__(self):
@@ -124,7 +124,7 @@ class Product(models.Model):
         # blank=True,
         # null=True,
         related_name="goods",
-        default=Color.objects.get(name="Белый").id,
+        default=Color.objects.get(color_code="#FF0000").id,
         verbose_name="Цвет",
     )
 

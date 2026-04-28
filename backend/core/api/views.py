@@ -120,47 +120,49 @@ def product_filtering(request):
     # Начинаем со всех товаров
     products = Product.objects.all()
 
-    # Фильтруем по строке поиска
-    if search_query:
-        products = products.filter(
-            Q(name__icontains=search_query)
-            | Q(brand__icontains=search_query)
-            | Q(category__name__icontains=search_query)
-        )
+    try:
 
-    # Добавляем фильтр по форме
-    if shape_query:
-        # products = products.filter(shape__icontains=shape_query)
-        products = products.filter(shape=shape_query)
+        # Добавляем фильтр по форме
+        if shape_query:
+            # products = products.filter(shape__icontains=shape_query)
+            products = products.filter(shape=shape_query)
 
-    # Добавляем фильтр по бренду
-    if brand_query:
-        # "4,6" -> [4, 6]
-        brand_ids = [int(x) for x in brand_query.split(",")]
-        products = products.filter(brand_id__in=brand_ids)
+        # Фильтруем по строке поиска
+        if search_query:
+            products = products.filter(
+                Q(name__icontains=search_query)
+                | Q(brand__name__icontains=search_query)
+                | Q(category__name__icontains=search_query)
+            )
 
-    # Добавляем фильтр по цене
+        # Добавляем фильтр по бренду
+        if brand_query:
+            # "4,6" -> [4, 6]
+            brand_ids = [int(x) for x in brand_query.split(",")]
+            products = products.filter(brand_id__in=brand_ids)
 
-    # if min_p and max_p:
-    #     products = products.filter(price__gte=min_p, price__lte=max_p)
-    # Если параметры есть, фильтруем. Если нет - пропускаем фильтр.
+        # Добавляем фильтр по цене
+        # Фильтруем только если значения переданы и они не пустые
+        if min_p and min_p != "undefined":
+            products = products.filter(price__gte=float(min_p))
 
-    # Фильтруем только если значения переданы и они не пустые
-    if min_p and min_p != "undefined":
-        products = products.filter(price__gte=float(min_p))
+        if max_p and max_p != "undefined":
+            # Если на фронте maxLimit, можем вообще не ограничивать сверху
+            # или ограничивать по присланному числу
+            products = products.filter(price__lte=float(max_p))
 
-    if max_p and max_p != "undefined":
-        # Если на фронте maxLimit, можем вообще не ограничивать сверху
-        # или ограничивать по присланному числу
-        products = products.filter(price__lte=float(max_p))
+        # Добавляем фильтр по цвету
+        if color_query:
+            color_ids = [int(x) for x in color_query.split(",")]
+            products = products.filter(color_id__in=color_ids)
 
-    # Добавляем фильтр по цвету
-    if color_query:
-        color_ids = [int(x) for x in color_query.split(",")]
-        products = products.filter(color_id__in=color_ids)
+        serializer = ProductListSerializer(products, many=True)
+        return Response(serializer.data)
 
-    serializer = ProductListSerializer(products, many=True)
-    return Response(serializer.data)
+    except Exception as e:
+        # Это выведет точную ошибку в терминал Django
+        print(f"Error in filtering: {str(e)}")
+        return Response({"error": str(e)}, status=500)
 
 
 # ------------------- Filters --------------------------
@@ -172,10 +174,7 @@ def filter_metadata(request):
             "shapes": [
                 {"value": k, "label": v} for k, v in Product.SHAPE_CHOICES.items()
             ],
-            "brands": Brand.objects.values(
-                "id", "name"
-            ),  # Если бренды в отдельной модели
-            # "colors": Product.objects.values_list("color", flat=True).distinct(),
+            "brands": Brand.objects.values("id", "name"),
             "colors": Color.objects.all().values("id", "name", "color_code"),
             "max_price": Product.objects.aggregate(Max("price"))["price__max"] or 2000,
         }
