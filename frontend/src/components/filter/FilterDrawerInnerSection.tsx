@@ -34,7 +34,7 @@ const FilterDrawerInnerSection = ({
   currentColors,
   currentSearch,
 }: Props) => {
-  const { data: metadata, isLoading } = useQuery({
+  const { data: metadata } = useQuery({
     queryKey: ["filter-metadata"],
     queryFn: () => api.get("/api/get_filter_metadata/").then((res) => res.data),
     staleTime: 1000 * 60 * 60, //Данные фильтров меняются редко, кешируем на час

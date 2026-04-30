@@ -33,3 +33,13 @@ export function generateRandomString(length = 10) {
 }
 
 export const CURRENT_YEAR = new Date().getFullYear();
+
+export const getRussianPlural = (count: number) => {
+  const lastDigit = count % 10;
+  const lastTwoDigits = count % 100;
+
+  if (lastTwoDigits >= 11 && lastTwoDigits <= 14) return "результатов";
+  if (lastDigit === 1) return "результат";
+  if (lastDigit >= 2 && lastDigit <= 4) return "результата";
+  return "результатов";
+};

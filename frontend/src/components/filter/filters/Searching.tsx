@@ -5,12 +5,13 @@ import {
   InputGroupText,
 } from "@/components/ui/input-group";
 import { useEffect, useState } from "react";
-import { type ProductUrlSearch } from "@/lib/types.ts";
+import { type ProductUrlQuery } from "@/lib/types.ts";
 import { useSearch } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import filteringOptions from "@/api/queryOptions/filteringOptions.ts";
 import { Search } from "lucide-react";
 import { useDebounce } from "@/hooks/useDebounce.ts";
+// import { getRussianPlural } from "@/lib/utilities";
 
 interface Props {
   currentSearch: string | undefined;
@@ -23,27 +24,23 @@ const Searching = ({ currentSearch, handleSearchChange }: Props) => {
 
   const debouncedLookupText = useDebounce(lookupText, 500) as string;
 
+  const searchParams = useSearch({
+    strict: false,
+  }) as ProductUrlQuery;
+
+  // TanStack Query НЕ будет делать второй запрос в сеть.
+  // Он просто мгновенно возьмет данные из кеша, потому что ключи
+  // (shape, search и т.д.) совпадут!
+  const { data: products } = useQuery(filteringOptions(searchParams));
+
+  const resultsCount = products?.count ?? 0; // Теперь берем общее число из count
+
   useEffect(() => {
     // Не отправляем пустую строку, если в URL и так ничего нет
     if (debouncedLookupText !== currentSearch) {
       handleSearchChange(debouncedLookupText || "");
     }
   }, [debouncedLookupText]);
-
-  // ============================================
-
-  const { shape, brand, min_price, max_price, color, search } = useSearch({
-    strict: false,
-  }) as ProductUrlSearch;
-
-  // TanStack Query НЕ будет делать второй запрос в сеть.
-  // Он просто мгновенно возьмет данные из кеша, потому что ключи
-  // (shape, search и т.д.) совпадут!
-  const { data: products } = useQuery(
-    filteringOptions(shape, brand, min_price, max_price, color, search),
-  );
-
-  const resultsCount = products?.length ?? 0;
 
   return (
     <>
@@ -60,15 +57,7 @@ const Searching = ({ currentSearch, handleSearchChange }: Props) => {
           </InputGroupAddon>
           <InputGroupAddon align="inline-end">
             <InputGroupText>
-              {resultsCount}
-
-              {/* {resultsCount == 1 ? (
-                <p>результат</p>
-              ) : resultsCount > 1 && resultsCount < 5 ? (
-                <p>результата</p>
-              ) : (
-                <p>результатов</p>
-              )} */}
+              {resultsCount} {/* {getRussianPlural(resultsCount)} */}
               {resultsCount == 1 ? <p>result</p> : <p>results</p>}
             </InputGroupText>
           </InputGroupAddon>

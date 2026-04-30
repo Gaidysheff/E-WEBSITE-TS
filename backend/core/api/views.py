@@ -4,7 +4,7 @@ import stripe
 from django.conf import settings
 from django.shortcuts import get_object_or_404, render
 from django.contrib.auth import get_user_model
-
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Q, Max
 
 import requests
@@ -107,6 +107,10 @@ def product_search(request):
 @api_view(["GET"])
 @permission_classes([AllowAny])
 def product_filtering(request):
+    # Извлекаем параметры
+    page_number = request.query_params.get("page", 1)
+    page_size = request.query_params.get("page_size", 10)  # 10 по умолчанию
+
     search_query = request.query_params.get("search", "")
     shape_query = request.query_params.get("shape", "")
     brand_query = request.query_params.get("brand", "")
@@ -114,55 +118,75 @@ def product_filtering(request):
     max_p = request.query_params.get("max_price")
     color_query = request.query_params.get("color")
 
-    # print("min_p", min_p)
-    # print("max_p", max_p)
-
     # Начинаем со всех товаров
-    products = Product.objects.all()
+    products = Product.objects.all().order_by(
+        "id"
+    )  # Сначала ВСЕГДА инициализируем базовый QuerySet
+    # .order_by('id') ОБЯЗАТЕЛЕН для стабильной пагинации
+
+    # Добавляем фильтр по форме
+    if shape_query:
+        # products = products.filter(shape__icontains=shape_query)
+        products = products.filter(shape=shape_query)
+    # Фильтруем по строке поиска
+    if search_query:
+        products = products.filter(
+            Q(name__icontains=search_query)
+            | Q(brand__name__icontains=search_query)
+            | Q(category__name__icontains=search_query)
+        )
+
+    # Добавляем фильтр по бренду
+    if brand_query:
+        # "4,6" -> [4, 6]
+        brand_ids = [int(x) for x in brand_query.split(",")]
+        products = products.filter(brand_id__in=brand_ids)
+
+    # Добавляем фильтр по цене
+    # Фильтруем только если значения переданы и они не пустые
+    if min_p and min_p != "undefined":
+        products = products.filter(price__gte=float(min_p))
+
+    if max_p and max_p != "undefined":
+        # Если на фронте maxLimit, можем вообще не ограничивать сверху
+        # или ограничивать по присланному числу
+        products = products.filter(price__lte=float(max_p))
+
+    # Добавляем фильтр по цвету
+    if color_query:
+        color_ids = [int(x) for x in color_query.split(",")]
+        products = products.filter(color_id__in=color_ids)
+
+    paginator = Paginator(products, page_size)
 
     try:
-
-        # Добавляем фильтр по форме
-        if shape_query:
-            # products = products.filter(shape__icontains=shape_query)
-            products = products.filter(shape=shape_query)
-
-        # Фильтруем по строке поиска
-        if search_query:
-            products = products.filter(
-                Q(name__icontains=search_query)
-                | Q(brand__name__icontains=search_query)
-                | Q(category__name__icontains=search_query)
-            )
-
-        # Добавляем фильтр по бренду
-        if brand_query:
-            # "4,6" -> [4, 6]
-            brand_ids = [int(x) for x in brand_query.split(",")]
-            products = products.filter(brand_id__in=brand_ids)
-
-        # Добавляем фильтр по цене
-        # Фильтруем только если значения переданы и они не пустые
-        if min_p and min_p != "undefined":
-            products = products.filter(price__gte=float(min_p))
-
-        if max_p and max_p != "undefined":
-            # Если на фронте maxLimit, можем вообще не ограничивать сверху
-            # или ограничивать по присланному числу
-            products = products.filter(price__lte=float(max_p))
-
-        # Добавляем фильтр по цвету
-        if color_query:
-            color_ids = [int(x) for x in color_query.split(",")]
-            products = products.filter(color_id__in=color_ids)
-
-        serializer = ProductListSerializer(products, many=True)
-        return Response(serializer.data)
-
+        page_obj = paginator.page(page_number)
+    except PageNotAnInteger:
+        page_obj = paginator.page(1)
+    except EmptyPage:
+        page_obj = paginator.page(paginator.num_pages)
     except Exception as e:
-        # Это выведет точную ошибку в терминал Django
-        print(f"Error in filtering: {str(e)}")
+        # ОБЯЗАТЕЛЬНО возвращаем Response при ошибке!
         return Response({"error": str(e)}, status=500)
+
+        # serializer = ProductListSerializer(products, many=True)
+        # return Response(serializer.data)
+
+    serializer = ProductListSerializer(page_obj, many=True)
+
+    return Response(
+        {
+            "count": paginator.count,  # Общее количество товаров
+            "total_pages": paginator.num_pages,  # Всего страниц
+            "current_page": page_obj.number,
+            "results": serializer.data,  # Список товаров
+        }
+    )
+
+    # except Exception as e:
+    #     # Это выведет точную ошибку в терминал Django
+    #     print(f"Error in filtering: {str(e)}")
+    #     return Response({"error": str(e)}, status=500)
 
 
 # ------------------- Filters --------------------------

@@ -1,4 +1,3 @@
-import { Field, FieldLabel } from "@/components/ui/field";
 import {
   Pagination,
   PaginationContent,
@@ -11,55 +10,117 @@ import {
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useNavigate, useSearch } from "@tanstack/react-router";
 
-interface Props {}
+interface Props {
+  totalPages: number;
+  currentPage: number;
+}
 
-const PageBreak = (props: Props) => {
+const PageBreak = ({ totalPages, currentPage }: Props) => {
+  const navigate = useNavigate();
+  // Подключаем хук с указанием маршрута, чтобы TS подхватил типы
+  const search = useSearch({ from: "/_filter/products" });
+
+  const pageSize = search.page_size;
+
+  const handlePageChange = (newPage: number) => {
+    navigate({ search: { ...search, page: newPage } });
+  };
+
+  const handlePageSizeChange = (newSize: string) => {
+    navigate({ search: { ...search, page: 1, page_size: Number(newSize) } });
+  };
+
+  // --- Функция генерации умных ссылок ---
+  const renderPageLinks = () => {
+    const pages = [];
+    for (let i = 1; i <= totalPages; i++) {
+      // Логика: всегда показывать первую, последнюю и по одной вокруг текущей
+      if (
+        i === 1 ||
+        i === totalPages ||
+        (i >= currentPage - 1 && i <= currentPage + 1)
+      ) {
+        pages.push(
+          <PaginationItem key={i}>
+            <PaginationLink
+              className="cursor-pointer"
+              isActive={i === currentPage}
+              onClick={() => handlePageChange(i)}
+            >
+              {i}
+            </PaginationLink>
+          </PaginationItem>,
+        );
+      }
+      // Вставляем троеточие, если между текущей и краями есть разрыв
+      else if (i === currentPage - 2 || i === currentPage + 2) {
+        pages.push(
+          <PaginationItem key={`ellipsis-${i}`}>
+            <PaginationEllipsis />
+          </PaginationItem>,
+        );
+      }
+    }
+    return pages;
+  };
+
   return (
-    <div className="mx-auto flex flex-col items-center gap-4">
-      <Field orientation="horizontal" className="w-fit">
-        <FieldLabel htmlFor="select-rows-per-page">Units per page</FieldLabel>
-        <Select defaultValue="25">
-          <SelectTrigger className="w-20" id="select-rows-per-page">
+    <div className="mx-auto flex flex-col items-center gap-4 my-8">
+      {/* Селект выбора количества (Units per page) */}
+      <div className="flex items-center gap-2">
+        <span className="text-sm">Units per page:</span>
+        <Select value={String(pageSize)} onValueChange={handlePageSizeChange}>
+          <SelectTrigger className="w-20">
             <SelectValue />
           </SelectTrigger>
-          <SelectContent align="start">
-            <SelectGroup>
-              <SelectItem value="10">10</SelectItem>
-              <SelectItem value="25">25</SelectItem>
-              <SelectItem value="50">50</SelectItem>
-              <SelectItem value="100">100</SelectItem>
-            </SelectGroup>
+          <SelectContent>
+            {[10, 25, 50, 100].map((size) => (
+              <SelectItem key={size} value={String(size)}>
+                {size}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
-      </Field>
-      {/* ========================= Pagination ========================= */}
+      </div>
+      {/* Сама пагинация */}
       <Pagination>
         <PaginationContent>
           <PaginationItem>
-            <PaginationPrevious href="#" />
+            <PaginationPrevious
+              className="cursor-pointer"
+              onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
+            />
           </PaginationItem>
+
+          {/* ВСТАВЛЯЕМ НАШУ ФУНКЦИЮ */}
+          {renderPageLinks()}
+
+          {/* Пример простой отрисовки страниц */}
+          {/* {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+            <PaginationItem key={p}>
+              <PaginationLink
+                className="cursor-pointer"
+                isActive={p === currentPage}
+                onClick={() => handlePageChange(p)}
+              >
+                {p}
+              </PaginationLink>
+            </PaginationItem>
+          ))} */}
+
           <PaginationItem>
-            <PaginationLink href="#">1</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#" isActive>
-              2
-            </PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#">3</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationEllipsis />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationNext href="#" />
+            <PaginationNext
+              className="cursor-pointer"
+              onClick={() =>
+                handlePageChange(Math.min(totalPages, currentPage + 1))
+              }
+            />
           </PaginationItem>
         </PaginationContent>
       </Pagination>

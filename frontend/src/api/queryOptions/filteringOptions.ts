@@ -1,18 +1,34 @@
+import type {
+  PaginatedResponse,
+  Product,
+  ProductSearch,
+  ProductUrlQuery,
+} from "@/lib/types";
 import api, { BASE_URL } from "@/api/api";
-import { type ProductSearch } from "@/lib/types";
 import { keepPreviousData, queryOptions } from "@tanstack/react-query";
 
-const filteringOptions = (
-  shape: string,
-  brand: string,
-  minPrice: number,
-  maxPrice: number,
-  color: string,
-  search: string,
-) => {
+const filteringOptions = (options: ProductUrlQuery) => {
+  const {
+    shape,
+    brand,
+    min_price: minPrice,
+    max_price: maxPrice,
+    color,
+    search,
+    page,
+    page_size: pageSize,
+  } = options;
+
   return queryOptions({
-    queryKey: ["products", { shape, brand, minPrice, maxPrice, color, search }],
-    queryFn: () =>
+    queryKey: [
+      "products",
+      { shape, brand, minPrice, maxPrice, color, search, page, pageSize },
+    ],
+    // Явно указываем тип возвращаемого значения в queryFn
+
+    // queryFn: (): Promise<Product[]> =>
+
+    queryFn: (): Promise<PaginatedResponse<Product>> =>
       fetchProducts({
         shape,
         brand,
@@ -20,7 +36,10 @@ const filteringOptions = (
         maxPrice,
         color,
         search,
+        page,
+        pageSize,
       }),
+
     placeholderData: keepPreviousData,
   });
 };
@@ -37,8 +56,11 @@ const fetchProducts = async (options: ProductSearch) => {
         max_price: options.maxPrice || undefined,
         color: options.color || undefined,
         search: options.search || undefined, // Django получит ?search=...
+        page: options.page || undefined, // Django получит ?page=...
+        page_size: options.pageSize || undefined,
       },
     });
+
     console.log("🚀 ~ fetchProducts ~ response:", response);
 
     return response.data;
