@@ -13,6 +13,7 @@ from .models import (
     DeliveryOption,
     Brand,
     Color,
+    PricePresets,
 )
 
 
@@ -177,4 +178,24 @@ class ColorAdmin(admin.ModelAdmin):
         "id",
         "name",
         "color_code",
+    ]
+
+
+@admin.register(PricePresets)
+class PricePresetsAdmin(admin.ModelAdmin):
+    fields = [
+        "label",
+        "min_price",
+        "max_price",
+        "order",
+    ]
+    list_display = [
+        "id",
+        "label",
+        "min_price",
+        "max_price",
+        "order",
+    ]
+    list_display_links = [
+        "label",
     ]

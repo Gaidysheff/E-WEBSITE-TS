@@ -17,12 +17,23 @@ const filteringOptions = (options: ProductUrlQuery) => {
     search,
     page,
     page_size: pageSize,
+    ordering,
   } = options;
 
   return queryOptions({
     queryKey: [
       "products",
-      { shape, brand, minPrice, maxPrice, color, search, page, pageSize },
+      {
+        shape,
+        brand,
+        minPrice,
+        maxPrice,
+        color,
+        search,
+        page,
+        pageSize,
+        ordering,
+      },
     ],
     // Явно указываем тип возвращаемого значения в queryFn
 
@@ -38,6 +49,7 @@ const filteringOptions = (options: ProductUrlQuery) => {
         search,
         page,
         pageSize,
+        ordering,
       }),
 
     placeholderData: keepPreviousData,
@@ -58,10 +70,11 @@ const fetchProducts = async (options: ProductSearch) => {
         search: options.search || undefined, // Django получит ?search=...
         page: options.page || undefined, // Django получит ?page=...
         page_size: options.pageSize || undefined,
+        ordering: options.ordering || undefined,
       },
     });
 
-    console.log("🚀 ~ fetchProducts ~ response:", response);
+    // console.log("🚀 ~ fetchProducts ~ response:", response);
 
     return response.data;
   } catch (error) {

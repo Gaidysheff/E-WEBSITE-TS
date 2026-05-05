@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-
+import { type PricePreset } from "@/lib/types.ts";
+import PricePresets from "./PricePresets.tsx";
 import { Slider } from "@/components/ui/slider";
 import { useDebounce } from "@/hooks/useDebounce.ts";
 
@@ -7,25 +8,29 @@ interface Props {
   maxPrice: number;
   minPrice: number;
   maxLimit: number;
-  currentMinPrice: number | undefined;
-  currentMaxPrice: number | undefined;
   handlePriceChange: (minValue: number, maxValue: number) => void;
+  presets: PricePreset[];
 }
 
-const Price = ({ minPrice, maxPrice, handlePriceChange, maxLimit }: Props) => {
-  console.log("🚀 ~ Price ~ maxLimit:", maxLimit);
-  // const maxLimit = 2000;
-  const [localRange, setLocalRange] = useState([
-    minPrice || 0,
-    maxPrice || maxLimit,
+const Price = ({
+  minPrice,
+  maxPrice,
+  handlePriceChange,
+  maxLimit,
+  presets,
+}: Props) => {
+  // Локальный стейт слайдера
+  const [localRange, setLocalRange] = useState<number[]>([
+    minPrice ?? 0,
+    maxPrice ?? maxLimit,
   ]);
 
   const handleSliderChange = (values: number[]) => {
     setLocalRange(values);
-    // Здесь же в будущем вызовем функцию обновления URL
   };
 
-  // Синхронизируем локальный стейт, когда приходят данные из БД
+  // СИНХРОНИЗАЦИЯ:
+  // Если URL изменился (через пресеты), подтягиваем ползунки слайдера
   useEffect(() => {
     // Если в URL нет параметров, ставим границы по умолчанию из мета-данных
     setLocalRange([minPrice ?? 0, maxPrice ?? maxLimit]);
@@ -59,6 +64,15 @@ const Price = ({ minPrice, maxPrice, handlePriceChange, maxLimit }: Props) => {
           step={10}
           onValueChange={handleSliderChange} // Обновляет стейт при движении
           className="w-full"
+        />
+
+        {/* 2. Динамические Чипсы */}
+        <PricePresets
+          maxLimit={maxLimit}
+          handlePriceChange={handlePriceChange}
+          presets={presets}
+          setLocalRange={setLocalRange}
+          localRange={localRange}
         />
       </div>
     </>

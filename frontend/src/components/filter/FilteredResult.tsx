@@ -3,6 +3,7 @@ import ProductCardSkeleton from "@/components/sectionProduct/ProductCardSkeleton
 import { type Product } from "@/lib/types.ts";
 import Skeleton from "react-loading-skeleton";
 import PageBreak from "@/components/pagination/PageBreak.tsx";
+import SortSelector from "./SortSelector.tsx";
 
 interface Props {
   filteredResults: Product[] | undefined;
@@ -21,9 +22,15 @@ const FilteredResult = ({
     <section className="mx-auto my-5">
       <h2 className="my-9 text-center text-xl font-bold text-primaryDark">
         {isFetching ? (
-          <Skeleton width={300} height={40} />
+          <>
+            <Skeleton width={200} height={40} />
+            <Skeleton width={250} height={30} />
+          </>
         ) : (
-          <div>FilteredResult</div>
+          <div className="flex flex-col items-center gap-5">
+            <h2>FilteredResult</h2>
+            <SortSelector />
+          </div>
         )}
       </h2>
 

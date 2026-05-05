@@ -98,7 +98,7 @@ const PageBreak = ({ totalPages, currentPage }: Props) => {
             />
           </PaginationItem>
 
-          {/* ВСТАВЛЯЕМ НАШУ ФУНКЦИЮ */}
+          {/* ВСТАВЛЯЕМ УМНУЮ ФУНКЦИЮ */}
           {renderPageLinks()}
 
           {/* Пример простой отрисовки страниц */}

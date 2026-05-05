@@ -25,6 +25,7 @@ from .models import (
     DeliveryOption,
     Brand,
     Color,
+    PricePresets,
 )
 from .serializers import (
     CartItemSerializer,
@@ -117,6 +118,9 @@ def product_filtering(request):
     min_p = request.query_params.get("min_price")
     max_p = request.query_params.get("max_price")
     color_query = request.query_params.get("color")
+    # Получаем параметр сортировки:
+    # например, "price_asc", "price_desc", "name_asc", "rating_desc"
+    ordering = request.query_params.get("ordering", "-id")  # По умолчанию новые (по ID)
 
     # Начинаем со всех товаров
     products = Product.objects.all().order_by(
@@ -157,6 +161,22 @@ def product_filtering(request):
         color_ids = [int(x) for x in color_query.split(",")]
         products = products.filter(color_id__in=color_ids)
 
+    if ordering == "price_asc":
+        products = products.order_by("price")
+    elif ordering == "price_desc":
+        products = products.order_by("-price")
+    elif ordering == "name_asc":
+        products = products.order_by("name")
+    elif ordering == "name_desc":
+        products = products.order_by("-name")
+    elif ordering == "rating_desc":
+        # Сортировка по связанной модели ProductRating
+        # Знак минус перед rating__average_rating означает "по убыванию"
+        products = products.order_by("-rating__average_rating")
+    else:
+        products = products.order_by("-id")
+
+    # Только ПОСЛЕ сортировки применяем пагинацию
     paginator = Paginator(products, page_size)
 
     try:
@@ -200,7 +220,15 @@ def filter_metadata(request):
             ],
             "brands": Brand.objects.values("id", "name"),
             "colors": Color.objects.all().values("id", "name", "color_code"),
-            "max_price": Product.objects.aggregate(Max("price"))["price__max"] or 2000,
+            "max_price": Product.objects.aggregate(Max("price"))["price__max"],
+            # "max_price": Product.objects.aggregate(Max("price"))["price__max"] or 2000,
+            "price_presets": PricePresets.objects.values(
+                "id",
+                "label",
+                "min_price",
+                "max_price",
+                "order",
+            ),
         }
     )
 
@@ -826,15 +854,13 @@ def post3ds(request):
 
         # После успеха нужно перенаправить пользователя обратно на фронтенд
         # Т.к. это POST от банка, мы возвращаем HTML с редиректом
-        return HttpResponse(
-            f"""
+        return HttpResponse(f"""
             <html>
                 <body onload="window.parent.postMessage('3ds-success', '*');">
                     Redirecting...
                 </body>
             </html>
-        """
-        )
+        """)
     except Exception as e:
         return HttpResponse(
             f'<html><body onload=\'window.parent.postMessage("3ds-fail", "*");\'>Error</body></html>'

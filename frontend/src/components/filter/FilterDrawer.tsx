@@ -15,8 +15,11 @@ import FilterDrawerInnerSection from "./FilterDrawerInnerSection.tsx";
 import { TbFilterSearch } from "react-icons/tb";
 
 import { type ProductSearch } from "@/lib/types";
+import { useState } from "react";
 
 const FilterDrawer = () => {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
   const navigate = useNavigate();
 
   // Используем strict: false. Теперь не упадет на главной!
@@ -93,9 +96,9 @@ const FilterDrawer = () => {
 
   return (
     <div className="flex flex-wrap gap-2">
-      <Drawer direction={"left"}>
+      <Drawer open={isOpen} onOpenChange={setIsOpen} direction={"left"}>
         <DrawerTrigger asChild>
-          <Link to={"/products"}>
+          <Link to={"/products"} onClick={() => setIsOpen(true)}>
             <TbFilterSearch
               size={40}
               className="text-primaryDark hover:text-primaryDark/50
@@ -122,10 +125,9 @@ const FilterDrawer = () => {
               handleSearchChange={handleSearchChange}
               currentShape={searchParams.shape}
               currentBrands={searchParams.brand}
-              currentMinPrice={searchParams.minPrice}
-              currentMaxPrice={searchParams.maxPrice}
               currentColors={searchParams.color}
               currentSearch={searchParams.search}
+              onClose={() => setIsOpen(false)}
             />
           </div>
           <DrawerFooter>

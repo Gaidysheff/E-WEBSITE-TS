@@ -5,7 +5,6 @@ import string
 
 from colorfield.fields import ColorField
 
-
 # from django.utils.text import slugify
 
 
@@ -341,3 +340,30 @@ class DeliveryOption(models.Model):
 
     def __str__(self):
         return f"{self.name} - {self.price}₽"
+
+
+class PricePresets(models.Model):
+    label = models.CharField(max_length=100, verbose_name="Ярлык для диапазона")
+    min_price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        blank=True,
+        null=True,
+        verbose_name="Минимальная цена",
+    )
+    max_price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        blank=True,
+        null=True,
+        verbose_name="Максимальная цена",
+    )
+    order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        verbose_name = "Диапазоны цены"
+        verbose_name_plural = "Диапазоны цены"
+        ordering = ["order"]
+
+    def __str__(self):
+        return self.label

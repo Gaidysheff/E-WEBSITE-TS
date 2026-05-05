@@ -77,6 +77,8 @@ export type ProductInDetails = Product &
     similar_products: Product[];
   };
 
+// ------ Filtering ------
+
 export type ProductSearch = {
   shape: string;
   search: string;
@@ -86,6 +88,7 @@ export type ProductSearch = {
   color: string;
   page: number;
   pageSize: number;
+  ordering: string;
 };
 
 export type ProductUrlQuery = {
@@ -97,6 +100,7 @@ export type ProductUrlQuery = {
   color: string;
   page: number;
   page_size: number;
+  ordering: string;
 };
 
 export type PaginatedResponse<T> = {
@@ -106,6 +110,14 @@ export type PaginatedResponse<T> = {
   total_pages: number;
   current_page: number;
   results: T[];
+};
+
+export type PricePreset = {
+  id: string;
+  label: string;
+  min_price: string;
+  max_price: string;
+  order: string;
 };
 
 // ------- Cart -----------

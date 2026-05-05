@@ -7,8 +7,6 @@ interface Props {
 }
 
 const Color = ({ options, currentColors, handleColorChange }: Props) => {
-  console.log("🚀 ~ Color ~ options:", options);
-
   const selectedColors = currentColors
     ? currentColors.split(",").map(Number)
     : [];

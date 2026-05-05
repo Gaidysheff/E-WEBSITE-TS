@@ -16,9 +16,10 @@ import { useDebounce } from "@/hooks/useDebounce.ts";
 interface Props {
   currentSearch: string | undefined;
   handleSearchChange: (value: string) => void;
+  onClose?: () => void;
 }
 
-const Searching = ({ currentSearch, handleSearchChange }: Props) => {
+const Searching = ({ currentSearch, handleSearchChange, onClose }: Props) => {
   // Инициализируем локальный текст значением из URL (один раз при монтировании)
   const [lookupText, setLookupText] = useState(currentSearch || "");
 
@@ -42,6 +43,16 @@ const Searching = ({ currentSearch, handleSearchChange }: Props) => {
     }
   }, [debouncedLookupText]);
 
+  // Функция обработки нажатия клавиш
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      // 1. Принудительно вызываем поиск без ожидания дебаунса (опционально)
+      handleSearchChange(lookupText);
+      // 2. Закрываем Drawer
+      if (onClose) onClose();
+    }
+  };
+
   return (
     <>
       <div className="font-semibold my-2">Search</div>
@@ -51,6 +62,7 @@ const Searching = ({ currentSearch, handleSearchChange }: Props) => {
             placeholder="Search..."
             value={lookupText} // Делаем инпут контролируемым
             onChange={(e) => setLookupText(e.target.value)}
+            onKeyDown={handleKeyDown} // Навешиваем слушатель
           />
           <InputGroupAddon>
             <Search />
