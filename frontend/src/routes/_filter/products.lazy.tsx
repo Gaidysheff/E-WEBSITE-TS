@@ -18,6 +18,7 @@ function RouteComponent() {
   // );
 
   // Теперь useQuery будет возвращать объект с результатами и мета-данными
+
   const { data, isFetching } = useQuery(filteringOptions(searchParams));
 
   const totalPages = data?.total_pages ?? 1;

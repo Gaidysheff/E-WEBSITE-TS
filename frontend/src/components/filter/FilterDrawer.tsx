@@ -144,10 +144,12 @@ const FilterDrawer = () => {
             />
           </div>
           <DrawerFooter>
-            <Button onClick={handleReset}>Reset All Filters</Button>
-            <DrawerClose asChild>
-              <Button variant="outline">Cancel</Button>
-            </DrawerClose>
+            <div className="flex flex-col gap-2 pb-10">
+              <Button onClick={handleReset}>Reset All Filters</Button>
+              <DrawerClose asChild>
+                <Button variant="outline">Cancel</Button>
+              </DrawerClose>
+            </div>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>

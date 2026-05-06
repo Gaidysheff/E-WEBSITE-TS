@@ -10,6 +10,7 @@ import { useQuery } from "@tanstack/react-query";
 import filteringOptions from "@/api/queryOptions/filteringOptions.ts";
 import { useSearch } from "@tanstack/react-router";
 import { type ProductUrlQuery } from "@/lib/types.ts";
+import SkeletonFilters from "./SkeletonFilters.tsx";
 
 interface Props {
   handleShapeChange: (value: string) => void;
@@ -40,11 +41,13 @@ const FilterDrawerInnerSection = ({
   currentRating,
   onClose,
 }: Props) => {
-  const { data: metadata } = useQuery({
+  const { data: metadata, isPending } = useQuery({
     queryKey: ["filter-metadata"],
-    queryFn: () => api.get("/api/get_filter_metadata/").then((res) => res.data),
+    queryFn: () =>
+      api.get("/api/get_filter_metadata555/").then((res) => res.data),
     staleTime: 1000 * 60 * 60, //Данные фильтров меняются редко, кешируем на час
   });
+
   console.log("🚀 ~ FilterDrawerInnerSection ~ METAdata:", metadata);
 
   const maxLimit = metadata?.max_price ?? 2000;
@@ -52,9 +55,8 @@ const FilterDrawerInnerSection = ({
   const searchParams = useSearch({ strict: false }) as ProductUrlQuery;
 
   const { data } = useQuery(filteringOptions(searchParams));
-  // const { data, isLoading } = useQuery(filteringOptions(searchParams));
 
-  // if (isLoading) return <FilterSkeleton />;
+  if (isPending) return <SkeletonFilters />;
 
   return (
     <>
