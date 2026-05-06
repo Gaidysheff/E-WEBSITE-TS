@@ -18,6 +18,7 @@ const filteringOptions = (options: ProductUrlQuery) => {
     page,
     page_size: pageSize,
     ordering,
+    rating,
   } = options;
 
   return queryOptions({
@@ -33,12 +34,12 @@ const filteringOptions = (options: ProductUrlQuery) => {
         page,
         pageSize,
         ordering,
+        rating,
       },
     ],
+
     // Явно указываем тип возвращаемого значения в queryFn
-
     // queryFn: (): Promise<Product[]> =>
-
     queryFn: (): Promise<PaginatedResponse<Product>> =>
       fetchProducts({
         shape,
@@ -50,6 +51,7 @@ const filteringOptions = (options: ProductUrlQuery) => {
         page,
         pageSize,
         ordering,
+        rating,
       }),
 
     placeholderData: keepPreviousData,
@@ -71,6 +73,7 @@ const fetchProducts = async (options: ProductSearch) => {
         page: options.page || undefined, // Django получит ?page=...
         page_size: options.pageSize || undefined,
         ordering: options.ordering || undefined,
+        rating: options.rating || undefined,
       },
     });
 

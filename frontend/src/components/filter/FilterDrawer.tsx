@@ -75,6 +75,17 @@ const FilterDrawer = () => {
     });
   };
 
+  const handleRatingChange = (rating: number | undefined) => {
+    navigate({
+      to: "/products",
+      search: (prev: any) => ({
+        ...prev,
+        rating,
+      }),
+      replace: true,
+    });
+  };
+
   const handleSearchChange = (search: string) => {
     navigate({
       to: "/products",
@@ -128,6 +139,8 @@ const FilterDrawer = () => {
               currentColors={searchParams.color}
               currentSearch={searchParams.search}
               onClose={() => setIsOpen(false)}
+              currentRating={searchParams.rating}
+              handleRatingChange={handleRatingChange}
             />
           </div>
           <DrawerFooter>

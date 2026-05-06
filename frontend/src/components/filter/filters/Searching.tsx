@@ -5,36 +5,40 @@ import {
   InputGroupText,
 } from "@/components/ui/input-group";
 import { useEffect, useState } from "react";
-import { type ProductUrlQuery } from "@/lib/types.ts";
-import { useSearch } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
-import filteringOptions from "@/api/queryOptions/filteringOptions.ts";
+
 import { Search } from "lucide-react";
 import { useDebounce } from "@/hooks/useDebounce.ts";
+
 // import { getRussianPlural } from "@/lib/utilities";
 
 interface Props {
   currentSearch: string | undefined;
   handleSearchChange: (value: string) => void;
   onClose?: () => void;
+  resultsCount: number;
 }
 
-const Searching = ({ currentSearch, handleSearchChange, onClose }: Props) => {
+const Searching = ({
+  resultsCount,
+  currentSearch,
+  handleSearchChange,
+  onClose,
+}: Props) => {
   // Инициализируем локальный текст значением из URL (один раз при монтировании)
   const [lookupText, setLookupText] = useState(currentSearch || "");
 
   const debouncedLookupText = useDebounce(lookupText, 500) as string;
 
-  const searchParams = useSearch({
-    strict: false,
-  }) as ProductUrlQuery;
+  // const searchParams = useSearch({
+  //   strict: false,
+  // }) as ProductUrlQuery;
 
   // TanStack Query НЕ будет делать второй запрос в сеть.
   // Он просто мгновенно возьмет данные из кеша, потому что ключи
   // (shape, search и т.д.) совпадут!
-  const { data: products } = useQuery(filteringOptions(searchParams));
+  // const { data: products } = useQuery(filteringOptions(searchParams));
 
-  const resultsCount = products?.count ?? 0; // Теперь берем общее число из count
+  // const resultsCount = products?.count ?? 0; // Теперь берем общее число из count
 
   useEffect(() => {
     // Не отправляем пустую строку, если в URL и так ничего нет

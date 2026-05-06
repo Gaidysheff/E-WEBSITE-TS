@@ -118,6 +118,9 @@ def product_filtering(request):
     min_p = request.query_params.get("min_price")
     max_p = request.query_params.get("max_price")
     color_query = request.query_params.get("color")
+
+    rating_query = request.query_params.get("rating")
+
     # Получаем параметр сортировки:
     # например, "price_asc", "price_desc", "name_asc", "rating_desc"
     ordering = request.query_params.get("ordering", "-id")  # По умолчанию новые (по ID)
@@ -161,6 +164,12 @@ def product_filtering(request):
         color_ids = [int(x) for x in color_query.split(",")]
         products = products.filter(color_id__in=color_ids)
 
+    if rating_query and rating_query.isdigit():
+        # Используем двойное подчеркивание для обращения к связанному полю
+        # average_rating
+        # gte = Greater Than or Equal (>=)
+        products = products.filter(rating__average_rating__gte=int(rating_query))
+
     if ordering == "price_asc":
         products = products.order_by("price")
     elif ordering == "price_desc":
@@ -175,6 +184,13 @@ def product_filtering(request):
         products = products.order_by("-rating__average_rating")
     else:
         products = products.order_by("-id")
+
+    rating_stats = {
+        "four_plus": products.filter(rating__average_rating__gte=4).count(),
+        "three_plus": products.filter(rating__average_rating__gte=3).count(),
+        "two_plus": products.filter(rating__average_rating__gte=2).count(),
+        "one_plus": products.filter(rating__average_rating__gte=1).count(),
+    }
 
     # Только ПОСЛЕ сортировки применяем пагинацию
     paginator = Paginator(products, page_size)
@@ -197,6 +213,7 @@ def product_filtering(request):
     return Response(
         {
             "count": paginator.count,  # Общее количество товаров
+            "rating_stats": rating_stats,  # Отдаем эти цифры фронтенду
             "total_pages": paginator.num_pages,  # Всего страниц
             "current_page": page_obj.number,
             "results": serializer.data,  # Список товаров

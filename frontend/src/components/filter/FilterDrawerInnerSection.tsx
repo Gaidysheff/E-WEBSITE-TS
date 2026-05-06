@@ -1,11 +1,15 @@
 import Brands from "./filters/Brands.tsx";
 import Color from "./filters/Color.tsx";
 import Price from "./filters/Price.tsx";
+import RatingFilter from "./filters/RatingFilter.tsx";
 import Searching from "./filters/Searching.tsx";
 import { Separator } from "@/components/ui/separator";
 import Shape from "./filters/Shape.tsx";
 import api from "@/api/api.ts";
 import { useQuery } from "@tanstack/react-query";
+import filteringOptions from "@/api/queryOptions/filteringOptions.ts";
+import { useSearch } from "@tanstack/react-router";
+import { type ProductUrlQuery } from "@/lib/types.ts";
 
 interface Props {
   handleShapeChange: (value: string) => void;
@@ -13,10 +17,12 @@ interface Props {
   handlePriceChange: (minValue: number, maxValue: number) => void;
   handleColorChange: (value: number[]) => void;
   handleSearchChange: (value: string) => void;
+  handleRatingChange: (rating: number | undefined) => void;
   currentShape: string | undefined;
   currentBrands: string | undefined; // Строка из URL: "4,6" - 1 бренд или несколько в 1 строке
   currentColors: string | undefined; // Из URL: "1,3,5"
   currentSearch: string | undefined;
+  currentRating: number | undefined;
   onClose?: () => void;
 }
 
@@ -26,10 +32,12 @@ const FilterDrawerInnerSection = ({
   handleBrandChange,
   handlePriceChange,
   handleColorChange,
+  handleRatingChange,
   currentShape,
   currentBrands,
   currentColors,
   currentSearch,
+  currentRating,
   onClose,
 }: Props) => {
   const { data: metadata } = useQuery({
@@ -40,6 +48,11 @@ const FilterDrawerInnerSection = ({
   console.log("🚀 ~ FilterDrawerInnerSection ~ METAdata:", metadata);
 
   const maxLimit = metadata?.max_price ?? 2000;
+
+  const searchParams = useSearch({ strict: false }) as ProductUrlQuery;
+
+  const { data } = useQuery(filteringOptions(searchParams));
+  // const { data, isLoading } = useQuery(filteringOptions(searchParams));
 
   // if (isLoading) return <FilterSkeleton />;
 
@@ -76,10 +89,20 @@ const FilterDrawerInnerSection = ({
       />
 
       <Separator className="h-[1px] my-5" />
+
+      <RatingFilter
+        currentRating={currentRating}
+        handleRatingChange={handleRatingChange}
+        stats={data?.rating_stats}
+      />
+
+      <Separator className="h-[1px] my-5" />
+
       <Searching
         currentSearch={currentSearch}
         handleSearchChange={handleSearchChange}
         onClose={onClose}
+        resultsCount={data?.count ?? 0}
       />
     </>
   );

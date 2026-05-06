@@ -89,6 +89,7 @@ export type ProductSearch = {
   page: number;
   pageSize: number;
   ordering: string;
+  rating: number;
 };
 
 export type ProductUrlQuery = {
@@ -101,6 +102,14 @@ export type ProductUrlQuery = {
   page: number;
   page_size: number;
   ordering: string;
+  rating: number;
+};
+
+export type RatingStats = {
+  four_plus: number;
+  three_plus: number;
+  two_plus: number;
+  one_plus: number;
 };
 
 export type PaginatedResponse<T> = {
@@ -110,6 +119,7 @@ export type PaginatedResponse<T> = {
   total_pages: number;
   current_page: number;
   results: T[];
+  rating_stats: RatingStats;
 };
 
 export type PricePreset = {

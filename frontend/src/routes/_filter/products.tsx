@@ -11,5 +11,6 @@ export const Route = createFileRoute("/_filter/products")({
     page: (search.page as number) || 1,
     page_size: (search.page_size as number) || 10,
     ordering: (search.ordering as string) || undefined,
+    rating: (search.rating as number) || undefined,
   }),
 });
