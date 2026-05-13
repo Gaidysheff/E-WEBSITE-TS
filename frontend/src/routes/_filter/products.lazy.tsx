@@ -24,10 +24,10 @@ function RouteComponent() {
   const totalPages = data?.total_pages ?? 1;
   const currentPage = data?.current_page ?? 1;
 
-  console.log("🚀 ~ RouteComponent ~ data:", data);
+  // console.log("🚀 ~ RouteComponent ~ data:", data);
 
   return (
-    <div>
+    <div className="container">
       {isFetching && <Spinner className="size-30 text-red-500 mx-auto" />}
       <FilteredResult
         filteredResults={data?.results}

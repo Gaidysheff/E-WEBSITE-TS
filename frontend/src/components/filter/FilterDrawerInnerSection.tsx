@@ -43,12 +43,11 @@ const FilterDrawerInnerSection = ({
 }: Props) => {
   const { data: metadata, isPending } = useQuery({
     queryKey: ["filter-metadata"],
-    queryFn: () =>
-      api.get("/api/get_filter_metadata555/").then((res) => res.data),
+    queryFn: () => api.get("/api/get_filter_metadata/").then((res) => res.data),
     staleTime: 1000 * 60 * 60, //Данные фильтров меняются редко, кешируем на час
   });
 
-  console.log("🚀 ~ FilterDrawerInnerSection ~ METAdata:", metadata);
+  // console.log("🚀 ~ FilterDrawerInnerSection ~ METAdata:", metadata);
 
   const maxLimit = metadata?.max_price ?? 2000;
 

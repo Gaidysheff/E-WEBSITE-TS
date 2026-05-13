@@ -175,42 +175,46 @@ function Payment() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center">
-      <h1
-        className="text-lg 2xsm:text-2xl xsm:text-3xl sm:text-4xl md:text-5xl 
-        mt-5 sm:mt-10 -mr-[2rem] 2xsm:-mr-[2.4rem] xsm:-mr-[3rem] sm:-mr-[4rem]
-        text-primaryDark z-2"
-      >
-        Payment with
-      </h1>
-      <p></p>
+    <div className="container">
+      <div className="flex flex-col items-center justify-center">
+        <h1
+          className="text-lg 2xsm:text-2xl xsm:text-3xl sm:text-4xl md:text-5xl 
+          mt-5 sm:mt-10 -mr-[2rem] 2xsm:-mr-[2.4rem] xsm:-mr-[3rem] sm:-mr-[4rem]
+          text-primaryDark z-2"
+        >
+          Payment with
+        </h1>
+        <p></p>
 
-      <div
-        className="w-[15rem] 2xsm:w-[18rem] xsm:w-[22.5rem] sm:w-[30rem]
-        -mr-[2rem] 2xsm:-mr-[2.4rem] xsm:-mr-[3rem] sm:-mr-[4rem] mt-5 sm:mt-10"
-      >
-        <CloudPayments />
-      </div>
+        <div
+          className="w-[15rem] 2xsm:w-[18rem] xsm:w-[22.5rem] sm:w-[30rem]
+          -mr-[2rem] 2xsm:-mr-[2.4rem] xsm:-mr-[3rem] sm:-mr-[4rem] mt-5 sm:mt-10"
+        >
+          <CloudPayments />
+        </div>
 
-      <div className="z-5">
-        <p className="mt-10 text-xl">
-          В тестовом режиме используйте номер карты 4242 4242 4242 4242
-          (остальные данные карты любые), чтобы получить успешное прохождение
-          платежа.
-        </p>
-        <p className="mt-10 text-xl">
-          Для отказа платежа используйте любой 16-ти или 19-ти значный номер.
-        </p>
-      </div>
+        <div className="z-5">
+          <p className="mt-10 text-xl">
+            В тестовом режиме используйте номер карты 4242 4242 4242 4242
+            (остальные данные карты любые), чтобы получить успешное прохождение
+            платежа.
+          </p>
+          <p className="mt-10 text-xl">
+            Для отказа платежа используйте любой 16-ти или 19-ти значный номер.
+          </p>
+        </div>
 
-      <div className="my-10 sm:my-20 z-4">
-        {inputError && (
-          <p className="bg-red-500 text-lg text-white p-2 mb-5">{inputError}</p>
-        )}
-        <BankCard onSubmitData={CardDataHandler} />
-      </div>
-      <div className="my-10 sm:my-20 z-3">
-        <BankCardWithAnimation onSubmitData={CardWithAnimationDataHandler} />
+        <div className="my-10 sm:my-20 z-4">
+          {inputError && (
+            <p className="bg-red-500 text-lg text-white p-2 mb-5">
+              {inputError}
+            </p>
+          )}
+          <BankCard onSubmitData={CardDataHandler} />
+        </div>
+        <div className="my-10 sm:my-20 z-3">
+          <BankCardWithAnimation onSubmitData={CardWithAnimationDataHandler} />
+        </div>
       </div>
     </div>
   );

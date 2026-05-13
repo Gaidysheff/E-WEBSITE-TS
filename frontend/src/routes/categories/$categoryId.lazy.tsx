@@ -35,38 +35,40 @@ function CategoryPage() {
     <>
       <link rel="canonical" href={`${BASE_URL}${currentPathname}`} />
 
-      <div className="py-9">
-        <div className="flex items-center justify-center ">
-          <img
-            src={`${BASE_URL}${selectedCategory.image}`}
-            width={30}
-            height={30}
-            // className="stroke-blue-500 dark:stroke-gray-200"
-            alt="thumbnail"
-          />
-          <p className="font-semibold text-center pl-3">
-            {selectedCategory.name}
-          </p>
-        </div>
-        <div className="flex-center flex-wrap my-6 gap-4">
-          {categories.map((cat) => (
-            <CategoryBtn key={cat.id} cat={cat} />
-          ))}
-        </div>
+      <div className="container">
+        <div className="py-9">
+          <div className="flex items-center justify-center ">
+            <img
+              src={`${BASE_URL}${selectedCategory.image}`}
+              width={30}
+              height={30}
+              // className="stroke-blue-500 dark:stroke-gray-200"
+              alt="thumbnail"
+            />
+            <p className="font-semibold text-center pl-3">
+              {selectedCategory.name}
+            </p>
+          </div>
+          <div className="flex-center flex-wrap my-6 gap-4">
+            {categories.map((cat) => (
+              <CategoryBtn key={cat.id} cat={cat} />
+            ))}
+          </div>
 
-        <div className="flex-center flex-wrap my-6 gap-4">
-          {products.length > 0 ? (
-            products.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))
-          ) : (
-            <div
-              className="italic font-semibold text-xl text-red-500 text-center
-              py-10"
-            >
-              Извините, товаров в данной категории не найдено.
-            </div>
-          )}
+          <div className="flex-center flex-wrap my-6 gap-4">
+            {products.length > 0 ? (
+              products.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))
+            ) : (
+              <div
+                className="italic font-semibold text-xl text-red-500 text-center
+                py-10"
+              >
+                Извините, товаров в данной категории не найдено.
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </>

@@ -343,263 +343,265 @@ function CheckoutPage() {
   }, []);
 
   return (
-    <div
-      className="grid lg:grid-cols-12 gap-8 sm:py-10 xsm:mb-2 sm:mb-8
-      scale-[0.85] 2xsm:scale-[0.9] xsm:scale-[0.95] sm:scale-100"
-    >
-      {/* ЛЕВАЯ ЧАСТЬ (8 колонок) */}
+    <div className="container">
       <div
-        className="lg:col-span-8 space-y-6 max-2xsm:-mt-40 max-xsm:-mt-20
-          max-sm:-mt-8"
+        className="grid lg:grid-cols-12 gap-8 sm:py-10 xsm:mb-2 sm:mb-8
+        scale-[0.85] 2xsm:scale-[0.9] xsm:scale-[0.95] sm:scale-100"
       >
-        {/* ----------------- 1. Получатель и Адрес ----------------- */}
-        <CheckoutSection
-          title="1. Shipping Address"
-          icon={<MapPin />}
-          isCompleted={!!user?.address?.street}
-        >
-          <ShippingInfo user={user} isLoading={isLoading} forCheckoutPage />
-          <Modal
-            addressForm
-            address={address}
-            isModalOpen={isAddressModalOpen}
-            setIsModalOpen={setIsAddressModalOpen}
-          >
-            <AddressFormTanstack
-              address={address}
-              setIsModalOpen={setIsAddressModalOpen}
-            />
-          </Modal>
-        </CheckoutSection>
-        {/* ---------------------- 2. Доставка ---------------------- */}
-
-        <CheckoutSection
-          title="2. Delivery Method"
-          icon={<Truck />}
-          isCompleted
-        >
-          <DeliveryOptions
-            options={options} // Передаем уже загруженные данные
-            selectedId={delivery?.id}
-            onSelect={setDelivery}
-            loading={loadingOptions} // Передаем состояние загрузки
-          />
-          {delivery?.is_pickup === true && (
-            <div className="mt-6">
-              <YandexMap />
-            </div>
-          )}
-        </CheckoutSection>
-
-        {/* ----------------------- 3. Оплата ----------------------- */}
-        <bankCardForm.Subscribe
-          selector={(state) => state.canSubmit}
-          children={(canSubmit) => (
-            <CheckoutSection
-              title="3. Payment Method"
-              icon={<CreditCard />}
-              isCompleted={paymentMethod === "card" ? canSubmit : true}
-              // Теперь маркер "Done" будет загораться мгновенно
-            >
-              <PaymentMethodToggle
-                selected={paymentMethod}
-                onSelect={setPaymentMethod}
-              />
-
-              {paymentMethod === "card" && (
-                <div className="mt-6">
-                  <BankCardWithAnimation
-                    // onSubmitData={CardDataHandler}
-                    bankCardForm={bankCardForm}
-                  />
-                </div>
-              )}
-              {paymentMethod === "sbp" && (
-                <div
-                  className="mt-6 p-6 bg-gray-50 rounded-xl text-center
-                    border-2 border-dashed"
-                >
-                  <Zap className="mx-auto mb-2 text-myMainColor" />
-                  <p className="text-sm text-gray-600">
-                    QR-code will be generated after clicking "Pay"
-                  </p>
-                </div>
-              )}
-            </CheckoutSection>
-          )}
-        />
-
-        {/* ---------- 4. Обзор товаров (Компактный список) ---------- */}
-        <CheckoutSection title="4. Review Items" icon={<PackageSearch />}>
-          <div className="space-y-1">
-            {items.map((item) => (
-              <MiniCartItem key={item.id} cartItem={item} />
-            ))}
-          </div>
-
-          {/* Ссылка "Вернуться к редактированию" на случай, если юзер передумал */}
-          <Link
-            from="/"
-            to={`cart/${cartCode}`}
-            className="text-xs text-primaryDark/50 hover:underline mt-4
-              inline-block"
-          >
-            Edit order in cart
-          </Link>
-        </CheckoutSection>
-      </div>
-
-      {/* ПРАВАЯ ЧАСТЬ (4 колонки) — СТИКИ-БЛОК */}
-      <div className="lg:col-span-4">
+        {/* ЛЕВАЯ ЧАСТЬ (8 колонок) */}
         <div
-          className="sticky top-24 p-6 rounded-2xl border
-            border-gray-100"
+          className="lg:col-span-8 space-y-6 max-2xsm:-mt-40 max-xsm:-mt-20
+            max-sm:-mt-8"
         >
-          <h2 className="text-xl font-bold mb-6">Order Summary</h2>
-          <div className="space-y-3 text-sm">
-            <div className="flex justify-between">
-              <span>Items total</span>
-              <span>
-                <NumericFormat
-                  value={totalPrice}
-                  displayType={"text"}
-                  decimalScale={2}
-                  fixedDecimalScale
-                  thousandSeparator=" "
-                  decimalSeparator="."
-                  // prefix={"$ "}
-                  suffix={" ₽"}
-                />
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span>Shipping</span>
-              <span>
-                <NumericFormat
-                  value={delivery?.price}
-                  displayType={"text"}
-                  decimalScale={2}
-                  fixedDecimalScale
-                  thousandSeparator=" "
-                  decimalSeparator="."
-                  // prefix={"$ "}
-                  suffix={" ₽"}
-                />
-              </span>
-            </div>
-            <div
-              className="border-t pt-3 mt-3 flex justify-between
-                font-bold text-lg"
-            >
-              <span>Total</span>
-              <span className="text-myMainColor">
-                <NumericFormat
-                  value={finalTotal}
-                  displayType={"text"}
-                  decimalScale={2}
-                  fixedDecimalScale
-                  thousandSeparator=" "
-                  decimalSeparator="."
-                  // prefix={"$ "}
-                  suffix={" ₽"}
-                />
-              </span>
-            </div>
-          </div>
-          {/* ---------------------------------------------------------- */}
-          <bankCardForm.Subscribe
-            selector={(state) => [state.canSubmit, state.isSubmitting]}
+          {/* ----------------- 1. Получатель и Адрес ----------------- */}
+          <CheckoutSection
+            title="1. Shipping Address"
+            icon={<MapPin />}
+            isCompleted={!!user?.address?.street}
           >
-            {([canSubmit, isSubmitting]) => {
-              // Вычисляем готовность внутри подписки
-              const isPaymentReady =
-                paymentMethod === "card" ? canSubmit : true;
-              const canPay = isAddressReady && isPaymentReady && !isLoading;
+            <ShippingInfo user={user} isLoading={isLoading} forCheckoutPage />
+            <Modal
+              addressForm
+              address={address}
+              isModalOpen={isAddressModalOpen}
+              setIsModalOpen={setIsAddressModalOpen}
+            >
+              <AddressFormTanstack
+                address={address}
+                setIsModalOpen={setIsAddressModalOpen}
+              />
+            </Modal>
+          </CheckoutSection>
+          {/* ---------------------- 2. Доставка ---------------------- */}
 
-              return (
-                <button
-                  type="button"
-                  disabled={!canPay || isSubmitting}
-                  onClick={() => bankCardForm.handleSubmit()}
-                  className="w-full mt-8 bg-primaryDarker text-primaryLighter
-                    h-auto p-3 rounded-xl transition-transform cursor-pointer
-                    text-sm xsm:text-base sm:text-lg lg:text-base xl:text-lg
-                    border-2 border-primaryDark transition-all duration-300
-                    active:hover:bg-primary hover:scale-105
-                    disabled:hover:scale-100 disabled:opacity-50
-                    disabled:cursor-not-allowed disabled:text-primary
-                    drop-shadow-[5px_5px_5px_rgba(0,0,0,0.5)]
-                    dark:shadow-[5px_5px_5px_rgba(255,255,255,0.5)]"
-                >
-                  {isSubmitting ? (
-                    // <Loader className="animate-spin mx-auto" />
-                    <PaymentLoader />
-                  ) : (
-                    <>
-                      <span className="lg:hidden">Place Order & Pay </span>
-                      <span className="max-lg:hidden">
-                        Place Order <br /> & <br />
-                        Pay{" "}
-                      </span>
-                      <NumericFormat
-                        value={finalTotal}
-                        displayType={"text"}
-                        decimalScale={2}
-                        fixedDecimalScale
-                        thousandSeparator=" "
-                        decimalSeparator="."
-                        // prefix={"$ "}
-                        suffix={" ₽"}
-                        className="font-bold"
-                      />
-                    </>
-                  )}
-                </button>
-              );
-            }}
-          </bankCardForm.Subscribe>
-
-          {/* ---------------------------------------------------------- */}
-
-          {delivery?.is_pickup === true &&
-            paymentMethod === "card" &&
-            !user?.address?.street && (
-              <div
-                className="mt-10 p-4 bg-blue-50 rounded-lg text-xs
-                text-blue-700"
-              >
-                ℹ️ Для оплаты картой при самовывозе укажите ваши данные как
-                плательщика.
+          <CheckoutSection
+            title="2. Delivery Method"
+            icon={<Truck />}
+            isCompleted
+          >
+            <DeliveryOptions
+              options={options} // Передаем уже загруженные данные
+              selectedId={delivery?.id}
+              onSelect={setDelivery}
+              loading={loadingOptions} // Передаем состояние загрузки
+            />
+            {delivery?.is_pickup === true && (
+              <div className="mt-6">
+                <YandexMap />
               </div>
             )}
-        </div>
-      </div>
-      {/* {bankCardForm.state.isSubmitting && <PaymentLoader />} */}
+          </CheckoutSection>
 
-      <Modal
-        isModalOpen={is3DSModalOpen}
-        setIsModalOpen={setIs3DSModalOpen}
-        iframe
-      >
-        <form
-          method="POST"
-          target="3ds-frame"
-          ref={formRef}
-          action={threeDSData?.acsUrl}
+          {/* ----------------------- 3. Оплата ----------------------- */}
+          <bankCardForm.Subscribe
+            selector={(state) => state.canSubmit}
+            children={(canSubmit) => (
+              <CheckoutSection
+                title="3. Payment Method"
+                icon={<CreditCard />}
+                isCompleted={paymentMethod === "card" ? canSubmit : true}
+                // Теперь маркер "Done" будет загораться мгновенно
+              >
+                <PaymentMethodToggle
+                  selected={paymentMethod}
+                  onSelect={setPaymentMethod}
+                />
+
+                {paymentMethod === "card" && (
+                  <div className="mt-6">
+                    <BankCardWithAnimation
+                      // onSubmitData={CardDataHandler}
+                      bankCardForm={bankCardForm}
+                    />
+                  </div>
+                )}
+                {paymentMethod === "sbp" && (
+                  <div
+                    className="mt-6 p-6 bg-gray-50 rounded-xl text-center
+                      border-2 border-dashed"
+                  >
+                    <Zap className="mx-auto mb-2 text-myMainColor" />
+                    <p className="text-sm text-gray-600">
+                      QR-code will be generated after clicking "Pay"
+                    </p>
+                  </div>
+                )}
+              </CheckoutSection>
+            )}
+          />
+
+          {/* ---------- 4. Обзор товаров (Компактный список) ---------- */}
+          <CheckoutSection title="4. Review Items" icon={<PackageSearch />}>
+            <div className="space-y-1">
+              {items.map((item) => (
+                <MiniCartItem key={item.id} cartItem={item} />
+              ))}
+            </div>
+
+            {/* Ссылка "Вернуться к редактированию" на случай, если юзер передумал */}
+            <Link
+              from="/"
+              to={`cart/${cartCode}`}
+              className="text-xs text-primaryDark/50 hover:underline mt-4
+                inline-block"
+            >
+              Edit order in cart
+            </Link>
+          </CheckoutSection>
+        </div>
+
+        {/* ПРАВАЯ ЧАСТЬ (4 колонки) — СТИКИ-БЛОК */}
+        <div className="lg:col-span-4">
+          <div
+            className="sticky top-24 p-6 rounded-2xl border
+              border-gray-100"
+          >
+            <h2 className="text-xl font-bold mb-6">Order Summary</h2>
+            <div className="space-y-3 text-sm">
+              <div className="flex justify-between">
+                <span>Items total</span>
+                <span>
+                  <NumericFormat
+                    value={totalPrice}
+                    displayType={"text"}
+                    decimalScale={2}
+                    fixedDecimalScale
+                    thousandSeparator=" "
+                    decimalSeparator="."
+                    // prefix={"$ "}
+                    suffix={" ₽"}
+                  />
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span>Shipping</span>
+                <span>
+                  <NumericFormat
+                    value={delivery?.price}
+                    displayType={"text"}
+                    decimalScale={2}
+                    fixedDecimalScale
+                    thousandSeparator=" "
+                    decimalSeparator="."
+                    // prefix={"$ "}
+                    suffix={" ₽"}
+                  />
+                </span>
+              </div>
+              <div
+                className="border-t pt-3 mt-3 flex justify-between
+                  font-bold text-lg"
+              >
+                <span>Total</span>
+                <span className="text-myMainColor">
+                  <NumericFormat
+                    value={finalTotal}
+                    displayType={"text"}
+                    decimalScale={2}
+                    fixedDecimalScale
+                    thousandSeparator=" "
+                    decimalSeparator="."
+                    // prefix={"$ "}
+                    suffix={" ₽"}
+                  />
+                </span>
+              </div>
+            </div>
+            {/* ---------------------------------------------------------- */}
+            <bankCardForm.Subscribe
+              selector={(state) => [state.canSubmit, state.isSubmitting]}
+            >
+              {([canSubmit, isSubmitting]) => {
+                // Вычисляем готовность внутри подписки
+                const isPaymentReady =
+                  paymentMethod === "card" ? canSubmit : true;
+                const canPay = isAddressReady && isPaymentReady && !isLoading;
+
+                return (
+                  <button
+                    type="button"
+                    disabled={!canPay || isSubmitting}
+                    onClick={() => bankCardForm.handleSubmit()}
+                    className="w-full mt-8 bg-primaryDarker text-primaryLighter
+                      h-auto p-3 rounded-xl transition-transform cursor-pointer
+                      text-sm xsm:text-base sm:text-lg lg:text-base xl:text-lg
+                      border-2 border-primaryDark transition-all duration-300
+                      active:hover:bg-primary hover:scale-105
+                      disabled:hover:scale-100 disabled:opacity-50
+                      disabled:cursor-not-allowed disabled:text-primary
+                      drop-shadow-[5px_5px_5px_rgba(0,0,0,0.5)]
+                      dark:shadow-[5px_5px_5px_rgba(255,255,255,0.5)]"
+                  >
+                    {isSubmitting ? (
+                      // <Loader className="animate-spin mx-auto" />
+                      <PaymentLoader />
+                    ) : (
+                      <>
+                        <span className="lg:hidden">Place Order & Pay </span>
+                        <span className="max-lg:hidden">
+                          Place Order <br /> & <br />
+                          Pay{" "}
+                        </span>
+                        <NumericFormat
+                          value={finalTotal}
+                          displayType={"text"}
+                          decimalScale={2}
+                          fixedDecimalScale
+                          thousandSeparator=" "
+                          decimalSeparator="."
+                          // prefix={"$ "}
+                          suffix={" ₽"}
+                          className="font-bold"
+                        />
+                      </>
+                    )}
+                  </button>
+                );
+              }}
+            </bankCardForm.Subscribe>
+
+            {/* ---------------------------------------------------------- */}
+
+            {delivery?.is_pickup === true &&
+              paymentMethod === "card" &&
+              !user?.address?.street && (
+                <div
+                  className="mt-10 p-4 bg-blue-50 rounded-lg text-xs
+                  text-blue-700"
+                >
+                  ℹ️ Для оплаты картой при самовывозе укажите ваши данные как
+                  плательщика.
+                </div>
+              )}
+          </div>
+        </div>
+        {/* {bankCardForm.state.isSubmitting && <PaymentLoader />} */}
+
+        <Modal
+          isModalOpen={is3DSModalOpen}
+          setIsModalOpen={setIs3DSModalOpen}
+          iframe
         >
-          <input type="hidden" name="PaReq" value={threeDSData?.paReq} />
-          <input
-            type="hidden"
-            name="TransactionId"
-            value={threeDSData?.transactionId}
-          />
-          <input
-            type="hidden"
-            name="TermUrl"
-            value={`${BASE_URL}/api/payments/post3ds/`}
-          />
-        </form>
-      </Modal>
+          <form
+            method="POST"
+            target="3ds-frame"
+            ref={formRef}
+            action={threeDSData?.acsUrl}
+          >
+            <input type="hidden" name="PaReq" value={threeDSData?.paReq} />
+            <input
+              type="hidden"
+              name="TransactionId"
+              value={threeDSData?.transactionId}
+            />
+            <input
+              type="hidden"
+              name="TermUrl"
+              value={`${BASE_URL}/api/payments/post3ds/`}
+            />
+          </form>
+        </Modal>
+      </div>
     </div>
   );
 }

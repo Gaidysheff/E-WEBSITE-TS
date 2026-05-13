@@ -25,7 +25,7 @@ function Users() {
   }, []);
 
   return (
-    <>
+    <div className="container">
       <div className="text-xl font-semibold underline">List of Users</div>
       {loading ? (
         <p>Loading data...</p>
@@ -39,6 +39,6 @@ function Users() {
           ))}
         </div>
       )}
-    </>
+    </div>
   );
 }

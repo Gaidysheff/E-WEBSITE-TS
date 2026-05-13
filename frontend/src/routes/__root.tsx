@@ -74,7 +74,9 @@ function RootComponent() {
                 <CategoryContextProvider>
                   <div className="h-screen">
                     <NavBar />
-                    <div className="container min-h-6/10">
+                    <div className="min-h-6/10">
+                      {/* <div className="container min-h-6/10"> */}
+
                       <Outlet />
                     </div>
                     <Footer />

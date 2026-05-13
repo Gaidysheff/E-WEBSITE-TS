@@ -35,7 +35,7 @@ function ProfilePage() {
   });
 
   return (
-    <>
+    <div className="container">
       <link rel="canonical" href={`${BASE_URL}${currentPathname}`} />
 
       <ShippingInfo user={user} isLoading={isLoading} />
@@ -57,6 +57,6 @@ function ProfilePage() {
 
       <Orders />
       <Wishlist />
-    </>
+    </div>
   );
 }

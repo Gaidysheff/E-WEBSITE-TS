@@ -16,20 +16,24 @@ function SearchComponent() {
   const { query } = Route.useSearch();
 
   return (
-    <section className="w-full px-6 py-16 text-center">
-      <p className="font-thin text-center text-xl">
-        You searched for - <span className="font-semibold">{query}</span>
-      </p>
-      <div className="flex-center flex-wrap my-9 gap-4">
-        {searchedProducts.length > 0 ? (
-          searchedProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))
-        ) : (
+    <section>
+      <div className="container">
+        <div className="w-full px-6 py-16 text-center">
           <p className="font-thin text-center text-xl">
-            There is no product matching your search input yet.
+            You searched for - <span className="font-semibold">{query}</span>
           </p>
-        )}
+          <div className="flex-center flex-wrap my-9 gap-4">
+            {searchedProducts.length > 0 ? (
+              searchedProducts.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))
+            ) : (
+              <p className="font-thin text-center text-xl">
+                There is no product matching your search input yet.
+              </p>
+            )}
+          </div>
+        </div>
       </div>
     </section>
   );

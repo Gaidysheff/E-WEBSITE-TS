@@ -12,7 +12,7 @@ export const Route = createLazyFileRoute("/_authenticated/users_tanstack")({
 function UsersPage() {
   const { users } = Route.useLoaderData() as LoaderData;
   return (
-    <div>
+    <div className="container">
       {users.map((item, index: number) => (
         <div key={index} className="my-5">
           <div> ID: {item.id}</div>

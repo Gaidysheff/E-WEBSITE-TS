@@ -50,7 +50,7 @@ function IndividualProductComponent() {
         <link rel="canonical" href={`${BASE_URL}${currentPathname}`} />
       </>
 
-      <>
+      <div className="container">
         <ProductInfo product={product} isAuthorized={isAuthorized} />
 
         <CustomerReviews
@@ -75,7 +75,7 @@ function IndividualProductComponent() {
           detailPage
           loadingFromDetailPage={false}
         />
-      </>
+      </div>
     </>
   );
 }

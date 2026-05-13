@@ -39,6 +39,7 @@ function RouteComponent() {
         <Hero productsForCarousel={productsForCarousel} />
 
         <CategorySection />
+
         <ProductSection
           title="Featured Products"
           similar_products={[]}

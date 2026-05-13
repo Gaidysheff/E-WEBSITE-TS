@@ -73,25 +73,29 @@ const ProductSection = ({
   }
 
   return (
-    <section className="mx-auto my-30">
-      <h2 className="my-9 text-center text-xl font-bold text-primaryDark">
-        {isLoading || loadingFromDetailPage ? (
-          <Skeleton width={300} height={40} />
-        ) : (
-          `${title}`
-        )}
-      </h2>
+    <section>
+      <div className="container">
+        <div className="mx-auto py-10">
+          <h2 className="py-9 text-center text-xl font-bold text-primaryDark">
+            {isLoading || loadingFromDetailPage ? (
+              <Skeleton width={300} height={40} />
+            ) : (
+              `${title}`
+            )}
+          </h2>
 
-      {/* Content */}
-      <div className="flex-center flex-wrap gap-6">
-        {isLoading && <ProductCardSkeleton cards={10} />}
+          {/* Content */}
+          <div className="flex-center flex-wrap gap-6">
+            {isLoading && <ProductCardSkeleton cards={10} />}
 
-        {loadingFromDetailPage && <ProductCardSkeleton cards={5} />}
+            {loadingFromDetailPage && <ProductCardSkeleton cards={5} />}
 
-        {products &&
-          products.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
+            {products &&
+              products.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+          </div>
+        </div>
       </div>
     </section>
   );
