@@ -107,7 +107,7 @@ const NavItems = ({ mobile }: Props) => {
 
           {cartItemsCount == 0 || (
             <span
-              className="absolute top-0 right-0 px-3 py-1 bg-red-500
+              className="absolute top-0 right-0 px-3 py-1 bg-myMainColor
                 rounded-full text-white group-hover/cart:bg-red-400"
             >
               {cartItemsCount}

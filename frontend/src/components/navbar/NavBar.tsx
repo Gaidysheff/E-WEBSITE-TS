@@ -4,6 +4,7 @@ import MobileNavbar from "./MobileNavbar";
 import NavItems from "./NavItems";
 import SearchButton from "./SearchButton";
 import SearchForm from "./SearchForm";
+import SettingsDrawer from "@/components/settings/SettingsDrawer.tsx";
 import ThemeSwitch from "./ThemeSwitch";
 import { useState } from "react";
 import { useTheme } from "@/store/ThemeContext";
@@ -45,6 +46,8 @@ const NavBar = () => {
               <div className="max-lg:hidden">
                 <SearchForm />
               </div>
+
+              <SettingsDrawer />
 
               <FilterDrawer />
 
