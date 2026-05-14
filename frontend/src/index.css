@@ -117,12 +117,15 @@
   /* ------------- Main Color ------------------- */
   --color-myMainColorLighter: var(--myMainColorLighter);
   --color-myMainColorLight: var(--myMainColorLight);
-
   --color-myMainColor: var(--myMainColor);
   /* --color-myMainColor: oklch(0.62 0.251 25); */
-
   --color-myMainColorDark: var(--myMainColorDark);
   --color-myMainColorDarker: var(--myMainColorDarker);
+
+  /* -------- Новые контрастные цвета -------------- */
+  --color-secondaryColor: var(--secondaryColor);
+  --color-secondaryColorLight: var(--secondaryColorLight);
+  --color-secondaryColorDark: var(--secondaryColorDark);
 }
 
 html {

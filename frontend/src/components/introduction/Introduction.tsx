@@ -23,11 +23,11 @@ const Introduction = () => {
 
             <span
               className="before:block before:absolute before:-inset-2 mx-2
-              before:skew-y-2 before:bg-primaryDark relative inline-block 
-              sm:p-1 md:p-2 lg:p-3"
+              before:skew-y-2 before:bg-secondaryColor relative inline-block 
+              sm:p-1 md:p-2 lg:p-3 z-10"
             >
               <span
-                className="relative text-primaryLight dark:text-brandDarkGray
+                className="relative text-primaryLight
                 font-rusHand font-bold text-xl 2xsm:text-2xl xsm:text-3xl 
                 sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl"
               >

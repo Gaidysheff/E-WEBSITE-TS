@@ -1,10 +1,23 @@
 import { Button } from "@/components/ui/button.tsx";
+import { Switch } from "@/components/ui/switch";
 import { useColor } from "@/store/ColorContext.tsx";
 
 const ColorSetup = () => {
   // Забираем глобальный стейт из контекста
-  const { hue, lightness, chroma, setHue, setLightness, setChroma } =
-    useColor();
+  const {
+    hue,
+    lightness,
+    chroma,
+    isContrast,
+    setHue,
+    setLightness,
+    setChroma,
+    setIsContrast,
+  } = useColor();
+
+  // Вычисляем тон для превью-квадрата
+  const secondaryHue = hue < 180 ? hue + 180 : hue - 180;
+  const secondaryColorPreview = `oklch(${lightness}% ${chroma / 100} ${secondaryHue})`;
 
   const playTick = () => {
     const tick = new Audio("/public/tick.mp3");
@@ -13,9 +26,23 @@ const ColorSetup = () => {
   };
 
   return (
-    <section className="mb-20">
-      {/* --------------------- Слайдеры цвета ------------------ */}
+    <section className="mb-20 space-y-6">
       <div className="flex flex-col items-center gap-4 py-10">
+        {/* ---------------- Переключатель режимов --------------- */}
+        <div
+          className="flex flex-col items-center justify-between border-b
+          pb-4 gap-5"
+        >
+          <span className="text-sm font-medium">Color Scheme Mode</span>
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-gray-500">
+              {isContrast ? "Contrast" : "Single"}
+            </span>
+            <Switch checked={isContrast} onCheckedChange={setIsContrast} />
+          </div>
+        </div>
+
+        {/* --------------------- Слайдеры цвета ------------------ */}
         <div className="w-70 relative z-[100]">
           <input
             type="range"
@@ -32,6 +59,18 @@ const ColorSetup = () => {
           <p className="text-center font-medium">
             Hue: <span className="text-myMainColor">{hue}°</span>
           </p>
+
+          {/* Маленький бокс-дисплей для отображения Secondary Color */}
+          {isContrast && (
+            <div className="flex items-center gap-2 animate-in fade-in duration-300">
+              <span className="text-xs text-gray-400">Secondary:</span>
+              <div
+                className="w-6 h-6 rounded-md border shadow-inner transition-all duration-300"
+                style={{ backgroundColor: secondaryColorPreview }}
+                title={`Complementary Hue: ${secondaryHue}°`}
+              />
+            </div>
+          )}
 
           <input
             type="range"
