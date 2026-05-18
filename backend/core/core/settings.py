@@ -171,8 +171,15 @@ MEDIA_URL = "/media/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # CORS settings
+
+CORS_ALLOW_CREDENTIALS = True  # Обязательно разрешаем передачу кук/авторизации
+
 if DEBUG:
-    CORS_ALLOW_ALL_ORIGINS = True
+    # CORS_ALLOW_ALL_ORIGINS = True
+    CORS_ALLOWED_ORIGINS = [
+        "http://localhost:5173",  # Порт Vite/React фронтенда
+        "http://127.0.0.1:5173",
+    ]
 else:
     CORS_ALLOWED_ORIGINS = [
         "https://test.gaidysheff.ru",
@@ -180,7 +187,6 @@ else:
         "http://test.gaidysheff.ru",
         "http://www.test.gaidysheff.ru",
     ]
-CORS_ALLOWS_CREDENTIALS = True
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 

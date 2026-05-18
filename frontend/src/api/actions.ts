@@ -287,9 +287,15 @@ export const paymentActionCP: CloudPaymentsHandler = async (paymentData) => {
     const response = await api.post(CLOUD_PAYMENTS_URL, paymentData);
     return response.data; // Возвращаем данные от Django (Success: true и т.д.)
   } catch (error: any) {
-    throw new Error(
-      error.response?.data?.message || "An unknown error occured",
+    // Чтобы в будущем не гадать, выводим реальную ошибку запроса в консоль
+    console.error(
+      "Ошибка внутри paymentActionCP:",
+      error?.response?.data || error.message,
     );
+    throw error;
+    // throw new Error(
+    //   error.response?.data?.message || "An unknown error occured",
+    // );
   }
 };
 

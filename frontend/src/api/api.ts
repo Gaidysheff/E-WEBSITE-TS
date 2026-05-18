@@ -6,6 +6,9 @@ export const BASE_URL = env.VITE_API_URL;
 const api = axios.create({
   baseURL: env.VITE_API_URL,
   timeout: 5000,
+  withCredentials: true, // Передает куки сессии (sessionid) на бэкенд автоматически
+  xsrfCookieName: "csrftoken", // Автоматически берет CSRF из куки
+  xsrfHeaderName: "X-CSRFToken", // И вставляет в заголовок
   headers: {
     "Content-Type": "application/json",
     accept: "application/json",

@@ -28,7 +28,6 @@ function RootComponent() {
 
   const currentPath = location.pathname;
 
-  // if (currentPathname.includes("products")) {}
   const noNavbar =
     location.pathname === "/login" ||
     location.pathname === "/register" ||
@@ -67,7 +66,8 @@ function RootComponent() {
               />
             )}
             {noNavbar ? (
-              <NoNavbarOutlet location={location} />
+              // <NoNavbarOutlet location={location} />
+              <Outlet />
             ) : (
               // Standard Pages with NavBar and Footer
               <UserContextProvider>
@@ -76,7 +76,6 @@ function RootComponent() {
                     <NavBar />
                     <div className="min-h-6/10">
                       {/* <div className="container min-h-6/10"> */}
-
                       <Outlet />
                     </div>
                     <Footer />

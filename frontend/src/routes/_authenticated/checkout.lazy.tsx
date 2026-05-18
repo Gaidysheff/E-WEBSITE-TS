@@ -79,7 +79,7 @@ function CheckoutPage() {
   }, []);
 
   // Остальная логика расчета цены
-  const finalTotal = totalPrice + (delivery?.price || 0);
+  const finalTotal = totalPrice + Number(delivery?.price || 0);
 
   // ======================================================================
 
@@ -167,144 +167,155 @@ function CheckoutPage() {
     setThreeDSData({ acsUrl, paReq, transactionId });
   };
 
-  const CardDataHandler = (CardData: Record<string, string>) => {
-    return new Promise((resolve, reject) => {
-      // Возвращаем Promise
+  // const CardDataHandler = (CardData: Record<string, string>) => {
+  const CardDataHandler = async (CardData: Record<string, string>) => {
+    // return new Promise((resolve, reject) => {
 
-      // console.log("Начинаем имитацию оплаты...");
+    if (isLoading) return; // Ждем загрузки профиля
 
-      // Искусственная пауза 3 секунды
-      // new Promise((res) => setTimeout(res, 3000));
+    const userEmail = user?.email || "guest@example.com";
+    const userPhone = user?.address?.phone;
+    const fullName = `${user?.first_name} ${user?.last_name}`;
+    const orderAddress = `${user?.address?.street}, ${user?.address?.city}, ${user?.address?.state}`;
 
-      if (isLoading) return; // Ждем загрузки профиля
+    // 1. Собираем данные для чека (Customer & Items)
+    // Эти данные обычно приходят из контекста корзины или профиля
+    const customerReceipt = {
+      Items: items.map((item) => ({
+        label: item.product.name, // Наименование товара
+        price: item.product.price, // Цена за единицу
+        quantity: item.quantity, // Количество
+        amount: item.product.price * item.quantity, // Сумма по позиции
+        vat: 22, // Ставка НДС (если есть)
+        method: 0, // Признак способа расчета (полная оплата)
+        object: 0, // Признак предмета расчета (товар)
+      })),
+      email: userEmail, // Обязательно для электронного чека
+      phone: userPhone, // Обязательно, если нет email
+      totalAmount: finalTotal,
+      shippingMethod: delivery?.id,
+      paymentMethod: paymentMethod,
+      // Если это самовывоз, адрес берем из константы магазина
+      shippingAddress:
+        delivery?.is_pickup === true
+          ? "Self-pickup: Pechatnikov 1"
+          : orderAddress,
+      taxationSystem: 0, // Система налогообложения магазина
+    };
 
-      const userEmail = user?.email || "guest@example.com";
-      const userPhone = user?.address?.phone;
-      const fullName = `${user?.first_name} ${user?.last_name}`;
-      const orderAddress = `${user?.address?.street}, ${user?.address?.city}, ${user?.address?.state}`;
+    // ================ Эмуляция =====================
 
-      // 1. Собираем данные для чека (Customer & Items)
-      // Эти данные обычно приходят из контекста корзины или профиля
-      const customerReceipt = {
-        Items: items.map((item) => ({
-          label: item.product.name, // Наименование товара
-          price: item.product.price, // Цена за единицу
-          quantity: item.quantity, // Количество
-          amount: item.product.price * item.quantity, // Сумма по позиции
-          vat: 22, // Ставка НДС (если есть)
-          method: 0, // Признак способа расчета (полная оплата)
-          object: 0, // Признак предмета расчета (товар)
-        })),
-        email: userEmail, // Обязательно для электронного чека
-        phone: userPhone, // Обязательно, если нет email
-        totalAmount: finalTotal,
-        shippingMethod: delivery?.id,
-        paymentMethod: paymentMethod,
-        // Если это самовывоз, адрес берем из константы магазина
-        shippingAddress:
-          delivery?.is_pickup === true
-            ? "Self-pickup: Pechatnikov 1"
-            : orderAddress,
-        taxationSystem: 0, // Система налогообложения магазина
-      };
+    if (CardData.userName === "FAIL TEST") {
+      // new Promise((res) => setTimeout(res, 2000));
+      toast.error("Имитация ошибки: Карта отклонена");
+      // return reject("Declined");
+      throw new Error("Declined");
+    }
 
-      // ================ Эмуляция =====================
+    // ================== Код от CloudPayments =============================
+    const checkout = new cp.Checkout({
+      publicId: "test_api_000000000000000001",
+    });
 
-      if (CardData.userName === "FAIL TEST") {
-        new Promise((res) => setTimeout(res, 2000));
-        toast.error("Имитация ошибки: Карта отклонена");
-        return reject("Declined");
-      }
+    const fieldValues = {
+      cvv: CardData.cvc,
+      cardNumber: CardData.cardNumber,
+      expDateMonth: CardData.month,
+      expDateYear: CardData.year.slice(-2), // Превратит "2026" в "26"
+    };
 
-      // ==================================================
-
-      // ================== Код от CloudPayments =============================
-      const checkout = new cp.Checkout({
-        publicId: "test_api_000000000000000001",
+    try {
+      // Ждем создания криптограммы (если библиотека CP поддерживает Promise,
+      // если нет — оставляем callback, но выносим вызов API наружу)
+      const cryptogram = await new Promise<string>((res, rej) => {
+        checkout
+          .createPaymentCryptogram(fieldValues)
+          .then((crypto) => res(crypto))
+          .catch((err) => rej(err));
       });
 
-      const fieldValues = {
-        cvv: CardData.cvc,
-        cardNumber: CardData.cardNumber,
-        expDateMonth: CardData.month,
-        expDateYear: CardData.year.slice(-2), // Превратит "2026" в "26"
+      console.log("Криптограмма успешно создана:", cryptogram);
+      // checkout
+      //   .createPaymentCryptogram(fieldValues)
+      //   .then(async (cryptogram: string) => {
+      //     // Криптограмма готова!
+      //     console.log("Криптограмма успешно создана:", cryptogram);
+
+      // 2. Формируем финальный объект для нашего Бэкенда
+      const paymentData = {
+        cart_code: cartCode,
+        amount: finalTotal, // Из useCart + Delivery
+        currency: "RUB",
+        name: CardData.userName, // Для банковского эквайринга (латиница)
+        cryptogram: cryptogram, // Используем НАСТОЯЩУЮ криптограмму
+        invoiceId: `INV-${Date.now()}`, // Генерация ID заказа
+        description: `Оплата заказа в магазине`,
+        // Добавляем данные для фискализации
+        jsonData: JSON.stringify({
+          customerReceipt, // Облачная касса возьмет данные отсюда
+          userContact: fullName, // Настоящее имя из профиля
+          address: orderAddress, // Адрес доставки
+        }),
       };
 
-      checkout
-        .createPaymentCryptogram(fieldValues)
-        .then(async (cryptogram: string) => {
-          // Криптограмма готова!
-          console.log("Криптограмма успешно создана:", cryptogram);
+      // Прямой линейный вызов без лишних вложенностей
+      const result = (await paymentActionCP(paymentData)) as CPResponse;
 
-          // ================ Эмуляция =====================
-          if (CardData.userName === "SUCCESS TEST") {
-            new Promise((res) => setTimeout(res, 2000));
-            navigate({ to: "/success", search: { cryptogram } });
-            return resolve({ Success: true });
-          }
+      if (result.Success) {
+        toast.success("Payment successful!");
 
-          // if (CardData.userName === "FAIL TEST") {
-          //   new Promise((res) => setTimeout(res, 2000));
-          //   toast.error("Имитация ошибки: Карта отклонена");
-          //   return reject("Declined");
-          // }
+        // clearCart(); // Очищаем стейт
 
-          // ==================================================
-
-          // 2. Формируем финальный объект для нашего Бэкенда
-          const paymentData = {
-            cart_code: cartCode,
-            amount: totalPrice, // Из useCart
-            currency: "RUB",
-            name: CardData.userName, // Для банковского эквайринга (латиница)
-            cryptogram: cryptogram, // Используем НАСТОЯЩУЮ криптограмму
-            invoiceId: `INV-${Date.now()}`, // Генерация ID заказа
-            description: `Оплата заказа в магазине`,
-            // Добавляем данные для фискализации
-            jsonData: JSON.stringify({
-              customerReceipt, // Облачная касса возьмет данные отсюда
-              userContact: fullName, // Настоящее имя из профиля
-              address: orderAddress, // Адрес доставки
-            }),
-          };
-
-          try {
-            const result = (await paymentActionCP(paymentData)) as CPResponse;
-
-            if (result.Success) {
-              toast.success("Payment successful!");
-
-              clearCart(); // Метод из useCart()
-
-              navigate({
-                to: "/success", // Улетаем на страницу успеха
-                search: { orderId: result.TransactionId }, // Передаем ID
-                // search: { orderId: result.TransactionId, cryptogram }, // Передаем ID
-              });
-              resolve(result); // Успех: перенаправляем на страницу "Спасибо"
-            } else if (result.Message === "Need3dSecure") {
-              // Имитация 3D Secure (если транзакция требует подтверждения SMS)
-              handle3DSecure(result.AcsUrl, result.PaReq, result.TransactionId);
-            } else {
-              // ВМЕСТО navigate({ to: "/failed" })
-              // Просто показываем ошибку и позволяем юзеру попробовать снова
-              toast.error(`Payment declined: ${result.Message}`, {
-                position: "top-center",
-                autoClose: 5000,
-              });
-              reject(result.Message); // Ошибка: например, "Недостаточно средств"
-            }
-          } catch (apiError) {
-            toast.error("Connection error. Please try again.");
-            reject("Ошибка связи с сервером - Network error");
-          }
-        })
-        .catch((errors) => {
-          console.log("🚀 ~ CheckoutPage ~ errors:", errors);
-          reject("Ошибка валидации карты на стороне шлюза");
+        await navigate({
+          to: "/success",
+          search: { orderId: result.TransactionId, cryptogram },
         });
-    });
+
+        return result;
+      } else {
+        toast.error(`Payment declined: ${result.Message}`);
+        throw new Error(result.Message);
+      }
+
+      // try {
+      //   const result = (await paymentActionCP(paymentData)) as CPResponse;
+
+      //   if (result.Success) {
+      //     toast.success("Payment successful!");
+
+      //     clearCart(); // Метод из useCart()
+
+      //     navigate({
+      //       to: "/success", // Улетаем на страницу успеха
+      //       search: { orderId: result.TransactionId }, // Передаем ID
+      //       // search: { orderId: result.TransactionId, cryptogram }, // Передаем ID
+      //     });
+      //     resolve(result); // Успех: перенаправляем на страницу "Спасибо"
+      //   } else if (result.Message === "Need3dSecure") {
+      //     // Имитация 3D Secure (если транзакция требует подтверждения SMS)
+      //     handle3DSecure(result.AcsUrl, result.PaReq, result.TransactionId);
+      //   } else {
+      //     // ВМЕСТО navigate({ to: "/failed" })
+      //     // Просто показываем ошибку и позволяем юзеру попробовать снова
+      //     toast.error(`Payment declined: ${result.Message}`, {
+      //       position: "top-center",
+      //       autoClose: 5000,
+      //     });
+      //     reject(result.Message); // Ошибка: например, "Недостаточно средств"
+      //   }
+    } catch (apiError: any) {
+      // Выведите полную ошибку в консоль, чтобы понять её природу:
+      console.error("=== ПОДРОБНОСТИ ОШИБКИ АПИ ===", apiError);
+      console.log("Статус ошибки:", apiError?.response?.status);
+      console.log("Данные ответа:", apiError?.response?.data);
+      toast.error("Connection error. Please try again.");
+      throw apiError;
+    }
   };
+  // .catch((errors) => {
+  //   console.log("🚀 ~ CheckoutPage ~ errors:", errors);
+  //   reject("Ошибка валидации карты на стороне шлюза");
+  // });
 
   useEffect(() => {
     if (paymentMethod !== "card") {

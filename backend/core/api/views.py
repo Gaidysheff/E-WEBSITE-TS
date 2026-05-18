@@ -1,12 +1,12 @@
 from django.db import transaction
-
 import stripe
+import json
 from django.conf import settings
 from django.shortcuts import get_object_or_404, render
 from django.contrib.auth import get_user_model
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Q, Max
-
+from django.http import JsonResponse
 import requests
 from requests.auth import HTTPBasicAuth
 
@@ -41,13 +41,24 @@ from .serializers import (
     WishlistSerializer,
     DeliveryOptionSerializer,
 )
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import (
+    api_view,
+    authentication_classes,
+    permission_classes,
+)
+from django.views.decorators.csrf import csrf_exempt  # Если React на другом порту
 
 # from rest_framework import permissions
 from rest_framework.permissions import AllowAny
 
 from django.http import HttpResponse
-from django.views.decorators.csrf import csrf_exempt  # Если React на другом порту
+from rest_framework.authentication import SessionAuthentication
+
+
+class UnsafeSessionAuthentication(SessionAuthentication):
+    def enforce_csrf(self, request):
+        return  # Пропускаем проверку CSRF
+
 
 User = get_user_model()
 
@@ -684,6 +695,14 @@ def get_orders(request):
     return Response(serializer.data)
 
 
+@api_view(["GET"])
+def user_orders_list(request):
+    # Извлекаем только заказы текущего пользователя и сортируем: сначала новые
+    orders = Order.objects.filter(customer_email=request.user).order_by("-created_at")
+    serializer = OrderSerializer(orders, many=True)
+    return Response(serializer.data)
+
+
 @api_view(["POST"])
 def add_address(request):
     email = request.data.get("email")
@@ -721,103 +740,282 @@ def get_address(request):
 
 
 # ======================= proceed with CloudPayments =========================
+# Этот вариант с использованием DRF не хочет отключать авторизацию,
+# поэтому приводит к ошибке 403.
+# Ниже эта вьюшка переписаны в "чистом" Django/
+# ------------------------------------------------------------------
+# # 1. Сначала говорим Django, что это API-вьюшка
+# @api_view(["POST"])
+# # 2. Затем ПОЛНОСТЬЮ отключаем встроенную аутентификацию
+# # (чтобы не искал куки/CSRF)
+# @authentication_classes([])
+# # 3. Затем разрешаем доступ всем (перебиваем глобальный IsAuthenticated)
+# @permission_classes([AllowAny])
+# # 4. В самом конце отключаем CSRF на уровне ядра Django
+# @csrf_exempt
+# def process_payment(request):
+#     # Получаем данные из запроса
+#     cart_code = request.data.get("cart_code")
+
+#     try:
+#         # Ищем корзину ТОЛЬКО по cart_code.
+#         # Это сработает и для авторизованных пользователей, и для гостей.
+#         cart = Cart.objects.get(cart_code=cart_code)
+
+#     # try:
+#     #     # Ищем корзину, которая ПРИНАДЛЕЖИТ юзеру И имеет нужный КОД
+#     #     if request.user and request.user.is_authenticated:
+#     #         cart = Cart.objects.get(user=request.user, cart_code=cart_code)
+#     #     else:
+#     #         # Для гостевой оплаты (если вы её разрешаете)
+#     #         cart = Cart.objects.get(cart_code=cart_code, user__isnull=True)
+
+#     except Cart.DoesNotExist:
+#         return Response({"error": "Cart not found or access denied"}, status=404)
+
+#         # 2. Считаем итоговую сумму на сервере
+#     total_amount = sum(item.total_price for item in cart.cartitems.all())
+#     # if cart:
+#     #     total_amount = sum(item.total_price for item in cart.cartitems.all())
+
+#     if not request.data:
+#         return Response({"error": "Empty body"}, status=400)
+
+#     # Данные для CloudPayments API
+#     # (!!! поля должны начинаться с Большой буквы - это важно для CP)
+#     payload = {
+#         # "Amount": float(total_amount),  # Берем честную сумму из БД,
+#         "Amount": int(total_amount * 100) / 100,  # Берем честную сумму из БД,
+#         # "Amount": request.data.get("amount"),
+#         "Currency": request.data.get("currency", "RUB"),
+#         "Name": request.data.get("name"),
+#         "CardCryptogramPacket": request.data.get("cryptogram"),
+#         "InvoiceId": request.data.get("invoiceId"),
+#         "Description": request.data.get("description"),
+#     }
+
+#     # print("CHECK-payload:", payload)
+
+#     # 3. Делаем запрос на правильный URL
+#     url = "https://api.cloudpayments.ru/payments/cards/charge"
+
+#     # Запрос к CloudPayments (используйте свои API Key и Public ID)
+
+#     auth = HTTPBasicAuth(
+#         settings.CLOUD_PAYMENTS_PUBLIC_ID, settings.CLOUD_PAYMENTS_API_SECRET_KEY
+#     )
+
+#     try:
+#         response = requests.post(url, json=payload, auth=auth, timeout=10)
+#         # Всегда ставьте таймаут для внешних API
+#         print(f"DEBUG: Status {response.status_code}, Content: {response.text}")
+
+#         # Имитируем успех, если получили 401 (нет ключей) или 200 (есть ключи)
+#         # В реальном коде заменить на =200
+#         if response.status_code in [200, 401]:
+#             # if response.status_code == 200: когда реально подписан на CP
+#             with transaction.atomic():
+
+#                 # Безопасное получение email, чтобы не упасть в ошибку 500,
+#                 # если user анонимен
+#                 customer_email = "guest@example.com"
+
+#                 # if request.user and request.user.is_authenticated:
+#                 #     customer_email = request.user.email
+#                 # elif request.data.get("jsonData"):
+#                 # Попробуем достать email изjsonData, который прислал фронтенд
+
+#                 try:
+#                     js_data = json.loads(request.data.get("jsonData"))
+#                     customer_email = js_data.get("customerReceipt", {}).get(
+#                         "email", customer_email
+#                     )
+#                 except Exception:
+#                     pass
+
+#                 # 2. Создаем основной заказ
+#                 order = Order.objects.create(
+#                     checkout_id=request.data.get("invoiceId", f"INV-{cart.id}"),
+#                     amount=total_amount,
+#                     currency="RUB",
+#                     customer_email=customer_email,
+#                     # customer_email=(
+#                     #     request.user.email
+#                     #     if request.user.is_authenticated
+#                     #     else "guest@example.com"
+#                     # ),
+#                     status="Paid",  # Ставим Paid, так как мы в режиме эмуляции успеха
+#                 )
+
+#                 # 3. Переносим товары из корзины в OrderItem
+#                 for item in cart.cartitems.all():
+#                     OrderItem.objects.create(
+#                         order=order, product=item.product, quantity=item.quantity
+#                     )
+
+#                 # 4. Удаляем корзину
+#                 cart.delete()
+
+#             return Response(
+#                 {
+#                     "Success": True,
+#                     "Message": "Order created (Dev Mode)",
+#                     "TransactionId": order.checkout_id,
+#                     # "cart_deleted": True,  # Сигнал фронтенду
+#                 },
+#                 status=200,
+#             )
+
+#         return Response(
+#             {"Success": False, "Message": "Payment Failed"}, status=response.status_code
+#         )
+
+#     except Cart.DoesNotExist:
+#         return Response({"error": "Cart not found"}, status=404)
+#     except Exception as e:
+#         return Response({"error": str(e)}, status=500)
 
 
-# @csrf_exempt  # если приходит ошибку 403 при POST-запросе
-@api_view(["POST"])
+# ======================= proceed with CloudPayments =========================
+# -- Альтернативный вариант (на чистом Django), если DRF продолжает блокировать --
+
+
+@csrf_exempt  # Чистый Django-декоратор, работает без сбоев
 def process_payment(request):
-    # Получаем данные из запроса
-    cart_code = request.data.get("cart_code")
+    # ОБЯЗАТЕЛЬНО обрабатываем предзапрос OPTIONS от браузера
+    if request.method == "OPTIONS":
+        response = JsonResponse({"status": "ok"})
+        response["Access-Control-Allow-Origin"] = "http://localhost:5173"
+        response["Access-Control-Allow-Credentials"] = "true"
+        response["Access-Control-Allow-Methods"] = "POST, OPTIONS"
+        response["Access-Control-Allow-Headers"] = "Content-Type, X-CSRFToken, Accept"
+        return response
+
+    if request.method != "POST":
+        return JsonResponse({"error": "Method not allowed"}, status=405)
+
+    # В чистом Django данные берутся из request.body
+    try:
+        data = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({"error": "Invalid JSON"}, status=400)
+
+    cart_code = data.get("cart_code")
 
     try:
-        # Ищем корзину, которая ПРИНАДЛЕЖИТ юзеру И имеет нужный КОД
-        if request.user.is_authenticated:
-            cart = Cart.objects.get(user=request.user, cart_code=cart_code)
-        else:
-            # Для гостевой оплаты (если вы её разрешаете)
-            cart = Cart.objects.get(cart_code=cart_code, user__isnull=True)
-
+        cart = Cart.objects.get(cart_code=cart_code)
     except Cart.DoesNotExist:
-        return Response({"error": "Cart not found or access denied"}, status=404)
+        return JsonResponse({"error": "Cart not found"}, status=404)
 
-        # 2. Считаем итоговую сумму на сервере
     total_amount = sum(item.total_price for item in cart.cartitems.all())
-    # if cart:
-    #     total_amount = sum(item.total_price for item in cart.cartitems.all())
 
-    if not request.data:
-        return Response({"error": "Empty body"}, status=400)
+    # payload = {
+    #     "Amount": int(total_amount * 100) / 100,
+    #     "Currency": data.get("currency", "RUB"),
+    #     "Name": data.get("name"),
+    #     "CardCryptogramPacket": data.get("cryptogram"),
+    #     "InvoiceId": data.get("invoiceId"),
+    #     "Description": data.get("description"),
+    # }
 
-    # Данные для CloudPayments API
-    # (!!! поля должны начинаться с Большой буквы - это важно для CP)
-    payload = {
-        # "Amount": float(total_amount),  # Берем честную сумму из БД,
-        "Amount": int(total_amount * 100) / 100,  # Берем честную сумму из БД,
-        # "Amount": request.data.get("amount"),
-        "Currency": request.data.get("currency", "RUB"),
-        "Name": request.data.get("name"),
-        "CardCryptogramPacket": request.data.get("cryptogram"),
-        "InvoiceId": request.data.get("invoiceId"),
-        "Description": request.data.get("description"),
-    }
-
-    # print("CHECK-payload:", payload)
-
-    # 3. Делаем запрос на правильный URL
-    url = "https://api.cloudpayments.ru/payments/cards/charge"
-
-    # Запрос к CloudPayments (используйте свои API Key и Public ID)
-
-    auth = HTTPBasicAuth(
-        settings.CLOUD_PAYMENTS_PUBLIC_ID, settings.CLOUD_PAYMENTS_API_SECRET_KEY
-    )
+    # url = "https://cloudpayments.ru"
+    # auth = HTTPBasicAuth(
+    #     settings.CLOUD_PAYMENTS_PUBLIC_ID, settings.CLOUD_PAYMENTS_API_SECRET_KEY
+    # )
 
     try:
-        response = requests.post(url, json=payload, auth=auth, timeout=10)
-        # Всегда ставьте таймаут для внешних API
-        print(f"DEBUG: Status {response.status_code}, Content: {response.text}")
+        # ==================== РЕЖИМ ЭМУЛЯЦИИ ДЛЯ РАЗРАБОТКИ ====================
+        # response = requests.post(url, json=payload, auth=auth, timeout=10)
 
-        # Имитируем успех, если получили 401 (нет ключей) или 200 (есть ключи)
-        # В реальном коде заменить на =200
-        if response.status_code in [200, 401]:
-            # if response.status_code == 200: когда реально подписан на CP
+        # if response.status_code == 200:
+        # if response.status_code in [200, 401]:  # Режим эмуляции успеха
+
+        # Просто создаем виртуальный успешный статус, как будто шлюз ответил "ОК"
+        payment_is_successful = True
+
+        if payment_is_successful:
+            # ================================================================
+
+            # Достаем email из переданного фронтендом jsonData
+            customer_email = "guest@example.com"
+            js_data_str = data.get("jsonData")
+            if js_data_str:
+                try:
+                    js_data = json.loads(js_data_str)
+                    customer_email = js_data.get("customerReceipt", {}).get(
+                        "email", customer_email
+                    )
+                except Exception:
+                    pass
+
             with transaction.atomic():
-                # 2. Создаем основной заказ
+
+                # Генерируем ID транзакции
+                transaction_id = data.get("invoiceId", f"INV-{cart.id}")
+
                 order = Order.objects.create(
-                    checkout_id=request.data.get("invoiceId", f"INV-{cart.id}"),
+                    checkout_id=data.get("invoiceId", f"INV-{cart.id}"),
                     amount=total_amount,
                     currency="RUB",
-                    customer_email=request.user.email,
-                    status="Paid",  # Ставим Paid, так как мы в режиме эмуляции успеха
+                    customer_email=customer_email,
+                    status="Paid",
                 )
 
-                # 3. Переносим товары из корзины в OrderItem
                 for item in cart.cartitems.all():
                     OrderItem.objects.create(
                         order=order, product=item.product, quantity=item.quantity
                     )
 
-                # 4. Удаляем корзину
-                cart.delete()
+                cart.delete()  # Удаляем корзину из БД
 
-            return Response(
+            # return JsonResponse(
+            #     {
+            #         "Success": True,
+            #         "Message": "Order created (Dev Mode)",
+            #         "TransactionId": transaction_id,
+            #         # "TransactionId": order.checkout_id,
+            #     },
+            #     status=200,
+            # )
+
+            response = JsonResponse(
                 {
                     "Success": True,
                     "Message": "Order created (Dev Mode)",
-                    "TransactionId": order.checkout_id,
-                    # "cart_deleted": True,  # Сигнал фронтенду
+                    "TransactionId": transaction_id,
                 },
                 status=200,
             )
 
-        return Response(
-            {"Success": False, "Message": "Payment Failed"}, status=response.status_code
-        )
+            # ВРУЧНУЮ ДОБАВЛЯЕМ CORS ДЛЯ WITH_CREDENTIALS:
+            response["Access-Control-Allow-Origin"] = "http://localhost:5173"
+            # Строго ваш фронтенд
+            response["Access-Control-Allow-Credentials"] = "true"
 
-    except Cart.DoesNotExist:
-        return Response({"error": "Cart not found"}, status=404)
+            return response
+
+        # return JsonResponse({"Success": False, "Message": "Payment Failed"}, status=400)
+
+        response = JsonResponse(
+            {"Success": False, "Message": "Payment Failed"}, status=400
+        )
+        # ВРУЧНУЮ ДОБАВЛЯЕМ CORS ДЛЯ WITH_CREDENTIALS:
+        response["Access-Control-Allow-Origin"] = "http://localhost:5173"
+        # Строго ваш фронтенд
+        response["Access-Control-Allow-Credentials"] = "true"
+
+        return response
+
     except Exception as e:
-        return Response({"error": str(e)}, status=500)
+        # return JsonResponse({"error": str(e)}, status=500)
+
+        response = JsonResponse({"error": str(e)}, status=500)
+        # ВРУЧНУЮ ДОБАВЛЯЕМ CORS ДЛЯ WITH_CREDENTIALS:
+        response["Access-Control-Allow-Origin"] = "http://localhost:5173"
+        # Строго ваш фронтенд
+        response["Access-Control-Allow-Credentials"] = "true"
+
+        return response
 
 
 # -----------------------------------------------------------------
@@ -848,7 +1046,11 @@ def post3ds(request):
                     checkout_id=request.data.get("invoiceId", f"INV-{cart.id}"),
                     amount=total_amount,
                     currency="RUB",
-                    customer_email=request.user.email,
+                    customer_email=(
+                        request.user.email
+                        if request.user.is_authenticated
+                        else "guest@example.com"
+                    ),
                     status="Paid",
                 )
 

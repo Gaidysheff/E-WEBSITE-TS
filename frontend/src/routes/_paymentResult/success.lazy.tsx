@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 
 import Confetti from "react-confetti";
 import SuccessSkeleton from "@/components/paymentResult/SuccessSkeleton.tsx";
+import { useCart } from "@/store/CartContext.tsx";
 import useWindowSize from "react-use/lib/useWindowSize";
 
 export const Route = createLazyFileRoute("/_paymentResult/success")({
@@ -16,6 +17,8 @@ export function Success() {
     orderId?: string;
     cryptogram?: string;
   };
+
+  const { clearCart } = useCart();
 
   // const { width, height } = useWindowSize();
   // const [showConfetti, setShowConfetti] = useState(false);
@@ -44,10 +47,10 @@ export function Success() {
   };
 
   useEffect(() => {
-    window.onresize = () => handleWindowSize();
-  }, []);
+    // Корзина очистится один раз, когда страница успеха полностью отрендерится
+    clearCart();
 
-  useEffect(() => {
+    window.onresize = () => handleWindowSize();
     // Имитируем небольшую задержку для красоты или ждем данных
     const timer = setTimeout(() => setLoading(false), 800);
     return () => clearTimeout(timer);

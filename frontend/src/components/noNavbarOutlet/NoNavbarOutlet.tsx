@@ -1,5 +1,6 @@
 import { Failure } from "@/routes/_paymentResult/failed.lazy";
 import { Login } from "@/routes/_auth/login";
+import { Outlet } from "@tanstack/react-router";
 import { PasswordReset } from "@/routes/_auth/password-reset/$token";
 import { PasswordResetRequest } from "@/routes/_auth/passwordResetRequest";
 import { Register } from "@/routes/_auth/register";
@@ -20,7 +21,7 @@ const NoNavbarOutlet = ({ location }: Props) => {
 
   return (
     <>
-      {loginPage ? (
+      {/* {loginPage ? (
         <Login />
       ) : registerPage ? (
         <Register />
@@ -32,7 +33,8 @@ const NoNavbarOutlet = ({ location }: Props) => {
         <Failure />
       ) : (
         <PasswordReset />
-      )}
+      )} */}
+      <Outlet />
     </>
   );
 };

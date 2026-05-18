@@ -96,8 +96,13 @@ export const CartContextProvider = ({ children }: CartProviderProps) => {
   }, [cartCode]);
 
   const clearCart = () => {
-    localStorage.removeItem("cart_code");
-    setCartCode("");
+    const newCode = generateRandomString(); // Сразу создаем новый код
+    localStorage.setItem("cart_code", newCode);
+    setCartCode(newCode); // Засели новый код
+
+    // localStorage.removeItem("cart_code");
+    // setCartCode("");
+    // -----------------------------
     // Чтобы иконка корзины в шапке (счетчик) обнулилась мгновенно
     // после оплаты без window.location.reload()
     setItems([]);

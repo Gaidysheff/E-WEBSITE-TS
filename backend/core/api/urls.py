@@ -1,7 +1,6 @@
 from django.urls import path
 from . import views
 
-
 urlpatterns = [
     path(
         "featured_product_list/",
@@ -39,6 +38,7 @@ urlpatterns = [
     path("webhook/", views.my_webhook_view, name="webhook"),
     # # Newly Added
     path("get_orders", views.get_orders, name="get_orders"),
+    path("user_orders_list", views.user_orders_list, name="user_orders_list"),
     # path("create_user/", views.create_user, name="create_user"),
     # path("existing_user/<str:email>", views.existing_user, name="existing_user"),
     path("add_address/", views.add_address, name="add_address"),
