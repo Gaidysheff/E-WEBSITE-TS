@@ -1,6 +1,7 @@
 import { Link, createLazyFileRoute } from "@tanstack/react-router";
 
 import { AlertTriangle } from "lucide-react";
+import { env } from "@/lib/env";
 import { useCart } from "@/store/CartContext.tsx";
 
 export const Route = createLazyFileRoute("/_paymentResult/failed")({
@@ -9,6 +10,12 @@ export const Route = createLazyFileRoute("/_paymentResult/failed")({
 
 export function Failure() {
   const { cartCode } = useCart();
+
+  const supportEmail = env.VITE_MY_EMAIL_TO_RECEIVE;
+  const emailSubject = encodeURIComponent("Заказ: Ошибка оплаты на сайте");
+  const emailBody = encodeURIComponent(
+    `Здравствуйте!\n\nУ меня возникла ошибка при оплате заказа.\nКод корзины: ${cartCode}\nВремя: ${new Date().toLocaleString()}`,
+  );
 
   return (
     <section
@@ -41,12 +48,22 @@ export function Failure() {
             Try Again
           </Link>
           <Link
-            to="/contact"
+            to="https://wa.me"
+            // to="https://t.me"
             className="inline-block px-6 py-3 rounded-full bg-black
             text-white text-base font-medium hover:bg-red-800
             transition duration-300"
           >
-            Contact Support
+            Contact Support - WA
+          </Link>
+
+          <Link
+            to={`mailto:${supportEmail}?subject=${emailSubject}&body=${emailBody}`}
+            className="inline-block px-6 py-3 rounded-full bg-black
+            text-white text-base font-medium hover:bg-red-800
+            transition duration-300"
+          >
+            Contact Support - Email
           </Link>
         </div>
       </div>

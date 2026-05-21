@@ -161,6 +161,15 @@ const CardForm = ({
             name="cardNumber"
             children={(field) => (
               <div>
+                <p className="italic text-red-500">
+                  Для успешной тестовой оплаты введите номер карты:
+                </p>
+                <p className="italic font-bold text-red-500">
+                  4242 4242 4242 4242
+                </p>
+                <p className="italic text-red-500">
+                  Для неуспешной тестовой оплаты - любой номер:
+                </p>
                 <FieldLabel htmlFor="cardNumber">Number</FieldLabel>
                 <Input
                   id="cardNumber"

@@ -5,7 +5,7 @@ interface LoaderData {
   users: User[];
 }
 
-export const Route = createLazyFileRoute("/_authenticated/users_tanstack")({
+export const Route = createLazyFileRoute("/_mainLayout/_authenticated/users_tanstack")({
   component: UsersPage,
 });
 

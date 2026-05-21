@@ -12,7 +12,7 @@ import { useUser } from "@/store/UserContext.tsx";
 
 // import { Spinner } from "@/components/ui/spinner";
 
-export const Route = createLazyFileRoute("/_authenticated/profile")({
+export const Route = createLazyFileRoute("/_mainLayout/_authenticated/profile")({
   component: ProfilePage,
 });
 

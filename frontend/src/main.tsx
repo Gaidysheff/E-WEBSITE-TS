@@ -7,6 +7,7 @@ import { ColorProvider } from "@/store/ColorContext.tsx";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { HelmetProvider } from "react-helmet-async";
 import { StrictMode } from "react";
+import { ThemeProvider } from "@/store/ThemeContext.tsx";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { createRoot } from "react-dom/client";
 
@@ -20,9 +21,11 @@ createRoot(document.getElementById("root")!).render(
       <GoogleOAuthProvider clientId={googleClientId}>
         <QueryClientProvider client={queryClient}>
           <TooltipProvider>
-            <ColorProvider>
-              <App />
-            </ColorProvider>
+            <ThemeProvider>
+              <ColorProvider>
+                <App />
+              </ColorProvider>
+            </ThemeProvider>
           </TooltipProvider>
         </QueryClientProvider>
       </GoogleOAuthProvider>

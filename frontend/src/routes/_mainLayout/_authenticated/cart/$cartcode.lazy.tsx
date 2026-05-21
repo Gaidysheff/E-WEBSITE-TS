@@ -9,7 +9,7 @@ import { useCart } from "@/store/CartContext.tsx";
 import { useEffect } from "react";
 import usePageSEO from "@/hooks/usePageSEO.ts";
 
-export const Route = createLazyFileRoute("/_authenticated/cart/$cartcode")({
+export const Route = createLazyFileRoute("/_mainLayout/_authenticated/cart/$cartcode")({
   component: CartItemPage,
 });
 

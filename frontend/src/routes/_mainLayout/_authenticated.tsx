@@ -1,6 +1,6 @@
 import { Outlet, createFileRoute, redirect } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/_authenticated")({
+export const Route = createFileRoute("/_mainLayout/_authenticated")({
   beforeLoad: ({ location }) => {
     // Проверяем именно наличие токена
     const isAuthenticated = !!localStorage.getItem("Token");

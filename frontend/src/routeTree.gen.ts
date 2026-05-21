@@ -11,51 +11,53 @@
 import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as ProductsProductSlugRouteImport } from './routes/products/$productSlug'
-import { Route as CategoriesCategoryIdRouteImport } from './routes/categories/$categoryId'
+import { Route as MainLayoutRouteImport } from './routes/_mainLayout'
+import { Route as MainLayoutIndexRouteImport } from './routes/_mainLayout.index'
 import { Route as SearchSearchRouteImport } from './routes/_search/search'
 import { Route as PaymentResultSuccessRouteImport } from './routes/_paymentResult/success'
-import { Route as FilterProductsRouteImport } from './routes/_filter/products'
-import { Route as AuthenticatedUsers_tanstackRouteImport } from './routes/_authenticated/users_tanstack'
+import { Route as MainLayoutAuthenticatedRouteImport } from './routes/_mainLayout/_authenticated'
 import { Route as AuthRegisterRouteImport } from './routes/_auth/register'
 import { Route as AuthPasswordResetRequestRouteImport } from './routes/_auth/passwordResetRequest'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
+import { Route as MainLayoutProductsProductSlugRouteImport } from './routes/_mainLayout/products/$productSlug'
+import { Route as MainLayoutCategoriesCategoryIdRouteImport } from './routes/_mainLayout/categories/$categoryId'
+import { Route as MainLayoutFilterProductsRouteImport } from './routes/_mainLayout/_filter/products'
+import { Route as MainLayoutAuthenticatedUsers_tanstackRouteImport } from './routes/_mainLayout/_authenticated/users_tanstack'
 import { Route as AuthPasswordResetTokenRouteImport } from './routes/_auth/password-reset/$token'
 
 const TestTestLazyRouteImport = createFileRoute('/_test/test')()
 const PaymentResultFailedLazyRouteImport = createFileRoute(
   '/_paymentResult/failed',
 )()
-const AuthenticatedUsersLazyRouteImport = createFileRoute(
-  '/_authenticated/users',
+const MainLayoutAuthenticatedUsersLazyRouteImport = createFileRoute(
+  '/_mainLayout/_authenticated/users',
 )()
-const AuthenticatedProfileLazyRouteImport = createFileRoute(
-  '/_authenticated/profile',
+const MainLayoutAuthenticatedProfileLazyRouteImport = createFileRoute(
+  '/_mainLayout/_authenticated/profile',
 )()
-const AuthenticatedCheckoutLazyRouteImport = createFileRoute(
-  '/_authenticated/checkout',
+const MainLayoutAuthenticatedCheckoutLazyRouteImport = createFileRoute(
+  '/_mainLayout/_authenticated/checkout',
 )()
-const AuthenticatedCartIndexLazyRouteImport = createFileRoute(
-  '/_authenticated/cart/',
+const MainLayoutAuthenticatedCartIndexLazyRouteImport = createFileRoute(
+  '/_mainLayout/_authenticated/cart/',
 )()
-const AuthenticatedCartCartcodeLazyRouteImport = createFileRoute(
-  '/_authenticated/cart/$cartcode',
+const MainLayoutAuthenticatedCartCartcodeLazyRouteImport = createFileRoute(
+  '/_mainLayout/_authenticated/cart/$cartcode',
 )()
-const AuthenticatedCloudPaymentPaymentLazyRouteImport = createFileRoute(
-  '/_authenticated/_CloudPayment/payment',
-)()
+const MainLayoutAuthenticatedCloudPaymentPaymentLazyRouteImport =
+  createFileRoute('/_mainLayout/_authenticated/_CloudPayment/payment')()
 
-const AuthenticatedRoute = AuthenticatedRouteImport.update({
-  id: '/_authenticated',
+const MainLayoutRoute = MainLayoutRouteImport.update({
+  id: '/_mainLayout',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
+const MainLayoutIndexRoute = MainLayoutIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
+  getParentRoute: () => MainLayoutRoute,
+} as any).lazy(() =>
+  import('./routes/_mainLayout.index.lazy').then((d) => d.Route),
+)
 const TestTestLazyRoute = TestTestLazyRouteImport.update({
   id: '/_test/test',
   path: '/test',
@@ -67,43 +69,6 @@ const PaymentResultFailedLazyRoute = PaymentResultFailedLazyRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() =>
   import('./routes/_paymentResult/failed.lazy').then((d) => d.Route),
-)
-const AuthenticatedUsersLazyRoute = AuthenticatedUsersLazyRouteImport.update({
-  id: '/users',
-  path: '/users',
-  getParentRoute: () => AuthenticatedRoute,
-} as any).lazy(() =>
-  import('./routes/_authenticated/users.lazy').then((d) => d.Route),
-)
-const AuthenticatedProfileLazyRoute =
-  AuthenticatedProfileLazyRouteImport.update({
-    id: '/profile',
-    path: '/profile',
-    getParentRoute: () => AuthenticatedRoute,
-  } as any).lazy(() =>
-    import('./routes/_authenticated/profile.lazy').then((d) => d.Route),
-  )
-const AuthenticatedCheckoutLazyRoute =
-  AuthenticatedCheckoutLazyRouteImport.update({
-    id: '/checkout',
-    path: '/checkout',
-    getParentRoute: () => AuthenticatedRoute,
-  } as any).lazy(() =>
-    import('./routes/_authenticated/checkout.lazy').then((d) => d.Route),
-  )
-const ProductsProductSlugRoute = ProductsProductSlugRouteImport.update({
-  id: '/products/$productSlug',
-  path: '/products/$productSlug',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() =>
-  import('./routes/products/$productSlug.lazy').then((d) => d.Route),
-)
-const CategoriesCategoryIdRoute = CategoriesCategoryIdRouteImport.update({
-  id: '/categories/$categoryId',
-  path: '/categories/$categoryId',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() =>
-  import('./routes/categories/$categoryId.lazy').then((d) => d.Route),
 )
 const SearchSearchRoute = SearchSearchRouteImport.update({
   id: '/_search/search',
@@ -119,21 +84,10 @@ const PaymentResultSuccessRoute = PaymentResultSuccessRouteImport.update({
 } as any).lazy(() =>
   import('./routes/_paymentResult/success.lazy').then((d) => d.Route),
 )
-const FilterProductsRoute = FilterProductsRouteImport.update({
-  id: '/_filter/products',
-  path: '/products',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() =>
-  import('./routes/_filter/products.lazy').then((d) => d.Route),
-)
-const AuthenticatedUsers_tanstackRoute =
-  AuthenticatedUsers_tanstackRouteImport.update({
-    id: '/users_tanstack',
-    path: '/users_tanstack',
-    getParentRoute: () => AuthenticatedRoute,
-  } as any).lazy(() =>
-    import('./routes/_authenticated/users_tanstack.lazy').then((d) => d.Route),
-  )
+const MainLayoutAuthenticatedRoute = MainLayoutAuthenticatedRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => MainLayoutRoute,
+} as any)
 const AuthRegisterRoute = AuthRegisterRouteImport.update({
   id: '/_auth/register',
   path: '/register',
@@ -150,29 +104,71 @@ const AuthLoginRoute = AuthLoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedCartIndexLazyRoute =
-  AuthenticatedCartIndexLazyRouteImport.update({
-    id: '/cart/',
-    path: '/cart/',
-    getParentRoute: () => AuthenticatedRoute,
+const MainLayoutAuthenticatedUsersLazyRoute =
+  MainLayoutAuthenticatedUsersLazyRouteImport.update({
+    id: '/users',
+    path: '/users',
+    getParentRoute: () => MainLayoutAuthenticatedRoute,
   } as any).lazy(() =>
-    import('./routes/_authenticated/cart/index.lazy').then((d) => d.Route),
+    import('./routes/_mainLayout/_authenticated/users.lazy').then(
+      (d) => d.Route,
+    ),
   )
-const AuthenticatedCartCartcodeLazyRoute =
-  AuthenticatedCartCartcodeLazyRouteImport.update({
-    id: '/cart/$cartcode',
-    path: '/cart/$cartcode',
-    getParentRoute: () => AuthenticatedRoute,
+const MainLayoutAuthenticatedProfileLazyRoute =
+  MainLayoutAuthenticatedProfileLazyRouteImport.update({
+    id: '/profile',
+    path: '/profile',
+    getParentRoute: () => MainLayoutAuthenticatedRoute,
   } as any).lazy(() =>
-    import('./routes/_authenticated/cart/$cartcode.lazy').then((d) => d.Route),
+    import('./routes/_mainLayout/_authenticated/profile.lazy').then(
+      (d) => d.Route,
+    ),
   )
-const AuthenticatedCloudPaymentPaymentLazyRoute =
-  AuthenticatedCloudPaymentPaymentLazyRouteImport.update({
-    id: '/_CloudPayment/payment',
-    path: '/payment',
-    getParentRoute: () => AuthenticatedRoute,
+const MainLayoutAuthenticatedCheckoutLazyRoute =
+  MainLayoutAuthenticatedCheckoutLazyRouteImport.update({
+    id: '/checkout',
+    path: '/checkout',
+    getParentRoute: () => MainLayoutAuthenticatedRoute,
   } as any).lazy(() =>
-    import('./routes/_authenticated/_CloudPayment/payment.lazy').then(
+    import('./routes/_mainLayout/_authenticated/checkout.lazy').then(
+      (d) => d.Route,
+    ),
+  )
+const MainLayoutProductsProductSlugRoute =
+  MainLayoutProductsProductSlugRouteImport.update({
+    id: '/products/$productSlug',
+    path: '/products/$productSlug',
+    getParentRoute: () => MainLayoutRoute,
+  } as any).lazy(() =>
+    import('./routes/_mainLayout/products/$productSlug.lazy').then(
+      (d) => d.Route,
+    ),
+  )
+const MainLayoutCategoriesCategoryIdRoute =
+  MainLayoutCategoriesCategoryIdRouteImport.update({
+    id: '/categories/$categoryId',
+    path: '/categories/$categoryId',
+    getParentRoute: () => MainLayoutRoute,
+  } as any).lazy(() =>
+    import('./routes/_mainLayout/categories/$categoryId.lazy').then(
+      (d) => d.Route,
+    ),
+  )
+const MainLayoutFilterProductsRoute =
+  MainLayoutFilterProductsRouteImport.update({
+    id: '/_filter/products',
+    path: '/products',
+    getParentRoute: () => MainLayoutRoute,
+  } as any).lazy(() =>
+    import('./routes/_mainLayout/_filter/products.lazy').then((d) => d.Route),
+  )
+const MainLayoutAuthenticatedUsers_tanstackRoute =
+  MainLayoutAuthenticatedUsers_tanstackRouteImport.update({
+    id: '/users_tanstack',
+    path: '/users_tanstack',
+    getParentRoute: () => MainLayoutAuthenticatedRoute,
+  } as any).lazy(() =>
+    import('./routes/_mainLayout/_authenticated/users_tanstack.lazy').then(
       (d) => d.Route,
     ),
   )
@@ -181,150 +177,178 @@ const AuthPasswordResetTokenRoute = AuthPasswordResetTokenRouteImport.update({
   path: '/password-reset/$token',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MainLayoutAuthenticatedCartIndexLazyRoute =
+  MainLayoutAuthenticatedCartIndexLazyRouteImport.update({
+    id: '/cart/',
+    path: '/cart/',
+    getParentRoute: () => MainLayoutAuthenticatedRoute,
+  } as any).lazy(() =>
+    import('./routes/_mainLayout/_authenticated/cart/index.lazy').then(
+      (d) => d.Route,
+    ),
+  )
+const MainLayoutAuthenticatedCartCartcodeLazyRoute =
+  MainLayoutAuthenticatedCartCartcodeLazyRouteImport.update({
+    id: '/cart/$cartcode',
+    path: '/cart/$cartcode',
+    getParentRoute: () => MainLayoutAuthenticatedRoute,
+  } as any).lazy(() =>
+    import('./routes/_mainLayout/_authenticated/cart/$cartcode.lazy').then(
+      (d) => d.Route,
+    ),
+  )
+const MainLayoutAuthenticatedCloudPaymentPaymentLazyRoute =
+  MainLayoutAuthenticatedCloudPaymentPaymentLazyRouteImport.update({
+    id: '/_CloudPayment/payment',
+    path: '/payment',
+    getParentRoute: () => MainLayoutAuthenticatedRoute,
+  } as any).lazy(() =>
+    import('./routes/_mainLayout/_authenticated/_CloudPayment/payment.lazy').then(
+      (d) => d.Route,
+    ),
+  )
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
   '/login': typeof AuthLoginRoute
   '/passwordResetRequest': typeof AuthPasswordResetRequestRoute
   '/register': typeof AuthRegisterRoute
-  '/users_tanstack': typeof AuthenticatedUsers_tanstackRoute
-  '/products': typeof FilterProductsRoute
   '/success': typeof PaymentResultSuccessRoute
   '/search': typeof SearchSearchRoute
-  '/categories/$categoryId': typeof CategoriesCategoryIdRoute
-  '/products/$productSlug': typeof ProductsProductSlugRoute
-  '/checkout': typeof AuthenticatedCheckoutLazyRoute
-  '/profile': typeof AuthenticatedProfileLazyRoute
-  '/users': typeof AuthenticatedUsersLazyRoute
   '/failed': typeof PaymentResultFailedLazyRoute
   '/test': typeof TestTestLazyRoute
+  '/': typeof MainLayoutIndexRoute
   '/password-reset/$token': typeof AuthPasswordResetTokenRoute
-  '/payment': typeof AuthenticatedCloudPaymentPaymentLazyRoute
-  '/cart/$cartcode': typeof AuthenticatedCartCartcodeLazyRoute
-  '/cart': typeof AuthenticatedCartIndexLazyRoute
+  '/users_tanstack': typeof MainLayoutAuthenticatedUsers_tanstackRoute
+  '/products': typeof MainLayoutFilterProductsRoute
+  '/categories/$categoryId': typeof MainLayoutCategoriesCategoryIdRoute
+  '/products/$productSlug': typeof MainLayoutProductsProductSlugRoute
+  '/checkout': typeof MainLayoutAuthenticatedCheckoutLazyRoute
+  '/profile': typeof MainLayoutAuthenticatedProfileLazyRoute
+  '/users': typeof MainLayoutAuthenticatedUsersLazyRoute
+  '/payment': typeof MainLayoutAuthenticatedCloudPaymentPaymentLazyRoute
+  '/cart/$cartcode': typeof MainLayoutAuthenticatedCartCartcodeLazyRoute
+  '/cart': typeof MainLayoutAuthenticatedCartIndexLazyRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
   '/login': typeof AuthLoginRoute
   '/passwordResetRequest': typeof AuthPasswordResetRequestRoute
   '/register': typeof AuthRegisterRoute
-  '/users_tanstack': typeof AuthenticatedUsers_tanstackRoute
-  '/products': typeof FilterProductsRoute
   '/success': typeof PaymentResultSuccessRoute
   '/search': typeof SearchSearchRoute
-  '/categories/$categoryId': typeof CategoriesCategoryIdRoute
-  '/products/$productSlug': typeof ProductsProductSlugRoute
-  '/checkout': typeof AuthenticatedCheckoutLazyRoute
-  '/profile': typeof AuthenticatedProfileLazyRoute
-  '/users': typeof AuthenticatedUsersLazyRoute
   '/failed': typeof PaymentResultFailedLazyRoute
   '/test': typeof TestTestLazyRoute
+  '/': typeof MainLayoutIndexRoute
   '/password-reset/$token': typeof AuthPasswordResetTokenRoute
-  '/payment': typeof AuthenticatedCloudPaymentPaymentLazyRoute
-  '/cart/$cartcode': typeof AuthenticatedCartCartcodeLazyRoute
-  '/cart': typeof AuthenticatedCartIndexLazyRoute
+  '/users_tanstack': typeof MainLayoutAuthenticatedUsers_tanstackRoute
+  '/products': typeof MainLayoutFilterProductsRoute
+  '/categories/$categoryId': typeof MainLayoutCategoriesCategoryIdRoute
+  '/products/$productSlug': typeof MainLayoutProductsProductSlugRoute
+  '/checkout': typeof MainLayoutAuthenticatedCheckoutLazyRoute
+  '/profile': typeof MainLayoutAuthenticatedProfileLazyRoute
+  '/users': typeof MainLayoutAuthenticatedUsersLazyRoute
+  '/payment': typeof MainLayoutAuthenticatedCloudPaymentPaymentLazyRoute
+  '/cart/$cartcode': typeof MainLayoutAuthenticatedCartCartcodeLazyRoute
+  '/cart': typeof MainLayoutAuthenticatedCartIndexLazyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/_authenticated': typeof AuthenticatedRouteWithChildren
+  '/_mainLayout': typeof MainLayoutRouteWithChildren
   '/_auth/login': typeof AuthLoginRoute
   '/_auth/passwordResetRequest': typeof AuthPasswordResetRequestRoute
   '/_auth/register': typeof AuthRegisterRoute
-  '/_authenticated/users_tanstack': typeof AuthenticatedUsers_tanstackRoute
-  '/_filter/products': typeof FilterProductsRoute
+  '/_mainLayout/_authenticated': typeof MainLayoutAuthenticatedRouteWithChildren
   '/_paymentResult/success': typeof PaymentResultSuccessRoute
   '/_search/search': typeof SearchSearchRoute
-  '/categories/$categoryId': typeof CategoriesCategoryIdRoute
-  '/products/$productSlug': typeof ProductsProductSlugRoute
-  '/_authenticated/checkout': typeof AuthenticatedCheckoutLazyRoute
-  '/_authenticated/profile': typeof AuthenticatedProfileLazyRoute
-  '/_authenticated/users': typeof AuthenticatedUsersLazyRoute
   '/_paymentResult/failed': typeof PaymentResultFailedLazyRoute
   '/_test/test': typeof TestTestLazyRoute
+  '/_mainLayout/': typeof MainLayoutIndexRoute
   '/_auth/password-reset/$token': typeof AuthPasswordResetTokenRoute
-  '/_authenticated/_CloudPayment/payment': typeof AuthenticatedCloudPaymentPaymentLazyRoute
-  '/_authenticated/cart/$cartcode': typeof AuthenticatedCartCartcodeLazyRoute
-  '/_authenticated/cart/': typeof AuthenticatedCartIndexLazyRoute
+  '/_mainLayout/_authenticated/users_tanstack': typeof MainLayoutAuthenticatedUsers_tanstackRoute
+  '/_mainLayout/_filter/products': typeof MainLayoutFilterProductsRoute
+  '/_mainLayout/categories/$categoryId': typeof MainLayoutCategoriesCategoryIdRoute
+  '/_mainLayout/products/$productSlug': typeof MainLayoutProductsProductSlugRoute
+  '/_mainLayout/_authenticated/checkout': typeof MainLayoutAuthenticatedCheckoutLazyRoute
+  '/_mainLayout/_authenticated/profile': typeof MainLayoutAuthenticatedProfileLazyRoute
+  '/_mainLayout/_authenticated/users': typeof MainLayoutAuthenticatedUsersLazyRoute
+  '/_mainLayout/_authenticated/_CloudPayment/payment': typeof MainLayoutAuthenticatedCloudPaymentPaymentLazyRoute
+  '/_mainLayout/_authenticated/cart/$cartcode': typeof MainLayoutAuthenticatedCartCartcodeLazyRoute
+  '/_mainLayout/_authenticated/cart/': typeof MainLayoutAuthenticatedCartIndexLazyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/'
     | '/login'
     | '/passwordResetRequest'
     | '/register'
-    | '/users_tanstack'
-    | '/products'
     | '/success'
     | '/search'
+    | '/failed'
+    | '/test'
+    | '/'
+    | '/password-reset/$token'
+    | '/users_tanstack'
+    | '/products'
     | '/categories/$categoryId'
     | '/products/$productSlug'
     | '/checkout'
     | '/profile'
     | '/users'
-    | '/failed'
-    | '/test'
-    | '/password-reset/$token'
     | '/payment'
     | '/cart/$cartcode'
     | '/cart'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/'
     | '/login'
     | '/passwordResetRequest'
     | '/register'
-    | '/users_tanstack'
-    | '/products'
     | '/success'
     | '/search'
+    | '/failed'
+    | '/test'
+    | '/'
+    | '/password-reset/$token'
+    | '/users_tanstack'
+    | '/products'
     | '/categories/$categoryId'
     | '/products/$productSlug'
     | '/checkout'
     | '/profile'
     | '/users'
-    | '/failed'
-    | '/test'
-    | '/password-reset/$token'
     | '/payment'
     | '/cart/$cartcode'
     | '/cart'
   id:
     | '__root__'
-    | '/'
-    | '/_authenticated'
+    | '/_mainLayout'
     | '/_auth/login'
     | '/_auth/passwordResetRequest'
     | '/_auth/register'
-    | '/_authenticated/users_tanstack'
-    | '/_filter/products'
+    | '/_mainLayout/_authenticated'
     | '/_paymentResult/success'
     | '/_search/search'
-    | '/categories/$categoryId'
-    | '/products/$productSlug'
-    | '/_authenticated/checkout'
-    | '/_authenticated/profile'
-    | '/_authenticated/users'
     | '/_paymentResult/failed'
     | '/_test/test'
+    | '/_mainLayout/'
     | '/_auth/password-reset/$token'
-    | '/_authenticated/_CloudPayment/payment'
-    | '/_authenticated/cart/$cartcode'
-    | '/_authenticated/cart/'
+    | '/_mainLayout/_authenticated/users_tanstack'
+    | '/_mainLayout/_filter/products'
+    | '/_mainLayout/categories/$categoryId'
+    | '/_mainLayout/products/$productSlug'
+    | '/_mainLayout/_authenticated/checkout'
+    | '/_mainLayout/_authenticated/profile'
+    | '/_mainLayout/_authenticated/users'
+    | '/_mainLayout/_authenticated/_CloudPayment/payment'
+    | '/_mainLayout/_authenticated/cart/$cartcode'
+    | '/_mainLayout/_authenticated/cart/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
+  MainLayoutRoute: typeof MainLayoutRouteWithChildren
   AuthLoginRoute: typeof AuthLoginRoute
   AuthPasswordResetRequestRoute: typeof AuthPasswordResetRequestRoute
   AuthRegisterRoute: typeof AuthRegisterRoute
-  FilterProductsRoute: typeof FilterProductsRoute
   PaymentResultSuccessRoute: typeof PaymentResultSuccessRoute
   SearchSearchRoute: typeof SearchSearchRoute
-  CategoriesCategoryIdRoute: typeof CategoriesCategoryIdRoute
-  ProductsProductSlugRoute: typeof ProductsProductSlugRoute
   PaymentResultFailedLazyRoute: typeof PaymentResultFailedLazyRoute
   TestTestLazyRoute: typeof TestTestLazyRoute
   AuthPasswordResetTokenRoute: typeof AuthPasswordResetTokenRoute
@@ -332,19 +356,19 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/_authenticated': {
-      id: '/_authenticated'
+    '/_mainLayout': {
+      id: '/_mainLayout'
       path: ''
       fullPath: ''
-      preLoaderRoute: typeof AuthenticatedRouteImport
+      preLoaderRoute: typeof MainLayoutRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
+    '/_mainLayout/': {
+      id: '/_mainLayout/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof MainLayoutIndexRouteImport
+      parentRoute: typeof MainLayoutRoute
     }
     '/_test/test': {
       id: '/_test/test'
@@ -358,41 +382,6 @@ declare module '@tanstack/react-router' {
       path: '/failed'
       fullPath: '/failed'
       preLoaderRoute: typeof PaymentResultFailedLazyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_authenticated/users': {
-      id: '/_authenticated/users'
-      path: '/users'
-      fullPath: '/users'
-      preLoaderRoute: typeof AuthenticatedUsersLazyRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
-    '/_authenticated/profile': {
-      id: '/_authenticated/profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof AuthenticatedProfileLazyRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
-    '/_authenticated/checkout': {
-      id: '/_authenticated/checkout'
-      path: '/checkout'
-      fullPath: '/checkout'
-      preLoaderRoute: typeof AuthenticatedCheckoutLazyRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
-    '/products/$productSlug': {
-      id: '/products/$productSlug'
-      path: '/products/$productSlug'
-      fullPath: '/products/$productSlug'
-      preLoaderRoute: typeof ProductsProductSlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/categories/$categoryId': {
-      id: '/categories/$categoryId'
-      path: '/categories/$categoryId'
-      fullPath: '/categories/$categoryId'
-      preLoaderRoute: typeof CategoriesCategoryIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_search/search': {
@@ -409,19 +398,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PaymentResultSuccessRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_filter/products': {
-      id: '/_filter/products'
-      path: '/products'
-      fullPath: '/products'
-      preLoaderRoute: typeof FilterProductsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_authenticated/users_tanstack': {
-      id: '/_authenticated/users_tanstack'
-      path: '/users_tanstack'
-      fullPath: '/users_tanstack'
-      preLoaderRoute: typeof AuthenticatedUsers_tanstackRouteImport
-      parentRoute: typeof AuthenticatedRoute
+    '/_mainLayout/_authenticated': {
+      id: '/_mainLayout/_authenticated'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof MainLayoutAuthenticatedRouteImport
+      parentRoute: typeof MainLayoutRoute
     }
     '/_auth/register': {
       id: '/_auth/register'
@@ -444,26 +426,54 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/cart/': {
-      id: '/_authenticated/cart/'
-      path: '/cart'
-      fullPath: '/cart'
-      preLoaderRoute: typeof AuthenticatedCartIndexLazyRouteImport
-      parentRoute: typeof AuthenticatedRoute
+    '/_mainLayout/_authenticated/users': {
+      id: '/_mainLayout/_authenticated/users'
+      path: '/users'
+      fullPath: '/users'
+      preLoaderRoute: typeof MainLayoutAuthenticatedUsersLazyRouteImport
+      parentRoute: typeof MainLayoutAuthenticatedRoute
     }
-    '/_authenticated/cart/$cartcode': {
-      id: '/_authenticated/cart/$cartcode'
-      path: '/cart/$cartcode'
-      fullPath: '/cart/$cartcode'
-      preLoaderRoute: typeof AuthenticatedCartCartcodeLazyRouteImport
-      parentRoute: typeof AuthenticatedRoute
+    '/_mainLayout/_authenticated/profile': {
+      id: '/_mainLayout/_authenticated/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof MainLayoutAuthenticatedProfileLazyRouteImport
+      parentRoute: typeof MainLayoutAuthenticatedRoute
     }
-    '/_authenticated/_CloudPayment/payment': {
-      id: '/_authenticated/_CloudPayment/payment'
-      path: '/payment'
-      fullPath: '/payment'
-      preLoaderRoute: typeof AuthenticatedCloudPaymentPaymentLazyRouteImport
-      parentRoute: typeof AuthenticatedRoute
+    '/_mainLayout/_authenticated/checkout': {
+      id: '/_mainLayout/_authenticated/checkout'
+      path: '/checkout'
+      fullPath: '/checkout'
+      preLoaderRoute: typeof MainLayoutAuthenticatedCheckoutLazyRouteImport
+      parentRoute: typeof MainLayoutAuthenticatedRoute
+    }
+    '/_mainLayout/products/$productSlug': {
+      id: '/_mainLayout/products/$productSlug'
+      path: '/products/$productSlug'
+      fullPath: '/products/$productSlug'
+      preLoaderRoute: typeof MainLayoutProductsProductSlugRouteImport
+      parentRoute: typeof MainLayoutRoute
+    }
+    '/_mainLayout/categories/$categoryId': {
+      id: '/_mainLayout/categories/$categoryId'
+      path: '/categories/$categoryId'
+      fullPath: '/categories/$categoryId'
+      preLoaderRoute: typeof MainLayoutCategoriesCategoryIdRouteImport
+      parentRoute: typeof MainLayoutRoute
+    }
+    '/_mainLayout/_filter/products': {
+      id: '/_mainLayout/_filter/products'
+      path: '/products'
+      fullPath: '/products'
+      preLoaderRoute: typeof MainLayoutFilterProductsRouteImport
+      parentRoute: typeof MainLayoutRoute
+    }
+    '/_mainLayout/_authenticated/users_tanstack': {
+      id: '/_mainLayout/_authenticated/users_tanstack'
+      path: '/users_tanstack'
+      fullPath: '/users_tanstack'
+      preLoaderRoute: typeof MainLayoutAuthenticatedUsers_tanstackRouteImport
+      parentRoute: typeof MainLayoutAuthenticatedRoute
     }
     '/_auth/password-reset/$token': {
       id: '/_auth/password-reset/$token'
@@ -472,45 +482,90 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthPasswordResetTokenRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_mainLayout/_authenticated/cart/': {
+      id: '/_mainLayout/_authenticated/cart/'
+      path: '/cart'
+      fullPath: '/cart'
+      preLoaderRoute: typeof MainLayoutAuthenticatedCartIndexLazyRouteImport
+      parentRoute: typeof MainLayoutAuthenticatedRoute
+    }
+    '/_mainLayout/_authenticated/cart/$cartcode': {
+      id: '/_mainLayout/_authenticated/cart/$cartcode'
+      path: '/cart/$cartcode'
+      fullPath: '/cart/$cartcode'
+      preLoaderRoute: typeof MainLayoutAuthenticatedCartCartcodeLazyRouteImport
+      parentRoute: typeof MainLayoutAuthenticatedRoute
+    }
+    '/_mainLayout/_authenticated/_CloudPayment/payment': {
+      id: '/_mainLayout/_authenticated/_CloudPayment/payment'
+      path: '/payment'
+      fullPath: '/payment'
+      preLoaderRoute: typeof MainLayoutAuthenticatedCloudPaymentPaymentLazyRouteImport
+      parentRoute: typeof MainLayoutAuthenticatedRoute
+    }
   }
 }
 
-interface AuthenticatedRouteChildren {
-  AuthenticatedUsers_tanstackRoute: typeof AuthenticatedUsers_tanstackRoute
-  AuthenticatedCheckoutLazyRoute: typeof AuthenticatedCheckoutLazyRoute
-  AuthenticatedProfileLazyRoute: typeof AuthenticatedProfileLazyRoute
-  AuthenticatedUsersLazyRoute: typeof AuthenticatedUsersLazyRoute
-  AuthenticatedCloudPaymentPaymentLazyRoute: typeof AuthenticatedCloudPaymentPaymentLazyRoute
-  AuthenticatedCartCartcodeLazyRoute: typeof AuthenticatedCartCartcodeLazyRoute
-  AuthenticatedCartIndexLazyRoute: typeof AuthenticatedCartIndexLazyRoute
+interface MainLayoutAuthenticatedRouteChildren {
+  MainLayoutAuthenticatedUsers_tanstackRoute: typeof MainLayoutAuthenticatedUsers_tanstackRoute
+  MainLayoutAuthenticatedCheckoutLazyRoute: typeof MainLayoutAuthenticatedCheckoutLazyRoute
+  MainLayoutAuthenticatedProfileLazyRoute: typeof MainLayoutAuthenticatedProfileLazyRoute
+  MainLayoutAuthenticatedUsersLazyRoute: typeof MainLayoutAuthenticatedUsersLazyRoute
+  MainLayoutAuthenticatedCloudPaymentPaymentLazyRoute: typeof MainLayoutAuthenticatedCloudPaymentPaymentLazyRoute
+  MainLayoutAuthenticatedCartCartcodeLazyRoute: typeof MainLayoutAuthenticatedCartCartcodeLazyRoute
+  MainLayoutAuthenticatedCartIndexLazyRoute: typeof MainLayoutAuthenticatedCartIndexLazyRoute
 }
 
-const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
-  AuthenticatedUsers_tanstackRoute: AuthenticatedUsers_tanstackRoute,
-  AuthenticatedCheckoutLazyRoute: AuthenticatedCheckoutLazyRoute,
-  AuthenticatedProfileLazyRoute: AuthenticatedProfileLazyRoute,
-  AuthenticatedUsersLazyRoute: AuthenticatedUsersLazyRoute,
-  AuthenticatedCloudPaymentPaymentLazyRoute:
-    AuthenticatedCloudPaymentPaymentLazyRoute,
-  AuthenticatedCartCartcodeLazyRoute: AuthenticatedCartCartcodeLazyRoute,
-  AuthenticatedCartIndexLazyRoute: AuthenticatedCartIndexLazyRoute,
+const MainLayoutAuthenticatedRouteChildren: MainLayoutAuthenticatedRouteChildren =
+  {
+    MainLayoutAuthenticatedUsers_tanstackRoute:
+      MainLayoutAuthenticatedUsers_tanstackRoute,
+    MainLayoutAuthenticatedCheckoutLazyRoute:
+      MainLayoutAuthenticatedCheckoutLazyRoute,
+    MainLayoutAuthenticatedProfileLazyRoute:
+      MainLayoutAuthenticatedProfileLazyRoute,
+    MainLayoutAuthenticatedUsersLazyRoute:
+      MainLayoutAuthenticatedUsersLazyRoute,
+    MainLayoutAuthenticatedCloudPaymentPaymentLazyRoute:
+      MainLayoutAuthenticatedCloudPaymentPaymentLazyRoute,
+    MainLayoutAuthenticatedCartCartcodeLazyRoute:
+      MainLayoutAuthenticatedCartCartcodeLazyRoute,
+    MainLayoutAuthenticatedCartIndexLazyRoute:
+      MainLayoutAuthenticatedCartIndexLazyRoute,
+  }
+
+const MainLayoutAuthenticatedRouteWithChildren =
+  MainLayoutAuthenticatedRoute._addFileChildren(
+    MainLayoutAuthenticatedRouteChildren,
+  )
+
+interface MainLayoutRouteChildren {
+  MainLayoutAuthenticatedRoute: typeof MainLayoutAuthenticatedRouteWithChildren
+  MainLayoutIndexRoute: typeof MainLayoutIndexRoute
+  MainLayoutFilterProductsRoute: typeof MainLayoutFilterProductsRoute
+  MainLayoutCategoriesCategoryIdRoute: typeof MainLayoutCategoriesCategoryIdRoute
+  MainLayoutProductsProductSlugRoute: typeof MainLayoutProductsProductSlugRoute
 }
 
-const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
-  AuthenticatedRouteChildren,
+const MainLayoutRouteChildren: MainLayoutRouteChildren = {
+  MainLayoutAuthenticatedRoute: MainLayoutAuthenticatedRouteWithChildren,
+  MainLayoutIndexRoute: MainLayoutIndexRoute,
+  MainLayoutFilterProductsRoute: MainLayoutFilterProductsRoute,
+  MainLayoutCategoriesCategoryIdRoute: MainLayoutCategoriesCategoryIdRoute,
+  MainLayoutProductsProductSlugRoute: MainLayoutProductsProductSlugRoute,
+}
+
+const MainLayoutRouteWithChildren = MainLayoutRoute._addFileChildren(
+  MainLayoutRouteChildren,
 )
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  AuthenticatedRoute: AuthenticatedRouteWithChildren,
+  MainLayoutRoute: MainLayoutRouteWithChildren,
   AuthLoginRoute: AuthLoginRoute,
   AuthPasswordResetRequestRoute: AuthPasswordResetRequestRoute,
   AuthRegisterRoute: AuthRegisterRoute,
-  FilterProductsRoute: FilterProductsRoute,
   PaymentResultSuccessRoute: PaymentResultSuccessRoute,
   SearchSearchRoute: SearchSearchRoute,
-  CategoriesCategoryIdRoute: CategoriesCategoryIdRoute,
-  ProductsProductSlugRoute: ProductsProductSlugRoute,
   PaymentResultFailedLazyRoute: PaymentResultFailedLazyRoute,
   TestTestLazyRoute: TestTestLazyRoute,
   AuthPasswordResetTokenRoute: AuthPasswordResetTokenRoute,

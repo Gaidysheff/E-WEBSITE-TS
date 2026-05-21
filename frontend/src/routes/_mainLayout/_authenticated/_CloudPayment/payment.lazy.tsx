@@ -10,7 +10,7 @@ import { useCart } from "@/store/CartContext.tsx";
 import { useUser } from "@/store/UserContext.tsx";
 
 export const Route = createLazyFileRoute(
-  "/_authenticated/_CloudPayment/payment",
+  "/_mainLayout/_authenticated/_CloudPayment/payment",
 )({
   component: Payment,
 });

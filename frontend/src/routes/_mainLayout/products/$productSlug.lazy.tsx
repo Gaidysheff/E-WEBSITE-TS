@@ -12,7 +12,7 @@ interface LoaderData {
   product: ProductInDetails;
 }
 
-export const Route = createLazyFileRoute("/products/$productSlug")({
+export const Route = createLazyFileRoute("/_mainLayout/products/$productSlug")({
   component: IndividualProductComponent,
 });
 
@@ -47,7 +47,7 @@ function IndividualProductComponent() {
         />
         <link rel="icon" type="image/svg+xml" href="/gift.svg" sizes="any2" />
 
-        <link rel="canonical" href={`${BASE_URL}${currentPathname}`} />
+        <link rel="canonical" href={"${BASE_URL}${currentPathname}"} />
       </>
 
       <div className="container">

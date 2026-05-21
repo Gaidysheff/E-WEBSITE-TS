@@ -10,7 +10,7 @@ import { type ProductUrlQuery } from "@/lib/types";
 
 const SortSelector = () => {
   const navigate = useNavigate();
-  const search = useSearch({ from: "/_filter/products" });
+  const search = useSearch({ from: "/_mainLayout/_filter/products" });
 
   return (
     <Select

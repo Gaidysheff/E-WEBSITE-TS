@@ -226,7 +226,8 @@ STRIPE_PUBLIC_KEY = os.getenv("STRIPE_PUBLIC_KEY")
 
 WEBHOOK_SECRET = os.getenv("WEBHOOK_SECRET")
 
-BASE_URL_FRONTEND = os.getenv("BASE_URL_FRONTEND")
+# Если переменная в .env пустая, подставится локальный адрес разработки
+BASE_URL_FRONTEND = os.getenv("BASE_URL_FRONTEND", "http://localhost:5173")
 
 # =================== Cloud Payments =======================
 

@@ -12,7 +12,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { toast } from "react-toastify";
 import { type Category, type CategoryWithProducts } from "@/lib/types.ts";
 
-export const Route = createFileRoute("/categories/$categoryId")({
+export const Route = createFileRoute("/_mainLayout/categories/$categoryId")({
   loader: async ({ params: { categoryId } }) => {
     // ---------- Loading Delay ----------
     // await new Promise((resolve) => setTimeout(resolve, 5000));

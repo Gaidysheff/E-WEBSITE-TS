@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/_filter/products")({
+export const Route = createFileRoute("/_mainLayout/_filter/products")({
   validateSearch: (search: Record<string, unknown>) => ({
     shape: (search.shape as string) || undefined,
     brand: (search.brand as string) || undefined,

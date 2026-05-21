@@ -880,12 +880,23 @@ def get_address(request):
 # -- Альтернативный вариант (на чистом Django), если DRF продолжает блокировать --
 
 
+# Вспомогательная функция-"хелпер", чтобы заголовки не повторять по несколько раз
+def cors_json_response(data, status=200):
+    response = JsonResponse(data, status=status)
+    response["Access-Control-Allow-Origin"] = settings.BASE_URL_FRONTEND
+    response["Access-Control-Allow-Credentials"] = "true"
+    return response
+
+
+# -------------------------------------------------------
+
+
 @csrf_exempt  # Чистый Django-декоратор, работает без сбоев
 def process_payment(request):
     # ОБЯЗАТЕЛЬНО обрабатываем предзапрос OPTIONS от браузера
     if request.method == "OPTIONS":
         response = JsonResponse({"status": "ok"})
-        response["Access-Control-Allow-Origin"] = "http://localhost:5173"
+        response["Access-Control-Allow-Origin"] = settings.BASE_URL_FRONTEND
         response["Access-Control-Allow-Credentials"] = "true"
         response["Access-Control-Allow-Methods"] = "POST, OPTIONS"
         response["Access-Control-Allow-Headers"] = "Content-Type, X-CSRFToken, Accept"
@@ -968,17 +979,8 @@ def process_payment(request):
 
                 cart.delete()  # Удаляем корзину из БД
 
-            # return JsonResponse(
-            #     {
-            #         "Success": True,
-            #         "Message": "Order created (Dev Mode)",
-            #         "TransactionId": transaction_id,
-            #         # "TransactionId": order.checkout_id,
-            #     },
-            #     status=200,
-            # )
-
-            response = JsonResponse(
+            # ------------ Вместо длинного блока пишем в одну строчку: --------
+            return cors_json_response(
                 {
                     "Success": True,
                     "Message": "Order created (Dev Mode)",
@@ -987,35 +989,48 @@ def process_payment(request):
                 status=200,
             )
 
-            # ВРУЧНУЮ ДОБАВЛЯЕМ CORS ДЛЯ WITH_CREDENTIALS:
-            response["Access-Control-Allow-Origin"] = "http://localhost:5173"
-            # Строго ваш фронтенд
-            response["Access-Control-Allow-Credentials"] = "true"
+            # response = JsonResponse(
+            #     {
+            #         "Success": True,
+            #         "Message": "Order created (Dev Mode)",
+            #         "TransactionId": transaction_id,
+            #     },
+            #     status=200,
+            # )
 
-            return response
+            # # ВРУЧНУЮ ДОБАВЛЯЕМ CORS ДЛЯ WITH_CREDENTIALS:
+            # # response["Access-Control-Allow-Origin"] = "http://localhost:5173"
+            # response["Access-Control-Allow-Origin"] = settings.BASE_URL_FRONTEND
+            # response["Access-Control-Allow-Credentials"] = "true"
 
-        # return JsonResponse({"Success": False, "Message": "Payment Failed"}, status=400)
+            # return response
+            # ---------------------------------------------------------------
 
-        response = JsonResponse(
+        # ------------ Вместо длинного блока пишем в одну строчку: --------
+        return cors_json_response(
             {"Success": False, "Message": "Payment Failed"}, status=400
         )
-        # ВРУЧНУЮ ДОБАВЛЯЕМ CORS ДЛЯ WITH_CREDENTIALS:
-        response["Access-Control-Allow-Origin"] = "http://localhost:5173"
-        # Строго ваш фронтенд
-        response["Access-Control-Allow-Credentials"] = "true"
 
-        return response
+        # response = JsonResponse(
+        #     {"Success": False, "Message": "Payment Failed"}, status=400
+        # )
+        # # ВРУЧНУЮ ДОБАВЛЯЕМ CORS ДЛЯ WITH_CREDENTIALS:
+        # response["Access-Control-Allow-Origin"] = settings.BASE_URL_FRONTEND
+        # response["Access-Control-Allow-Credentials"] = "true"
+
+        # return response
+        # ---------------------------------------------------------------
 
     except Exception as e:
-        # return JsonResponse({"error": str(e)}, status=500)
+        # ------------ Вместо длинного блока пишем в одну строчку: --------
+        return cors_json_response({"error": str(e)}, status=500)
 
-        response = JsonResponse({"error": str(e)}, status=500)
-        # ВРУЧНУЮ ДОБАВЛЯЕМ CORS ДЛЯ WITH_CREDENTIALS:
-        response["Access-Control-Allow-Origin"] = "http://localhost:5173"
-        # Строго ваш фронтенд
-        response["Access-Control-Allow-Credentials"] = "true"
+        # response = JsonResponse({"error": str(e)}, status=500)
+        # # ВРУЧНУЮ ДОБАВЛЯЕМ CORS ДЛЯ WITH_CREDENTIALS:
+        # response["Access-Control-Allow-Origin"] = settings.BASE_URL_FRONTEND
+        # response["Access-Control-Allow-Credentials"] = "true"
 
-        return response
+        # return response
 
 
 # -----------------------------------------------------------------

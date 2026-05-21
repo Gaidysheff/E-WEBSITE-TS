@@ -10,7 +10,7 @@ interface LoaderData {
   productsForCarousel: Product[];
 }
 
-export const Route = createLazyFileRoute("/")({
+export const Route = createLazyFileRoute("/_mainLayout/")({
   component: RouteComponent,
 });
 
@@ -26,12 +26,12 @@ function RouteComponent() {
           content="E-Shop online shop providing e-commerce services !!!"
         />
         {/* <link rel="canonical" href="http://localhost:5173" /> */}
-        <link rel="canonical" href={`${BASE_URL}`} />
+        <link rel="canonical" href={"${BASE_URL}"} />
         {/* <meta name="keywords" content="main,e-Shop" /> */}
         <meta property="og:title" content="Eshop | OG:Title" />
         <meta property="og:description" content="This is OG:Description" />
         <meta property="og:image" content={"${Image}"} />
-        <meta property="og:url" content={`${BASE_URL}`} />
+        <meta property="og:url" content={"${BASE_URL}"} />
       </>
       <main className="min-h-[85vh]">
         <Introduction />

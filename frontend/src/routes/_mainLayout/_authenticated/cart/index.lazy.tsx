@@ -2,7 +2,7 @@ import { Link, createLazyFileRoute } from "@tanstack/react-router";
 
 import { BASE_URL } from "@/api/api";
 
-export const Route = createLazyFileRoute("/_authenticated/cart/")({
+export const Route = createLazyFileRoute("/_mainLayout/_authenticated/cart/")({
   component: CartPage,
 });
 

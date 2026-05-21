@@ -5,7 +5,7 @@ import { type ProductUrlQuery } from "@/lib/types.ts";
 import { useQuery } from "@tanstack/react-query";
 import { createLazyFileRoute } from "@tanstack/react-router";
 
-export const Route = createLazyFileRoute("/_filter/products")({
+export const Route = createLazyFileRoute("/_mainLayout/_filter/products")({
   component: RouteComponent,
 });
 

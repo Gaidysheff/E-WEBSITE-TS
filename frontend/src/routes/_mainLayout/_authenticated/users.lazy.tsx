@@ -4,7 +4,7 @@ import { USERS_URL } from "@/api/endpoints";
 import api from "@/api/api";
 import { createLazyFileRoute } from "@tanstack/react-router";
 
-export const Route = createLazyFileRoute("/_authenticated/users")({
+export const Route = createLazyFileRoute("/_mainLayout/_authenticated/users")({
   component: Users,
 });
 

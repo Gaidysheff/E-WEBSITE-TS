@@ -33,7 +33,9 @@ import { useEffect, useRef, useState } from "react";
 import { NumericFormat } from "react-number-format";
 import { toast } from "react-toastify";
 
-export const Route = createLazyFileRoute("/_authenticated/checkout")({
+export const Route = createLazyFileRoute(
+  "/_mainLayout/_authenticated/checkout",
+)({
   component: CheckoutPage,
 });
 
@@ -304,14 +306,24 @@ function CheckoutPage() {
       //     reject(result.Message); // Ошибка: например, "Недостаточно средств"
       //   }
     } catch (apiError: any) {
-      // Выведите полную ошибку в консоль, чтобы понять её природу:
+      // Направляем на страницу неудачи
+      navigate({ to: "/failed" });
+
       console.error("=== ПОДРОБНОСТИ ОШИБКИ АПИ ===", apiError);
-      console.log("Статус ошибки:", apiError?.response?.status);
-      console.log("Данные ответа:", apiError?.response?.data);
-      toast.error("Connection error. Please try again.");
+
+      // Если это понятная ошибка валидации от CloudPayments
+      // (как {cardNumber: 'CardNumber_Invalid'})
+      if (apiError?.cardNumber === "CardNumber_Invalid" || apiError?.message) {
+        toast.error("Payment Error. Check card details.");
+      } else {
+        // Если это реально упал сервер или пропал интернет
+        toast.error("Connection error. Please try again.");
+      }
+
       throw apiError;
     }
   };
+
   // .catch((errors) => {
   //   console.log("🚀 ~ CheckoutPage ~ errors:", errors);
   //   reject("Ошибка валидации карты на стороне шлюза");

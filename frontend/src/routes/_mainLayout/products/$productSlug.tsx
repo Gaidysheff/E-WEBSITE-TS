@@ -12,7 +12,7 @@ import { type ProductInDetails } from "@/lib/types.ts";
 import { PRODUCT_DETAIL_PAGE_URL } from "@/api/endpoints.ts";
 import api from "@/api/api.ts";
 
-export const Route = createFileRoute("/products/$productSlug")({
+export const Route = createFileRoute("/_mainLayout/products/$productSlug")({
   loader: async ({ params: { productSlug } }) => {
     // ---------- Loading Delay ----------
     // await new Promise((resolve) => setTimeout(resolve, 5000));

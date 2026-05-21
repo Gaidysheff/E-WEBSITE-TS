@@ -5,7 +5,7 @@ import { USERS_URL } from "@/api/endpoints";
 import Error from "@/components/error/Error";
 import api from "@/api/api";
 
-export const Route = createFileRoute("/_authenticated/users_tanstack")({
+export const Route = createFileRoute("/_mainLayout/_authenticated/users_tanstack")({
   // component: UsersPage,
 
   loader: async () => {
