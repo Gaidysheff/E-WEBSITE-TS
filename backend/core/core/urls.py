@@ -3,14 +3,13 @@ from django.urls import path, include
 from knox import views as knox_views
 
 from django.conf.urls.static import static
+from core import settings
 
 from drf_spectacular.views import (
     SpectacularAPIView,
     SpectacularRedocView,
     SpectacularSwaggerView,
 )
-
-from core import settings
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -38,3 +37,6 @@ urlpatterns = [
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+admin.site.site_header = "Панель администрирования Базы Данных магазина E-Shop Kalika"
+admin.site.index_title = "Разделы Базы Данных магазина E-Shop Kalika"

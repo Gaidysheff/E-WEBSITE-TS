@@ -34,6 +34,7 @@ function RouteComponent() {
         isFetching={isFetching}
         totalPages={totalPages}
         currentPage={currentPage}
+        isCatalog={searchParams.isCatalog}
       />
     </div>
   );

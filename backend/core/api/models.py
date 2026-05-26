@@ -132,10 +132,8 @@ class Product(models.Model):
     image = models.ImageField(
         upload_to="images_products/%Y/%m/%d/", blank=True, null=True
     )
-    featured = models.BooleanField(
-        default=False, verbose_name="show in Featured Products"
-    )
-    carousel = models.BooleanField(default=False, verbose_name="show in Carousel")
+    featured = models.BooleanField(default=False, verbose_name="Featured")
+    carousel = models.BooleanField(default=False, verbose_name="in Carousel")
     category = models.ForeignKey(
         Category,
         on_delete=models.SET_NULL,

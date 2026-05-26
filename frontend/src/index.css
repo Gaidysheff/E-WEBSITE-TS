@@ -311,9 +311,9 @@ html {
     @apply flex items-center justify-center;
   }
 
-  .main-max-width {
+  /* .main-max-width {
     @apply max-w-[1440px];
-  }
+  } */
 
   /* .padding-x {
     @apply px-24 max-sm:px-10;

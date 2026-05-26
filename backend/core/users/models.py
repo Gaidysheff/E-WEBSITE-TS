@@ -49,16 +49,13 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return self.email
 
-    # class Meta:
-    #     db_table = 'auth_user'
-
 
 @receiver(reset_password_token_created)
 def password_reset_token_created(reset_password_token, *args, **kwargs):
     sitelink = os.getenv("BASE_URL_FRONTEND")
-    # sitelink = "http://localhost:5173/"
+    # sitelink = "http://localhost:5173"
     token = "{}".format(reset_password_token.key)
-    full_link = str(sitelink) + str("password-reset/") + str(token)
+    full_link = str(sitelink) + str("/password-reset/") + str(token)
 
     print(token)
     print(full_link)

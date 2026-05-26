@@ -4,12 +4,14 @@ import { type Product } from "@/lib/types.ts";
 import Skeleton from "react-loading-skeleton";
 import PageBreak from "@/components/pagination/PageBreak.tsx";
 import SortSelector from "./SortSelector.tsx";
+import { useSearch } from "@tanstack/react-router";
 
 interface Props {
   filteredResults: Product[] | undefined;
   isFetching: boolean;
   totalPages: number;
   currentPage: number;
+  isCatalog: boolean;
 }
 
 const FilteredResult = ({
@@ -17,6 +19,7 @@ const FilteredResult = ({
   isFetching,
   totalPages,
   currentPage,
+  isCatalog,
 }: Props) => {
   return (
     <section className="mx-auto my-5">
@@ -28,7 +31,10 @@ const FilteredResult = ({
           </>
         ) : (
           <div className="flex flex-col items-center gap-5">
-            <h2>FilteredResult</h2>
+            {/* Динамический заголовок */}
+            <h2 className="text-3xl font-bold">
+              {isCatalog ? "Каталог" : "FilteredResult"}
+            </h2>
             <SortSelector />
           </div>
         )}

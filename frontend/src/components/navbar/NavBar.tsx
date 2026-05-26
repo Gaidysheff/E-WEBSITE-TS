@@ -1,4 +1,5 @@
 import FilterDrawer from "@/components/filter/FilterDrawer.tsx";
+import { LayoutGrid } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import MobileNavbar from "./MobileNavbar";
 import NavItems from "./NavItems";
@@ -24,7 +25,7 @@ const NavBar = () => {
         border-b border-primaryLight"
       >
         <div className="container">
-          <div className="flex justify-between items-center main-max-width">
+          <div className="flex justify-between items-center">
             <div className="w-full flex justify-between items-center">
               <Link to="/">
                 <h1
@@ -47,6 +48,16 @@ const NavBar = () => {
                 <SearchForm />
               </div>
 
+              <Link
+                to="/products"
+                // TanStack Router требует, чтобы параметры search были объектом
+                search={{ isCatalog: true }}
+                className="text-primaryDark hover:text-primaryDark/50
+                hover:scale-110 transition duration-300 w-[40px]"
+              >
+                <LayoutGrid size={40} />
+              </Link>
+
               <SettingsDrawer />
 
               <FilterDrawer />
@@ -61,6 +72,7 @@ const NavBar = () => {
                 </div>
               </div>
             </div>
+
             {theme === "light" ? (
               <ThemeSwitch id="dark-btn" />
             ) : (

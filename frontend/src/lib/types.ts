@@ -7,6 +7,7 @@ export type User = {
   last_name: string;
   birthday: string;
   image: string;
+  username: string;
   address: {
     street: string;
     city: string;
@@ -103,6 +104,7 @@ export type ProductUrlQuery = {
   page_size: number;
   ordering: string;
   rating: number;
+  isCatalog: boolean;
 };
 
 export type RatingStats = {
