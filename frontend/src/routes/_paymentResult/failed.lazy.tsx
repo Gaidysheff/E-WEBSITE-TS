@@ -2,10 +2,11 @@
 declare global {
   interface Window {
     jivo_api?: {
+      get_mode(): unknown;
       open: () => void;
       close: () => void;
-      show: () => void;
-      hide: () => void;
+      // show: () => void;
+      // hide: () => void;
       setCustomData: (
         data: Array<{ key: string; value: string; label: string }>,
       ) => void;
@@ -13,6 +14,7 @@ declare global {
         name: string;
         email: string;
         phone?: string;
+        description?: string;
       }) => void;
     };
   }
@@ -41,58 +43,60 @@ export function Failure() {
   );
 
   useEffect(() => {
-    // 1. Проверяем, загрузился ли скрипт Jivo в глобальное окно браузера
-    // @ts-ignore
-    if (window.jivo_api) {
-      window.jivo_api.show(); // Показываем ярлык чата
-      window.jivo_api.open(); // Автоматически раскрываем диалоговое окно
+    let timerId: ReturnType<typeof setTimeout> | undefined;
 
-      // 2. Прокидываем данные клиента и контекст ошибки оператору поддержки
-      // (Данные user возьмите из вашего контекста авторизации,
-      // если они доступны на этой странице)
-      let clientName = user ? `${user.first_name} ${user.last_name}` : "Гость";
+    // Универсальная функция передачи данных
+    const trySetJivoData = () => {
+      if (window.jivo_api && typeof window.jivo_api.open === "function") {
+        // @ts-ignore
+        const chatMode = window.jivo_api.get_mode
+          ? window.jivo_api.get_mode()
+          : "online";
 
-      // Если имя и фамилия не заполнены в профиле, используем username или часть email
-      if (!clientName && user) {
-        clientName = user.username || user.email.split("@")[0];
+        if (chatMode === "online") {
+          window.jivo_api.open();
+
+          const clientName = user
+            ? `${user.first_name} ${user.last_name}`.trim()
+            : "";
+          const clientEmail = user?.email || "";
+
+          if (clientEmail || clientName) {
+            window.jivo_api.setContactInfo({
+              name: clientName || `Покупатель (${cartCode?.slice(0, 4)})`,
+              email: clientEmail,
+              phone: user?.address?.phone || "",
+              description: `Сбой оплаты. Корзина: ${cartCode}`,
+            });
+
+            window.jivo_api.setCustomData([
+              {
+                key: "cart_code",
+                value: cartCode || "—",
+                label: "Код корзины с ошибкой",
+              },
+              {
+                key: "error_time",
+                value: new Date().toLocaleTimeString(),
+                label: "Время сбоя",
+              },
+            ]);
+          }
+        }
+      } else {
+        // Записываем таймер в переменную
+        timerId = setTimeout(trySetJivoData, 200);
       }
+    };
 
-      const clientEmail = user?.email || "Не указан";
-
-      // 1. ЖЕЛЕЗНО регистрируем контакты, чтобы чат не задавал вопросов пользователю
-      if (clientEmail || clientName) {
-        // Убедитесь, что добавили этот метод в declare global интерфейса Window сверху!
-        window.jivo_api.setContactInfo({
-          name: clientName,
-          email: clientEmail,
-          phone: user?.address?.phone || "",
-        });
-      }
-
-      window.jivo_api.setCustomData([
-        // { key: "client_name", value: clientName, label: "Имя клиента" },
-        // { key: "client_email", value: clientEmail, label: "Email" },
-        {
-          key: "cart_code",
-          value: cartCode || "—",
-          label: "Код корзины с ошибкой",
-        },
-        {
-          key: "error_time",
-          value: new Date().toLocaleTimeString(),
-          label: "Время сбоя",
-        },
-      ]);
-    }
+    trySetJivoData();
 
     return () => {
-      // Когда пользователь нажимает "Try Again" и уходит со страницы:
-      // @ts-ignore
-      if (window.jivo_api) {
-        // @ts-ignore
-        window.jivo_api.close(); // Сворачиваем окно чата
-        // @ts-ignore
-        window.jivo_api.hide(); // Полностью скрываем ярлык с сайта
+      // Очищаем таймер при размонтировании
+      if (timerId) clearTimeout(timerId);
+
+      if (window.jivo_api && typeof window.jivo_api.close === "function") {
+        window.jivo_api.close();
       }
     };
   }, [cartCode, user]);

@@ -163,7 +163,7 @@ class Product(models.Model):
 
     class Meta:
         verbose_name = "Товар"
-        verbose_name_plural = "Товары"
+        verbose_name_plural = "ТОВАРЫ"
         ordering = [
             "name",
         ]
@@ -315,9 +315,7 @@ class CustomerAddress(models.Model):
 
 class DeliveryOption(models.Model):
     name = models.CharField(max_length=100, verbose_name="Название (напр. DHL)")
-    description = models.TextField(
-        blank=True, verbose_name="Описание (напр. 2-3 рабочих дня)"
-    )
+    description = models.TextField(blank=True, verbose_name="Описание")
     icon = models.ImageField(
         upload_to="icon_delivery",
         null=True,

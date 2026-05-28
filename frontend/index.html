@@ -22,6 +22,17 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <script type="text/javascript">
+      // Перед загрузкой Jivo проверяем, есть ли ID авторизованного пользователя
+      const userId = localStorage.getItem("user_id");
+      // Записывайте его туда при успешном логине
+
+      if (userId) {
+        window.jivo_config = {
+          userToken: userId, // Jivo жестко привяжет диалог к ID из вашей БД Django
+        };
+      }
+    </script>
     <script src="//code.jivo.ru/widget/JkLYoJ9dgD" async></script>
   </body>
 </html>

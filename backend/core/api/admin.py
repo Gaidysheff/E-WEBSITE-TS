@@ -132,65 +132,127 @@ class ProductAdmin(admin.ModelAdmin):
         return "Без фото"
 
 
-# admin.site.register(Product, ProductAdmin)
-
-
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ["name", "slug", "image"]
+    list_display = [
+        "name",
+        "slug",
+        "icon_image",
+    ]
     prepopulated_fields = {"slug": ("name",)}
+    readonly_fields = [
+        "icon_image",
+    ]
 
-
-# admin.site.register(Category, CategoryAdmin)
+    @admin.display(description="Иконка", ordering="name")
+    def icon_image(self, item: Category):
+        if item.image:
+            return mark_safe(f"<img src='{item.image.url}' height=25>")
+        return "Без фото"
 
 
 @admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):
-    list_display = ["id", "product", "rating", "review", "created", "updated"]
-
-
-# admin.site.register(Review, ReviewAdmin)
+    list_display = [
+        "product",
+        "rating",
+        "user",
+        "review",
+        "created",
+        "updated",
+    ]
+    list_display_links = [
+        "product",
+        "user",
+        "review",
+    ]
+    readonly_fields = [
+        "product",
+        "user",
+        "rating",
+        "review",
+        "created",
+        "updated",
+    ]
+    list_filter = [
+        "product",
+        "user",
+    ]
 
 
 @admin.register(ProductRating)
 class ProductRatingAdmin(admin.ModelAdmin):
-    list_display = ("product", "average_rating", "total_reviews")
-
-
-# admin.site.register(ProductRating, ProductRatingAdmin)
+    list_display = [
+        "product",
+        "average_rating",
+        "total_reviews",
+    ]
+    readonly_fields = [
+        "product",
+        "average_rating",
+        "total_reviews",
+    ]
 
 
 @admin.register(Cart)
 class CartAdmin(admin.ModelAdmin):
-    list_display = (
+    list_display = [
         "id",
         "cart_code",
         "user",
-    )
-
-
-# admin.site.register(Cart, CartAdmin)
+    ]
+    readonly_fields = [
+        "id",
+        "cart_code",
+        "user",
+    ]
+    list_display_links = [
+        "id",
+        "cart_code",
+    ]
 
 
 @admin.register(CartItem)
 class CartItemAdmin(admin.ModelAdmin):
-    list_display = ("id", "cart", "product", "quantity")
-
-
-# admin.site.register(CartItem, CartItemAdmin)
+    list_display = [
+        "id",
+        "cart",
+        "product",
+        "quantity",
+    ]
+    readonly_fields = [
+        "id",
+        "cart",
+        "product",
+        "quantity",
+    ]
+    list_display_links = [
+        "id",
+        "cart",
+    ]
 
 
 @admin.register(Wishlist)
 class WishlistAdmin(admin.ModelAdmin):
-    list_display = ("user", "product")
-
-
-# admin.site.register(Wishlist, WishlistAdmin)
+    list_display = [
+        "user",
+        "product",
+        "created",
+    ]
+    readonly_fields = [
+        "user",
+        "product",
+        "created",
+    ]
+    list_filter = [
+        "user",
+        "product",
+    ]
 
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = (
+    list_display = [
         "checkout_id",
         # "stripe_checkout_id",
         "amount",
@@ -198,86 +260,121 @@ class OrderAdmin(admin.ModelAdmin):
         "customer_email",
         "status",
         "created_at",
-    )
-
-
-# admin.site.register(Order, OrderAdmin)
+    ]
+    readonly_fields = [
+        "checkout_id",
+        "amount",
+        "currency",
+        "customer_email",
+        "status",
+        "created_at",
+    ]
 
 
 @admin.register(OrderItem)
 class OrderItemAdmin(admin.ModelAdmin):
-    list_display = (
+    list_display = [
         "order",
         "product",
         "quantity",
-    )
-
-
-# admin.site.register(OrderItem, OrderItemAdmin)
+    ]
+    readonly_fields = [
+        "order",
+        "product",
+        "quantity",
+    ]
 
 
 @admin.register(CustomerAddress)
 class CustomerAddressAdmin(admin.ModelAdmin):
-    list_display = (
+    list_display = [
         "customer",
         "street",
         "state",
         "city",
         "phone",
-    )
-
-
-# admin.site.register(CustomerAddress, CustomerAddressAdmin)
+    ]
+    readonly_fields = [
+        "customer",
+        "street",
+        "state",
+        "city",
+        "phone",
+    ]
+    list_filter = [
+        "city",
+    ]
 
 
 @admin.register(DeliveryOption)
 class DeliveryOptionAdmin(admin.ModelAdmin):
-    list_display = (
-        "id",
+    list_display = [
         "name",
+        "icon_image",
+        # "icon",
         "description",
-        "icon",
         "price",
         "is_active",
         "is_pickup",
         "order",
-    )
+    ]
+    list_editable = [
+        "order",
+    ]
+    readonly_fields = [
+        "icon_image",
+    ]
+    fieldsets = [
+        (
+            None,
+            {
+                "fields": (
+                    "name",
+                    "description",
+                    "price",
+                    "is_active",
+                    "is_pickup",
+                    "order",
+                )
+            },
+        ),
+        (
+            None,
+            {
+                "fields": (
+                    "icon",
+                    "icon_image",
+                )
+            },
+        ),
+    ]
 
-
-# admin.site.register(DeliveryOption, DeliveryOptionAdmin)
+    @admin.display(description="Иконка", ordering="name")
+    def icon_image(self, item: DeliveryOption):
+        if item.icon:
+            return mark_safe(f"<img src='{item.icon.url}' height=25>")
+        return "Без фото"
 
 
 @admin.register(Brand)
 class BrandAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("name",)}
-    fields = [
-        "name",
-        "slug",
-    ]
     list_display = [
-        "id",
         "name",
         "slug",
     ]
     list_display_links = [
-        "id",
         "name",
     ]
 
 
 @admin.register(Color)
 class ColorAdmin(admin.ModelAdmin):
-    fields = [
-        "name",
-        "color_code",
-    ]
     list_display = [
-        "id",
         "name",
         "color_code",
     ]
     list_display_links = [
-        "id",
         "name",
         "color_code",
     ]
@@ -285,14 +382,7 @@ class ColorAdmin(admin.ModelAdmin):
 
 @admin.register(PricePresets)
 class PricePresetsAdmin(admin.ModelAdmin):
-    fields = [
-        "label",
-        "min_price",
-        "max_price",
-        "order",
-    ]
     list_display = [
-        "id",
         "label",
         "min_price",
         "max_price",
@@ -300,4 +390,7 @@ class PricePresetsAdmin(admin.ModelAdmin):
     ]
     list_display_links = [
         "label",
+    ]
+    list_editable = [
+        "order",
     ]
