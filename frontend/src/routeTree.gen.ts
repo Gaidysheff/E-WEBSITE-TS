@@ -11,65 +11,59 @@
 import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as MainLayoutRouteImport } from './routes/_mainLayout'
-import { Route as MainLayoutIndexRouteImport } from './routes/_mainLayout.index'
+import { Route as LangRouteImport } from './routes/$lang'
+import { Route as IndexRouteImport } from './routes/index'
 import { Route as SearchSearchRouteImport } from './routes/_search/search'
-import { Route as PaymentResultSuccessRouteImport } from './routes/_paymentResult/success'
-import { Route as MainLayoutAuthenticatedRouteImport } from './routes/_mainLayout/_authenticated'
-import { Route as AuthRegisterRouteImport } from './routes/_auth/register'
-import { Route as AuthPasswordResetRequestRouteImport } from './routes/_auth/passwordResetRequest'
-import { Route as AuthLoginRouteImport } from './routes/_auth/login'
-import { Route as MainLayoutProductsProductSlugRouteImport } from './routes/_mainLayout/products/$productSlug'
-import { Route as MainLayoutCategoriesCategoryIdRouteImport } from './routes/_mainLayout/categories/$categoryId'
-import { Route as MainLayoutFilterProductsRouteImport } from './routes/_mainLayout/_filter/products'
-import { Route as MainLayoutAuthenticatedUsers_tanstackRouteImport } from './routes/_mainLayout/_authenticated/users_tanstack'
-import { Route as AuthPasswordResetTokenRouteImport } from './routes/_auth/password-reset/$token'
+import { Route as LangMainLayoutRouteImport } from './routes/$lang/_mainLayout'
+import { Route as LangMainLayoutIndexRouteImport } from './routes/$lang/_mainLayout.index'
+import { Route as LangPaymentResultSuccessRouteImport } from './routes/$lang/_paymentResult/success'
+import { Route as LangMainLayoutAuthenticatedRouteImport } from './routes/$lang/_mainLayout/_authenticated'
+import { Route as LangAuthRegisterRouteImport } from './routes/$lang/_auth/register'
+import { Route as LangAuthPasswordResetRequestRouteImport } from './routes/$lang/_auth/passwordResetRequest'
+import { Route as LangAuthLoginRouteImport } from './routes/$lang/_auth/login'
+import { Route as LangMainLayoutProductsProductSlugRouteImport } from './routes/$lang/_mainLayout/products/$productSlug'
+import { Route as LangMainLayoutCategoriesCategoryIdRouteImport } from './routes/$lang/_mainLayout/categories/$categoryId'
+import { Route as LangMainLayoutFilterProductsRouteImport } from './routes/$lang/_mainLayout/_filter/products'
+import { Route as LangMainLayoutAuthenticatedUsers_tanstackRouteImport } from './routes/$lang/_mainLayout/_authenticated/users_tanstack'
+import { Route as LangAuthPasswordResetTokenRouteImport } from './routes/$lang/_auth/password-reset/$token'
 
 const TestTestLazyRouteImport = createFileRoute('/_test/test')()
-const PaymentResultFailedLazyRouteImport = createFileRoute(
-  '/_paymentResult/failed',
+const LangPaymentResultFailedLazyRouteImport = createFileRoute(
+  '/$lang/_paymentResult/failed',
 )()
-const MainLayoutAuthenticatedUsersLazyRouteImport = createFileRoute(
-  '/_mainLayout/_authenticated/users',
+const LangMainLayoutAuthenticatedUsersLazyRouteImport = createFileRoute(
+  '/$lang/_mainLayout/_authenticated/users',
 )()
-const MainLayoutAuthenticatedProfileLazyRouteImport = createFileRoute(
-  '/_mainLayout/_authenticated/profile',
+const LangMainLayoutAuthenticatedProfileLazyRouteImport = createFileRoute(
+  '/$lang/_mainLayout/_authenticated/profile',
 )()
-const MainLayoutAuthenticatedCheckoutLazyRouteImport = createFileRoute(
-  '/_mainLayout/_authenticated/checkout',
+const LangMainLayoutAuthenticatedCheckoutLazyRouteImport = createFileRoute(
+  '/$lang/_mainLayout/_authenticated/checkout',
 )()
-const MainLayoutAuthenticatedCartIndexLazyRouteImport = createFileRoute(
-  '/_mainLayout/_authenticated/cart/',
+const LangMainLayoutAuthenticatedCartIndexLazyRouteImport = createFileRoute(
+  '/$lang/_mainLayout/_authenticated/cart/',
 )()
-const MainLayoutAuthenticatedCartCartcodeLazyRouteImport = createFileRoute(
-  '/_mainLayout/_authenticated/cart/$cartcode',
+const LangMainLayoutAuthenticatedCartCartcodeLazyRouteImport = createFileRoute(
+  '/$lang/_mainLayout/_authenticated/cart/$cartcode',
 )()
-const MainLayoutAuthenticatedCloudPaymentPaymentLazyRouteImport =
-  createFileRoute('/_mainLayout/_authenticated/_CloudPayment/payment')()
+const LangMainLayoutAuthenticatedCloudPaymentPaymentLazyRouteImport =
+  createFileRoute('/$lang/_mainLayout/_authenticated/_CloudPayment/payment')()
 
-const MainLayoutRoute = MainLayoutRouteImport.update({
-  id: '/_mainLayout',
+const LangRoute = LangRouteImport.update({
+  id: '/$lang',
+  path: '/$lang',
   getParentRoute: () => rootRouteImport,
 } as any)
-const MainLayoutIndexRoute = MainLayoutIndexRouteImport.update({
+const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => MainLayoutRoute,
-} as any).lazy(() =>
-  import('./routes/_mainLayout.index.lazy').then((d) => d.Route),
-)
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TestTestLazyRoute = TestTestLazyRouteImport.update({
   id: '/_test/test',
   path: '/test',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/_test/test.lazy').then((d) => d.Route))
-const PaymentResultFailedLazyRoute = PaymentResultFailedLazyRouteImport.update({
-  id: '/_paymentResult/failed',
-  path: '/failed',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() =>
-  import('./routes/_paymentResult/failed.lazy').then((d) => d.Route),
-)
 const SearchSearchRoute = SearchSearchRouteImport.update({
   id: '/_search/search',
   path: '/search',
@@ -77,311 +71,333 @@ const SearchSearchRoute = SearchSearchRouteImport.update({
 } as any).lazy(() =>
   import('./routes/_search/search.lazy').then((d) => d.Route),
 )
-const PaymentResultSuccessRoute = PaymentResultSuccessRouteImport.update({
-  id: '/_paymentResult/success',
-  path: '/success',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() =>
-  import('./routes/_paymentResult/success.lazy').then((d) => d.Route),
-)
-const MainLayoutAuthenticatedRoute = MainLayoutAuthenticatedRouteImport.update({
-  id: '/_authenticated',
-  getParentRoute: () => MainLayoutRoute,
+const LangMainLayoutRoute = LangMainLayoutRouteImport.update({
+  id: '/_mainLayout',
+  getParentRoute: () => LangRoute,
 } as any)
-const AuthRegisterRoute = AuthRegisterRouteImport.update({
+const LangMainLayoutIndexRoute = LangMainLayoutIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => LangMainLayoutRoute,
+} as any).lazy(() =>
+  import('./routes/$lang/_mainLayout.index.lazy').then((d) => d.Route),
+)
+const LangPaymentResultFailedLazyRoute =
+  LangPaymentResultFailedLazyRouteImport.update({
+    id: '/_paymentResult/failed',
+    path: '/failed',
+    getParentRoute: () => LangRoute,
+  } as any).lazy(() =>
+    import('./routes/$lang/_paymentResult/failed.lazy').then((d) => d.Route),
+  )
+const LangPaymentResultSuccessRoute =
+  LangPaymentResultSuccessRouteImport.update({
+    id: '/_paymentResult/success',
+    path: '/success',
+    getParentRoute: () => LangRoute,
+  } as any).lazy(() =>
+    import('./routes/$lang/_paymentResult/success.lazy').then((d) => d.Route),
+  )
+const LangMainLayoutAuthenticatedRoute =
+  LangMainLayoutAuthenticatedRouteImport.update({
+    id: '/_authenticated',
+    getParentRoute: () => LangMainLayoutRoute,
+  } as any)
+const LangAuthRegisterRoute = LangAuthRegisterRouteImport.update({
   id: '/_auth/register',
   path: '/register',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => LangRoute,
 } as any)
-const AuthPasswordResetRequestRoute =
-  AuthPasswordResetRequestRouteImport.update({
+const LangAuthPasswordResetRequestRoute =
+  LangAuthPasswordResetRequestRouteImport.update({
     id: '/_auth/passwordResetRequest',
     path: '/passwordResetRequest',
-    getParentRoute: () => rootRouteImport,
+    getParentRoute: () => LangRoute,
   } as any)
-const AuthLoginRoute = AuthLoginRouteImport.update({
+const LangAuthLoginRoute = LangAuthLoginRouteImport.update({
   id: '/_auth/login',
   path: '/login',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => LangRoute,
 } as any)
-const MainLayoutAuthenticatedUsersLazyRoute =
-  MainLayoutAuthenticatedUsersLazyRouteImport.update({
+const LangMainLayoutAuthenticatedUsersLazyRoute =
+  LangMainLayoutAuthenticatedUsersLazyRouteImport.update({
     id: '/users',
     path: '/users',
-    getParentRoute: () => MainLayoutAuthenticatedRoute,
+    getParentRoute: () => LangMainLayoutAuthenticatedRoute,
   } as any).lazy(() =>
-    import('./routes/_mainLayout/_authenticated/users.lazy').then(
+    import('./routes/$lang/_mainLayout/_authenticated/users.lazy').then(
       (d) => d.Route,
     ),
   )
-const MainLayoutAuthenticatedProfileLazyRoute =
-  MainLayoutAuthenticatedProfileLazyRouteImport.update({
+const LangMainLayoutAuthenticatedProfileLazyRoute =
+  LangMainLayoutAuthenticatedProfileLazyRouteImport.update({
     id: '/profile',
     path: '/profile',
-    getParentRoute: () => MainLayoutAuthenticatedRoute,
+    getParentRoute: () => LangMainLayoutAuthenticatedRoute,
   } as any).lazy(() =>
-    import('./routes/_mainLayout/_authenticated/profile.lazy').then(
+    import('./routes/$lang/_mainLayout/_authenticated/profile.lazy').then(
       (d) => d.Route,
     ),
   )
-const MainLayoutAuthenticatedCheckoutLazyRoute =
-  MainLayoutAuthenticatedCheckoutLazyRouteImport.update({
+const LangMainLayoutAuthenticatedCheckoutLazyRoute =
+  LangMainLayoutAuthenticatedCheckoutLazyRouteImport.update({
     id: '/checkout',
     path: '/checkout',
-    getParentRoute: () => MainLayoutAuthenticatedRoute,
+    getParentRoute: () => LangMainLayoutAuthenticatedRoute,
   } as any).lazy(() =>
-    import('./routes/_mainLayout/_authenticated/checkout.lazy').then(
+    import('./routes/$lang/_mainLayout/_authenticated/checkout.lazy').then(
       (d) => d.Route,
     ),
   )
-const MainLayoutProductsProductSlugRoute =
-  MainLayoutProductsProductSlugRouteImport.update({
+const LangMainLayoutProductsProductSlugRoute =
+  LangMainLayoutProductsProductSlugRouteImport.update({
     id: '/products/$productSlug',
     path: '/products/$productSlug',
-    getParentRoute: () => MainLayoutRoute,
+    getParentRoute: () => LangMainLayoutRoute,
   } as any).lazy(() =>
-    import('./routes/_mainLayout/products/$productSlug.lazy').then(
+    import('./routes/$lang/_mainLayout/products/$productSlug.lazy').then(
       (d) => d.Route,
     ),
   )
-const MainLayoutCategoriesCategoryIdRoute =
-  MainLayoutCategoriesCategoryIdRouteImport.update({
+const LangMainLayoutCategoriesCategoryIdRoute =
+  LangMainLayoutCategoriesCategoryIdRouteImport.update({
     id: '/categories/$categoryId',
     path: '/categories/$categoryId',
-    getParentRoute: () => MainLayoutRoute,
+    getParentRoute: () => LangMainLayoutRoute,
   } as any).lazy(() =>
-    import('./routes/_mainLayout/categories/$categoryId.lazy').then(
+    import('./routes/$lang/_mainLayout/categories/$categoryId.lazy').then(
       (d) => d.Route,
     ),
   )
-const MainLayoutFilterProductsRoute =
-  MainLayoutFilterProductsRouteImport.update({
+const LangMainLayoutFilterProductsRoute =
+  LangMainLayoutFilterProductsRouteImport.update({
     id: '/_filter/products',
     path: '/products',
-    getParentRoute: () => MainLayoutRoute,
+    getParentRoute: () => LangMainLayoutRoute,
   } as any).lazy(() =>
-    import('./routes/_mainLayout/_filter/products.lazy').then((d) => d.Route),
+    import('./routes/$lang/_mainLayout/_filter/products.lazy').then(
+      (d) => d.Route,
+    ),
   )
-const MainLayoutAuthenticatedUsers_tanstackRoute =
-  MainLayoutAuthenticatedUsers_tanstackRouteImport.update({
+const LangMainLayoutAuthenticatedUsers_tanstackRoute =
+  LangMainLayoutAuthenticatedUsers_tanstackRouteImport.update({
     id: '/users_tanstack',
     path: '/users_tanstack',
-    getParentRoute: () => MainLayoutAuthenticatedRoute,
+    getParentRoute: () => LangMainLayoutAuthenticatedRoute,
   } as any).lazy(() =>
-    import('./routes/_mainLayout/_authenticated/users_tanstack.lazy').then(
+    import('./routes/$lang/_mainLayout/_authenticated/users_tanstack.lazy').then(
       (d) => d.Route,
     ),
   )
-const AuthPasswordResetTokenRoute = AuthPasswordResetTokenRouteImport.update({
-  id: '/_auth/password-reset/$token',
-  path: '/password-reset/$token',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MainLayoutAuthenticatedCartIndexLazyRoute =
-  MainLayoutAuthenticatedCartIndexLazyRouteImport.update({
+const LangAuthPasswordResetTokenRoute =
+  LangAuthPasswordResetTokenRouteImport.update({
+    id: '/_auth/password-reset/$token',
+    path: '/password-reset/$token',
+    getParentRoute: () => LangRoute,
+  } as any)
+const LangMainLayoutAuthenticatedCartIndexLazyRoute =
+  LangMainLayoutAuthenticatedCartIndexLazyRouteImport.update({
     id: '/cart/',
     path: '/cart/',
-    getParentRoute: () => MainLayoutAuthenticatedRoute,
+    getParentRoute: () => LangMainLayoutAuthenticatedRoute,
   } as any).lazy(() =>
-    import('./routes/_mainLayout/_authenticated/cart/index.lazy').then(
+    import('./routes/$lang/_mainLayout/_authenticated/cart/index.lazy').then(
       (d) => d.Route,
     ),
   )
-const MainLayoutAuthenticatedCartCartcodeLazyRoute =
-  MainLayoutAuthenticatedCartCartcodeLazyRouteImport.update({
+const LangMainLayoutAuthenticatedCartCartcodeLazyRoute =
+  LangMainLayoutAuthenticatedCartCartcodeLazyRouteImport.update({
     id: '/cart/$cartcode',
     path: '/cart/$cartcode',
-    getParentRoute: () => MainLayoutAuthenticatedRoute,
+    getParentRoute: () => LangMainLayoutAuthenticatedRoute,
   } as any).lazy(() =>
-    import('./routes/_mainLayout/_authenticated/cart/$cartcode.lazy').then(
+    import('./routes/$lang/_mainLayout/_authenticated/cart/$cartcode.lazy').then(
       (d) => d.Route,
     ),
   )
-const MainLayoutAuthenticatedCloudPaymentPaymentLazyRoute =
-  MainLayoutAuthenticatedCloudPaymentPaymentLazyRouteImport.update({
+const LangMainLayoutAuthenticatedCloudPaymentPaymentLazyRoute =
+  LangMainLayoutAuthenticatedCloudPaymentPaymentLazyRouteImport.update({
     id: '/_CloudPayment/payment',
     path: '/payment',
-    getParentRoute: () => MainLayoutAuthenticatedRoute,
+    getParentRoute: () => LangMainLayoutAuthenticatedRoute,
   } as any).lazy(() =>
-    import('./routes/_mainLayout/_authenticated/_CloudPayment/payment.lazy').then(
+    import('./routes/$lang/_mainLayout/_authenticated/_CloudPayment/payment.lazy').then(
       (d) => d.Route,
     ),
   )
 
 export interface FileRoutesByFullPath {
-  '/login': typeof AuthLoginRoute
-  '/passwordResetRequest': typeof AuthPasswordResetRequestRoute
-  '/register': typeof AuthRegisterRoute
-  '/success': typeof PaymentResultSuccessRoute
+  '/': typeof IndexRoute
+  '/$lang': typeof LangMainLayoutAuthenticatedRouteWithChildren
   '/search': typeof SearchSearchRoute
-  '/failed': typeof PaymentResultFailedLazyRoute
   '/test': typeof TestTestLazyRoute
-  '/': typeof MainLayoutIndexRoute
-  '/password-reset/$token': typeof AuthPasswordResetTokenRoute
-  '/users_tanstack': typeof MainLayoutAuthenticatedUsers_tanstackRoute
-  '/products': typeof MainLayoutFilterProductsRoute
-  '/categories/$categoryId': typeof MainLayoutCategoriesCategoryIdRoute
-  '/products/$productSlug': typeof MainLayoutProductsProductSlugRoute
-  '/checkout': typeof MainLayoutAuthenticatedCheckoutLazyRoute
-  '/profile': typeof MainLayoutAuthenticatedProfileLazyRoute
-  '/users': typeof MainLayoutAuthenticatedUsersLazyRoute
-  '/payment': typeof MainLayoutAuthenticatedCloudPaymentPaymentLazyRoute
-  '/cart/$cartcode': typeof MainLayoutAuthenticatedCartCartcodeLazyRoute
-  '/cart': typeof MainLayoutAuthenticatedCartIndexLazyRoute
+  '/$lang/login': typeof LangAuthLoginRoute
+  '/$lang/passwordResetRequest': typeof LangAuthPasswordResetRequestRoute
+  '/$lang/register': typeof LangAuthRegisterRoute
+  '/$lang/success': typeof LangPaymentResultSuccessRoute
+  '/$lang/failed': typeof LangPaymentResultFailedLazyRoute
+  '/$lang/': typeof LangMainLayoutIndexRoute
+  '/$lang/password-reset/$token': typeof LangAuthPasswordResetTokenRoute
+  '/$lang/users_tanstack': typeof LangMainLayoutAuthenticatedUsers_tanstackRoute
+  '/$lang/products': typeof LangMainLayoutFilterProductsRoute
+  '/$lang/categories/$categoryId': typeof LangMainLayoutCategoriesCategoryIdRoute
+  '/$lang/products/$productSlug': typeof LangMainLayoutProductsProductSlugRoute
+  '/$lang/checkout': typeof LangMainLayoutAuthenticatedCheckoutLazyRoute
+  '/$lang/profile': typeof LangMainLayoutAuthenticatedProfileLazyRoute
+  '/$lang/users': typeof LangMainLayoutAuthenticatedUsersLazyRoute
+  '/$lang/payment': typeof LangMainLayoutAuthenticatedCloudPaymentPaymentLazyRoute
+  '/$lang/cart/$cartcode': typeof LangMainLayoutAuthenticatedCartCartcodeLazyRoute
+  '/$lang/cart': typeof LangMainLayoutAuthenticatedCartIndexLazyRoute
 }
 export interface FileRoutesByTo {
-  '/login': typeof AuthLoginRoute
-  '/passwordResetRequest': typeof AuthPasswordResetRequestRoute
-  '/register': typeof AuthRegisterRoute
-  '/success': typeof PaymentResultSuccessRoute
+  '/': typeof IndexRoute
+  '/$lang': typeof LangMainLayoutIndexRoute
   '/search': typeof SearchSearchRoute
-  '/failed': typeof PaymentResultFailedLazyRoute
   '/test': typeof TestTestLazyRoute
-  '/': typeof MainLayoutIndexRoute
-  '/password-reset/$token': typeof AuthPasswordResetTokenRoute
-  '/users_tanstack': typeof MainLayoutAuthenticatedUsers_tanstackRoute
-  '/products': typeof MainLayoutFilterProductsRoute
-  '/categories/$categoryId': typeof MainLayoutCategoriesCategoryIdRoute
-  '/products/$productSlug': typeof MainLayoutProductsProductSlugRoute
-  '/checkout': typeof MainLayoutAuthenticatedCheckoutLazyRoute
-  '/profile': typeof MainLayoutAuthenticatedProfileLazyRoute
-  '/users': typeof MainLayoutAuthenticatedUsersLazyRoute
-  '/payment': typeof MainLayoutAuthenticatedCloudPaymentPaymentLazyRoute
-  '/cart/$cartcode': typeof MainLayoutAuthenticatedCartCartcodeLazyRoute
-  '/cart': typeof MainLayoutAuthenticatedCartIndexLazyRoute
+  '/$lang/login': typeof LangAuthLoginRoute
+  '/$lang/passwordResetRequest': typeof LangAuthPasswordResetRequestRoute
+  '/$lang/register': typeof LangAuthRegisterRoute
+  '/$lang/success': typeof LangPaymentResultSuccessRoute
+  '/$lang/failed': typeof LangPaymentResultFailedLazyRoute
+  '/$lang/password-reset/$token': typeof LangAuthPasswordResetTokenRoute
+  '/$lang/users_tanstack': typeof LangMainLayoutAuthenticatedUsers_tanstackRoute
+  '/$lang/products': typeof LangMainLayoutFilterProductsRoute
+  '/$lang/categories/$categoryId': typeof LangMainLayoutCategoriesCategoryIdRoute
+  '/$lang/products/$productSlug': typeof LangMainLayoutProductsProductSlugRoute
+  '/$lang/checkout': typeof LangMainLayoutAuthenticatedCheckoutLazyRoute
+  '/$lang/profile': typeof LangMainLayoutAuthenticatedProfileLazyRoute
+  '/$lang/users': typeof LangMainLayoutAuthenticatedUsersLazyRoute
+  '/$lang/payment': typeof LangMainLayoutAuthenticatedCloudPaymentPaymentLazyRoute
+  '/$lang/cart/$cartcode': typeof LangMainLayoutAuthenticatedCartCartcodeLazyRoute
+  '/$lang/cart': typeof LangMainLayoutAuthenticatedCartIndexLazyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/_mainLayout': typeof MainLayoutRouteWithChildren
-  '/_auth/login': typeof AuthLoginRoute
-  '/_auth/passwordResetRequest': typeof AuthPasswordResetRequestRoute
-  '/_auth/register': typeof AuthRegisterRoute
-  '/_mainLayout/_authenticated': typeof MainLayoutAuthenticatedRouteWithChildren
-  '/_paymentResult/success': typeof PaymentResultSuccessRoute
+  '/': typeof IndexRoute
+  '/$lang': typeof LangRouteWithChildren
+  '/$lang/_mainLayout': typeof LangMainLayoutRouteWithChildren
   '/_search/search': typeof SearchSearchRoute
-  '/_paymentResult/failed': typeof PaymentResultFailedLazyRoute
   '/_test/test': typeof TestTestLazyRoute
-  '/_mainLayout/': typeof MainLayoutIndexRoute
-  '/_auth/password-reset/$token': typeof AuthPasswordResetTokenRoute
-  '/_mainLayout/_authenticated/users_tanstack': typeof MainLayoutAuthenticatedUsers_tanstackRoute
-  '/_mainLayout/_filter/products': typeof MainLayoutFilterProductsRoute
-  '/_mainLayout/categories/$categoryId': typeof MainLayoutCategoriesCategoryIdRoute
-  '/_mainLayout/products/$productSlug': typeof MainLayoutProductsProductSlugRoute
-  '/_mainLayout/_authenticated/checkout': typeof MainLayoutAuthenticatedCheckoutLazyRoute
-  '/_mainLayout/_authenticated/profile': typeof MainLayoutAuthenticatedProfileLazyRoute
-  '/_mainLayout/_authenticated/users': typeof MainLayoutAuthenticatedUsersLazyRoute
-  '/_mainLayout/_authenticated/_CloudPayment/payment': typeof MainLayoutAuthenticatedCloudPaymentPaymentLazyRoute
-  '/_mainLayout/_authenticated/cart/$cartcode': typeof MainLayoutAuthenticatedCartCartcodeLazyRoute
-  '/_mainLayout/_authenticated/cart/': typeof MainLayoutAuthenticatedCartIndexLazyRoute
+  '/$lang/_auth/login': typeof LangAuthLoginRoute
+  '/$lang/_auth/passwordResetRequest': typeof LangAuthPasswordResetRequestRoute
+  '/$lang/_auth/register': typeof LangAuthRegisterRoute
+  '/$lang/_mainLayout/_authenticated': typeof LangMainLayoutAuthenticatedRouteWithChildren
+  '/$lang/_paymentResult/success': typeof LangPaymentResultSuccessRoute
+  '/$lang/_paymentResult/failed': typeof LangPaymentResultFailedLazyRoute
+  '/$lang/_mainLayout/': typeof LangMainLayoutIndexRoute
+  '/$lang/_auth/password-reset/$token': typeof LangAuthPasswordResetTokenRoute
+  '/$lang/_mainLayout/_authenticated/users_tanstack': typeof LangMainLayoutAuthenticatedUsers_tanstackRoute
+  '/$lang/_mainLayout/_filter/products': typeof LangMainLayoutFilterProductsRoute
+  '/$lang/_mainLayout/categories/$categoryId': typeof LangMainLayoutCategoriesCategoryIdRoute
+  '/$lang/_mainLayout/products/$productSlug': typeof LangMainLayoutProductsProductSlugRoute
+  '/$lang/_mainLayout/_authenticated/checkout': typeof LangMainLayoutAuthenticatedCheckoutLazyRoute
+  '/$lang/_mainLayout/_authenticated/profile': typeof LangMainLayoutAuthenticatedProfileLazyRoute
+  '/$lang/_mainLayout/_authenticated/users': typeof LangMainLayoutAuthenticatedUsersLazyRoute
+  '/$lang/_mainLayout/_authenticated/_CloudPayment/payment': typeof LangMainLayoutAuthenticatedCloudPaymentPaymentLazyRoute
+  '/$lang/_mainLayout/_authenticated/cart/$cartcode': typeof LangMainLayoutAuthenticatedCartCartcodeLazyRoute
+  '/$lang/_mainLayout/_authenticated/cart/': typeof LangMainLayoutAuthenticatedCartIndexLazyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/login'
-    | '/passwordResetRequest'
-    | '/register'
-    | '/success'
-    | '/search'
-    | '/failed'
-    | '/test'
     | '/'
-    | '/password-reset/$token'
-    | '/users_tanstack'
-    | '/products'
-    | '/categories/$categoryId'
-    | '/products/$productSlug'
-    | '/checkout'
-    | '/profile'
-    | '/users'
-    | '/payment'
-    | '/cart/$cartcode'
-    | '/cart'
+    | '/$lang'
+    | '/search'
+    | '/test'
+    | '/$lang/login'
+    | '/$lang/passwordResetRequest'
+    | '/$lang/register'
+    | '/$lang/success'
+    | '/$lang/failed'
+    | '/$lang/'
+    | '/$lang/password-reset/$token'
+    | '/$lang/users_tanstack'
+    | '/$lang/products'
+    | '/$lang/categories/$categoryId'
+    | '/$lang/products/$productSlug'
+    | '/$lang/checkout'
+    | '/$lang/profile'
+    | '/$lang/users'
+    | '/$lang/payment'
+    | '/$lang/cart/$cartcode'
+    | '/$lang/cart'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/login'
-    | '/passwordResetRequest'
-    | '/register'
-    | '/success'
-    | '/search'
-    | '/failed'
-    | '/test'
     | '/'
-    | '/password-reset/$token'
-    | '/users_tanstack'
-    | '/products'
-    | '/categories/$categoryId'
-    | '/products/$productSlug'
-    | '/checkout'
-    | '/profile'
-    | '/users'
-    | '/payment'
-    | '/cart/$cartcode'
-    | '/cart'
+    | '/$lang'
+    | '/search'
+    | '/test'
+    | '/$lang/login'
+    | '/$lang/passwordResetRequest'
+    | '/$lang/register'
+    | '/$lang/success'
+    | '/$lang/failed'
+    | '/$lang/password-reset/$token'
+    | '/$lang/users_tanstack'
+    | '/$lang/products'
+    | '/$lang/categories/$categoryId'
+    | '/$lang/products/$productSlug'
+    | '/$lang/checkout'
+    | '/$lang/profile'
+    | '/$lang/users'
+    | '/$lang/payment'
+    | '/$lang/cart/$cartcode'
+    | '/$lang/cart'
   id:
     | '__root__'
-    | '/_mainLayout'
-    | '/_auth/login'
-    | '/_auth/passwordResetRequest'
-    | '/_auth/register'
-    | '/_mainLayout/_authenticated'
-    | '/_paymentResult/success'
+    | '/'
+    | '/$lang'
+    | '/$lang/_mainLayout'
     | '/_search/search'
-    | '/_paymentResult/failed'
     | '/_test/test'
-    | '/_mainLayout/'
-    | '/_auth/password-reset/$token'
-    | '/_mainLayout/_authenticated/users_tanstack'
-    | '/_mainLayout/_filter/products'
-    | '/_mainLayout/categories/$categoryId'
-    | '/_mainLayout/products/$productSlug'
-    | '/_mainLayout/_authenticated/checkout'
-    | '/_mainLayout/_authenticated/profile'
-    | '/_mainLayout/_authenticated/users'
-    | '/_mainLayout/_authenticated/_CloudPayment/payment'
-    | '/_mainLayout/_authenticated/cart/$cartcode'
-    | '/_mainLayout/_authenticated/cart/'
+    | '/$lang/_auth/login'
+    | '/$lang/_auth/passwordResetRequest'
+    | '/$lang/_auth/register'
+    | '/$lang/_mainLayout/_authenticated'
+    | '/$lang/_paymentResult/success'
+    | '/$lang/_paymentResult/failed'
+    | '/$lang/_mainLayout/'
+    | '/$lang/_auth/password-reset/$token'
+    | '/$lang/_mainLayout/_authenticated/users_tanstack'
+    | '/$lang/_mainLayout/_filter/products'
+    | '/$lang/_mainLayout/categories/$categoryId'
+    | '/$lang/_mainLayout/products/$productSlug'
+    | '/$lang/_mainLayout/_authenticated/checkout'
+    | '/$lang/_mainLayout/_authenticated/profile'
+    | '/$lang/_mainLayout/_authenticated/users'
+    | '/$lang/_mainLayout/_authenticated/_CloudPayment/payment'
+    | '/$lang/_mainLayout/_authenticated/cart/$cartcode'
+    | '/$lang/_mainLayout/_authenticated/cart/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  MainLayoutRoute: typeof MainLayoutRouteWithChildren
-  AuthLoginRoute: typeof AuthLoginRoute
-  AuthPasswordResetRequestRoute: typeof AuthPasswordResetRequestRoute
-  AuthRegisterRoute: typeof AuthRegisterRoute
-  PaymentResultSuccessRoute: typeof PaymentResultSuccessRoute
+  IndexRoute: typeof IndexRoute
+  LangRoute: typeof LangRouteWithChildren
   SearchSearchRoute: typeof SearchSearchRoute
-  PaymentResultFailedLazyRoute: typeof PaymentResultFailedLazyRoute
   TestTestLazyRoute: typeof TestTestLazyRoute
-  AuthPasswordResetTokenRoute: typeof AuthPasswordResetTokenRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/_mainLayout': {
-      id: '/_mainLayout'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof MainLayoutRouteImport
+    '/$lang': {
+      id: '/$lang'
+      path: '/$lang'
+      fullPath: '/$lang'
+      preLoaderRoute: typeof LangRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_mainLayout/': {
-      id: '/_mainLayout/'
+    '/': {
+      id: '/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof MainLayoutIndexRouteImport
-      parentRoute: typeof MainLayoutRoute
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_test/test': {
       id: '/_test/test'
       path: '/test'
       fullPath: '/test'
       preLoaderRoute: typeof TestTestLazyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_paymentResult/failed': {
-      id: '/_paymentResult/failed'
-      path: '/failed'
-      fullPath: '/failed'
-      preLoaderRoute: typeof PaymentResultFailedLazyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_search/search': {
@@ -391,184 +407,225 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SearchSearchRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_paymentResult/success': {
-      id: '/_paymentResult/success'
-      path: '/success'
-      fullPath: '/success'
-      preLoaderRoute: typeof PaymentResultSuccessRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_mainLayout/_authenticated': {
-      id: '/_mainLayout/_authenticated'
+    '/$lang/_mainLayout': {
+      id: '/$lang/_mainLayout'
       path: ''
-      fullPath: ''
-      preLoaderRoute: typeof MainLayoutAuthenticatedRouteImport
-      parentRoute: typeof MainLayoutRoute
+      fullPath: '/$lang'
+      preLoaderRoute: typeof LangMainLayoutRouteImport
+      parentRoute: typeof LangRoute
     }
-    '/_auth/register': {
-      id: '/_auth/register'
+    '/$lang/_mainLayout/': {
+      id: '/$lang/_mainLayout/'
+      path: '/'
+      fullPath: '/$lang/'
+      preLoaderRoute: typeof LangMainLayoutIndexRouteImport
+      parentRoute: typeof LangMainLayoutRoute
+    }
+    '/$lang/_paymentResult/failed': {
+      id: '/$lang/_paymentResult/failed'
+      path: '/failed'
+      fullPath: '/$lang/failed'
+      preLoaderRoute: typeof LangPaymentResultFailedLazyRouteImport
+      parentRoute: typeof LangRoute
+    }
+    '/$lang/_paymentResult/success': {
+      id: '/$lang/_paymentResult/success'
+      path: '/success'
+      fullPath: '/$lang/success'
+      preLoaderRoute: typeof LangPaymentResultSuccessRouteImport
+      parentRoute: typeof LangRoute
+    }
+    '/$lang/_mainLayout/_authenticated': {
+      id: '/$lang/_mainLayout/_authenticated'
+      path: ''
+      fullPath: '/$lang'
+      preLoaderRoute: typeof LangMainLayoutAuthenticatedRouteImport
+      parentRoute: typeof LangMainLayoutRoute
+    }
+    '/$lang/_auth/register': {
+      id: '/$lang/_auth/register'
       path: '/register'
-      fullPath: '/register'
-      preLoaderRoute: typeof AuthRegisterRouteImport
-      parentRoute: typeof rootRouteImport
+      fullPath: '/$lang/register'
+      preLoaderRoute: typeof LangAuthRegisterRouteImport
+      parentRoute: typeof LangRoute
     }
-    '/_auth/passwordResetRequest': {
-      id: '/_auth/passwordResetRequest'
+    '/$lang/_auth/passwordResetRequest': {
+      id: '/$lang/_auth/passwordResetRequest'
       path: '/passwordResetRequest'
-      fullPath: '/passwordResetRequest'
-      preLoaderRoute: typeof AuthPasswordResetRequestRouteImport
-      parentRoute: typeof rootRouteImport
+      fullPath: '/$lang/passwordResetRequest'
+      preLoaderRoute: typeof LangAuthPasswordResetRequestRouteImport
+      parentRoute: typeof LangRoute
     }
-    '/_auth/login': {
-      id: '/_auth/login'
+    '/$lang/_auth/login': {
+      id: '/$lang/_auth/login'
       path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof AuthLoginRouteImport
-      parentRoute: typeof rootRouteImport
+      fullPath: '/$lang/login'
+      preLoaderRoute: typeof LangAuthLoginRouteImport
+      parentRoute: typeof LangRoute
     }
-    '/_mainLayout/_authenticated/users': {
-      id: '/_mainLayout/_authenticated/users'
+    '/$lang/_mainLayout/_authenticated/users': {
+      id: '/$lang/_mainLayout/_authenticated/users'
       path: '/users'
-      fullPath: '/users'
-      preLoaderRoute: typeof MainLayoutAuthenticatedUsersLazyRouteImport
-      parentRoute: typeof MainLayoutAuthenticatedRoute
+      fullPath: '/$lang/users'
+      preLoaderRoute: typeof LangMainLayoutAuthenticatedUsersLazyRouteImport
+      parentRoute: typeof LangMainLayoutAuthenticatedRoute
     }
-    '/_mainLayout/_authenticated/profile': {
-      id: '/_mainLayout/_authenticated/profile'
+    '/$lang/_mainLayout/_authenticated/profile': {
+      id: '/$lang/_mainLayout/_authenticated/profile'
       path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof MainLayoutAuthenticatedProfileLazyRouteImport
-      parentRoute: typeof MainLayoutAuthenticatedRoute
+      fullPath: '/$lang/profile'
+      preLoaderRoute: typeof LangMainLayoutAuthenticatedProfileLazyRouteImport
+      parentRoute: typeof LangMainLayoutAuthenticatedRoute
     }
-    '/_mainLayout/_authenticated/checkout': {
-      id: '/_mainLayout/_authenticated/checkout'
+    '/$lang/_mainLayout/_authenticated/checkout': {
+      id: '/$lang/_mainLayout/_authenticated/checkout'
       path: '/checkout'
-      fullPath: '/checkout'
-      preLoaderRoute: typeof MainLayoutAuthenticatedCheckoutLazyRouteImport
-      parentRoute: typeof MainLayoutAuthenticatedRoute
+      fullPath: '/$lang/checkout'
+      preLoaderRoute: typeof LangMainLayoutAuthenticatedCheckoutLazyRouteImport
+      parentRoute: typeof LangMainLayoutAuthenticatedRoute
     }
-    '/_mainLayout/products/$productSlug': {
-      id: '/_mainLayout/products/$productSlug'
+    '/$lang/_mainLayout/products/$productSlug': {
+      id: '/$lang/_mainLayout/products/$productSlug'
       path: '/products/$productSlug'
-      fullPath: '/products/$productSlug'
-      preLoaderRoute: typeof MainLayoutProductsProductSlugRouteImport
-      parentRoute: typeof MainLayoutRoute
+      fullPath: '/$lang/products/$productSlug'
+      preLoaderRoute: typeof LangMainLayoutProductsProductSlugRouteImport
+      parentRoute: typeof LangMainLayoutRoute
     }
-    '/_mainLayout/categories/$categoryId': {
-      id: '/_mainLayout/categories/$categoryId'
+    '/$lang/_mainLayout/categories/$categoryId': {
+      id: '/$lang/_mainLayout/categories/$categoryId'
       path: '/categories/$categoryId'
-      fullPath: '/categories/$categoryId'
-      preLoaderRoute: typeof MainLayoutCategoriesCategoryIdRouteImport
-      parentRoute: typeof MainLayoutRoute
+      fullPath: '/$lang/categories/$categoryId'
+      preLoaderRoute: typeof LangMainLayoutCategoriesCategoryIdRouteImport
+      parentRoute: typeof LangMainLayoutRoute
     }
-    '/_mainLayout/_filter/products': {
-      id: '/_mainLayout/_filter/products'
+    '/$lang/_mainLayout/_filter/products': {
+      id: '/$lang/_mainLayout/_filter/products'
       path: '/products'
-      fullPath: '/products'
-      preLoaderRoute: typeof MainLayoutFilterProductsRouteImport
-      parentRoute: typeof MainLayoutRoute
+      fullPath: '/$lang/products'
+      preLoaderRoute: typeof LangMainLayoutFilterProductsRouteImport
+      parentRoute: typeof LangMainLayoutRoute
     }
-    '/_mainLayout/_authenticated/users_tanstack': {
-      id: '/_mainLayout/_authenticated/users_tanstack'
+    '/$lang/_mainLayout/_authenticated/users_tanstack': {
+      id: '/$lang/_mainLayout/_authenticated/users_tanstack'
       path: '/users_tanstack'
-      fullPath: '/users_tanstack'
-      preLoaderRoute: typeof MainLayoutAuthenticatedUsers_tanstackRouteImport
-      parentRoute: typeof MainLayoutAuthenticatedRoute
+      fullPath: '/$lang/users_tanstack'
+      preLoaderRoute: typeof LangMainLayoutAuthenticatedUsers_tanstackRouteImport
+      parentRoute: typeof LangMainLayoutAuthenticatedRoute
     }
-    '/_auth/password-reset/$token': {
-      id: '/_auth/password-reset/$token'
+    '/$lang/_auth/password-reset/$token': {
+      id: '/$lang/_auth/password-reset/$token'
       path: '/password-reset/$token'
-      fullPath: '/password-reset/$token'
-      preLoaderRoute: typeof AuthPasswordResetTokenRouteImport
-      parentRoute: typeof rootRouteImport
+      fullPath: '/$lang/password-reset/$token'
+      preLoaderRoute: typeof LangAuthPasswordResetTokenRouteImport
+      parentRoute: typeof LangRoute
     }
-    '/_mainLayout/_authenticated/cart/': {
-      id: '/_mainLayout/_authenticated/cart/'
+    '/$lang/_mainLayout/_authenticated/cart/': {
+      id: '/$lang/_mainLayout/_authenticated/cart/'
       path: '/cart'
-      fullPath: '/cart'
-      preLoaderRoute: typeof MainLayoutAuthenticatedCartIndexLazyRouteImport
-      parentRoute: typeof MainLayoutAuthenticatedRoute
+      fullPath: '/$lang/cart'
+      preLoaderRoute: typeof LangMainLayoutAuthenticatedCartIndexLazyRouteImport
+      parentRoute: typeof LangMainLayoutAuthenticatedRoute
     }
-    '/_mainLayout/_authenticated/cart/$cartcode': {
-      id: '/_mainLayout/_authenticated/cart/$cartcode'
+    '/$lang/_mainLayout/_authenticated/cart/$cartcode': {
+      id: '/$lang/_mainLayout/_authenticated/cart/$cartcode'
       path: '/cart/$cartcode'
-      fullPath: '/cart/$cartcode'
-      preLoaderRoute: typeof MainLayoutAuthenticatedCartCartcodeLazyRouteImport
-      parentRoute: typeof MainLayoutAuthenticatedRoute
+      fullPath: '/$lang/cart/$cartcode'
+      preLoaderRoute: typeof LangMainLayoutAuthenticatedCartCartcodeLazyRouteImport
+      parentRoute: typeof LangMainLayoutAuthenticatedRoute
     }
-    '/_mainLayout/_authenticated/_CloudPayment/payment': {
-      id: '/_mainLayout/_authenticated/_CloudPayment/payment'
+    '/$lang/_mainLayout/_authenticated/_CloudPayment/payment': {
+      id: '/$lang/_mainLayout/_authenticated/_CloudPayment/payment'
       path: '/payment'
-      fullPath: '/payment'
-      preLoaderRoute: typeof MainLayoutAuthenticatedCloudPaymentPaymentLazyRouteImport
-      parentRoute: typeof MainLayoutAuthenticatedRoute
+      fullPath: '/$lang/payment'
+      preLoaderRoute: typeof LangMainLayoutAuthenticatedCloudPaymentPaymentLazyRouteImport
+      parentRoute: typeof LangMainLayoutAuthenticatedRoute
     }
   }
 }
 
-interface MainLayoutAuthenticatedRouteChildren {
-  MainLayoutAuthenticatedUsers_tanstackRoute: typeof MainLayoutAuthenticatedUsers_tanstackRoute
-  MainLayoutAuthenticatedCheckoutLazyRoute: typeof MainLayoutAuthenticatedCheckoutLazyRoute
-  MainLayoutAuthenticatedProfileLazyRoute: typeof MainLayoutAuthenticatedProfileLazyRoute
-  MainLayoutAuthenticatedUsersLazyRoute: typeof MainLayoutAuthenticatedUsersLazyRoute
-  MainLayoutAuthenticatedCloudPaymentPaymentLazyRoute: typeof MainLayoutAuthenticatedCloudPaymentPaymentLazyRoute
-  MainLayoutAuthenticatedCartCartcodeLazyRoute: typeof MainLayoutAuthenticatedCartCartcodeLazyRoute
-  MainLayoutAuthenticatedCartIndexLazyRoute: typeof MainLayoutAuthenticatedCartIndexLazyRoute
+interface LangMainLayoutAuthenticatedRouteChildren {
+  LangMainLayoutAuthenticatedUsers_tanstackRoute: typeof LangMainLayoutAuthenticatedUsers_tanstackRoute
+  LangMainLayoutAuthenticatedCheckoutLazyRoute: typeof LangMainLayoutAuthenticatedCheckoutLazyRoute
+  LangMainLayoutAuthenticatedProfileLazyRoute: typeof LangMainLayoutAuthenticatedProfileLazyRoute
+  LangMainLayoutAuthenticatedUsersLazyRoute: typeof LangMainLayoutAuthenticatedUsersLazyRoute
+  LangMainLayoutAuthenticatedCloudPaymentPaymentLazyRoute: typeof LangMainLayoutAuthenticatedCloudPaymentPaymentLazyRoute
+  LangMainLayoutAuthenticatedCartCartcodeLazyRoute: typeof LangMainLayoutAuthenticatedCartCartcodeLazyRoute
+  LangMainLayoutAuthenticatedCartIndexLazyRoute: typeof LangMainLayoutAuthenticatedCartIndexLazyRoute
 }
 
-const MainLayoutAuthenticatedRouteChildren: MainLayoutAuthenticatedRouteChildren =
+const LangMainLayoutAuthenticatedRouteChildren: LangMainLayoutAuthenticatedRouteChildren =
   {
-    MainLayoutAuthenticatedUsers_tanstackRoute:
-      MainLayoutAuthenticatedUsers_tanstackRoute,
-    MainLayoutAuthenticatedCheckoutLazyRoute:
-      MainLayoutAuthenticatedCheckoutLazyRoute,
-    MainLayoutAuthenticatedProfileLazyRoute:
-      MainLayoutAuthenticatedProfileLazyRoute,
-    MainLayoutAuthenticatedUsersLazyRoute:
-      MainLayoutAuthenticatedUsersLazyRoute,
-    MainLayoutAuthenticatedCloudPaymentPaymentLazyRoute:
-      MainLayoutAuthenticatedCloudPaymentPaymentLazyRoute,
-    MainLayoutAuthenticatedCartCartcodeLazyRoute:
-      MainLayoutAuthenticatedCartCartcodeLazyRoute,
-    MainLayoutAuthenticatedCartIndexLazyRoute:
-      MainLayoutAuthenticatedCartIndexLazyRoute,
+    LangMainLayoutAuthenticatedUsers_tanstackRoute:
+      LangMainLayoutAuthenticatedUsers_tanstackRoute,
+    LangMainLayoutAuthenticatedCheckoutLazyRoute:
+      LangMainLayoutAuthenticatedCheckoutLazyRoute,
+    LangMainLayoutAuthenticatedProfileLazyRoute:
+      LangMainLayoutAuthenticatedProfileLazyRoute,
+    LangMainLayoutAuthenticatedUsersLazyRoute:
+      LangMainLayoutAuthenticatedUsersLazyRoute,
+    LangMainLayoutAuthenticatedCloudPaymentPaymentLazyRoute:
+      LangMainLayoutAuthenticatedCloudPaymentPaymentLazyRoute,
+    LangMainLayoutAuthenticatedCartCartcodeLazyRoute:
+      LangMainLayoutAuthenticatedCartCartcodeLazyRoute,
+    LangMainLayoutAuthenticatedCartIndexLazyRoute:
+      LangMainLayoutAuthenticatedCartIndexLazyRoute,
   }
 
-const MainLayoutAuthenticatedRouteWithChildren =
-  MainLayoutAuthenticatedRoute._addFileChildren(
-    MainLayoutAuthenticatedRouteChildren,
+const LangMainLayoutAuthenticatedRouteWithChildren =
+  LangMainLayoutAuthenticatedRoute._addFileChildren(
+    LangMainLayoutAuthenticatedRouteChildren,
   )
 
-interface MainLayoutRouteChildren {
-  MainLayoutAuthenticatedRoute: typeof MainLayoutAuthenticatedRouteWithChildren
-  MainLayoutIndexRoute: typeof MainLayoutIndexRoute
-  MainLayoutFilterProductsRoute: typeof MainLayoutFilterProductsRoute
-  MainLayoutCategoriesCategoryIdRoute: typeof MainLayoutCategoriesCategoryIdRoute
-  MainLayoutProductsProductSlugRoute: typeof MainLayoutProductsProductSlugRoute
+interface LangMainLayoutRouteChildren {
+  LangMainLayoutAuthenticatedRoute: typeof LangMainLayoutAuthenticatedRouteWithChildren
+  LangMainLayoutIndexRoute: typeof LangMainLayoutIndexRoute
+  LangMainLayoutFilterProductsRoute: typeof LangMainLayoutFilterProductsRoute
+  LangMainLayoutCategoriesCategoryIdRoute: typeof LangMainLayoutCategoriesCategoryIdRoute
+  LangMainLayoutProductsProductSlugRoute: typeof LangMainLayoutProductsProductSlugRoute
 }
 
-const MainLayoutRouteChildren: MainLayoutRouteChildren = {
-  MainLayoutAuthenticatedRoute: MainLayoutAuthenticatedRouteWithChildren,
-  MainLayoutIndexRoute: MainLayoutIndexRoute,
-  MainLayoutFilterProductsRoute: MainLayoutFilterProductsRoute,
-  MainLayoutCategoriesCategoryIdRoute: MainLayoutCategoriesCategoryIdRoute,
-  MainLayoutProductsProductSlugRoute: MainLayoutProductsProductSlugRoute,
+const LangMainLayoutRouteChildren: LangMainLayoutRouteChildren = {
+  LangMainLayoutAuthenticatedRoute:
+    LangMainLayoutAuthenticatedRouteWithChildren,
+  LangMainLayoutIndexRoute: LangMainLayoutIndexRoute,
+  LangMainLayoutFilterProductsRoute: LangMainLayoutFilterProductsRoute,
+  LangMainLayoutCategoriesCategoryIdRoute:
+    LangMainLayoutCategoriesCategoryIdRoute,
+  LangMainLayoutProductsProductSlugRoute:
+    LangMainLayoutProductsProductSlugRoute,
 }
 
-const MainLayoutRouteWithChildren = MainLayoutRoute._addFileChildren(
-  MainLayoutRouteChildren,
+const LangMainLayoutRouteWithChildren = LangMainLayoutRoute._addFileChildren(
+  LangMainLayoutRouteChildren,
 )
 
+interface LangRouteChildren {
+  LangMainLayoutRoute: typeof LangMainLayoutRouteWithChildren
+  LangAuthLoginRoute: typeof LangAuthLoginRoute
+  LangAuthPasswordResetRequestRoute: typeof LangAuthPasswordResetRequestRoute
+  LangAuthRegisterRoute: typeof LangAuthRegisterRoute
+  LangPaymentResultSuccessRoute: typeof LangPaymentResultSuccessRoute
+  LangPaymentResultFailedLazyRoute: typeof LangPaymentResultFailedLazyRoute
+  LangAuthPasswordResetTokenRoute: typeof LangAuthPasswordResetTokenRoute
+}
+
+const LangRouteChildren: LangRouteChildren = {
+  LangMainLayoutRoute: LangMainLayoutRouteWithChildren,
+  LangAuthLoginRoute: LangAuthLoginRoute,
+  LangAuthPasswordResetRequestRoute: LangAuthPasswordResetRequestRoute,
+  LangAuthRegisterRoute: LangAuthRegisterRoute,
+  LangPaymentResultSuccessRoute: LangPaymentResultSuccessRoute,
+  LangPaymentResultFailedLazyRoute: LangPaymentResultFailedLazyRoute,
+  LangAuthPasswordResetTokenRoute: LangAuthPasswordResetTokenRoute,
+}
+
+const LangRouteWithChildren = LangRoute._addFileChildren(LangRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
-  MainLayoutRoute: MainLayoutRouteWithChildren,
-  AuthLoginRoute: AuthLoginRoute,
-  AuthPasswordResetRequestRoute: AuthPasswordResetRequestRoute,
-  AuthRegisterRoute: AuthRegisterRoute,
-  PaymentResultSuccessRoute: PaymentResultSuccessRoute,
+  IndexRoute: IndexRoute,
+  LangRoute: LangRouteWithChildren,
   SearchSearchRoute: SearchSearchRoute,
-  PaymentResultFailedLazyRoute: PaymentResultFailedLazyRoute,
   TestTestLazyRoute: TestTestLazyRoute,
-  AuthPasswordResetTokenRoute: AuthPasswordResetTokenRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -7,7 +7,7 @@ const Introduction = () => {
       <div className="pt-20 bg-myMainColor/15">
         {/* <div className="pt-20 bg-linear-to-r from-myMainColor/15 to-myMainColor/01"> */}
         <div className="container flex flex-col">
-          <div className="mx-auto">
+          <div className="flex justify-center">
             <Logo
               currentColor={"fill-primaryDark"}
               extraColor={"fill-myMainColorDarker stroke-myMainColorDarker"}

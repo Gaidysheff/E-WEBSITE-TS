@@ -1,7 +1,8 @@
 import { type Product } from "@/lib/types.ts";
 import { BASE_URL } from "@/api/api";
 import { NumericFormat } from "react-number-format";
-import { Link } from "@tanstack/react-router";
+// import { Link } from "@tanstack/react-router";
+import { AppLink as Link } from "@/components/appLink/AppLink";
 
 type Props = {
   product: Product;

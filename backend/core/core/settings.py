@@ -21,7 +21,12 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = True
 
 if DEBUG:
-    ALLOWED_HOSTS = ["*"]
+    ALLOWED_HOSTS = [
+        # "http://localhost:5173",
+        # "http://172.27.32.1:5173",
+        # "http://192.168.20.2:5173",
+        "*"
+    ]
 else:
     ALLOWED_HOSTS = [
         "test.gaidysheff.ru",

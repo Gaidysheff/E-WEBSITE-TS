@@ -20,7 +20,8 @@ const ColorSetup = () => {
   const secondaryColorPreview = `oklch(${lightness}% ${chroma / 100} ${secondaryHue})`;
 
   const playTick = () => {
-    const tick = new Audio("/public/tick.mp3");
+    const tick = new Audio("/tick.mp3");
+    // const tick = new Audio("/public/tick.mp3");
     tick.volume = 0.1;
     tick.play().catch(() => {});
   };

@@ -1,10 +1,11 @@
-import { Link, useNavigate } from "@tanstack/react-router";
-
 import { BASE_URL } from "@/api/api.ts";
 import { FaCartShopping } from "react-icons/fa6";
+import { AppLink as Link } from "@/components/appLink/AppLink";
 import { cn } from "@/lib/utils";
 import { logout } from "@/api/endpoints_auth";
 import { useCart } from "@/store/CartContext.tsx";
+import { useI18nContext } from "@/i18n/i18n-react";
+import { useNavigate } from "@tanstack/react-router";
 import { useUser } from "@/store/UserContext.tsx";
 
 type Props = {
@@ -19,20 +20,34 @@ const NavItems = ({ mobile }: Props) => {
   const imgURL = `${BASE_URL}${user?.image}`;
 
   const navigate = useNavigate();
+  const { locale } = useI18nContext();
+  // Получаем живой текущий язык ('ru' или 'en')
 
   const token = !!localStorage.getItem("Token");
 
-  const logoutHandler = () => {
+  const logoutHandler = async () => {
     logout();
-    navigate({ to: `/` });
+    // Перенаправляем на главную страницу текущего языка (например, /ru или /en)
+    await navigate({
+      to: "/$lang",
+      params: { lang: locale },
+    });
   };
 
-  const loginHandler = () => {
-    navigate({ to: `/login` });
+  const loginHandler = async () => {
+    // Перенаправляем на страницу логина текущего языка (/ru/login)
+    await navigate({
+      to: "/$lang/login",
+      params: { lang: locale },
+    });
   };
 
-  const registerHandler = () => {
-    navigate({ to: `/register` });
+  const registerHandler = async () => {
+    // Перенаправляем на страницу регистрации текущего языка (/ru/register)
+    await navigate({
+      to: "/$lang/register",
+      params: { lang: locale },
+    });
   };
 
   return (
@@ -52,11 +67,11 @@ const NavItems = ({ mobile }: Props) => {
           <Link
             to="/profile"
             className="flex items-center justify-between group/profile
-          transition duration-300 hover:scale-110"
+            transition duration-300 hover:scale-110"
           >
             <div
               className="w-[50px] h-[50px] rounded-full overflow-hidden border-2 
-            border-primaryDark shadow-md mr-3"
+              border-primaryDark shadow-md mr-3"
             >
               {/* Profile picture container */}
               {user?.image && (
@@ -66,7 +81,7 @@ const NavItems = ({ mobile }: Props) => {
 
             <div
               className="text-lg font-medium text-primaryDark 
-            group-hover/profile:text-primaryDark/50 "
+              group-hover/profile:text-primaryDark/50 "
             >
               {/* User's Name */}
               {user?.first_name || user?.last_name
@@ -95,7 +110,12 @@ const NavItems = ({ mobile }: Props) => {
         </div>
       )}
 
-      <Link from="/" to={`cart/${cartCode}`}>
+      {/* <Link from="/" to={`/cart/${cartCode}`}> */}
+      <Link
+        to="/cart/$cartcode"
+        params={{ cartcode: cartCode }}
+        // Передаем cartcode в нижнем регистре, как в файле маршрута!
+      >
         <div
           className="relative flex items-center h-[60px] w-[60px]
             justify-center cursor-pointer group/cart hover:scale-110"

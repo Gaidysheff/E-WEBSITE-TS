@@ -1,10 +1,10 @@
-import { Failure } from "@/routes/_paymentResult/failed.lazy";
-import { Login } from "@/routes/_auth/login";
+import { Failure } from "@/routes/$lang/_paymentResult/failed.lazy";
+import { Login } from "@/routes/$lang/_auth/login";
 import { Outlet } from "@tanstack/react-router";
-import { PasswordReset } from "@/routes/_auth/password-reset/$token";
-import { PasswordResetRequest } from "@/routes/_auth/passwordResetRequest";
-import { Register } from "@/routes/_auth/register";
-import { Success } from "@/routes/_paymentResult/success.lazy";
+import { PasswordReset } from "@/routes/$lang/_auth/password-reset/$token";
+import { PasswordResetRequest } from "@/routes/$lang/_auth/passwordResetRequest";
+import { Register } from "@/routes/$lang/_auth/register";
+import { Success } from "@/routes/$lang/_paymentResult/success.lazy";
 
 interface Props {
   location: {

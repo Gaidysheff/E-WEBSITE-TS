@@ -24,7 +24,9 @@ interface Props {
 const PageBreak = ({ totalPages, currentPage }: Props) => {
   const navigate = useNavigate();
   // Подключаем хук с указанием маршрута, чтобы TS подхватил типы
-  const search = useSearch({ from: "/_mainLayout/_filter/products" });
+
+  const search = useSearch({ from: "/$lang/_mainLayout/_filter/products" });
+  // const search = useSearch({ from: "/_mainLayout/_filter/products" });
 
   const pageSize = search.page_size;
 

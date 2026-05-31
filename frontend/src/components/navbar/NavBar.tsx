@@ -1,23 +1,54 @@
 import FilterDrawer from "@/components/filter/FilterDrawer.tsx";
 import { LayoutGrid } from "lucide-react";
-import { Link } from "@tanstack/react-router";
+import { AppLink as Link } from "@/components/appLink/AppLink";
 import MobileNavbar from "./MobileNavbar";
 import NavItems from "./NavItems";
 import SearchButton from "./SearchButton";
 import SearchForm from "./SearchForm";
 import SettingsDrawer from "@/components/settings/SettingsDrawer.tsx";
 import ThemeSwitch from "./ThemeSwitch";
+import { useI18nContext } from "@/i18n/i18n-react";
+import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { useTheme } from "@/store/ThemeContext";
+
+// import { Link } from "@tanstack/react-router";
 
 const NavBar = () => {
   const [showSearchForm, setShowSearchForm] = useState(false);
 
   const { theme } = useTheme();
 
+  // const location = useLocation();
+
+  // Инициализируем типизированный метод навигации
+  const navigate = useNavigate({ from: "/$lang" });
+
+  const { locale } = useI18nContext();
+
+  // Определяем, на какой язык мы хотим переключить пользователя
+  const nextLang = locale === "ru" ? "en" : "ru";
+
   const handleSearch = () => {
     setShowSearchForm((curr) => !curr);
   };
+
+  const handleLanguageChange = async () => {
+    try {
+      // Вызываем navigate напрямую
+      await navigate({
+        // params принимает прямой объект с указанием нового языка
+        params: {
+          lang: nextLang,
+        },
+        // Говорим роутеру сохранить текущие search-параметры (фильтры/пагинацию)
+        search: true,
+      });
+    } catch (error) {
+      console.error("Ошибка при смене языка:", error);
+    }
+  };
+
   return (
     <>
       <nav
@@ -50,10 +81,9 @@ const NavBar = () => {
 
               <Link
                 to="/products"
-                // TanStack Router требует, чтобы параметры search были объектом
                 search={{ isCatalog: true }}
                 className="text-primaryDark hover:text-primaryDark/50
-                hover:scale-110 transition duration-300 w-[40px]"
+                  hover:scale-110 transition duration-300 w-[40px]"
               >
                 <LayoutGrid size={40} />
               </Link>
@@ -71,6 +101,30 @@ const NavBar = () => {
                   <MobileNavbar />
                 </div>
               </div>
+            </div>
+
+            <div>
+              <button
+                type="button"
+                onClick={handleLanguageChange}
+                className="flex items-center justify-center p-2 rounded-full
+                hover:bg-gray-100 dark:hover:bg-gray-800 transition duration-300
+                active:scale-95"
+                title={
+                  locale === "ru"
+                    ? "Switch to English"
+                    : "Переключить на Русский"
+                }
+              >
+                {locale === "ru" ? (
+                  // Если сейчас русский — показываем американский флаг
+                  // для перехода на английский
+                  <span className="text-2xl select-none leading-none">🇺🇸</span>
+                ) : (
+                  // Если сейчас английский — показываем русский флаг
+                  <span className="text-2xl select-none leading-none">🇷🇺</span>
+                )}
+              </button>
             </div>
 
             {theme === "light" ? (

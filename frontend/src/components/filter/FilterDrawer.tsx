@@ -8,7 +8,8 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { Link, useNavigate, useSearch } from "@tanstack/react-router";
+import { useNavigate, useSearch } from "@tanstack/react-router";
+import { AppLink as Link } from "@/components/appLink/AppLink";
 
 import { Button } from "@/components/ui/button";
 import FilterDrawerInnerSection from "./FilterDrawerInnerSection.tsx";
@@ -29,7 +30,8 @@ const FilterDrawer = () => {
 
   const handleShapeChange = (newShape: string) => {
     navigate({
-      to: "/products",
+      to: ".",
+      // to: "/products",
       search: (prev: any) => ({
         ...prev,
         // Если выбрано "all", удаляем ключ из URL совсем
@@ -41,7 +43,8 @@ const FilterDrawer = () => {
 
   const handleBrandChange = (brandIds: number[]) => {
     navigate({
-      to: "/products",
+      to: ".",
+      // to: "/products",
       search: (prev: any) => ({
         ...prev,
         // Если массив пуст — удаляем ключ из URL, иначе склеиваим через запятую
@@ -53,7 +56,8 @@ const FilterDrawer = () => {
 
   const handlePriceChange = (minPrice: number, maxPrice: number) => {
     navigate({
-      to: "/products",
+      to: ".",
+      // to: "/products",
       search: (prev: any) => ({
         ...prev,
         min_price: minPrice,
@@ -65,7 +69,8 @@ const FilterDrawer = () => {
 
   const handleColorChange = (colorIds: number[]) => {
     navigate({
-      to: "/products",
+      to: ".",
+      // to: "/products",
       search: (prev: any) => ({
         ...prev,
         // Если массив пуст — удаляем ключ из URL, иначе склеиваим через запятую
@@ -77,7 +82,8 @@ const FilterDrawer = () => {
 
   const handleRatingChange = (rating: number | undefined) => {
     navigate({
-      to: "/products",
+      to: ".",
+      // to: "/products",
       search: (prev: any) => ({
         ...prev,
         rating,
@@ -88,7 +94,8 @@ const FilterDrawer = () => {
 
   const handleSearchChange = (search: string) => {
     navigate({
-      to: "/products",
+      to: ".",
+      // to: "/products",",
       search: (prev: any) => ({
         ...prev,
         search,
@@ -99,7 +106,8 @@ const FilterDrawer = () => {
 
   const handleReset = () => {
     navigate({
-      to: "/products",
+      to: ".",
+      // to: "/products",
       search: {}, // Пустой объект удалит ВСЕ параметры из URL
       replace: true,
     });
@@ -109,6 +117,7 @@ const FilterDrawer = () => {
     <div className="flex flex-wrap gap-2">
       <Drawer open={isOpen} onOpenChange={setIsOpen} direction={"left"}>
         <DrawerTrigger asChild>
+          {/* <Link to={"/products"}> */}
           <Link to={"/products"} onClick={() => setIsOpen(true)}>
             <TbFilterSearch
               size={40}
