@@ -16,7 +16,6 @@ import {
 import { googleLoginAction, login } from "@/api/endpoints_auth";
 
 import type { AnyFieldApi } from "@tanstack/react-form";
-import { BASE_URL } from "@/api/api";
 import { Button } from "@/components/ui/button";
 import { FcGoogle } from "react-icons/fc";
 import { Input } from "@/components/ui/input";
@@ -26,6 +25,8 @@ import { toast } from "react-toastify";
 import { useCart } from "@/store/CartContext.tsx";
 import { useForm } from "@tanstack/react-form";
 import { useGoogleLogin } from "@react-oauth/google";
+import { useI18nContext } from "@/i18n/i18n-react";
+import { useUser } from "@/store/UserContext";
 import { z } from "zod";
 
 export const Route = createFileRoute("/$lang/_auth/login")({
@@ -64,15 +65,25 @@ function FieldInfo({ field }: { field: AnyFieldApi }) {
 
 export function Login() {
   const { cartCode, setCartCode } = useCart();
+  const { locale } = useI18nContext();
+  const { refreshUser } = useUser(); // Забираем функцию принудительного
+  // обновления профиля
 
-  const navigate = useNavigate();
+  const navigate = useNavigate({ from: "/$lang" });
   // const search: any = Route.useSearch();
   // const search: any = useSearch({ from: "/_auth/login" }); // Достаем search params
   const search: any = useSearch({ strict: false });
 
-  const onLoginSuccess = () => {
-    const targetPath = (search.redirect || "/profile") as any;
-    navigate({ to: targetPath });
+  const onLoginSuccess = async () => {
+    const targetPath = (search.redirect || "/$lang/profile") as any;
+
+    // 2. КРИТИЧЕСКИЙ ШАГ: Мгновенно пинаем контекст пользователя,
+    // чтобы он скачал данные профиля с Django!
+    await refreshUser();
+
+    // 3. И только после того, как данные скачались, плавно перенаправляем
+    // на профиль
+    await navigate({ to: targetPath, params: { lang: locale } });
   };
 
   const form = useForm({

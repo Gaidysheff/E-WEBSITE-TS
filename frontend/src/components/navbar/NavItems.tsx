@@ -15,7 +15,7 @@ type Props = {
 const NavItems = ({ mobile }: Props) => {
   const { cartItemsCount, cartCode } = useCart();
 
-  const { user } = useUser();
+  const { user, isLoading } = useUser();
 
   const imgURL = `${BASE_URL}${user?.image}`;
 
@@ -50,6 +50,11 @@ const NavItems = ({ mobile }: Props) => {
     });
   };
 
+  if (isLoading) {
+    return <div className="w-10 h-10 rounded-full bg-gray-200 animate-pulse" />;
+    // Лоадер-скелетон для авы
+  }
+
   return (
     <div
       className={cn(
@@ -74,7 +79,10 @@ const NavItems = ({ mobile }: Props) => {
               border-primaryDark shadow-md mr-3"
             >
               {/* Profile picture container */}
-              {user?.image && (
+
+              {/* {user?.image && ( */}
+
+              {user && (
                 <img className="grayscale" src={imgURL} alt="User's image" />
               )}
             </div>

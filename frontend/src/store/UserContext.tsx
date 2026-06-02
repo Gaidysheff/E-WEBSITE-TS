@@ -1,5 +1,6 @@
 import {
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useState,
@@ -20,6 +21,7 @@ interface UserContextType {
   user: UserLoggedIn | undefined;
   setUser: React.Dispatch<React.SetStateAction<UserLoggedIn | undefined>>;
   isLoading: boolean; // Полезно, чтобы не отправлять платеж, пока юзер грузится
+  refreshUser: () => Promise<void>;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -29,48 +31,60 @@ interface UserProviderProps {
 }
 
 export const UserContextProvider = ({ children }: UserProviderProps) => {
-  const [user, setUser] = useState<UserLoggedIn | undefined>();
+  const [user, setUser] = useState<UserLoggedIn | undefined>(undefined);
   // console.log("🚀 ~ UserContextProvider ~ user:", user);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  useEffect(() => {
-    const getUser = async () => {
-      setIsLoading(true);
-      const token = localStorage.getItem("Token");
-      if (token) {
-        try {
-          // const response = await api.get(CURRENT_USER_URL);
-          // setUser(response.data); // Если поля совпадают с UserLoggedIn
-          // console.log("🚀 ~ getUser ~ data:", response?.data);
-          await api.get(CURRENT_USER_URL).then((response) => {
-            const loadedData = {
-              id: response.data.id,
-              email: response.data.email,
-              first_name: response.data.first_name,
-              last_name: response.data.last_name,
-              birthday: response.data.birthday,
-              image: response.data.image,
-              address: response.data.address,
-              // { street, city, phone ... } или null
-            };
-            setUser(loadedData);
-          });
-        } catch (error) {
-          console.log("🚀 ~ Ошибка загрузки пользователя", error);
-        }
-      }
-      setIsLoading(false);
-      // return;
-    };
+  const getUser = useCallback(async () => {
+    const token = localStorage.getItem("Token");
+    if (!token) {
+      setUser(undefined);
+      return;
+    }
+    setIsLoading(true);
 
-    getUser();
+    // if (token) {
+    try {
+      const response = await api.get(CURRENT_USER_URL);
+      setUser(response.data); // Если поля совпадают с UserLoggedIn
+      // console.log("🚀 ~ getUser ~ data:", response?.data);
+
+      // await api.get(CURRENT_USER_URL).then((response) => {
+      //   const loadedData = {
+      //     id: response.data.id,
+      //     email: response.data.email,
+      //     first_name: response.data.first_name,
+      //     last_name: response.data.last_name,
+      //     birthday: response.data.birthday,
+      //     image: response.data.image,
+      //     address: response.data.address,
+      //     // { street, city, phone ... } или null
+      //   };
+      //   setUser(loadedData);
+      // });
+    } catch (error) {
+      setUser(undefined);
+      console.log("🚀 ~ Ошибка загрузки пользователя", error);
+    } finally {
+      setIsLoading(false);
+    }
+    // setIsLoading(false);
   }, []);
 
-  return (
-    <UserContext.Provider value={{ user, setUser, isLoading }}>
-      {children}
-    </UserContext.Provider>
-  );
+  useEffect(() => {
+    getUser();
+  }, [getUser]);
+
+  // Передаем getUser в значение контекста, чтобы его можно было вызвать
+  // из формы логина!
+  const value = {
+    user,
+    isLoading,
+    setUser,
+    refreshUser: getUser, // Протягиваем веревочку для триггера
+  };
+
+  return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };
 
 // export const useUser = () => useContext(UserContext);
