@@ -1,8 +1,9 @@
-import { Link, createLazyFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 
 import Confetti from "react-confetti";
+import { AppLink as Link } from "@/components/appLink/AppLink";
 import SuccessSkeleton from "@/components/paymentResult/SuccessSkeleton.tsx";
+import { createLazyFileRoute } from "@tanstack/react-router";
 import { useCart } from "@/store/CartContext.tsx";
 import useWindowSize from "react-use/lib/useWindowSize";
 
@@ -112,7 +113,7 @@ export function Success() {
         </p>
         <div className="flex flex-col sm:flex-row justify-center gap-4 pt-4">
           <Link
-            to="/profile"
+            to="/$lang/profile"
             className="inline-block px-6 py-3 rounded-full bg-green-700
             text-white text-base font-medium hover:bg-green-800
             transition duration-300"
@@ -120,7 +121,7 @@ export function Success() {
             View Order
           </Link>
           <Link
-            to="/"
+            to="/$lang/"
             className="inline-block px-6 py-3 rounded-full bg-black
             text-white text-base font-medium hover:bg-green-800
             transition duration-300"

@@ -7,12 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Link,
-  createFileRoute,
-  useNavigate,
-  useSearch,
-} from "@tanstack/react-router";
+import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { googleLoginAction, login } from "@/api/endpoints_auth";
 
 import type { AnyFieldApi } from "@tanstack/react-form";
@@ -21,6 +16,7 @@ import { FcGoogle } from "react-icons/fc";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { MoveLeft } from "lucide-react";
+import { SUPPORTED_LANGUAGES } from "@/routes/$lang.tsx";
 import { toast } from "react-toastify";
 import { useCart } from "@/store/CartContext.tsx";
 import { useForm } from "@tanstack/react-form";
@@ -32,6 +28,7 @@ import { z } from "zod";
 export const Route = createFileRoute("/$lang/_auth/login")({
   validateSearch: (search: Record<string, unknown>) => {
     return {
+      // Регистрируем опциональный параметр redirect как строку
       // Всегда возвращаем объект, даже если он пустой
       redirect: (search.redirect as string) || undefined,
     };
@@ -70,20 +67,67 @@ export function Login() {
   // обновления профиля
 
   const navigate = useNavigate({ from: "/$lang" });
-  // const search: any = Route.useSearch();
-  // const search: any = useSearch({ from: "/_auth/login" }); // Достаем search params
-  const search: any = useSearch({ strict: false });
+
+  // const search: any = useSearch({ strict: false });
+
+  // Читаем параметр redirect из URL строки
+  const { redirect: redirectToPage } = Route.useSearch();
 
   const onLoginSuccess = async () => {
-    const targetPath = (search.redirect || "/$lang/profile") as any;
+    // const targetPath = (search.redirect || "/$lang/profile") as any;
 
     // 2. КРИТИЧЕСКИЙ ШАГ: Мгновенно пинаем контекст пользователя,
     // чтобы он скачал данные профиля с Django!
     await refreshUser();
 
     // 3. И только после того, как данные скачались, плавно перенаправляем
-    // на профиль
-    await navigate({ to: targetPath, params: { lang: locale } });
+    // на профиль или страницу, с которой пришли
+
+    if (redirectToPage) {
+      // ВАРИАНТ А: Если пользователя перекинуло из корзины или карточки товара
+      // Нам прилетит полный URL типа "http://localhost:5173/ru/products/product-1"
+      // Просто парсим его или отдаем навигатору, убрав доменную часть:
+      const targetPath = redirectToPage.replace(window.location.origin, "");
+
+      // Динамически собираем строку для регулярного выражения.
+      // Если массив ['ru', 'en'], то join('|') превратит его в "ru|en"
+      const languagesPattern = SUPPORTED_LANGUAGES.join("|");
+
+      // Создаем регулярное выражение на лету: /^\/(ru|en)\/?$/
+      const homePageRegex = new RegExp(`^\\/(${languagesPattern})\\/?$`);
+
+      // Проверяем путь
+      const isHomePage = homePageRegex.test(targetPath);
+
+      // Регулярное выражение, которое проверяет, равен ли путь строго
+      //  "/ru", "/en", "/ru/" или "/en/"
+
+      // const isHomePage = /^\/(ru|en)\/?$/.test(targetPath);
+
+      if (isHomePage) {
+        // ЕСЛИ ЭТО ГЛАВНАЯ СТРАНИЦА: Игнорируем редирект и ведем пользователя
+        // в Профиль
+        await navigate({
+          to: "/$lang/profile",
+          params: { lang: locale },
+        });
+      } else {
+        // ЕСЛИ ЭТО ЛЮБАЯ ДРУГАЯ СТРАНИЦА (Товар, Корзина и т.д.): Железно
+        // возвращаем назад
+        window.location.href = targetPath;
+        // Железно возвращаем пользователя назад
+        // (Использование window.location здесь безопаснее всего, так как полностью
+        // сбросит и переинициализирует контексты роутера под нового
+        // авторизованного юзера)
+      }
+    } else {
+      // ВАРИАНТ Б: Если инфы откуда пришел нет — отправляем в Профиль как обычно
+      // Подстраховка на случай, если каким-то чудом параметра не оказалось
+      await navigate({
+        to: "/$lang/profile",
+        params: { lang: locale },
+      });
+    }
   };
 
   const form = useForm({

@@ -27,7 +27,9 @@ import { CURRENT_YEAR } from "@/lib/utilities.ts";
 import { useCart } from "@/store/CartContext.tsx";
 import { useUser } from "@/store/UserContext.tsx";
 import { useForm } from "@tanstack/react-form";
-import { createLazyFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createLazyFileRoute, useNavigate } from "@tanstack/react-router";
+import { AppLink as Link } from "@/components/appLink/AppLink";
+
 import { CreditCard, MapPin, PackageSearch, Truck, Zap } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { NumericFormat } from "react-number-format";
@@ -269,7 +271,7 @@ function CheckoutPage() {
         // clearCart(); // Очищаем стейт
 
         await navigate({
-          to: "/success",
+          to: "/$lang/success",
           search: { orderId: result.TransactionId, cryptogram },
         });
 
@@ -288,7 +290,7 @@ function CheckoutPage() {
       //     clearCart(); // Метод из useCart()
 
       //     navigate({
-      //       to: "/success", // Улетаем на страницу успеха
+      //       to: "/$lang/success", // Улетаем на страницу успеха
       //       search: { orderId: result.TransactionId }, // Передаем ID
       //       // search: { orderId: result.TransactionId, cryptogram }, // Передаем ID
       //     });
@@ -307,7 +309,7 @@ function CheckoutPage() {
       //   }
     } catch (apiError: any) {
       // Направляем на страницу неудачи
-      navigate({ to: "/failed" });
+      navigate({ to: "/$lang/failed" });
 
       console.error("=== ПОДРОБНОСТИ ОШИБКИ АПИ ===", apiError);
 
@@ -353,7 +355,7 @@ function CheckoutPage() {
       if (event.data === "3ds-success") {
         setIs3DSModalOpen(false);
         clearCart(); // Очищаем корзину
-        navigate({ to: "/success" });
+        navigate({ to: "/$lang/success" });
       }
       if (event.data === "3ds-fail") {
         setIs3DSModalOpen(false);
@@ -463,8 +465,8 @@ function CheckoutPage() {
 
             {/* Ссылка "Вернуться к редактированию" на случай, если юзер передумал */}
             <Link
-              from="/"
-              to={`cart/${cartCode}`}
+              // from="/"
+              to={`/$lang/cart/${cartCode}`}
               className="text-xs text-primaryDark/50 hover:underline mt-4
                 inline-block"
             >
@@ -557,7 +559,7 @@ function CheckoutPage() {
                   >
                     {isSubmitting ? (
                       // <Loader className="animate-spin mx-auto" />
-                      (<PaymentLoader />)
+                      <PaymentLoader />
                     ) : (
                       <>
                         <span className="lg:hidden">Place Order & Pay </span>
@@ -579,7 +581,7 @@ function CheckoutPage() {
                       </>
                     )}
                   </button>
-                )
+                );
               }}
             </bankCardForm.Subscribe>
 
@@ -626,5 +628,5 @@ function CheckoutPage() {
         </Modal>
       </div>
     </div>
-  )
+  );
 }

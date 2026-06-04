@@ -18,7 +18,7 @@ interface Props {
 }
 
 const CartSummary = ({ total }: Props) => {
-  const navigate = useNavigate();
+  const navigate = useNavigate({ from: "/$lang" });
 
   const { items, cartItemsCount } = useCart();
 
@@ -51,7 +51,7 @@ const CartSummary = ({ total }: Props) => {
   // };
 
   // const proceedCloudPaymentHandler = () => {
-  //   navigate({ to: "/payment" });
+  //   navigate({ to: "/$lang/payment" });
   // };
 
   return (
@@ -201,7 +201,7 @@ const CartSummary = ({ total }: Props) => {
       <Button
         disabled={total < 0.01}
         handleClick={() => {
-          navigate({ to: "/checkout" });
+          navigate({ to: "/$lang/checkout" });
         }}
         className="checkout-btn"
       >

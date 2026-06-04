@@ -38,7 +38,7 @@ const IndividualOrder = ({ order }: Props) => {
       toast.success("Товары успешно добавлены в корзину! 🛒");
 
       refreshCart(); // Обновляем стейт корзины в шапке
-      navigate({ to: `/cart/${cartCode}` });
+      navigate({ to: `/$lang/cart/${cartCode}` });
       // Телепортируем пользователя в корзину
     } catch (error) {
       toast.dismiss();

@@ -1,7 +1,12 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 
 // Список языков, которые поддерживает ваш сайт
-const SUPPORTED_LANGUAGES = ["ru", "en"];
+
+// Добавляем export, чтобы массив стал виден всему приложению
+
+export const SUPPORTED_LANGUAGES = ["ru", "en"];
+
+// export const SUPPORTED_LANGUAGES = ['ru', 'en', 'zh', 'de'];
 
 export const Route = createFileRoute("/$lang")({
   // Функция валидации параметров URL

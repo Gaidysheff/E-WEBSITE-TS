@@ -1,5 +1,6 @@
 import { type Category } from "@/lib/types.ts";
-import { Link } from "@tanstack/react-router";
+// import { Link } from "@tanstack/react-router";
+import { AppLink as Link } from "@/components/appLink/AppLink";
 import { BASE_URL } from "@/api/api";
 
 type Props = {

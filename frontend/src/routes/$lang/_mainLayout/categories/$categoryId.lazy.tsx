@@ -14,7 +14,9 @@ interface LoaderData {
   categories: Category[];
 }
 
-export const Route = createLazyFileRoute("/$lang/_mainLayout/categories/$categoryId")({
+export const Route = createLazyFileRoute(
+  "/$lang/_mainLayout/categories/$categoryId",
+)({
   component: CategoryPage,
 });
 
@@ -33,7 +35,7 @@ function CategoryPage() {
 
   return (
     <>
-      <link rel="canonical" href={"${BASE_URL}${currentPathname}"} />
+      <link rel="canonical" href={`${BASE_URL}${currentPathname}`} />
 
       <div className="container">
         <div className="py-9">

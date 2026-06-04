@@ -1,3 +1,5 @@
+import { useLocation, useNavigate } from "@tanstack/react-router";
+
 import { BASE_URL } from "@/api/api.ts";
 import { FaCartShopping } from "react-icons/fa6";
 import { AppLink as Link } from "@/components/appLink/AppLink";
@@ -5,7 +7,6 @@ import { cn } from "@/lib/utils";
 import { logout } from "@/api/endpoints_auth";
 import { useCart } from "@/store/CartContext.tsx";
 import { useI18nContext } from "@/i18n/i18n-react";
-import { useNavigate } from "@tanstack/react-router";
 import { useUser } from "@/store/UserContext.tsx";
 
 type Props = {
@@ -25,8 +26,10 @@ const NavItems = ({ mobile }: Props) => {
 
   const token = !!localStorage.getItem("Token");
 
+  const location = useLocation();
+
   const logoutHandler = async () => {
-    logout();
+    await logout();
     // Перенаправляем на главную страницу текущего языка (например, /ru или /en)
     await navigate({
       to: "/$lang",
@@ -39,6 +42,10 @@ const NavItems = ({ mobile }: Props) => {
     await navigate({
       to: "/$lang/login",
       params: { lang: locale },
+      // Запоминаем текущую страницу (например, главную или карточку товара)
+      search: {
+        redirect: location.href,
+      },
     });
   };
 

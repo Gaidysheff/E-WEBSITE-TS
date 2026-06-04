@@ -228,6 +228,9 @@ const CardForm = ({
             )}
           />
 
+          <p className="italic text-red-500">
+            Для успешной тестовой оплаты дата должна быть неустаревшая
+          </p>
           <div className="grid grid-cols-4 xsm:grid-cols-5 gap-4">
             <div className="">
               <bankCardForm.Field

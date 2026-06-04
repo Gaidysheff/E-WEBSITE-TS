@@ -32,19 +32,19 @@ const PasswordResetSchema = z
       // .max(20, "Password must be not more than 20 characters")
       .refine(
         (password) => /[A-Z]/.test(password),
-        "Password must contain at least one uppercase letter"
+        "Password must contain at least one uppercase letter",
       )
       .refine(
         (password) => /[a-z]/.test(password),
-        "Password must contain at least one lowercase letter"
+        "Password must contain at least one lowercase letter",
       )
       .refine(
         (password) => /[0-9]/.test(password),
-        "Password must contain at least one number"
+        "Password must contain at least one number",
       )
       .refine(
         (password) => /[!@#$%^&*]/.test(password),
-        "Password must contain at least one special character, for example: !@#$%^&*"
+        "Password must contain at least one special character, for example: !@#$%^&*",
       ),
     confirm_password: z.string().min(1, "Please confirm your password"),
   })
@@ -95,7 +95,7 @@ export function PasswordReset() {
       passwordConfirm(value, token);
 
       setTimeout(() => {
-        navigate({ to: `/login` });
+        navigate({ to: `/$lang/login` });
       }, 3000);
     },
   });

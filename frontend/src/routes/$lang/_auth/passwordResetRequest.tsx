@@ -57,7 +57,7 @@ export function PasswordResetRequest() {
       passwordResetRequest(value);
 
       setTimeout(() => {
-        navigate({ to: `/login` });
+        navigate({ to: `/$lang/login` });
       }, 3000);
     },
   });

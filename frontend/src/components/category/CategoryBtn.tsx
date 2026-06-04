@@ -1,6 +1,11 @@
 import { type Category } from "@/lib/types.ts";
 import { BASE_URL } from "@/api/api";
-import { Link, useParams } from "@tanstack/react-router";
+import {
+  // Link,
+  useParams,
+} from "@tanstack/react-router";
+import { AppLink as Link } from "@/components/appLink/AppLink";
+
 import { cn } from "@/lib/utils.ts";
 
 type Props = {
