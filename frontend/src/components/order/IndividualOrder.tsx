@@ -1,12 +1,13 @@
-import MiniProductCard from "./MiniProductCard";
-import { type Order } from "@/lib/types.ts";
-import { timeAgo } from "@/lib/utilities.ts";
-import { useNavigate } from "@tanstack/react-router";
-import { useCart } from "@/store/CartContext.tsx";
-import { toast } from "react-toastify";
 import { addToCartAction } from "@/api/actions.ts";
 import { Button } from "@/components/ui/button";
+import { useAppNavigate } from "@/hooks/useAppNavigate.ts";
+import { type Order } from "@/lib/types.ts";
+import { timeAgo } from "@/lib/utilities.ts";
+import { useCart } from "@/store/CartContext.tsx";
 import { ShoppingCart } from "lucide-react";
+import { toast } from "react-toastify";
+import MiniProductCard from "./MiniProductCard";
+
 // import { userOrdersOptions } from "@/api/queryOptions/userOrdersOptions.ts";
 interface Props {
   order: Order;
@@ -17,7 +18,7 @@ const IndividualOrder = ({ order }: Props) => {
 
   const { refreshCart, cartCode } = useCart();
   // console.log("🚀 ~ IndividualOrder ~ cartCode:", cartCode);
-  const navigate = useNavigate();
+  const navigate = useAppNavigate();
 
   const handleRepeatOrder = async () => {
     try {

@@ -7,6 +7,7 @@ import { Link } from "@tanstack/react-router";
 import { type ProductInDetails, type Review } from "@/lib/types.ts";
 import { useUser } from "@/store/UserContext.tsx";
 import { useState } from "react";
+import { useI18nContext } from "@/i18n/i18n-react";
 
 type Props = {
   product: ProductInDetails;
@@ -14,7 +15,24 @@ type Props = {
   reviews: Review[];
 };
 
+// Функция склонения русских слов
+const getRussianPlural = (
+  count: number,
+  one: string,
+  few: string,
+  many: string,
+) => {
+  const mod10 = count % 10;
+  const mod100 = count % 100;
+  if (mod100 >= 11 && mod100 <= 19) return many;
+  if (mod10 === 1) return one;
+  if (mod10 >= 2 && mod10 <= 4) return few;
+  return many;
+};
+
 const CustomerReviews = ({ product, isAuthorized, reviews }: Props) => {
+  const { LL, locale } = useI18nContext();
+
   const avgRating = product.rating?.average_rating ?? 0;
 
   const reviewCount = product.rating?.total_reviews ?? 0;
@@ -37,11 +55,22 @@ const CustomerReviews = ({ product, isAuthorized, reviews }: Props) => {
     (review) => review.user.email === user?.email,
   );
 
+  // Вычисляем правильное слово на основе текущего активного языка сайта
+  let reviewWord = "";
+  if (locale === "ru") {
+    // Для русского: "из 1 отзыва", "из 3 отзывов", "из 5 отзывов"
+    reviewWord = getRussianPlural(reviewCount, "отзыва", "отзывов", "отзывов");
+  } else {
+    // Для английского: "of 1 review", "of 5 reviews"
+    reviewWord = reviewCount === 1 ? "review" : "reviews";
+  }
+
   return (
     <>
       <div className="mx-auto">
         <h3 className="font-semibold text-xl text-center my-6 text-primaryDark">
-          Customer Reviews
+          {LL.productSection.reviews()}
+          {/* Customer Reviews */}
         </h3>
         <div
           className="w-full flex py-6 gap-6 
@@ -56,7 +85,12 @@ const CustomerReviews = ({ product, isAuthorized, reviews }: Props) => {
               {avgRating.toFixed(1)}
             </h1>
             <small className="text-primaryDark text-sm">
-              of {reviewCount} {reviewCount < 2 ? "review" : "reviews"}
+              {LL.productSection.reviewsCount({
+                count: reviewCount,
+                reviewWord: reviewWord,
+              })}
+
+              {/* of {reviewCount} {reviewCount < 2 ? "review" : "reviews"} */}
             </small>
             <div className="flex gap-2">
               {stars.map((star) => (
@@ -75,16 +109,25 @@ const CustomerReviews = ({ product, isAuthorized, reviews }: Props) => {
           {/* Rating progress bar */}
           <div className="flex flex-col gap-6 w-[700px] max-md:w-full">
             <RatingProgressBar
-              rating="Excellent"
+              rating={`${LL.productSection.excellent()}`}
               numRating={excellent_rating}
             />
             <RatingProgressBar
-              rating="Very Good"
+              rating={`${LL.productSection.veryGood()}`}
               numRating={very_good_rating}
             />
-            <RatingProgressBar rating="Good" numRating={good_rating} />
-            <RatingProgressBar rating="Fair" numRating={fair_rating} />
-            <RatingProgressBar rating="Poor" numRating={poor_rating} />
+            <RatingProgressBar
+              rating={`${LL.productSection.good()}`}
+              numRating={good_rating}
+            />
+            <RatingProgressBar
+              rating={`${LL.productSection.fair()}`}
+              numRating={fair_rating}
+            />
+            <RatingProgressBar
+              rating={`${LL.productSection.poor()}`}
+              numRating={poor_rating}
+            />
           </div>
           {/* ------------------------------------------------------- */}
         </div>

@@ -5,11 +5,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useNavigate, useSearch } from "@tanstack/react-router";
+import { useAppNavigate } from "@/hooks/useAppNavigate.ts";
 import { type ProductUrlQuery } from "@/lib/types";
+import { useSearch } from "@tanstack/react-router";
 
 const SortSelector = () => {
-  const navigate = useNavigate();
+  const navigate = useAppNavigate();
   const search = useSearch({ from: "/$lang/_mainLayout/_filter/products" });
   // const search = useSearch({ from: "/_mainLayout/_filter/products" });
 

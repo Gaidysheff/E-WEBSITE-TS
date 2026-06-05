@@ -9,7 +9,7 @@ const RatingProgressBar = ({ rating, numRating }: Props) => {
   return (
     <div className="flex items-center gap-4 w-full">
       <small
-        className="w-[140px] text-primaryDark font-medium truncate
+        className="w-[150px] text-primaryDark font-medium truncate
         max-sm:text-[10px] max-sm:w-[100px]"
       >
         {rating}

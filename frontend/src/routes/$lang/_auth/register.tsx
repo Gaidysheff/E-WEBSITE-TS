@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
+import { Link, createFileRoute } from "@tanstack/react-router";
 
 import type { AnyFieldApi } from "@tanstack/react-form";
 import { BASE_URL } from "@/api/api";
@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { register } from "@/api/endpoints_auth";
+import { useAppNavigate } from "@/hooks/useAppNavigate.ts";
 import { useForm } from "@tanstack/react-form";
 import { z } from "zod";
 
@@ -73,7 +74,7 @@ function FieldInfo({ field }: { field: AnyFieldApi }) {
 }
 
 export function Register() {
-  const navigate = useNavigate();
+  const navigate = useAppNavigate();
   const form = useForm({
     defaultValues: {
       email: "",

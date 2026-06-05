@@ -14,7 +14,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useNavigate, useSearch } from "@tanstack/react-router";
+
+import { useAppNavigate } from "@/hooks/useAppNavigate.ts";
+import { useSearch } from "@tanstack/react-router";
 
 interface Props {
   totalPages: number;
@@ -22,7 +24,7 @@ interface Props {
 }
 
 const PageBreak = ({ totalPages, currentPage }: Props) => {
-  const navigate = useNavigate();
+  const navigate = useAppNavigate();
   // Подключаем хук с указанием маршрута, чтобы TS подхватил типы
 
   const search = useSearch({ from: "/$lang/_mainLayout/_filter/products" });

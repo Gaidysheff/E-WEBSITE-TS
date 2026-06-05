@@ -1,23 +1,28 @@
-import { BASE_URL } from "@/api/api";
 import CustomerReviews from "@/components/productDetail/CustomerReviews";
 import ProductInfo from "@/components/productDetail/ProductInfo";
 import ReviewCardContainer from "@/components/productDetail/ReviewCardContainer";
 import ProductSection from "@/components/sectionProduct/ProductSection";
 import usePageSEO from "@/hooks/usePageSEO.ts";
+import { useI18nContext } from "@/i18n/i18n-react";
 import { type ProductInDetails } from "@/lib/types.ts";
 import { createLazyFileRoute, useRouterState } from "@tanstack/react-router";
 import { useEffect } from "react";
+import { BASE_URL } from "@/api/api.ts";
 
 interface LoaderData {
   product: ProductInDetails;
 }
 
-export const Route = createLazyFileRoute("/$lang/_mainLayout/products/$productSlug")({
+export const Route = createLazyFileRoute(
+  "/$lang/_mainLayout/products/$productSlug",
+)({
   component: IndividualProductComponent,
 });
 
 function IndividualProductComponent() {
   const { product } = Route.useLoaderData() as LoaderData;
+
+  const { LL } = useI18nContext();
 
   const reviews = product.reviews;
   // const [reviews, setReviews] = useState([]);
@@ -47,7 +52,7 @@ function IndividualProductComponent() {
         />
         <link rel="icon" type="image/svg+xml" href="/gift.svg" sizes="any2" />
 
-        <link rel="canonical" href={"${BASE_URL}${currentPathname}"} />
+        <link rel="canonical" href={`${BASE_URL}${currentPathname}`} />
       </>
 
       <div className="container">
@@ -70,7 +75,8 @@ function IndividualProductComponent() {
         )}
 
         <ProductSection
-          title="Products from the same category"
+          // title="Products from the same category"
+          title={`${LL.productSection.titleRelated()}`}
           similar_products={similar_products}
           detailPage
           loadingFromDetailPage={false}

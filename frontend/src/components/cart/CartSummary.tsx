@@ -2,8 +2,8 @@ import { BASE_URL } from "@/api/api.ts";
 import Button from "@/components/uiComponents/Button";
 import { ListChecks } from "lucide-react";
 import { NumericFormat } from "react-number-format";
+import { useAppNavigate } from "@/hooks/useAppNavigate.ts";
 import { useCart } from "@/store/CartContext.tsx";
-import { useNavigate } from "@tanstack/react-router";
 
 // ----------------- Version for STRIPE -----------------------
 // import { initiatePaymentAction } from "@/api/actions.ts";
@@ -18,7 +18,7 @@ interface Props {
 }
 
 const CartSummary = ({ total }: Props) => {
-  const navigate = useNavigate({ from: "/$lang" });
+  const navigate = useAppNavigate();
 
   const { items, cartItemsCount } = useCart();
 
@@ -201,7 +201,9 @@ const CartSummary = ({ total }: Props) => {
       <Button
         disabled={total < 0.01}
         handleClick={() => {
-          navigate({ to: "/$lang/checkout" });
+          navigate({
+            to: "/$lang/checkout",
+          });
         }}
         className="checkout-btn"
       >

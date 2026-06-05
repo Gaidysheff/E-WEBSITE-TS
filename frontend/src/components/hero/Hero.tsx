@@ -1,11 +1,14 @@
 import { EmblaCarousel } from "./HeroCarouselEmbla";
 import { type Product } from "@/lib/types.ts";
+import { AppLink as Link } from "@/components/appLink/AppLink";
+import { useI18nContext } from "@/i18n/i18n-react";
 
 interface Props {
   productsForCarousel: Product[];
 }
 
 const Hero = ({ productsForCarousel }: Props) => {
+  const { LL } = useI18nContext();
   return (
     <section className="mt-20">
       <div className="bg-card">
@@ -16,31 +19,35 @@ const Hero = ({ productsForCarousel }: Props) => {
           >
             <div
               className="max-w-4xl mx-auto space-y-8 px-6 sm:px-12 md:px-16 
-      				lg:px-24"
+              lg:px-24"
             >
               <h1
                 className="text-xl 2xsm:text-2xl xsm:text-3xl sm:text-4xl lg:text-5xl 
                 font-extrabold text-primaryDark leading-snug mb-1 2xsm:mb-2 xsm:mb-3 
                 sm:mb-4 lg:mb-5 xl:mb-6"
               >
-                Find the Perfect Product for Every Occasion
+                {/* Find the Perfect Product for Every Occasion */}
+                {LL.hero.title()}
               </h1>
               <p
                 className="text-sm xsm:text-base lg:text-lg text-primaryDark max-w-2xl 
                 mx-auto mb-4 lg:mb-6 xl:mb-8"
               >
-                Discover a curated selection of high-quality products designed
-                to fit your lifestyle.
+                {/* Discover a curated selection of high-quality products designed
+                to fit your lifestyle. */}
+                {LL.hero.subtitle()}
               </p>
-              <a
-                href="#product_section"
-                className="inline-block bg-black text-white font-semibold 
-      					rounded-xl shadow-lg hover:bg-gray-900 transition-all duration-300 
+              <Link
+                to="/$lang/products"
+                search={{ isCatalog: true }}
+                className="inline-block bg-black text-white font-semibold
+                rounded-xl shadow-lg hover:bg-gray-900 transition-all duration-300 
                 text-xs xsm:text-base md:text-lg 
                 px-4 py-2 xsm:px-6 xsm:py-3 md:px-8"
               >
-                Shop Now
-              </a>
+                {/* Shop Now */}
+                {LL.hero.btn()}
+              </Link>
             </div>
             <div
               className="mt-[1rem] 2xsm:mt-[2rem] xsm:mt-[3rem] sm:mt-[4rem] 

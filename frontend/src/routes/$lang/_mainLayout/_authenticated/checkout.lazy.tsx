@@ -10,6 +10,7 @@ import CheckoutSection from "@/components/checkout/CheckoutSection.tsx";
 //   options,
 // } from "@/components/checkout/DeliveryOptions.tsx";
 import { getDeliveryOptionsAction } from "@/api/actions.ts";
+import { AppLink as Link } from "@/components/appLink/AppLink";
 import DeliveryOptions from "@/components/checkout/DeliveryOptions.tsx";
 import MiniCartItem from "@/components/checkout/MiniCartItem.tsx";
 import PaymentMethodToggle from "@/components/checkout/PaymentMethodToggle.tsx";
@@ -18,6 +19,7 @@ import YandexMap from "@/components/map/YandexMap.tsx";
 import AddressFormTanstack from "@/components/order/AddressFormTanstack.tsx";
 import ShippingInfo from "@/components/profile/ShippingInfo.tsx";
 import Modal from "@/components/uiComponents/Modal.tsx";
+import { useAppNavigate } from "@/hooks/useAppNavigate.ts";
 import {
   type CPResponse,
   type DeliveryOption,
@@ -27,8 +29,7 @@ import { CURRENT_YEAR } from "@/lib/utilities.ts";
 import { useCart } from "@/store/CartContext.tsx";
 import { useUser } from "@/store/UserContext.tsx";
 import { useForm } from "@tanstack/react-form";
-import { createLazyFileRoute, useNavigate } from "@tanstack/react-router";
-import { AppLink as Link } from "@/components/appLink/AppLink";
+import { createLazyFileRoute } from "@tanstack/react-router";
 
 import { CreditCard, MapPin, PackageSearch, Truck, Zap } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -52,7 +53,7 @@ function CheckoutPage() {
 
   const address = user?.address;
 
-  const navigate = useNavigate();
+  const navigate = useAppNavigate();
 
   // ====================== DeliveryOptions ===========================
 

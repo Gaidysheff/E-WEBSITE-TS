@@ -5,6 +5,7 @@ import { type Product } from "@/lib/types.ts";
 import { useCart } from "@/store/CartContext.tsx";
 import { useEffect, useState } from "react";
 import { NumericFormat } from "react-number-format";
+import { useI18nContext } from "@/i18n/i18n-react";
 
 import {
   addToCartAction,
@@ -22,6 +23,8 @@ interface Props {
 }
 
 const ProductInfo = ({ product, isAuthorized }: Props) => {
+  const { LL } = useI18nContext();
+
   const { user } = useUser();
   const email = typeof user === "undefined" ? "" : user.email;
 
@@ -43,12 +46,14 @@ const ProductInfo = ({ product, isAuthorized }: Props) => {
 
     try {
       await addToCartAction(formData);
-      toast.success("Selected item added successfully!");
+      toast.success(`${LL.productSection.toastCartSuccess()}`);
+      // toast.success("Selected item added successfully!");
       refreshCart(); // Обновляем данные в стейте без перезагрузки всей страницы!
       setCartItemsCount((current: number) => current + 1);
       setIsAddedToCart(true);
     } catch (error) {
-      toast.error("Something went wrong");
+      toast.error(`${LL.productSection.toastError()}`);
+      // toast.error("Something went wrong");
       throw error;
     } finally {
       // Выключаем лоадер и при успехе, и при ошибке
@@ -92,12 +97,15 @@ const ProductInfo = ({ product, isAuthorized }: Props) => {
       setIsAddedToWishlist((current) => !current);
 
       if (isAddedToWishlist) {
-        toast.info("Item removed from your Wishlist successfully!");
+        toast.info(`${LL.productSection.toastWishlistInfo()}`);
+        // toast.info("Item removed from your Wishlist successfully!");
       } else {
-        toast.success("Item added to your Wishlist successfully!");
+        toast.success(`${LL.productSection.toastWishlistSuccess()}`);
+        // toast.success("Item added to your Wishlist successfully!");
       }
     } catch (error) {
-      toast.error("Something went wrong");
+      toast.error(`${LL.productSection.toastError()}`);
+      // toast.error("Something went wrong");
       throw error;
     } finally {
       setIsLoadingWishlist(false);
@@ -167,7 +175,10 @@ const ProductInfo = ({ product, isAuthorized }: Props) => {
 
         {/* Product Details */}
         <div>
-          <h3 className="text-lg sm:text-xl text-primaryDark my-3">Details:</h3>
+          <h3 className="text-lg sm:text-xl text-primaryDark my-3">
+            {LL.productSection.details()}
+            {/* Details: */}
+          </h3>
           <p
             className="text-primaryDark text-justify md:leading-6 text-base
             max-sm:text-sm mb-10"
@@ -186,10 +197,10 @@ const ProductInfo = ({ product, isAuthorized }: Props) => {
               disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {addToCartLoader
-              ? "Adding to Cart ..."
+              ? `${LL.productSection.adding()}`
               : isAddedToCart
-                ? "Added to Cart"
-                : "Add to Cart"}
+                ? `${LL.productSection.added()}`
+                : `${LL.productSection.addCart()}`}
           </Button>
 
           {isAuthorized ? (
@@ -201,11 +212,11 @@ const ProductInfo = ({ product, isAuthorized }: Props) => {
             >
               {isAddedToWishlist
                 ? isLoadingWishlist
-                  ? "Updating ..."
-                  : "Remove from Wishlist"
+                  ? `${LL.productSection.updating()}`
+                  : `${LL.productSection.remove()}`
                 : isLoadingWishlist
-                  ? "Updating ..."
-                  : "Add to Wishlist"}
+                  ? `${LL.productSection.updating()}`
+                  : `${LL.productSection.addWishlist()}`}
             </Button>
           ) : (
             <WishlistTooltip />

@@ -8,7 +8,7 @@ import SearchForm from "./SearchForm";
 import SettingsDrawer from "@/components/settings/SettingsDrawer.tsx";
 import ThemeSwitch from "./ThemeSwitch";
 import { useI18nContext } from "@/i18n/i18n-react";
-import { useNavigate } from "@tanstack/react-router";
+import { useRouter } from "@tanstack/react-router";
 import { useState } from "react";
 import { useTheme } from "@/store/ThemeContext";
 
@@ -19,10 +19,13 @@ const NavBar = () => {
 
   const { theme } = useTheme();
 
-  // const location = useLocation();
+  // Получаем доступ к глобальному состоянию роутера
+  const router = useRouter();
 
   // Инициализируем типизированный метод навигации
-  const navigate = useNavigate({ from: "/$lang" });
+  // const navigate = useNavigate({ from: "/$lang" });
+
+  // const location = useLocation();
 
   const { locale } = useI18nContext();
 
@@ -35,15 +38,34 @@ const NavBar = () => {
 
   const handleLanguageChange = async () => {
     try {
-      // Вызываем navigate напрямую
-      await navigate({
-        // params принимает прямой объект с указанием нового языка
-        params: {
-          lang: nextLang,
-        },
-        // Говорим роутеру сохранить текущие search-параметры (фильтры/пагинацию)
-        search: true,
+      // 1. Берем текущий реальный путь из адресной строки
+      // (например, "/en/products/product-1")
+      const currentPathname = router.state.location.pathname;
+
+      // 2. Заменяем языковой префикс в начале строки пути
+      let newPathname = currentPathname;
+      if (currentPathname.startsWith(`/${locale}`)) {
+        newPathname = currentPathname.replace(`/${locale}`, `/${nextLang}`);
+      }
+
+      // 3. Переходим по новому чистому адресу, сохраняя
+      //  все query-параметры (фильтры)
+      await router.navigate({
+        to: newPathname,
+        // Передаем текущие search-параметры как есть
+        search: (prev: any) => prev,
       });
+      // Вызываем navigate напрямую
+      // await navigate({
+      //   // КРИТИЧЕСКИЙ ШАГ: Говорим роутеру остаться на текущей странице!
+      //   to: ".",
+      //   // params принимает прямой объект с указанием нового языка
+      //   params: {
+      //     lang: nextLang,
+      //   },
+      //   // Говорим роутеру сохранить текущие search-параметры (фильтры/пагинацию)
+      //   search: true,
+      // });
     } catch (error) {
       console.error("Ошибка при смене языка:", error);
     }

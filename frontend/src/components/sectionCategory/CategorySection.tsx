@@ -3,8 +3,11 @@ import CategoryCardSkeleton from "./CategoryCardSkeleton.tsx";
 import Skeleton from "react-loading-skeleton";
 import Waves from "@/components/decor/Waves.tsx";
 import { useCategory } from "@/store/CategoryContext.tsx";
+import { useI18nContext } from "@/i18n/i18n-react";
 
 const CategorySection = () => {
+  const { LL } = useI18nContext();
+
   const { categories, isLoading, error } = useCategory();
 
   if (error) {
@@ -24,7 +27,8 @@ const CategorySection = () => {
               {isLoading ? (
                 <Skeleton width={300} height={40} />
               ) : (
-                "Browse By Category"
+                // "Browse By Category"
+                `${LL.categorySection.title()}`
               )}
             </h2>
 
@@ -38,8 +42,9 @@ const CategorySection = () => {
 
               {!!error && (
                 <div className="italic text-xl text-red-500 text-center">
-                  Извините, возникла непредвиденная ОШИБКА сервера при загрузки
-                  списка категорий!!!
+                  {/* Извините, возникла непредвиденная ОШИБКА сервера при загрузки
+                  списка категорий!!! */}
+                  {LL.categorySection.error()}
                 </div>
               )}
             </div>

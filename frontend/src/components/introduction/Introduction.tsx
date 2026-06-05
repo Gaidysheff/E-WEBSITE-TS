@@ -1,7 +1,11 @@
 import Logo from "@/components/svg/Logo.tsx";
 import Waves from "@/components/decor/Waves.tsx";
+import { useI18nContext } from "@/i18n/i18n-react";
 
 const Introduction = () => {
+  // Вытаскиваем LL (объект перевода) и locale (текущий активный язык)
+  const { LL } = useI18nContext();
+
   return (
     <section>
       <div className="pt-20 bg-myMainColor/15">
@@ -31,7 +35,7 @@ const Introduction = () => {
                 font-rusHand font-bold text-xl 2xsm:text-2xl xsm:text-3xl 
                 sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl"
               >
-                "Click. Buy. Enjoy!"
+                {LL.introduction.slogan()}
               </span>
             </span>
           </div>

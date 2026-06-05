@@ -154,7 +154,7 @@ export function Failure() {
             </Link>
           </div>
           <div className="flex flex-col gap-3">
-            <p>Contact us ({locale})</p>
+            <p> {LL.failedPage.contactUs()}</p>
             <Link
               to="https://wa.me"
               // to="https://t.me"

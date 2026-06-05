@@ -14,6 +14,120 @@ export type Translation = RootTranslation
 export type Translations = RootTranslation
 
 type RootTranslation = {
+	introduction: {
+		/**
+		 * "​К​л​и​к​а​й​.​ ​П​о​к​у​п​а​й​.​ ​Н​а​с​л​а​ж​д​а​й​с​я​!​"
+		 */
+		slogan: string
+	}
+	hero: {
+		/**
+		 * Н​а​й​д​и​т​е​ ​и​д​е​а​л​ь​н​ы​й​ ​т​о​в​а​р​ ​д​л​я​ ​л​ю​б​ы​х​ ​п​о​т​р​е​б​н​о​с​т​е​й​.
+		 */
+		title: string
+		/**
+		 * О​т​к​р​о​й​т​е​ ​д​л​я​ ​с​е​б​я​ ​т​щ​а​т​е​л​ь​н​о​ ​о​т​о​б​р​а​н​н​у​ю​ ​к​о​л​л​е​к​ц​и​ю​ ​в​ы​с​о​к​о​к​а​ч​е​с​т​в​е​н​н​ы​х​ ​т​о​в​а​р​о​в​,​ ​с​о​з​д​а​н​н​ы​х​ ​д​л​я​ ​у​ч​ё​т​а​ ​в​а​ш​е​г​о​ ​о​б​р​а​з​а​ ​ж​и​з​н​и​.
+		 */
+		subtitle: string
+		/**
+		 * П​о​к​а​з​а​т​ь
+		 */
+		btn: string
+	}
+	categorySection: {
+		/**
+		 * П​р​о​с​м​о​т​р​ ​п​о​ ​к​а​т​е​г​о​р​и​я​м
+		 */
+		title: string
+		/**
+		 * И​з​в​и​н​и​т​е​,​ ​в​о​з​н​и​к​л​а​ ​н​е​п​р​е​д​в​и​д​е​н​н​а​я​ ​О​Ш​И​Б​К​А​ ​с​е​р​в​е​р​а​ ​п​р​и​ ​з​а​г​р​у​з​к​и​ ​с​п​и​с​к​а​ ​к​а​т​е​г​о​р​и​й​!​!​!
+		 */
+		error: string
+	}
+	productSection: {
+		/**
+		 * Р​е​к​о​м​е​н​д​у​е​м​ы​е​ ​т​о​в​а​р​ы
+		 */
+		titleFeatured: string
+		/**
+		 * Т​о​в​а​р​ы​ ​и​з​ ​т​о​й​ ​ж​е​ ​к​а​т​е​г​о​р​и​и
+		 */
+		titleRelated: string
+		/**
+		 * П​о​л​н​о​е​ ​о​п​и​с​а​н​и​е​:
+		 */
+		details: string
+		/**
+		 * Д​о​б​а​в​л​я​е​м​ ​.​.​.
+		 */
+		adding: string
+		/**
+		 * У​ж​е​ ​в​ ​к​о​р​з​и​н​е
+		 */
+		added: string
+		/**
+		 * В​ ​к​о​р​з​и​н​у
+		 */
+		addCart: string
+		/**
+		 * О​б​н​о​в​л​я​е​м​ ​.​.​.
+		 */
+		updating: string
+		/**
+		 * У​д​а​л​и​т​ь
+		 */
+		remove: string
+		/**
+		 * В​ ​И​з​б​р​а​н​н​о​е
+		 */
+		addWishlist: string
+		/**
+		 * Ч​т​о​-​т​о​ ​п​о​ш​л​о​ ​н​е​ ​т​а​к​.
+		 */
+		toastError: string
+		/**
+		 * В​ы​б​р​а​н​н​ы​й​ ​т​о​в​а​р​ ​у​с​п​е​ш​н​о​ ​д​о​б​а​в​л​е​н​!
+		 */
+		toastCartSuccess: string
+		/**
+		 * Т​о​в​а​р​ ​у​с​п​е​ш​н​о​ ​д​о​б​а​в​л​е​н​ ​в​ ​И​з​б​р​а​н​н​о​е​!
+		 */
+		toastWishlistSuccess: string
+		/**
+		 * Т​о​в​а​р​ ​у​с​п​е​ш​н​о​ ​у​д​а​л​ё​н​ ​и​з​ ​И​з​б​р​а​н​н​о​г​о​!
+		 */
+		toastWishlistInfo: string
+		/**
+		 * О​т​з​ы​в​ы​ ​п​о​к​у​п​а​т​е​л​е​й
+		 */
+		reviews: string
+		/**
+		 * О​т​л​и​ч​н​о
+		 */
+		excellent: string
+		/**
+		 * О​ч​е​н​ь​ ​х​о​р​о​ш​о
+		 */
+		veryGood: string
+		/**
+		 * X​о​р​о​ш​о
+		 */
+		good: string
+		/**
+		 * У​д​о​в​л​е​т​в​о​р​и​т​е​л​ь​н​о
+		 */
+		fair: string
+		/**
+		 * П​л​о​х​о
+		 */
+		poor: string
+		/**
+		 * и​з​ ​{​c​o​u​n​t​}​ ​{​r​e​v​i​e​w​W​o​r​d​}
+		 * @param {number} count
+		 * @param {string} reviewWord
+		 */
+		reviewsCount: RequiredParams<'count' | 'reviewWord'>
+	}
 	failedPage: {
 		/**
 		 * О​й​!​ ​О​ш​и​б​к​а​ ​о​п​л​а​т​ы​.
@@ -27,6 +141,10 @@ type RootTranslation = {
 		 * П​о​п​р​о​б​о​в​а​т​ь​ ​с​н​о​в​а
 		 */
 		tryAgain: string
+		/**
+		 * С​в​я​ж​и​т​е​с​ь​ ​с​ ​н​а​м​и
+		 */
+		contactUs: string
 		/**
 		 * П​о​д​д​е​р​ж​к​а​ ​—​ ​W​h​a​t​s​A​p​p
 		 */
@@ -48,6 +166,118 @@ type RootTranslation = {
 }
 
 export type TranslationFunctions = {
+	introduction: {
+		/**
+		 * "Кликай. Покупай. Наслаждайся!"
+		 */
+		slogan: () => LocalizedString
+	}
+	hero: {
+		/**
+		 * Найдите идеальный товар для любых потребностей.
+		 */
+		title: () => LocalizedString
+		/**
+		 * Откройте для себя тщательно отобранную коллекцию высококачественных товаров, созданных для учёта вашего образа жизни.
+		 */
+		subtitle: () => LocalizedString
+		/**
+		 * Показать
+		 */
+		btn: () => LocalizedString
+	}
+	categorySection: {
+		/**
+		 * Просмотр по категориям
+		 */
+		title: () => LocalizedString
+		/**
+		 * Извините, возникла непредвиденная ОШИБКА сервера при загрузки списка категорий!!!
+		 */
+		error: () => LocalizedString
+	}
+	productSection: {
+		/**
+		 * Рекомендуемые товары
+		 */
+		titleFeatured: () => LocalizedString
+		/**
+		 * Товары из той же категории
+		 */
+		titleRelated: () => LocalizedString
+		/**
+		 * Полное описание:
+		 */
+		details: () => LocalizedString
+		/**
+		 * Добавляем ...
+		 */
+		adding: () => LocalizedString
+		/**
+		 * Уже в корзине
+		 */
+		added: () => LocalizedString
+		/**
+		 * В корзину
+		 */
+		addCart: () => LocalizedString
+		/**
+		 * Обновляем ...
+		 */
+		updating: () => LocalizedString
+		/**
+		 * Удалить
+		 */
+		remove: () => LocalizedString
+		/**
+		 * В Избранное
+		 */
+		addWishlist: () => LocalizedString
+		/**
+		 * Что-то пошло не так.
+		 */
+		toastError: () => LocalizedString
+		/**
+		 * Выбранный товар успешно добавлен!
+		 */
+		toastCartSuccess: () => LocalizedString
+		/**
+		 * Товар успешно добавлен в Избранное!
+		 */
+		toastWishlistSuccess: () => LocalizedString
+		/**
+		 * Товар успешно удалён из Избранного!
+		 */
+		toastWishlistInfo: () => LocalizedString
+		/**
+		 * Отзывы покупателей
+		 */
+		reviews: () => LocalizedString
+		/**
+		 * Отлично
+		 */
+		excellent: () => LocalizedString
+		/**
+		 * Очень хорошо
+		 */
+		veryGood: () => LocalizedString
+		/**
+		 * Xорошо
+		 */
+		good: () => LocalizedString
+		/**
+		 * Удовлетворительно
+		 */
+		fair: () => LocalizedString
+		/**
+		 * Плохо
+		 */
+		poor: () => LocalizedString
+		/**
+		 * из {count} {reviewWord}
+		 */
+		reviewsCount: (arg: { count: number, reviewWord: string }) => LocalizedString
+	}
 	failedPage: {
 		/**
 		 * Ой! Ошибка оплаты.
@@ -61,6 +291,10 @@ export type TranslationFunctions = {
 		 * Попробовать снова
 		 */
 		tryAgain: () => LocalizedString
+		/**
+		 * Свяжитесь с нами
+		 */
+		contactUs: () => LocalizedString
 		/**
 		 * Поддержка — WhatsApp
 		 */

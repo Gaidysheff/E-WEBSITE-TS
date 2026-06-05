@@ -1,3 +1,4 @@
+import { AppLink as Link } from "@/components/appLink/AppLink";
 import {
   Drawer,
   DrawerClose,
@@ -8,12 +9,12 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { useNavigate, useSearch } from "@tanstack/react-router";
-import { AppLink as Link } from "@/components/appLink/AppLink";
+import { useAppNavigate } from "@/hooks/useAppNavigate.ts";
+import { useSearch } from "@tanstack/react-router";
 
 import { Button } from "@/components/ui/button";
-import FilterDrawerInnerSection from "./FilterDrawerInnerSection.tsx";
 import { TbFilterSearch } from "react-icons/tb";
+import FilterDrawerInnerSection from "./FilterDrawerInnerSection.tsx";
 
 import { type ProductSearch } from "@/lib/types";
 import { useState } from "react";
@@ -21,7 +22,7 @@ import { useState } from "react";
 const FilterDrawer = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const navigate = useNavigate();
+  const navigate = useAppNavigate();
 
   // Используем strict: false. Теперь не упадет на главной!
   const searchParams = useSearch({

@@ -4,7 +4,8 @@ import Introduction from "@/components/introduction/Introduction.tsx";
 import ProductSection from "@/components/sectionProduct/ProductSection.tsx";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { type Product } from "@/lib/types.ts";
-import { BASE_URL } from "@/api/api";
+import { BASE_URL } from "@/api/api.ts";
+import { useI18nContext } from "@/i18n/i18n-react";
 
 interface LoaderData {
   productsForCarousel: Product[];
@@ -16,6 +17,7 @@ export const Route = createLazyFileRoute("/$lang/_mainLayout/")({
 
 function RouteComponent() {
   const { productsForCarousel } = Route.useLoaderData() as LoaderData;
+  const { LL } = useI18nContext();
 
   return (
     <>
@@ -26,12 +28,12 @@ function RouteComponent() {
           content="E-Shop online shop providing e-commerce services !!!"
         />
         {/* <link rel="canonical" href="http://localhost:5173" /> */}
-        <link rel="canonical" href={"${BASE_URL}"} />
+        <link rel="canonical" href={`${BASE_URL}`} />
         {/* <meta name="keywords" content="main,e-Shop" /> */}
         <meta property="og:title" content="Eshop | OG:Title" />
         <meta property="og:description" content="This is OG:Description" />
-        <meta property="og:image" content={"${Image}"} />
-        <meta property="og:url" content={"${BASE_URL}"} />
+        <meta property="og:image" content={`${Image}`} />
+        <meta property="og:url" content={`${BASE_URL}`} />
       </>
       <main className="min-h-[85vh]">
         <Introduction />
@@ -41,7 +43,7 @@ function RouteComponent() {
         <CategorySection />
 
         <ProductSection
-          title="Featured Products"
+          title={`${LL.productSection.titleFeatured()}`}
           similar_products={[]}
           detailPage={false}
           loadingFromDetailPage={false}

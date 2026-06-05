@@ -11,6 +11,7 @@ import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { googleLoginAction, login } from "@/api/endpoints_auth";
 
 import type { AnyFieldApi } from "@tanstack/react-form";
+import { BASE_URL } from "@/api/api.ts";
 import { Button } from "@/components/ui/button";
 import { FcGoogle } from "react-icons/fc";
 import { Input } from "@/components/ui/input";
@@ -199,7 +200,7 @@ export function Login() {
           name="description"
           content="LOGIN page is for user's authentication inside the application."
         />
-        <link rel="canonical" href={"${BASE_URL}/login"} />
+        <link rel="canonical" href={`${BASE_URL}/$lang/login`} />
       </>
       <section
         className="mt-10 xsm:mt-0 xsm:h-dvh

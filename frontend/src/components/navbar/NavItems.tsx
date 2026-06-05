@@ -1,12 +1,11 @@
-import { useLocation, useNavigate } from "@tanstack/react-router";
-
 import { BASE_URL } from "@/api/api.ts";
 import { FaCartShopping } from "react-icons/fa6";
 import { AppLink as Link } from "@/components/appLink/AppLink";
 import { cn } from "@/lib/utils";
 import { logout } from "@/api/endpoints_auth";
+import { useAppNavigate } from "@/hooks/useAppNavigate.ts";
 import { useCart } from "@/store/CartContext.tsx";
-import { useI18nContext } from "@/i18n/i18n-react";
+import { useLocation } from "@tanstack/react-router";
 import { useUser } from "@/store/UserContext.tsx";
 
 type Props = {
@@ -20,9 +19,7 @@ const NavItems = ({ mobile }: Props) => {
 
   const imgURL = `${BASE_URL}${user?.image}`;
 
-  const navigate = useNavigate();
-  const { locale } = useI18nContext();
-  // Получаем живой текущий язык ('ru' или 'en')
+  const navigate = useAppNavigate(); // Наш умный навигатор
 
   const token = !!localStorage.getItem("Token");
 
@@ -33,7 +30,7 @@ const NavItems = ({ mobile }: Props) => {
     // Перенаправляем на главную страницу текущего языка (например, /ru или /en)
     await navigate({
       to: "/$lang",
-      params: { lang: locale },
+      // params: { lang: locale },
     });
   };
 
@@ -41,7 +38,7 @@ const NavItems = ({ mobile }: Props) => {
     // Перенаправляем на страницу логина текущего языка (/ru/login)
     await navigate({
       to: "/$lang/login",
-      params: { lang: locale },
+      // params: { lang: locale },
       // Запоминаем текущую страницу (например, главную или карточку товара)
       search: {
         redirect: location.href,
@@ -53,7 +50,7 @@ const NavItems = ({ mobile }: Props) => {
     // Перенаправляем на страницу регистрации текущего языка (/ru/register)
     await navigate({
       to: "/$lang/register",
-      params: { lang: locale },
+      // params: { lang: locale },
     });
   };
 
@@ -77,7 +74,7 @@ const NavItems = ({ mobile }: Props) => {
           )}
         >
           <Link
-            to="/profile"
+            to="/$lang/profile"
             className="flex items-center justify-between group/profile
             transition duration-300 hover:scale-110"
           >
