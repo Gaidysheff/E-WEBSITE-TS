@@ -13,6 +13,7 @@ import { deleteReviewAction } from "@/api/actions.ts";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "@tanstack/react-router";
+import { useI18nContext } from "@/i18n/i18n-react";
 
 type Props = {
   review: Review;
@@ -21,6 +22,9 @@ type Props = {
 };
 
 const ReviewCard = ({ review, user, product }: Props) => {
+  const { LL, locale } = useI18nContext();
+  // Забираем текущий живой язык из контекста сайта ('ru' или 'en')
+
   const [isReviewFormOpen, setIsReviewFormOpen] = useState<boolean>(false);
 
   const starArray = [1, 2, 3, 4, 5];
@@ -82,11 +86,14 @@ const ReviewCard = ({ review, user, product }: Props) => {
         {/* Information showing when the review was edited */}
         <span className="text-sm text-primary">
           {review.created == review.updated ? (
-            <small className="block">published...</small>
+            <small className="block">{LL.productSection.published()}</small>
           ) : (
-            <small className="block">edited...</small>
+            // <small className="block">published...</small>
+            <small className="block">{LL.productSection.edited()}</small>
+
+            // <small className="block">edited...</small>
           )}
-          <small>{timeAgo(review.updated)}</small>
+          <small>{timeAgo(review.updated, locale)}</small>
         </span>
       </div>
 

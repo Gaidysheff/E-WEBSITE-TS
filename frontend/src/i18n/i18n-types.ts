@@ -14,6 +14,16 @@ export type Translation = RootTranslation
 export type Translations = RootTranslation
 
 type RootTranslation = {
+	general: {
+		/**
+		 * О​т​м​е​н​и​т​ь
+		 */
+		cancel: string
+		/**
+		 * П​р​о​д​о​л​ж​и​т​ь
+		 */
+		'continue': string
+	}
 	introduction: {
 		/**
 		 * "​К​л​и​к​а​й​.​ ​П​о​к​у​п​а​й​.​ ​Н​а​с​л​а​ж​д​а​й​с​я​!​"
@@ -70,6 +80,26 @@ type RootTranslation = {
 		 */
 		addCart: string
 		/**
+		 * В​ ​И​з​б​р​а​н​н​о​е
+		 */
+		addWishlist: string
+		/**
+		 * Д​о​б​а​в​и​т​ь​ ​о​т​з​ы​в
+		 */
+		addReview: string
+		/**
+		 * Д​о​б​а​в​л​я​е​м​ ​о​т​з​ы​в​ ​.​.​.
+		 */
+		addingReview: string
+		/**
+		 * О​б​н​о​в​л​я​е​м​ ​о​т​з​ы​в​ ​.​.​.
+		 */
+		updatingReview: string
+		/**
+		 * О​б​н​о​в​и​т​ь​ ​о​т​з​ы​в
+		 */
+		updateReview: string
+		/**
 		 * О​б​н​о​в​л​я​е​м​ ​.​.​.
 		 */
 		updating: string
@@ -77,10 +107,6 @@ type RootTranslation = {
 		 * У​д​а​л​и​т​ь
 		 */
 		remove: string
-		/**
-		 * В​ ​И​з​б​р​а​н​н​о​е
-		 */
-		addWishlist: string
 		/**
 		 * Ч​т​о​-​т​о​ ​п​о​ш​л​о​ ​н​е​ ​т​а​к​.
 		 */
@@ -127,6 +153,50 @@ type RootTranslation = {
 		 * @param {string} reviewWord
 		 */
 		reviewsCount: RequiredParams<'count' | 'reviewWord'>
+		/**
+		 * А​в​т​о​р​и​з​у​й​т​е​с​ь​,​ ​ч​т​о​б​ы​ ​о​с​т​а​в​и​т​ь​ ​о​т​з​ы​в
+		 */
+		btnLogin: string
+		/**
+		 * О​ц​е​н​и​т​е​ ​и​ ​о​с​т​а​в​ь​т​е​ ​о​т​з​ы​в​ ​о​б​ ​э​т​о​м​ ​т​о​в​а​р​е​.
+		 */
+		reviewFormTitle: string
+		/**
+		 * О​ц​е​н​к​а​ ​т​о​в​а​р​у
+		 */
+		reviewScore: string
+		/**
+		 * Н​а​п​и​ш​и​т​е​ ​с​в​о​й​ ​о​т​з​ы​в​.​.​.
+		 */
+		reviewPlaceholder: string
+		/**
+		 * о​п​у​б​л​и​к​о​в​а​н​о​ ​.​.​.
+		 */
+		published: string
+		/**
+		 * о​т​р​е​д​а​к​т​и​р​о​в​а​н​о​ ​.​.​.
+		 */
+		edited: string
+		/**
+		 * В​ы​ ​а​б​с​о​л​ю​т​н​о​ ​у​в​е​р​е​н​ы​?
+		 */
+		dialogTitle: string
+		/**
+		 * В​ы​ ​с​о​б​и​р​а​е​т​е​с​ь​ ​у​д​а​л​и​т​ь​ ​э​т​о​т​ ​т​о​в​а​р​ ​и​з​ ​к​о​р​з​и​н​ы​.
+		 */
+		dialogSubTitle: string
+		/**
+		 * Э​т​о​ ​д​е​й​с​т​в​и​е​ ​н​е​о​б​р​а​т​и​м​о​.​ ​В​ ​р​е​з​у​л​ь​т​а​т​е​ ​в​а​ш​ ​о​т​з​ы​в​ ​о​ ​д​а​н​н​о​м​ ​т​о​в​а​р​е​ ​б​у​д​е​т​ ​б​е​з​в​о​з​в​р​а​т​н​о​ ​у​д​а​л​ё​н​ ​с​ ​н​а​ш​е​г​о​ ​с​е​р​в​е​р​а​.
+		 */
+		dialogAlert: string
+		/**
+		 * О​т​з​ы​в​ы
+		 */
+		reviewsNo: string
+		/**
+		 * О​т​з​ы​в
+		 */
+		review: string
 	}
 	failedPage: {
 		/**
@@ -166,6 +236,16 @@ type RootTranslation = {
 }
 
 export type TranslationFunctions = {
+	general: {
+		/**
+		 * Отменить
+		 */
+		cancel: () => LocalizedString
+		/**
+		 * Продолжить
+		 */
+		'continue': () => LocalizedString
+	}
 	introduction: {
 		/**
 		 * "Кликай. Покупай. Наслаждайся!"
@@ -222,6 +302,26 @@ export type TranslationFunctions = {
 		 */
 		addCart: () => LocalizedString
 		/**
+		 * В Избранное
+		 */
+		addWishlist: () => LocalizedString
+		/**
+		 * Добавить отзыв
+		 */
+		addReview: () => LocalizedString
+		/**
+		 * Добавляем отзыв ...
+		 */
+		addingReview: () => LocalizedString
+		/**
+		 * Обновляем отзыв ...
+		 */
+		updatingReview: () => LocalizedString
+		/**
+		 * Обновить отзыв
+		 */
+		updateReview: () => LocalizedString
+		/**
 		 * Обновляем ...
 		 */
 		updating: () => LocalizedString
@@ -229,10 +329,6 @@ export type TranslationFunctions = {
 		 * Удалить
 		 */
 		remove: () => LocalizedString
-		/**
-		 * В Избранное
-		 */
-		addWishlist: () => LocalizedString
 		/**
 		 * Что-то пошло не так.
 		 */
@@ -277,6 +373,50 @@ export type TranslationFunctions = {
 		 * из {count} {reviewWord}
 		 */
 		reviewsCount: (arg: { count: number, reviewWord: string }) => LocalizedString
+		/**
+		 * Авторизуйтесь, чтобы оставить отзыв
+		 */
+		btnLogin: () => LocalizedString
+		/**
+		 * Оцените и оставьте отзыв об этом товаре.
+		 */
+		reviewFormTitle: () => LocalizedString
+		/**
+		 * Оценка товару
+		 */
+		reviewScore: () => LocalizedString
+		/**
+		 * Напишите свой отзыв...
+		 */
+		reviewPlaceholder: () => LocalizedString
+		/**
+		 * опубликовано ...
+		 */
+		published: () => LocalizedString
+		/**
+		 * отредактировано ...
+		 */
+		edited: () => LocalizedString
+		/**
+		 * Вы абсолютно уверены?
+		 */
+		dialogTitle: () => LocalizedString
+		/**
+		 * Вы собираетесь удалить этот товар из корзины.
+		 */
+		dialogSubTitle: () => LocalizedString
+		/**
+		 * Это действие необратимо. В результате ваш отзыв о данном товаре будет безвозвратно удалён с нашего сервера.
+		 */
+		dialogAlert: () => LocalizedString
+		/**
+		 * Отзывы
+		 */
+		reviewsNo: () => LocalizedString
+		/**
+		 * Отзыв
+		 */
+		review: () => LocalizedString
 	}
 	failedPage: {
 		/**

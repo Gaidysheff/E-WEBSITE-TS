@@ -1,6 +1,10 @@
 import type { Translation } from "../i18n-types.js";
 
 const en: Translation = {
+  general: {
+    cancel: "Cancel",
+    continue: "Continue",
+  },
   introduction: {
     slogan: '"Click. Buy. Enjoy!"',
   },
@@ -22,9 +26,13 @@ const en: Translation = {
     adding: "Adding to Cart ...",
     added: "Added to Cart",
     addCart: "Add to Cart",
+    addWishlist: "Add to Wishlist",
+    addReview: "Add a review",
+    addingReview: "Adding Review ...",
+    updatingReview: "Updating Review ...",
+    updateReview: "Update Review",
     updating: "Updating ...",
     remove: "Remove from Wishlist",
-    addWishlist: "Add to Wishlist",
     toastError: "Something went wrong",
     toastCartSuccess: "Selected item added successfully!",
     toastWishlistSuccess: "Item added to your Wishlist successfully!",
@@ -36,6 +44,18 @@ const en: Translation = {
     fair: "Fair",
     poor: "Poor",
     reviewsCount: "of {count} {reviewWord}",
+    btnLogin: "Login to add a review",
+    reviewFormTitle: "Rate and review this product",
+    reviewScore: "Review Score",
+    reviewPlaceholder: "Write your review...",
+    published: "published ...",
+    edited: "edited ...",
+    dialogTitle: "Are you absolutely sure?",
+    dialogSubTitle: "You are about to delete this Cart Item.",
+    dialogAlert:
+      "This action cannot be undone. This will permanently delete the review you have on this product and remove your review from our servers.",
+    reviewsNo: "Reviews",
+    review: "Review",
   },
 
   failedPage: {

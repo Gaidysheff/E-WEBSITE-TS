@@ -14,6 +14,7 @@ import {
 } from "react";
 import { toast } from "react-toastify";
 import Button from "../uiComponents/Button";
+import { useI18nContext } from "@/i18n/i18n-react";
 
 type HandleStars = {
   rating: number;
@@ -33,13 +34,22 @@ const ReviewForm = ({
   updateReviewForm,
   setIsReviewFormOpen,
 }: Props) => {
+  const { LL } = useI18nContext();
+
   const ratings = [
-    { rating: 1, review: "Poor" },
-    { rating: 2, review: "Fair" },
-    { rating: 3, review: "Good" },
-    { rating: 4, review: "Very Good" },
-    { rating: 5, review: "Excellent" },
+    { rating: 1, review: `${LL.productSection.poor()}` },
+    { rating: 2, review: `${LL.productSection.fair()}` },
+    { rating: 3, review: `${LL.productSection.good()}` },
+    { rating: 4, review: `${LL.productSection.veryGood()}` },
+    { rating: 5, review: `${LL.productSection.excellent()}` },
   ];
+  // const ratings = [
+  //   { rating: 1, review: "Poor" },
+  //   { rating: 2, review: "Fair" },
+  //   { rating: 3, review: "Good" },
+  //   { rating: 4, review: "Very Good" },
+  //   { rating: 5, review: "Excellent" },
+  // ];
 
   const router = useRouter();
 
@@ -144,7 +154,8 @@ const ReviewForm = ({
   return (
     <div className="w-full mx-auto bg-white rounded-xl p-6">
       <h3 className="text-lg font-semibold text-gray-800 mb-3 text-center">
-        Rate and review this product
+        {LL.productSection.reviewFormTitle()}
+        {/* Rate and review this product */}
       </h3>
 
       <div className="flex items-center justify-center gap-2 mb-4">
@@ -166,7 +177,7 @@ const ReviewForm = ({
       </div>
 
       <p className="text-center text-gray-600 text-sm">
-        {hoverReview || clickedReview || "Review Score"}
+        {hoverReview || clickedReview || `${LL.productSection.reviewScore()}`}
       </p>
       {/* Review Form */}
       <form
@@ -179,7 +190,8 @@ const ReviewForm = ({
           onChange={(e) => setCustomerReview(e.target.value)}
           className="border border-gray-300 focus:border-blue-500 focus:ring
           focus:ring-blue-300 rounded-lg p-3 w-full resize-none"
-          placeholder="Write your review..."
+          placeholder={`${LL.productSection.reviewPlaceholder()}`}
+          // placeholder="Write your review..."
           required
         />
 
@@ -198,15 +210,13 @@ const ReviewForm = ({
           hover:bg-gray-900 transition
           disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {/* {reviewBtnLoader ? "Adding Review ..." : "Add Review"} */}
-
           {updateReviewForm
             ? reviewBtnLoader
-              ? "Updating Review ..."
-              : "Update Review"
+              ? `${LL.productSection.updatingReview}`
+              : `${LL.productSection.updateReview()}`
             : reviewBtnLoader
-              ? "Adding Review ..."
-              : "Add Review"}
+              ? `${LL.productSection.addingReview()}`
+              : `${LL.productSection.addReview()}`}
         </Button>
       </form>
     </div>

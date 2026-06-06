@@ -146,8 +146,9 @@ const CustomerReviews = ({ product, isAuthorized, reviews }: Props) => {
               />
             </Modal>
           ) : (
-            <Link to="/login" className="nav-btn">
-              Login to add a review
+            <Link to="/$lang/login" className="nav-btn">
+              {LL.productSection.btnLogin()}
+              {/* Login to add a review */}
             </Link>
           )}
         </div>

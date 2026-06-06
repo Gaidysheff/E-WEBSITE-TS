@@ -13,6 +13,7 @@ import {
   type ProductInDetails,
 } from "@/lib/types.ts";
 import { useState } from "react";
+import { useI18nContext } from "@/i18n/i18n-react";
 
 interface Props {
   reviews: Review[];
@@ -21,13 +22,19 @@ interface Props {
 }
 
 const Collapse = ({ reviews, user, product }: Props) => {
+  const { LL } = useI18nContext();
+
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen} className="space-y-2">
       <div className="flex items-center justify-between space-x-4 px-4">
         <h4 className="font-semibold text-primaryDark">
-          {reviews.length < 2 ? "Review" : "Reviews"} ({reviews?.length})
+          {reviews.length < 2
+            ? `${LL.productSection.review()}`
+            : `${LL.productSection.reviewsNo()}`}{" "}
+          ({reviews?.length})
+          {/* {reviews.length < 2 ? "Review" : "Reviews"} ({reviews?.length}) */}
         </h4>
         <CollapsibleTrigger asChild>
           <Button variant="ghost" size="sm" className="w-9 p-0">

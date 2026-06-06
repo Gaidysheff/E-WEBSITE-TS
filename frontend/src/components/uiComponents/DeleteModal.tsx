@@ -12,6 +12,7 @@ import {
 
 import { Trash2 } from "lucide-react";
 import { X } from "lucide-react";
+import { useI18nContext } from "@/i18n/i18n-react";
 
 interface Props {
   handleDeleteReview?: VoidFunction;
@@ -23,6 +24,7 @@ const DeleteModal = ({
   deleteCartItemHandler,
   deleteCartitem,
 }: Props) => {
+  const { LL } = useI18nContext();
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
@@ -46,23 +48,29 @@ const DeleteModal = ({
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+          <AlertDialogTitle>
+            {LL.productSection.dialogTitle()}
+            {/* Are you absolutely sure? */}
+          </AlertDialogTitle>
 
           {deleteCartitem ? (
             <AlertDialogDescription>
-              You are about to delete this Cart Item.
+              {LL.productSection.dialogSubTitle()}
+              {/* You are about to delete this Cart Item. */}
             </AlertDialogDescription>
           ) : (
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the
+              {LL.productSection.dialogAlert()}
+              {/* This action cannot be undone. This will permanently delete the
               review you have on this product and remove your review from our
-              servers.
+              servers. */}
             </AlertDialogDescription>
           )}
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel className="cursor-pointer">
-            Cancel
+            {LL.general.cancel()}
+            {/* Cancel */}
           </AlertDialogCancel>
           <AlertDialogAction
             className="cursor-pointer"
@@ -70,7 +78,8 @@ const DeleteModal = ({
               deleteCartitem ? deleteCartItemHandler : handleDeleteReview
             }
           >
-            Continue
+            {LL.general.continue()}
+            {/* Continue */}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

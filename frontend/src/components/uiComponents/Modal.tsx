@@ -8,8 +8,8 @@ import {
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils.ts";
 import { PenIcon } from "lucide-react";
-// import { type Dispatch, type SetStateAction } from "react";
 import { type PureAddress } from "@/lib/types.ts";
+import { useI18nContext } from "@/i18n/i18n-react";
 
 import { type Dispatch, type SetStateAction } from "react";
 
@@ -34,6 +34,8 @@ const Modal = ({
   setIsModalOpen,
   iframe,
 }: Props) => {
+  const { LL } = useI18nContext();
+
   if (userAlreadyHaveReview) {
     return null;
   }
@@ -64,7 +66,8 @@ const Modal = ({
               className="default-btn max-sm:text-sm max-sm:px-4 my-6"
               onClick={() => setIsModalOpen(true)} // Явно открываем
             >
-              Click to add a review
+              {LL.productSection.addReview()}
+              {/* Click to add a review */}
             </button>
           )}
         </DialogTrigger>
@@ -93,7 +96,8 @@ const Modal = ({
           <>
             <DialogHeader>
               <DialogTitle className="hidden">
-                Are you absolutely sure?
+                {LL.productSection.dialogTitle()}
+                {/* Are you absolutely sure? */}
               </DialogTitle>
               <DialogDescription asChild>{children}</DialogDescription>
             </DialogHeader>

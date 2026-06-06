@@ -12,8 +12,6 @@ import { useRouter } from "@tanstack/react-router";
 import { useState } from "react";
 import { useTheme } from "@/store/ThemeContext";
 
-// import { Link } from "@tanstack/react-router";
-
 const NavBar = () => {
   const [showSearchForm, setShowSearchForm] = useState(false);
 
@@ -21,11 +19,6 @@ const NavBar = () => {
 
   // Получаем доступ к глобальному состоянию роутера
   const router = useRouter();
-
-  // Инициализируем типизированный метод навигации
-  // const navigate = useNavigate({ from: "/$lang" });
-
-  // const location = useLocation();
 
   const { locale } = useI18nContext();
 
@@ -55,17 +48,6 @@ const NavBar = () => {
         // Передаем текущие search-параметры как есть
         search: (prev: any) => prev,
       });
-      // Вызываем navigate напрямую
-      // await navigate({
-      //   // КРИТИЧЕСКИЙ ШАГ: Говорим роутеру остаться на текущей странице!
-      //   to: ".",
-      //   // params принимает прямой объект с указанием нового языка
-      //   params: {
-      //     lang: nextLang,
-      //   },
-      //   // Говорим роутеру сохранить текущие search-параметры (фильтры/пагинацию)
-      //   search: true,
-      // });
     } catch (error) {
       console.error("Ошибка при смене языка:", error);
     }
