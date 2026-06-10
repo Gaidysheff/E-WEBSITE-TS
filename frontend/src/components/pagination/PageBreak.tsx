@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/select";
 
 import { useAppNavigate } from "@/hooks/useAppNavigate.ts";
+import { useI18nContext } from "@/i18n/i18n-react";
 import { useSearch } from "@tanstack/react-router";
 
 interface Props {
@@ -24,6 +25,7 @@ interface Props {
 }
 
 const PageBreak = ({ totalPages, currentPage }: Props) => {
+  const { LL } = useI18nContext();
   const navigate = useAppNavigate();
   // Подключаем хук с указанием маршрута, чтобы TS подхватил типы
 
@@ -78,7 +80,10 @@ const PageBreak = ({ totalPages, currentPage }: Props) => {
     <div className="mx-auto flex flex-col items-center gap-4 my-8">
       {/* Селект выбора количества (Units per page) */}
       <div className="flex items-center gap-2">
-        <span className="text-sm">Units per page:</span>
+        <span className="text-sm">
+          {LL.pageBreak.perPage()}
+          {/* Units per page: */}
+        </span>
         <Select value={String(pageSize)} onValueChange={handlePageSizeChange}>
           <SelectTrigger className="w-20">
             <SelectValue />

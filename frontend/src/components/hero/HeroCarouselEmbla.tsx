@@ -45,7 +45,6 @@ export function EmblaCarousel({ productsForCarousel }: Props) {
               className="w-[80%] h-auto md:w-auto md:max-h-[500px]
               grayscale hover:grayscale-0"
             />
-
             <div className="absolute bottom-0 right-0 my-3">
               <span
                 className="before:block before:absolute before:-inset-1 mx-2

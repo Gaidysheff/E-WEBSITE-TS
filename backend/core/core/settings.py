@@ -2,6 +2,7 @@ from pathlib import Path
 from datetime import timedelta
 from dotenv import load_dotenv
 import os
+from corsheaders.defaults import default_headers
 
 load_dotenv()
 
@@ -42,6 +43,7 @@ CSRF_TRUSTED_ORIGINS = ["https://mwu0o2-83-217-13-197.ru.tuna.am"]
 # Application definition
 
 INSTALLED_APPS = [
+    "modeltranslation",  # Обязательно сверху!
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -67,6 +69,7 @@ MIDDLEWARE = [
     "django.contrib.sessions.middleware.SessionMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
+    "django.middleware.locale.LocaleMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
@@ -151,7 +154,13 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
+# LANGUAGE_CODE = "en-us"
+
+LANGUAGE_CODE = "ru"
+LANGUAGES = [
+    ("ru", "Русский"),
+    ("en", "English"),
+]
 
 TIME_ZONE = "UTC"
 
@@ -179,6 +188,10 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CORS_ALLOW_CREDENTIALS = True  # Обязательно разрешаем передачу кук/авторизации
 
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    "accept-language",  # Разрешаем читать этот заголовок при CORS-запросах
+]
+
 if DEBUG:
     # CORS_ALLOW_ALL_ORIGINS = True
     CORS_ALLOWED_ORIGINS = [
@@ -192,6 +205,7 @@ else:
         "http://test.gaidysheff.ru",
         "http://www.test.gaidysheff.ru",
     ]
+
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 

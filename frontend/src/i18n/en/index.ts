@@ -4,6 +4,18 @@ const en: Translation = {
   general: {
     cancel: "Cancel",
     continue: "Continue",
+    reset: "Reset",
+  },
+  choices: {
+    shape: {
+      C: "Circular",
+      Q: "Quadratic",
+      T: "Triangular",
+
+      // Circular: "Circular",
+      // Quadratic: "Quadratic",
+      // Triangular: "Triangular",
+    },
   },
   introduction: {
     slogan: '"Click. Buy. Enjoy!"',
@@ -27,6 +39,7 @@ const en: Translation = {
     added: "Added to Cart",
     addCart: "Add to Cart",
     addWishlist: "Add to Wishlist",
+    addWishlistTooltip: "Login to add product to your Wishlist",
     addReview: "Add a review",
     addingReview: "Adding Review ...",
     updatingReview: "Updating Review ...",
@@ -56,6 +69,40 @@ const en: Translation = {
       "This action cannot be undone. This will permanently delete the review you have on this product and remove your review from our servers.",
     reviewsNo: "Reviews",
     review: "Review",
+    noReview: "Reviews (0) - there no reviews for the time being.",
+  },
+  filter: {
+    catalog: "Catalog",
+    result: "Filtered Result",
+    noMatch: "No products match your criteria.",
+    reset: "Reset All Filters",
+    criteria: "Filtering Criteria",
+    subtitle: "Select the criteria needed for finding certain products.",
+    brands: "Brands",
+    colors: "Colors",
+    price: "Price",
+    showLess: "Show less",
+    showMore: "Show more",
+    more: "more",
+    reviews: "Customer Reviews",
+    up: "& Up",
+    search: "Search",
+    searchPlaceholder: "Search...",
+    shape: "Shape",
+    shapes: "All shapes",
+    shapePlaceholder: "show all shapes",
+  },
+  sorting: {
+    new: "New ones first",
+    priceUp: "Price: ascending",
+    priceDown: "Price: descending",
+    alphabet: "Alphabet: A-Z",
+    rating: "Rating: descending",
+  },
+  pageBreak: {
+    perPage: "Units per page",
+    previous: "Previous",
+    next: "Next",
   },
 
   failedPage: {
@@ -68,6 +115,17 @@ const en: Translation = {
     contactSupportEmail: "Contact Support - Email",
     chatWithSupport: "Chat with Support",
     emailSubject: "Payment error for order (Cart: {cartCode})",
+  },
+  colorSettings: {
+    settings: "Settings",
+    setColor: "Set your preferable color.",
+    mode: "Color Scheme Mode",
+    single: "Single",
+    contrast: "Contrast",
+    hue: "Hue:",
+    secondary: "Secondary:",
+    lightness: "Lightness:",
+    chroma: "Chroma:",
   },
 };
 

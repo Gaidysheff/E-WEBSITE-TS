@@ -11,6 +11,7 @@ import filteringOptions from "@/api/queryOptions/filteringOptions.ts";
 import { useSearch } from "@tanstack/react-router";
 import { type ProductUrlQuery } from "@/lib/types.ts";
 import SkeletonFilters from "./SkeletonFilters.tsx";
+import { useI18nContext } from "@/i18n/i18n-react";
 
 interface Props {
   handleShapeChange: (value: string) => void;
@@ -41,8 +42,9 @@ const FilterDrawerInnerSection = ({
   currentRating,
   onClose,
 }: Props) => {
+  const { locale } = useI18nContext();
   const { data: metadata, isPending } = useQuery({
-    queryKey: ["filter-metadata"],
+    queryKey: ["filter-metadata", locale],
     queryFn: () => api.get("/api/get_filter_metadata/").then((res) => res.data),
     staleTime: 1000 * 60 * 60, //Данные фильтров меняются редко, кешируем на час
   });

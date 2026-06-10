@@ -12,8 +12,11 @@ import {
 import { Button } from "@/components/ui/button";
 import ColorSetup from "./ColorSetup.tsx";
 import { Settings } from "lucide-react";
+import { useI18nContext } from "@/i18n/i18n-react";
 
 const SettingsDrawer = () => {
+  const { LL } = useI18nContext();
+
   // const [isOpen, setIsOpen] = useState<boolean>(false);
   return (
     <div className="flex flex-wrap gap-2">
@@ -31,8 +34,14 @@ const SettingsDrawer = () => {
 
         <DrawerContent className="data-[vaul-drawer-direction=bottom]:max-h-[50vh] data-[vaul-drawer-direction=top]:max-h-[50vh]">
           <DrawerHeader>
-            <DrawerTitle>Settings</DrawerTitle>
-            <DrawerDescription>Set your preferable color.</DrawerDescription>
+            <DrawerTitle>
+              {LL.colorSettings.settings()}
+              {/* Settings */}
+            </DrawerTitle>
+            <DrawerDescription>
+              {LL.colorSettings.setColor()}
+              {/* Set your preferable color. */}
+            </DrawerDescription>
           </DrawerHeader>
 
           <div className="no-scrollbar overflow-y-auto px-4">
@@ -42,7 +51,10 @@ const SettingsDrawer = () => {
           <DrawerFooter>
             {/* <Button>Submit</Button> */}
             <DrawerClose asChild>
-              <Button variant="outline">Cancel</Button>
+              <Button variant="outline">
+                {LL.general.cancel()}
+                {/* Cancel */}
+              </Button>
             </DrawerClose>
           </DrawerFooter>
         </DrawerContent>

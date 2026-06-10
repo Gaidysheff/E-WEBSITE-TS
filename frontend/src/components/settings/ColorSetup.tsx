@@ -1,8 +1,11 @@
 import { Button } from "@/components/ui/button.tsx";
 import { Switch } from "@/components/ui/switch";
 import { useColor } from "@/store/ColorContext.tsx";
+import { useI18nContext } from "@/i18n/i18n-react";
 
 const ColorSetup = () => {
+  const { LL } = useI18nContext();
+
   // Забираем глобальный стейт из контекста
   const {
     hue,
@@ -34,10 +37,16 @@ const ColorSetup = () => {
           className="flex flex-col items-center justify-between border-b
           pb-4 gap-5"
         >
-          <span className="text-sm font-medium">Color Scheme Mode</span>
+          <span className="text-sm font-medium">
+            {LL.colorSettings.mode()}
+            {/* Color Scheme Mode */}
+          </span>
           <div className="flex items-center gap-2">
             <span className="text-xs text-gray-500">
-              {isContrast ? "Contrast" : "Single"}
+              {isContrast
+                ? `${LL.colorSettings.contrast()}`
+                : `${LL.colorSettings.single()}`}
+              {/* {isContrast ? "Contrast" : "Single"} */}
             </span>
             <Switch checked={isContrast} onCheckedChange={setIsContrast} />
           </div>
@@ -58,13 +67,16 @@ const ColorSetup = () => {
           />
 
           <p className="text-center font-medium">
-            Hue: <span className="text-myMainColor">{hue}°</span>
+            {LL.colorSettings.hue()} {/* Hue:  */}
+            <span className="text-myMainColor">{hue}°</span>
           </p>
 
           {/* Маленький бокс-дисплей для отображения Secondary Color */}
           {isContrast && (
             <div className="flex items-center gap-2 animate-in fade-in duration-300">
-              <span className="text-xs text-gray-400">Secondary:</span>
+              <span className="text-xs text-gray-400">
+                {LL.colorSettings.secondary()} {/* Secondary: */}
+              </span>
               <div
                 className="w-6 h-6 rounded-md border shadow-inner transition-all duration-300"
                 style={{ backgroundColor: secondaryColorPreview }}
@@ -85,7 +97,8 @@ const ColorSetup = () => {
             }}
           />
           <p className="text-center font-medium">
-            Lightness: <span className="text-myMainColor">{lightness}%</span>
+            {LL.colorSettings.lightness()} {/* Lightness:  */}
+            <span className="text-myMainColor">{lightness}%</span>
           </p>
           <input
             type="range"
@@ -99,7 +112,8 @@ const ColorSetup = () => {
             }}
           />
           <p className="text-center font-medium">
-            Chroma: <span className="text-myMainColor">{chroma}%</span>
+            {LL.colorSettings.chroma()} {/* Chroma:  */}
+            <span className="text-myMainColor">{chroma}%</span>
           </p>
 
           <div className="flex justify-center">
@@ -112,7 +126,8 @@ const ColorSetup = () => {
               type="button"
               className="p-6 my-5 w-70"
             >
-              Reset
+              {LL.general.reset()}
+              {/* Reset */}
             </Button>
           </div>
         </div>

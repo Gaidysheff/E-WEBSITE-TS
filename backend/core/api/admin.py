@@ -16,6 +16,7 @@ from .models import (
     Color,
     PricePresets,
 )
+from modeltranslation.admin import TranslationAdmin
 
 
 class nameSlugAdmin(admin.ModelAdmin):
@@ -23,7 +24,8 @@ class nameSlugAdmin(admin.ModelAdmin):
 
 
 @admin.register(Product)
-class ProductAdmin(admin.ModelAdmin):
+class ProductAdmin(TranslationAdmin):
+    # class ProductAdmin(admin.ModelAdmin):
     fieldsets = (
         (
             None,
@@ -34,6 +36,7 @@ class ProductAdmin(admin.ModelAdmin):
                     "brand",
                     "category",
                     "price",
+                    "description",
                 )
             },
         ),
@@ -133,7 +136,8 @@ class ProductAdmin(admin.ModelAdmin):
 
 
 @admin.register(Category)
-class CategoryAdmin(admin.ModelAdmin):
+class CategoryAdmin(TranslationAdmin):
+    # class CategoryAdmin(admin.ModelAdmin):
     list_display = [
         "name",
         "slug",
@@ -152,7 +156,8 @@ class CategoryAdmin(admin.ModelAdmin):
 
 
 @admin.register(Review)
-class ReviewAdmin(admin.ModelAdmin):
+class ReviewAdmin(TranslationAdmin):
+    # class ReviewAdmin(admin.ModelAdmin):
     list_display = [
         "product",
         "rating",
@@ -307,7 +312,8 @@ class CustomerAddressAdmin(admin.ModelAdmin):
 
 
 @admin.register(DeliveryOption)
-class DeliveryOptionAdmin(admin.ModelAdmin):
+class DeliveryOptionAdmin(TranslationAdmin):
+    # class DeliveryOptionAdmin(admin.ModelAdmin):
     list_display = [
         "name",
         "icon_image",
@@ -369,7 +375,8 @@ class BrandAdmin(admin.ModelAdmin):
 
 
 @admin.register(Color)
-class ColorAdmin(admin.ModelAdmin):
+class ColorAdmin(TranslationAdmin):
+    # class ColorAdmin(admin.ModelAdmin):
     list_display = [
         "name",
         "color_code",

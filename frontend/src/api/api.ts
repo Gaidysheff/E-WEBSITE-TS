@@ -22,6 +22,13 @@ api.interceptors.request.use((config) => {
   } else {
     config.headers.Authorization = ``;
   }
+
+  // Вытаскиваем текущий сохраненный язык из localStorage ('ru' или 'en')
+  const currentLang = localStorage.getItem("app_lang") || "ru";
+
+  // Передаем его в стандартный заголовок
+  config.headers["Accept-Language"] = currentLang;
+
   return config;
 });
 

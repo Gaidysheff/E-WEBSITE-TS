@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/drawer";
 import { useAppNavigate } from "@/hooks/useAppNavigate.ts";
 import { useSearch } from "@tanstack/react-router";
+import { useI18nContext } from "@/i18n/i18n-react";
 
 import { Button } from "@/components/ui/button";
 import { TbFilterSearch } from "react-icons/tb";
@@ -21,6 +22,8 @@ import { useState } from "react";
 
 const FilterDrawer = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const { LL } = useI18nContext();
 
   const navigate = useAppNavigate();
 
@@ -132,9 +135,13 @@ const FilterDrawer = () => {
           data-[vaul-drawer-direction=top]:max-h-[50vh]"
         >
           <DrawerHeader>
-            <DrawerTitle>Filtering Criteria</DrawerTitle>
+            <DrawerTitle>
+              {LL.filter.criteria()}
+              {/* Filtering Criteria */}
+            </DrawerTitle>
             <DrawerDescription>
-              Select the criteria needed for finding certain products.
+              {LL.filter.subtitle()}
+              {/* Select the criteria needed for finding certain products. */}
             </DrawerDescription>
           </DrawerHeader>
           <div className="no-scrollbar overflow-y-auto px-4">
@@ -155,9 +162,15 @@ const FilterDrawer = () => {
           </div>
           <DrawerFooter>
             <div className="flex flex-col gap-2 pb-10">
-              <Button onClick={handleReset}>Reset All Filters</Button>
+              <Button onClick={handleReset}>
+                {LL.filter.reset()}
+                {/* Reset All Filters */}
+              </Button>
               <DrawerClose asChild>
-                <Button variant="outline">Cancel</Button>
+                <Button variant="outline">
+                  {LL.general.cancel()}
+                  {/* Cancel */}
+                </Button>
               </DrawerClose>
             </div>
           </DrawerFooter>

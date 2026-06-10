@@ -1,6 +1,7 @@
 import { Star } from "lucide-react";
 import { cn } from "@/lib/utils.ts";
 import { type RatingStats } from "@/lib/types.ts";
+import { useI18nContext } from "@/i18n/i18n-react";
 
 interface Props {
   currentRating: number | undefined;
@@ -10,6 +11,7 @@ interface Props {
 }
 
 const RatingFilter = ({ currentRating, handleRatingChange, stats }: Props) => {
+  const { LL } = useI18nContext();
   const ratingConfig = [
     { value: 4, key: "four_plus" },
     { value: 3, key: "three_plus" },
@@ -20,7 +22,8 @@ const RatingFilter = ({ currentRating, handleRatingChange, stats }: Props) => {
   return (
     <div className="flex flex-col gap-2 my-4">
       <div className="font-semibold italic text-myMainColor">
-        Customer Reviews
+        {LL.filter.reviews()}
+        {/* Customer Reviews */}
       </div>
       {ratingConfig.map((cfg) => {
         const count = stats ? stats[cfg.key as keyof typeof stats] : 0;
@@ -59,7 +62,8 @@ const RatingFilter = ({ currentRating, handleRatingChange, stats }: Props) => {
                 isActive ? "text-myMainColor font-bold" : "text-gray-600",
               )}
             >
-              & Up <span className="text-gray-400 font-normal">({count})</span>
+              {LL.filter.up()} {/* & Up  */}
+              <span className="text-gray-400 font-normal">({count})</span>
             </span>
           </button>
         );

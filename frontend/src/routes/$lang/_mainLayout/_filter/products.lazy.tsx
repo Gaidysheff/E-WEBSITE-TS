@@ -5,9 +5,11 @@ import { type ProductUrlQuery } from "@/lib/types.ts";
 import { useQuery } from "@tanstack/react-query";
 import { createLazyFileRoute } from "@tanstack/react-router";
 
-export const Route = createLazyFileRoute("/$lang/_mainLayout/_filter/products")({
-  component: RouteComponent,
-});
+export const Route = createLazyFileRoute("/$lang/_mainLayout/_filter/products")(
+  {
+    component: RouteComponent,
+  },
+);
 
 function RouteComponent() {
   // 1. Типизируем параметры поиска (они приходят из схемы в products.tsx)

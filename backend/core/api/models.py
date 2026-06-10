@@ -5,7 +5,9 @@ import string
 
 from colorfield.fields import ColorField
 
-# from django.utils.text import slugify
+from .mixins import AutoTranslationMixin  # Импортируем наш миксин
+
+from deep_translator import GoogleTranslator  # Бесплатный переводчик
 
 
 # ------------------ Менеджеры для выбора "в наличии" ------------------
@@ -15,7 +17,8 @@ class ProductAvailabilityManager(models.Manager):
 
 
 # ------------------------------------------------------------------------
-class Category(models.Model):
+class Category(AutoTranslationMixin, models.Model):
+
     name = models.CharField(max_length=255, unique=True, verbose_name="Название")
     slug = models.SlugField(
         max_length=255, unique=True, db_index=True, verbose_name="Slug"
@@ -23,7 +26,7 @@ class Category(models.Model):
     image = models.FileField(upload_to="images_categories", blank=True, null=True)
 
     def __str__(self):
-        return self.name
+        return self.name or f"Category #{self.id}"
 
     class Meta:
         verbose_name = "Категория"
@@ -53,7 +56,7 @@ class Brand(models.Model):
     )
 
     def __str__(self):
-        return self.name
+        return self.name or f"Brand #{self.id}"
 
     class Meta:
         verbose_name = "Brand"
@@ -63,7 +66,7 @@ class Brand(models.Model):
         ]
 
 
-class Color(models.Model):
+class Color(AutoTranslationMixin, models.Model):
     name = models.CharField(max_length=255, unique=True, verbose_name="Название")
     color_code = ColorField(
         default="#FF0000",
@@ -71,7 +74,7 @@ class Color(models.Model):
     )
 
     def __str__(self):
-        return self.name
+        return self.name or f"Color #{self.id}"
 
     class Meta:
         verbose_name = "Color"
@@ -81,7 +84,8 @@ class Color(models.Model):
         ]
 
 
-class Product(models.Model):
+class Product(AutoTranslationMixin, models.Model):
+
     MALE = "M"
     FEMALE = "F"
     UNISEX = "U"
@@ -159,7 +163,7 @@ class Product(models.Model):
     available = ProductAvailabilityManager()
 
     def __str__(self):
-        return self.name
+        return self.name or f"Product #{self.id}"
 
     class Meta:
         verbose_name = "Товар"
@@ -168,16 +172,27 @@ class Product(models.Model):
             "name",
         ]
 
+    # ===== функционал сохранения перевода передаём в Mixin для тиражирования =====
+    # ==== Метод save() писать НЕ НУЖНО, он автоматически прилетит из миксина! ====
+    # =============================================================================
     # def save(self, *args, **kwargs):
+    #     # Если русское поле заполнено, а английское оставили пустым:
+    #     if self.name_ru and not self.name_en:
+    #         try:
+    #             # Автоматически переводим через Google
+    #             self.name_en = GoogleTranslator(source="ru", target="en").translate(
+    #                 self.name_ru
+    #             )
+    #         except Exception:
+    #             pass  # Если нет интернета, просто пропускаем
 
-    #     if not self.slug:
-    #         self.slug = slugify(self.name)
-    #         unique_slug = self.slug
-    #         counter = 1
-    #         if Product.objects.filter(slug=unique_slug).exists():
-    #             unique_slug = f'{self.slug}-{counter}'
-    #             counter += 1
-    #         self.slug = unique_slug
+    #     if self.description_ru and not self.description_en:
+    #         try:
+    #             self.description_en = GoogleTranslator(
+    #                 source="ru", target="en"
+    #             ).translate(self.description_ru)
+    #         except Exception:
+    #             pass
 
     #     super().save(*args, **kwargs)
 
@@ -218,7 +233,7 @@ class CartItem(models.Model):
         return f"{self.quantity} x {self.product.name} in cart {self.cart.cart_code}"
 
 
-class Review(models.Model):
+class Review(AutoTranslationMixin, models.Model):
 
     RATING_CHOICES = [
         (1, "1 - Poor"),
@@ -313,7 +328,8 @@ class CustomerAddress(models.Model):
         return f"{self.customer.email} - {self.street} - {self.city}"
 
 
-class DeliveryOption(models.Model):
+class DeliveryOption(AutoTranslationMixin, models.Model):
+
     name = models.CharField(max_length=100, verbose_name="Название (напр. DHL)")
     description = models.TextField(blank=True, verbose_name="Описание")
     icon = models.ImageField(

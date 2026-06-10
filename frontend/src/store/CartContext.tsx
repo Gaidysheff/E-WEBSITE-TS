@@ -11,6 +11,8 @@ import { CARTITEMS_WITH_TOTAL_URL } from "@/api/endpoints.ts";
 import api from "@/api/api.ts";
 import { type Cartitem } from "@/lib/types.ts";
 import { GET_USER_CARTCODE_URL } from "@/api/endpoints_auth.ts";
+import { useParams } from "@tanstack/react-router";
+
 interface CartProviderProps {
   children: ReactNode;
 }
@@ -31,6 +33,9 @@ interface CartContextType {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartContextProvider = ({ children }: CartProviderProps) => {
+  // 1. Вытаскиваем живой параметр lang из URL роутера
+  const { lang } = useParams({ from: "/$lang" });
+
   const isAuthenticated = !!localStorage.getItem("Token");
 
   const [cartCode, setCartCode] = useState<string>("");
@@ -93,7 +98,7 @@ export const CartContextProvider = ({ children }: CartProviderProps) => {
     if (cartCode) {
       fetchFullCartData(cartCode);
     }
-  }, [cartCode]);
+  }, [cartCode, lang]);
 
   const clearCart = () => {
     const newCode = generateRandomString(); // Сразу создаем новый код

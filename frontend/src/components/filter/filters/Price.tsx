@@ -3,6 +3,7 @@ import { type PricePreset } from "@/lib/types.ts";
 import PricePresets from "./PricePresets.tsx";
 import { Slider } from "@/components/ui/slider";
 import { useDebounce } from "@/hooks/useDebounce.ts";
+import { useI18nContext } from "@/i18n/i18n-react";
 
 interface Props {
   maxPrice: number;
@@ -19,6 +20,8 @@ const Price = ({
   maxLimit,
   presets,
 }: Props) => {
+  const { LL } = useI18nContext();
+
   // Локальный стейт слайдера
   const [localRange, setLocalRange] = useState<number[]>([
     minPrice ?? 0,
@@ -45,7 +48,10 @@ const Price = ({
 
   return (
     <>
-      <div className="font-semibold my-2">Price</div>
+      <div className="font-semibold my-2">
+        {LL.filter.price()}
+        {/* Price */}
+      </div>
       <div className="flex items-center">
         {localRange[0]} ₽ — {localRange[1]} ₽{" "}
         {localRange[1] == maxLimit && <span className="text-2xl ml-1">+</span>}

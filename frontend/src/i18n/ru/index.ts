@@ -4,6 +4,19 @@ const ru: BaseTranslation = {
   general: {
     cancel: "Отменить",
     continue: "Продолжить",
+    reset: "Сбросить",
+  },
+  choices: {
+    shape: {
+      C: "Круглая",
+      Q: "Квадратная",
+      T: "Треугольная",
+
+      // Или если бэкенд присылает полные слова:
+      // Circular: "Круглая",
+      // Quadratic: "Квадратная",
+      // Triangular: "Треугольная",
+    },
   },
   introduction: {
     slogan: '"Кликай. Покупай. Наслаждайся!"',
@@ -27,6 +40,7 @@ const ru: BaseTranslation = {
     added: "Уже в корзине",
     addCart: "В корзину",
     addWishlist: "В Избранное",
+    addWishlistTooltip: "Авторизуйтесь, чтобы добавить товар в Избранное.",
     addReview: "Добавить отзыв",
     addingReview: "Добавляем отзыв ...",
     updatingReview: "Обновляем отзыв ...",
@@ -56,8 +70,41 @@ const ru: BaseTranslation = {
       "Это действие необратимо. В результате ваш отзыв о данном товаре будет безвозвратно удалён с нашего сервера.",
     reviewsNo: "Отзывы",
     review: "Отзыв",
+    noReview: "Отзывы (0) - на данный момент отзывов нет.",
   },
-
+  filter: {
+    catalog: "Каталог",
+    result: "Результат фильтрации",
+    noMatch: "Нет товаров, соответствующих вашим критериям.",
+    reset: "Сбросить все фильтры",
+    criteria: "Критерии фильтрации",
+    subtitle: "Выберите критерии, необходимые для поиска определенных товаров.",
+    brands: "Бренды",
+    colors: "Цвета",
+    price: "Цена",
+    showLess: "Показать меньше",
+    showMore: "Показать больше",
+    more: "дополнительно",
+    reviews: "Отзывы покупателей",
+    up: "и выше",
+    search: "Поиск",
+    searchPlaceholder: "Искать...",
+    shape: "Форма",
+    shapes: "Все формы",
+    shapePlaceholder: "Все формы",
+  },
+  sorting: {
+    new: "Сначала новые",
+    priceUp: "Цена: по возрастанию",
+    priceDown: "Цена: по убыванию",
+    alphabet: "Алфавит: А-Я",
+    rating: "Рейтинг: по убыванию",
+  },
+  pageBreak: {
+    perPage: "Кол-во единиц на странице",
+    previous: "Предыдущая",
+    next: "Следующая",
+  },
   failedPage: {
     title: "Ой! Ошибка оплаты.",
     description:
@@ -69,6 +116,17 @@ const ru: BaseTranslation = {
     chatWithSupport: "Чат с поддержкой",
     // Динамическая строка для темы письма
     emailSubject: "Ошибка оплаты заказа (Корзина: {cartCode:string})",
+  },
+  colorSettings: {
+    settings: "Настройки",
+    setColor: "Выберите желаемый цвет.",
+    mode: "Цветовая схема",
+    single: "Моно",
+    contrast: "Контраст",
+    hue: "Оттенок:",
+    secondary: "Контрастный цвет:",
+    lightness: "Освещение:",
+    chroma: "Насыщенность:",
   },
 };
 

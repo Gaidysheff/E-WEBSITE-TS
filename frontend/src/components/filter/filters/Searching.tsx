@@ -7,9 +7,9 @@ import {
 import { useEffect, useState } from "react";
 
 import { Search } from "lucide-react";
+import { getRussianPlural } from "@/lib/utilities";
 import { useDebounce } from "@/hooks/useDebounce.ts";
-
-// import { getRussianPlural } from "@/lib/utilities";
+import { useI18nContext } from "@/i18n/i18n-react";
 
 interface Props {
   currentSearch: string | undefined;
@@ -24,6 +24,7 @@ const Searching = ({
   handleSearchChange,
   onClose,
 }: Props) => {
+  const { LL, locale } = useI18nContext();
   // Инициализируем локальный текст значением из URL (один раз при монтировании)
   const [lookupText, setLookupText] = useState(currentSearch || "");
 
@@ -57,13 +58,32 @@ const Searching = ({
     }
   };
 
+  // Вычисляем правильное слово на основе текущего активного языка сайта
+  let searchResultWord = "";
+  if (locale === "ru") {
+    // Для русского: "1 результат", "3 результата", "5 результатов"
+    searchResultWord = getRussianPlural(
+      resultsCount,
+      "результат",
+      "результата",
+      "результатов",
+    );
+  } else {
+    // Для английского: "of 1 review", "of 5 reviews"
+    searchResultWord = resultsCount === 1 ? "result" : "results";
+  }
+
   return (
     <>
-      <div className="font-semibold my-2">Search</div>
+      <div className="font-semibold my-2">
+        {LL.filter.search()}
+        {/* Search */}
+      </div>
       <div>
         <InputGroup className="my-2" onPointerDown={(e) => e.stopPropagation()}>
           <InputGroupInput
-            placeholder="Search..."
+            placeholder={`${LL.filter.searchPlaceholder()}`}
+            // placeholder="Search..."
             value={lookupText} // Делаем инпут контролируемым
             onChange={(e) => setLookupText(e.target.value)}
             onKeyDown={handleKeyDown} // Навешиваем слушатель
@@ -73,8 +93,9 @@ const Searching = ({
           </InputGroupAddon>
           <InputGroupAddon align="inline-end">
             <InputGroupText>
-              {resultsCount} {/* {getRussianPlural(resultsCount)} */}
-              {resultsCount == 1 ? <p>result</p> : <p>results</p>}
+              {resultsCount} {searchResultWord}
+              {/* {getRussianPlural(resultsCount)} */}
+              {/* {resultsCount == 1 ? <p>result</p> : <p>results</p>} */}
             </InputGroupText>
           </InputGroupAddon>
         </InputGroup>

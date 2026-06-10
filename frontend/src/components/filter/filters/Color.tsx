@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils.ts";
+import { useI18nContext } from "@/i18n/i18n-react";
 
 interface Props {
   options: { id: number; name: string; color_code: string }[];
@@ -7,6 +8,8 @@ interface Props {
 }
 
 const Color = ({ options, currentColors, handleColorChange }: Props) => {
+  const { LL } = useI18nContext();
+
   const selectedColors = currentColors
     ? currentColors.split(",").map(Number)
     : [];
@@ -33,7 +36,10 @@ const Color = ({ options, currentColors, handleColorChange }: Props) => {
 
   return (
     <>
-      <div className="font-semibold my-2">Colors</div>
+      <div className="font-semibold my-2">
+        {LL.filter.colors()}
+        {/* Colors */}
+      </div>
       <div className="flex flex-wrap gap-3 my-4">
         {options.map((color) => (
           <button

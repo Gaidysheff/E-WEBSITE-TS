@@ -8,6 +8,7 @@ import { type ProductInDetails, type Review } from "@/lib/types.ts";
 import { useUser } from "@/store/UserContext.tsx";
 import { useState } from "react";
 import { useI18nContext } from "@/i18n/i18n-react";
+import { getRussianPlural } from "@/lib/utilities";
 
 type Props = {
   product: ProductInDetails;
@@ -16,19 +17,19 @@ type Props = {
 };
 
 // Функция склонения русских слов
-const getRussianPlural = (
-  count: number,
-  one: string,
-  few: string,
-  many: string,
-) => {
-  const mod10 = count % 10;
-  const mod100 = count % 100;
-  if (mod100 >= 11 && mod100 <= 19) return many;
-  if (mod10 === 1) return one;
-  if (mod10 >= 2 && mod10 <= 4) return few;
-  return many;
-};
+// const getRussianPlural = (
+//   count: number,
+//   one: string,
+//   few: string,
+//   many: string,
+// ) => {
+//   const mod10 = count % 10;
+//   const mod100 = count % 100;
+//   if (mod100 >= 11 && mod100 <= 19) return many;
+//   if (mod10 === 1) return one;
+//   if (mod10 >= 2 && mod10 <= 4) return few;
+//   return many;
+// };
 
 const CustomerReviews = ({ product, isAuthorized, reviews }: Props) => {
   const { LL, locale } = useI18nContext();

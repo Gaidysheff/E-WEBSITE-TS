@@ -7,7 +7,10 @@ import type {
 import api, { BASE_URL } from "@/api/api";
 import { keepPreviousData, queryOptions } from "@tanstack/react-query";
 
+import { useParams } from "@tanstack/react-router";
+
 const filteringOptions = (options: ProductUrlQuery) => {
+  const { lang } = useParams({ strict: false });
   const {
     shape,
     brand,
@@ -36,6 +39,7 @@ const filteringOptions = (options: ProductUrlQuery) => {
         ordering,
         rating,
       },
+      lang,
     ],
 
     // Явно указываем тип возвращаемого значения в queryFn

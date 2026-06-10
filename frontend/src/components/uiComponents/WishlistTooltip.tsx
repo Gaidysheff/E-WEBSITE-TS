@@ -4,18 +4,27 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-import { Link } from "@tanstack/react-router";
+import { AppLink as Link } from "@/components/appLink/AppLink";
+import { useI18nContext } from "@/i18n/i18n-react";
 
-// import Button from "@/components/uiComponents/Button";
+// import { Link } from "@tanstack/react-router";
 
 const WishlistTooltip = () => {
+  const { LL } = useI18nContext();
+
   return (
     <Tooltip>
       <TooltipTrigger className="wish-btn opacity-50">
-        <Link to="/login">Add to Wishlist</Link>
+        <Link to="/$lang/login">
+          {LL.productSection.addWishlist()}
+          {/* Add to Wishlist */}
+        </Link>
       </TooltipTrigger>
       <TooltipContent redTooltip className="bg-red-500 text-xl">
-        <p>Login to add product to your Wishlist</p>
+        <p>
+          {LL.productSection.addWishlistTooltip()}
+          {/* Login to add product to your Wishlist */}
+        </p>
       </TooltipContent>
     </Tooltip>
   );

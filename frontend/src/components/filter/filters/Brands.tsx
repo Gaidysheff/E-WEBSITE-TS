@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils.ts";
+import { useI18nContext } from "@/i18n/i18n-react";
 
 interface Props {
   options: { id: number; name: string }[];
@@ -12,6 +13,8 @@ interface Props {
 }
 
 const Brands = ({ handleBrandChange, options, currentBrands }: Props) => {
+  const { LL } = useI18nContext();
+
   // Инициализируем массив из строки URL: "4,6" -> [4, 6]
   const selectedBrands = useMemo(
     () => (currentBrands ? currentBrands.split(",").map(Number) : []),
@@ -47,7 +50,10 @@ const Brands = ({ handleBrandChange, options, currentBrands }: Props) => {
 
   return (
     <>
-      <div className="font-semibold my-2 italic text-myMainColor">Brands</div>
+      <div className="font-semibold my-2 italic text-myMainColor">
+        {LL.filter.brands()}
+        {/* Brands */}
+      </div>
       <div
         className={cn(
           "space-y-4 scroll-behavior:smooth",
@@ -101,8 +107,11 @@ const Brands = ({ handleBrandChange, options, currentBrands }: Props) => {
       >
         {isExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
         {isExpanded
+          ? `${LL.filter.showLess()}`
+          : `${LL.filter.showMore()} (${(options?.length || 0) - 5} ${LL.filter.more()})`}
+        {/* {isExpanded
           ? "Show less"
-          : `Show more (${(options?.length || 0) - 5} more)`}
+          : `Show more (${(options?.length || 0) - 5} more)`} */}
       </button>
     </>
   );

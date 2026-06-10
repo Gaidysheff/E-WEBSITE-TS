@@ -4,7 +4,8 @@ import { type Product } from "@/lib/types.ts";
 import Skeleton from "react-loading-skeleton";
 import PageBreak from "@/components/pagination/PageBreak.tsx";
 import SortSelector from "./SortSelector.tsx";
-import { useSearch } from "@tanstack/react-router";
+// import { useSearch } from "@tanstack/react-router";
+import { useI18nContext } from "@/i18n/i18n-react";
 
 interface Props {
   filteredResults: Product[] | undefined;
@@ -21,6 +22,7 @@ const FilteredResult = ({
   currentPage,
   isCatalog,
 }: Props) => {
+  const { LL } = useI18nContext();
   return (
     <section className="mx-auto my-5">
       <h2 className="my-9 text-center text-xl font-bold text-primaryDark">
@@ -33,7 +35,8 @@ const FilteredResult = ({
           <div className="flex flex-col items-center gap-5">
             {/* Динамический заголовок */}
             <h2 className="text-3xl font-bold">
-              {isCatalog ? "Каталог" : "FilteredResult"}
+              {isCatalog ? `${LL.filter.catalog()}` : `${LL.filter.result()}`}
+              {/* {isCatalog ? "Каталог" : "FilteredResult"} */}
             </h2>
             <SortSelector />
           </div>
@@ -60,7 +63,8 @@ const FilteredResult = ({
           </div>
         ) : (
           <div className="text-myMainColor font-semibold text-xl text-center">
-            No products match your criteria.
+            {LL.filter.noMatch()}
+            {/* No products match your criteria. */}
           </div>
         )}
       </>

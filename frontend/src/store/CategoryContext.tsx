@@ -8,6 +8,7 @@ import {
 import { type Category } from "@/lib/types.ts";
 import { CATEGORY_LIST_URL } from "@/api/endpoints.ts";
 import api from "@/api/api.ts";
+import { useParams } from "@tanstack/react-router";
 
 interface CatProviderProps {
   children: ReactNode;
@@ -24,6 +25,9 @@ const CategoryContext = createContext<CategoriesContextType | undefined>(
 );
 
 export const CategoryContextProvider = ({ children }: CatProviderProps) => {
+  // 1. Вытаскиваем живой параметр lang из URL роутера
+  const { lang } = useParams({ from: "/$lang" });
+
   const [categories, setCategories] = useState<Category[]>([]);
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -63,7 +67,7 @@ export const CategoryContextProvider = ({ children }: CatProviderProps) => {
       }
     };
     getCategories();
-  }, []);
+  }, [lang]);
 
   return (
     <CategoryContext.Provider value={value}>

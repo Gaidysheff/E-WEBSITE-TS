@@ -69,7 +69,9 @@ function IndividualProductComponent() {
         ) : (
           <div className="flex items-center justify-between space-x-4 px-4 pb-10">
             <h4 className="font-semibold text-primaryDark">
-              Reviews(0) - there no reviews for the time being."{" "}
+              {LL.productSection.noReview()}
+
+              {/* Reviews (0) - there no reviews for the time being. */}
             </h4>
           </div>
         )}

@@ -8,8 +8,10 @@ import {
 import { useAppNavigate } from "@/hooks/useAppNavigate.ts";
 import { type ProductUrlQuery } from "@/lib/types";
 import { useSearch } from "@tanstack/react-router";
+import { useI18nContext } from "@/i18n/i18n-react";
 
 const SortSelector = () => {
+  const { LL } = useI18nContext();
   const navigate = useAppNavigate();
   const search = useSearch({ from: "/$lang/_mainLayout/_filter/products" });
   // const search = useSearch({ from: "/_mainLayout/_filter/products" });
@@ -32,11 +34,26 @@ const SortSelector = () => {
         <SelectValue placeholder="Сортировка" />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value="-id">Сначала новые</SelectItem>
-        <SelectItem value="price_asc">Цена: по возрастанию</SelectItem>
-        <SelectItem value="price_desc">Цена: по убыванию</SelectItem>
-        <SelectItem value="name_asc">Алфавит: А-Я</SelectItem>
-        <SelectItem value="rating_desc">Рейтинг: по убыванию</SelectItem>
+        <SelectItem value="-id">
+          {LL.sorting.new()}
+          {/* Сначала новые */}
+        </SelectItem>
+        <SelectItem value="price_asc">
+          {LL.sorting.priceUp()}
+          {/* Цена: по возрастанию */}
+        </SelectItem>
+        <SelectItem value="price_desc">
+          {LL.sorting.priceDown()}
+          {/* Цена: по убыванию */}
+        </SelectItem>
+        <SelectItem value="name_asc">
+          {LL.sorting.alphabet()}
+          {/* Алфавит: А-Я */}
+        </SelectItem>
+        <SelectItem value="rating_desc">
+          {LL.sorting.rating()}
+          {/* Рейтинг: по убыванию */}
+        </SelectItem>
       </SelectContent>
     </Select>
   );

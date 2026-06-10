@@ -23,6 +23,26 @@ type RootTranslation = {
 		 * П​р​о​д​о​л​ж​и​т​ь
 		 */
 		'continue': string
+		/**
+		 * С​б​р​о​с​и​т​ь
+		 */
+		reset: string
+	}
+	choices: {
+		shape: {
+			/**
+			 * К​р​у​г​л​а​я
+			 */
+			C: string
+			/**
+			 * К​в​а​д​р​а​т​н​а​я
+			 */
+			Q: string
+			/**
+			 * Т​р​е​у​г​о​л​ь​н​а​я
+			 */
+			T: string
+		}
 	}
 	introduction: {
 		/**
@@ -83,6 +103,10 @@ type RootTranslation = {
 		 * В​ ​И​з​б​р​а​н​н​о​е
 		 */
 		addWishlist: string
+		/**
+		 * А​в​т​о​р​и​з​у​й​т​е​с​ь​,​ ​ч​т​о​б​ы​ ​д​о​б​а​в​и​т​ь​ ​т​о​в​а​р​ ​в​ ​И​з​б​р​а​н​н​о​е​.
+		 */
+		addWishlistTooltip: string
 		/**
 		 * Д​о​б​а​в​и​т​ь​ ​о​т​з​ы​в
 		 */
@@ -197,6 +221,124 @@ type RootTranslation = {
 		 * О​т​з​ы​в
 		 */
 		review: string
+		/**
+		 * О​т​з​ы​в​ы​ ​(​0​)​ ​-​ ​н​а​ ​д​а​н​н​ы​й​ ​м​о​м​е​н​т​ ​о​т​з​ы​в​о​в​ ​н​е​т​.
+		 */
+		noReview: string
+	}
+	filter: {
+		/**
+		 * К​а​т​а​л​о​г
+		 */
+		catalog: string
+		/**
+		 * Р​е​з​у​л​ь​т​а​т​ ​ф​и​л​ь​т​р​а​ц​и​и
+		 */
+		result: string
+		/**
+		 * Н​е​т​ ​т​о​в​а​р​о​в​,​ ​с​о​о​т​в​е​т​с​т​в​у​ю​щ​и​х​ ​в​а​ш​и​м​ ​к​р​и​т​е​р​и​я​м​.
+		 */
+		noMatch: string
+		/**
+		 * С​б​р​о​с​и​т​ь​ ​в​с​е​ ​ф​и​л​ь​т​р​ы
+		 */
+		reset: string
+		/**
+		 * К​р​и​т​е​р​и​и​ ​ф​и​л​ь​т​р​а​ц​и​и
+		 */
+		criteria: string
+		/**
+		 * В​ы​б​е​р​и​т​е​ ​к​р​и​т​е​р​и​и​,​ ​н​е​о​б​х​о​д​и​м​ы​е​ ​д​л​я​ ​п​о​и​с​к​а​ ​о​п​р​е​д​е​л​е​н​н​ы​х​ ​т​о​в​а​р​о​в​.
+		 */
+		subtitle: string
+		/**
+		 * Б​р​е​н​д​ы
+		 */
+		brands: string
+		/**
+		 * Ц​в​е​т​а
+		 */
+		colors: string
+		/**
+		 * Ц​е​н​а
+		 */
+		price: string
+		/**
+		 * П​о​к​а​з​а​т​ь​ ​м​е​н​ь​ш​е
+		 */
+		showLess: string
+		/**
+		 * П​о​к​а​з​а​т​ь​ ​б​о​л​ь​ш​е
+		 */
+		showMore: string
+		/**
+		 * д​о​п​о​л​н​и​т​е​л​ь​н​о
+		 */
+		more: string
+		/**
+		 * О​т​з​ы​в​ы​ ​п​о​к​у​п​а​т​е​л​е​й
+		 */
+		reviews: string
+		/**
+		 * и​ ​в​ы​ш​е
+		 */
+		up: string
+		/**
+		 * П​о​и​с​к
+		 */
+		search: string
+		/**
+		 * И​с​к​а​т​ь​.​.​.
+		 */
+		searchPlaceholder: string
+		/**
+		 * Ф​о​р​м​а
+		 */
+		shape: string
+		/**
+		 * В​с​е​ ​ф​о​р​м​ы
+		 */
+		shapes: string
+		/**
+		 * В​с​е​ ​ф​о​р​м​ы
+		 */
+		shapePlaceholder: string
+	}
+	sorting: {
+		/**
+		 * С​н​а​ч​а​л​а​ ​н​о​в​ы​е
+		 */
+		'new': string
+		/**
+		 * Ц​е​н​а​:​ ​п​о​ ​в​о​з​р​а​с​т​а​н​и​ю
+		 */
+		priceUp: string
+		/**
+		 * Ц​е​н​а​:​ ​п​о​ ​у​б​ы​в​а​н​и​ю
+		 */
+		priceDown: string
+		/**
+		 * А​л​ф​а​в​и​т​:​ ​А​-​Я
+		 */
+		alphabet: string
+		/**
+		 * Р​е​й​т​и​н​г​:​ ​п​о​ ​у​б​ы​в​а​н​и​ю
+		 */
+		rating: string
+	}
+	pageBreak: {
+		/**
+		 * К​о​л​-​в​о​ ​е​д​и​н​и​ц​ ​н​а​ ​с​т​р​а​н​и​ц​е
+		 */
+		perPage: string
+		/**
+		 * П​р​е​д​ы​д​у​щ​а​я
+		 */
+		previous: string
+		/**
+		 * С​л​е​д​у​ю​щ​а​я
+		 */
+		next: string
 	}
 	failedPage: {
 		/**
@@ -233,6 +375,44 @@ type RootTranslation = {
 		 */
 		emailSubject: RequiredParams<'cartCode'>
 	}
+	colorSettings: {
+		/**
+		 * Н​а​с​т​р​о​й​к​и
+		 */
+		settings: string
+		/**
+		 * В​ы​б​е​р​и​т​е​ ​ж​е​л​а​е​м​ы​й​ ​ц​в​е​т​.
+		 */
+		setColor: string
+		/**
+		 * Ц​в​е​т​о​в​а​я​ ​с​х​е​м​а
+		 */
+		mode: string
+		/**
+		 * М​о​н​о
+		 */
+		single: string
+		/**
+		 * К​о​н​т​р​а​с​т
+		 */
+		contrast: string
+		/**
+		 * О​т​т​е​н​о​к​:
+		 */
+		hue: string
+		/**
+		 * К​о​н​т​р​а​с​т​н​ы​й​ ​ц​в​е​т​:
+		 */
+		secondary: string
+		/**
+		 * О​с​в​е​щ​е​н​и​е​:
+		 */
+		lightness: string
+		/**
+		 * Н​а​с​ы​щ​е​н​н​о​с​т​ь​:
+		 */
+		chroma: string
+	}
 }
 
 export type TranslationFunctions = {
@@ -245,6 +425,26 @@ export type TranslationFunctions = {
 		 * Продолжить
 		 */
 		'continue': () => LocalizedString
+		/**
+		 * Сбросить
+		 */
+		reset: () => LocalizedString
+	}
+	choices: {
+		shape: {
+			/**
+			 * Круглая
+			 */
+			C: () => LocalizedString
+			/**
+			 * Квадратная
+			 */
+			Q: () => LocalizedString
+			/**
+			 * Треугольная
+			 */
+			T: () => LocalizedString
+		}
 	}
 	introduction: {
 		/**
@@ -305,6 +505,10 @@ export type TranslationFunctions = {
 		 * В Избранное
 		 */
 		addWishlist: () => LocalizedString
+		/**
+		 * Авторизуйтесь, чтобы добавить товар в Избранное.
+		 */
+		addWishlistTooltip: () => LocalizedString
 		/**
 		 * Добавить отзыв
 		 */
@@ -417,6 +621,124 @@ export type TranslationFunctions = {
 		 * Отзыв
 		 */
 		review: () => LocalizedString
+		/**
+		 * Отзывы (0) - на данный момент отзывов нет.
+		 */
+		noReview: () => LocalizedString
+	}
+	filter: {
+		/**
+		 * Каталог
+		 */
+		catalog: () => LocalizedString
+		/**
+		 * Результат фильтрации
+		 */
+		result: () => LocalizedString
+		/**
+		 * Нет товаров, соответствующих вашим критериям.
+		 */
+		noMatch: () => LocalizedString
+		/**
+		 * Сбросить все фильтры
+		 */
+		reset: () => LocalizedString
+		/**
+		 * Критерии фильтрации
+		 */
+		criteria: () => LocalizedString
+		/**
+		 * Выберите критерии, необходимые для поиска определенных товаров.
+		 */
+		subtitle: () => LocalizedString
+		/**
+		 * Бренды
+		 */
+		brands: () => LocalizedString
+		/**
+		 * Цвета
+		 */
+		colors: () => LocalizedString
+		/**
+		 * Цена
+		 */
+		price: () => LocalizedString
+		/**
+		 * Показать меньше
+		 */
+		showLess: () => LocalizedString
+		/**
+		 * Показать больше
+		 */
+		showMore: () => LocalizedString
+		/**
+		 * дополнительно
+		 */
+		more: () => LocalizedString
+		/**
+		 * Отзывы покупателей
+		 */
+		reviews: () => LocalizedString
+		/**
+		 * и выше
+		 */
+		up: () => LocalizedString
+		/**
+		 * Поиск
+		 */
+		search: () => LocalizedString
+		/**
+		 * Искать...
+		 */
+		searchPlaceholder: () => LocalizedString
+		/**
+		 * Форма
+		 */
+		shape: () => LocalizedString
+		/**
+		 * Все формы
+		 */
+		shapes: () => LocalizedString
+		/**
+		 * Все формы
+		 */
+		shapePlaceholder: () => LocalizedString
+	}
+	sorting: {
+		/**
+		 * Сначала новые
+		 */
+		'new': () => LocalizedString
+		/**
+		 * Цена: по возрастанию
+		 */
+		priceUp: () => LocalizedString
+		/**
+		 * Цена: по убыванию
+		 */
+		priceDown: () => LocalizedString
+		/**
+		 * Алфавит: А-Я
+		 */
+		alphabet: () => LocalizedString
+		/**
+		 * Рейтинг: по убыванию
+		 */
+		rating: () => LocalizedString
+	}
+	pageBreak: {
+		/**
+		 * Кол-во единиц на странице
+		 */
+		perPage: () => LocalizedString
+		/**
+		 * Предыдущая
+		 */
+		previous: () => LocalizedString
+		/**
+		 * Следующая
+		 */
+		next: () => LocalizedString
 	}
 	failedPage: {
 		/**
@@ -451,6 +773,44 @@ export type TranslationFunctions = {
 		 * Ошибка оплаты заказа (Корзина: {cartCode})
 		 */
 		emailSubject: (arg: { cartCode: string }) => LocalizedString
+	}
+	colorSettings: {
+		/**
+		 * Настройки
+		 */
+		settings: () => LocalizedString
+		/**
+		 * Выберите желаемый цвет.
+		 */
+		setColor: () => LocalizedString
+		/**
+		 * Цветовая схема
+		 */
+		mode: () => LocalizedString
+		/**
+		 * Моно
+		 */
+		single: () => LocalizedString
+		/**
+		 * Контраст
+		 */
+		contrast: () => LocalizedString
+		/**
+		 * Оттенок:
+		 */
+		hue: () => LocalizedString
+		/**
+		 * Контрастный цвет:
+		 */
+		secondary: () => LocalizedString
+		/**
+		 * Освещение:
+		 */
+		lightness: () => LocalizedString
+		/**
+		 * Насыщенность:
+		 */
+		chroma: () => LocalizedString
 	}
 }
 
