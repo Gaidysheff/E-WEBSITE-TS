@@ -15,6 +15,7 @@ import { Label } from "@/components/ui/label";
 import { passwordConfirm } from "@/api/endpoints_auth";
 import { useAppNavigate } from "@/hooks/useAppNavigate.ts";
 import { useForm } from "@tanstack/react-form";
+import { useI18nContext } from "@/i18n/i18n-react";
 import { z } from "zod";
 
 export const Route = createFileRoute("/$lang/_auth/password-reset/$token")({
@@ -71,8 +72,10 @@ function FieldInfo({ field }: { field: AnyFieldApi }) {
 }
 
 export function PasswordReset() {
+  const { LL } = useI18nContext();
+
   const token = useParams({
-    from: "/_auth/password-reset/$token",
+    from: "/$lang/_auth/password-reset/$token",
     select: (params) => params.token,
   });
 
@@ -105,9 +108,13 @@ export function PasswordReset() {
       <div className="w-[90%] max-w-sm m-auto">
         <Card className="">
           <CardHeader>
-            <CardTitle className="text-2xl">Reset password</CardTitle>
+            <CardTitle className="text-2xl">
+              {LL.auth.passResetTitle()}
+              {/* Reset password */}
+            </CardTitle>
             <CardDescription>
-              Enter your new password and confirm it.
+              {LL.auth.passResetSubtitle()}
+              {/* Enter your new password and confirm it. */}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -122,7 +129,10 @@ export function PasswordReset() {
                   name="password"
                   children={(field) => (
                     <div className="grid gap-2">
-                      <Label htmlFor="password">Password</Label>
+                      <Label htmlFor="password">
+                        {LL.auth.password()}
+                        {/* Password */}
+                      </Label>
                       <Input
                         id="password"
                         type="password"
@@ -139,7 +149,10 @@ export function PasswordReset() {
                   name="confirm_password"
                   children={(field) => (
                     <div className="grid gap-2">
-                      <Label htmlFor="confirm_password">Confirm Password</Label>
+                      <Label htmlFor="confirm_password">
+                        {LL.auth.confirmPassword()}
+                        {/* Confirm Password */}
+                      </Label>
                       <Input
                         id="confirm_password"
                         type="password"
@@ -159,7 +172,8 @@ export function PasswordReset() {
               className="w-full"
               onClick={form.handleSubmit}
             >
-              Reset password
+              {LL.auth.passResetBtn()}
+              {/* Reset password */}
             </Button>
           </CardFooter>
         </Card>

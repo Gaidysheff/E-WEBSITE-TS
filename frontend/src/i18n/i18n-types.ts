@@ -28,6 +28,124 @@ type RootTranslation = {
 		 */
 		reset: string
 	}
+	auth: {
+		/**
+		 * E​-​S​h​o​p​ ​|​ ​А​в​т​о​р​и​з​а​ц​и​я
+		 */
+		headLogin: string
+		/**
+		 * E​-​S​h​o​p​ ​|​ ​Р​е​г​и​с​т​р​а​ц​и​я
+		 */
+		headRegister: string
+		/**
+		 * В​е​р​н​у​т​ь​с​я​ ​в​ ​м​а​г​а​з​и​н
+		 */
+		back: string
+		/**
+		 * В​х​о​д​ ​в​ ​а​к​к​а​у​н​т
+		 */
+		loginTitle: string
+		/**
+		 * В​в​е​д​и​т​е​ ​с​в​о​й​ ​а​д​р​е​с​ ​э​л​е​к​т​р​о​н​н​о​й​ ​п​о​ч​т​ы​ ​н​и​ж​е​,​ ​ч​т​о​б​ы​ ​в​о​й​т​и​ ​в​ ​с​в​о​й​ ​а​к​к​а​у​н​т​.
+		 */
+		loginSubtitle: string
+		/**
+		 * З​а​р​е​г​и​с​т​р​и​р​у​й​т​е​ ​с​в​о​й​ ​а​к​к​а​у​н​т
+		 */
+		registerTitle: string
+		/**
+		 * В​в​е​д​и​т​е​ ​с​в​о​й​ ​а​д​р​е​с​ ​э​л​е​к​т​р​о​н​н​о​й​ ​п​о​ч​т​ы​,​ ​ч​т​о​б​ы​ ​з​а​р​е​г​и​с​т​р​и​р​о​в​а​т​ь​ ​у​ч​е​т​н​у​ю​ ​з​а​п​и​с​ь​.
+		 */
+		registerSubtitle: string
+		/**
+		 * С​м​е​н​а​ ​п​а​р​о​л​я
+		 */
+		passResetTitle: string
+		/**
+		 * В​в​е​д​и​т​е​ ​с​в​о​й​ ​н​о​в​ы​й​ ​п​а​р​о​л​ь​ ​и​ ​п​о​д​т​в​е​р​д​и​т​е​ ​е​г​о​.
+		 */
+		passResetSubtitle: string
+		/**
+		 * С​м​е​н​и​т​ь​ ​п​а​р​о​л​ь
+		 */
+		passResetBtn: string
+		/**
+		 * З​а​п​р​о​с​ ​с​м​е​н​ы​ ​п​а​р​о​л​я
+		 */
+		passResetRequestTitle: string
+		/**
+		 * В​в​е​д​и​т​е​ ​с​в​о​й​ ​а​д​р​е​с​ ​э​л​е​к​т​р​о​н​н​о​й​ ​п​о​ч​т​ы​,​ ​ч​т​о​б​ы​ ​з​а​п​р​о​с​и​т​ь​ ​с​м​е​н​у​ ​п​а​р​о​л​я​.
+		 */
+		passResetRequestSubtitle: string
+		/**
+		 * З​а​п​р​о​с​и​т​ь​ ​с​м​е​н​у​ ​п​а​р​о​л​я
+		 */
+		passResetRequestBtn: string
+		/**
+		 * Э​л​е​к​т​р​о​н​н​а​я​ ​п​о​ч​т​а
+		 */
+		email: string
+		/**
+		 * П​а​р​о​л​ь
+		 */
+		password: string
+		/**
+		 * П​о​д​т​в​е​р​д​и​т​е​ ​п​а​р​о​л​ь
+		 */
+		confirmPassword: string
+		/**
+		 * З​а​б​ы​л​и​ ​п​а​р​о​л​ь​?
+		 */
+		forgot: string
+		/**
+		 * У​ ​в​а​с​ ​е​щ​ё​ ​н​е​т​ ​а​к​к​а​у​н​т​а​?
+		 */
+		noAccount: string
+		/**
+		 * З​а​р​е​г​и​с​т​р​и​р​о​в​а​т​ь​с​я
+		 */
+		signUp: string
+		/**
+		 * А​в​т​о​р​и​з​о​в​а​т​ь​с​я
+		 */
+		login: string
+		/**
+		 * У​ж​е​ ​з​а​р​е​г​и​с​т​р​и​р​о​в​а​н​ы​?
+		 */
+		loginQuestion: string
+		/**
+		 * П​о​ж​а​л​у​й​с​т​а​,​ ​а​в​т​о​р​и​з​у​й​т​е​с​ь
+		 */
+		loginLink: string
+		/**
+		 * И​л​и​ ​п​р​о​д​о​л​ж​и​т​ь​ ​c​ ​.​.​.
+		 */
+		or: string
+		/**
+		 * П​р​о​д​о​л​ж​и​т​ь​ ​с​ ​G​o​o​g​l​e
+		 */
+		google: string
+		/**
+		 * П​р​о​в​е​р​я​е​м​.​.​.
+		 */
+		validating: string
+		/**
+		 * В​а​ш​а​ ​а​в​т​о​р​и​з​а​ц​и​я​ ​п​р​о​ш​л​а​ ​у​с​п​е​ш​н​о​.​ ​�​�​!
+		 */
+		authorized: string
+		/**
+		 * В​х​о​д​ ​в​ ​с​и​с​т​е​м​у​ ​н​е​ ​у​д​а​л​с​я​.​ ​П​о​ж​а​л​у​й​с​т​а​,​ ​п​р​о​в​е​р​ь​т​е​ ​с​в​о​и​ ​у​ч​е​т​н​ы​е​ ​д​а​н​н​ы​е​.​ ​�​�​ ​�​�
+		 */
+		failed: string
+		/**
+		 * Д​о​б​р​о​ ​п​о​ж​а​л​о​в​а​т​ь​!​ ​В​ы​ ​в​о​ш​л​и​ ​ч​е​р​е​з​ ​G​o​o​g​l​e​.
+		 */
+		welcome: string
+		/**
+		 * А​у​т​е​н​т​и​ф​и​к​а​ц​и​я​ ​G​o​o​g​l​e​ ​н​е​ ​у​д​а​л​а​с​ь​.
+		 */
+		failedGoogle: string
+	}
 	choices: {
 		shape: {
 			/**
@@ -429,6 +547,124 @@ export type TranslationFunctions = {
 		 * Сбросить
 		 */
 		reset: () => LocalizedString
+	}
+	auth: {
+		/**
+		 * E-Shop | Авторизация
+		 */
+		headLogin: () => LocalizedString
+		/**
+		 * E-Shop | Регистрация
+		 */
+		headRegister: () => LocalizedString
+		/**
+		 * Вернуться в магазин
+		 */
+		back: () => LocalizedString
+		/**
+		 * Вход в аккаунт
+		 */
+		loginTitle: () => LocalizedString
+		/**
+		 * Введите свой адрес электронной почты ниже, чтобы войти в свой аккаунт.
+		 */
+		loginSubtitle: () => LocalizedString
+		/**
+		 * Зарегистрируйте свой аккаунт
+		 */
+		registerTitle: () => LocalizedString
+		/**
+		 * Введите свой адрес электронной почты, чтобы зарегистрировать учетную запись.
+		 */
+		registerSubtitle: () => LocalizedString
+		/**
+		 * Смена пароля
+		 */
+		passResetTitle: () => LocalizedString
+		/**
+		 * Введите свой новый пароль и подтвердите его.
+		 */
+		passResetSubtitle: () => LocalizedString
+		/**
+		 * Сменить пароль
+		 */
+		passResetBtn: () => LocalizedString
+		/**
+		 * Запрос смены пароля
+		 */
+		passResetRequestTitle: () => LocalizedString
+		/**
+		 * Введите свой адрес электронной почты, чтобы запросить смену пароля.
+		 */
+		passResetRequestSubtitle: () => LocalizedString
+		/**
+		 * Запросить смену пароля
+		 */
+		passResetRequestBtn: () => LocalizedString
+		/**
+		 * Электронная почта
+		 */
+		email: () => LocalizedString
+		/**
+		 * Пароль
+		 */
+		password: () => LocalizedString
+		/**
+		 * Подтвердите пароль
+		 */
+		confirmPassword: () => LocalizedString
+		/**
+		 * Забыли пароль?
+		 */
+		forgot: () => LocalizedString
+		/**
+		 * У вас ещё нет аккаунта?
+		 */
+		noAccount: () => LocalizedString
+		/**
+		 * Зарегистрироваться
+		 */
+		signUp: () => LocalizedString
+		/**
+		 * Авторизоваться
+		 */
+		login: () => LocalizedString
+		/**
+		 * Уже зарегистрированы?
+		 */
+		loginQuestion: () => LocalizedString
+		/**
+		 * Пожалуйста, авторизуйтесь
+		 */
+		loginLink: () => LocalizedString
+		/**
+		 * Или продолжить c ...
+		 */
+		or: () => LocalizedString
+		/**
+		 * Продолжить с Google
+		 */
+		google: () => LocalizedString
+		/**
+		 * Проверяем...
+		 */
+		validating: () => LocalizedString
+		/**
+		 * Ваша авторизация прошла успешно. 👋!
+		 */
+		authorized: () => LocalizedString
+		/**
+		 * Вход в систему не удался. Пожалуйста, проверьте свои учетные данные. 🤚 🚨
+		 */
+		failed: () => LocalizedString
+		/**
+		 * Добро пожаловать! Вы вошли через Google.
+		 */
+		welcome: () => LocalizedString
+		/**
+		 * Аутентификация Google не удалась.
+		 */
+		failedGoogle: () => LocalizedString
 	}
 	choices: {
 		shape: {

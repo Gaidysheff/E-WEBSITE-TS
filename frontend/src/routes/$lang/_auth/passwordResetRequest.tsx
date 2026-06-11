@@ -15,6 +15,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { passwordResetRequest } from "@/api/endpoints_auth";
 import { useAppNavigate } from "@/hooks/useAppNavigate.ts";
 import { useForm } from "@tanstack/react-form";
+import { useI18nContext } from "@/i18n/i18n-react";
 import { z } from "zod";
 
 export const Route = createFileRoute("/$lang/_auth/passwordResetRequest")({
@@ -43,6 +44,8 @@ function FieldInfo({ field }: { field: AnyFieldApi }) {
 }
 
 export function PasswordResetRequest() {
+  const { LL } = useI18nContext();
+
   const navigate = useAppNavigate();
 
   const form = useForm({
@@ -71,9 +74,13 @@ export function PasswordResetRequest() {
       <div className="w-[90%] max-w-sm m-auto">
         <Card className="">
           <CardHeader>
-            <CardTitle className="text-2xl">Request password reset</CardTitle>
+            <CardTitle className="text-2xl">
+              {LL.auth.passResetRequestTitle()}
+              {/* Request password reset */}
+            </CardTitle>
             <CardDescription>
-              Enter your email below to request password reset
+              {LL.auth.passResetRequestSubtitle()}
+              {/* Enter your email below to request password reset */}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -110,7 +117,8 @@ export function PasswordResetRequest() {
               className="w-full"
               onClick={form.handleSubmit}
             >
-              Request password reset
+              {LL.auth.passResetRequestBtn()}
+              {/* Request password reset */}
             </Button>
           </CardFooter>
         </Card>

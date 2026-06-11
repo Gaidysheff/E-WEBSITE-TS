@@ -7,16 +7,18 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Link, createFileRoute } from "@tanstack/react-router";
 
 import type { AnyFieldApi } from "@tanstack/react-form";
 import { BASE_URL } from "@/api/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { AppLink as Link } from "@/components/appLink/AppLink";
+import { createFileRoute } from "@tanstack/react-router";
 import { register } from "@/api/endpoints_auth";
 import { useAppNavigate } from "@/hooks/useAppNavigate.ts";
 import { useForm } from "@tanstack/react-form";
+import { useI18nContext } from "@/i18n/i18n-react";
 import { z } from "zod";
 
 export const Route = createFileRoute("/$lang/_auth/register")({
@@ -74,7 +76,10 @@ function FieldInfo({ field }: { field: AnyFieldApi }) {
 }
 
 export function Register() {
+  const { LL } = useI18nContext();
+
   const navigate = useAppNavigate();
+
   const form = useForm({
     defaultValues: {
       email: "",
@@ -98,7 +103,10 @@ export function Register() {
   return (
     <>
       <>
-        <title>E-Shop | Register</title>
+        <title>
+          {LL.auth.headRegister()}
+          {/* E-Shop | Register */}
+        </title>
         <meta
           name="description"
           content="REGISTER page is for user's registration inside the application."
@@ -111,9 +119,13 @@ export function Register() {
       >
         <Card className="w-[90%] max-w-sm m-auto">
           <CardHeader>
-            <CardTitle className="text-2xl">Register your account</CardTitle>
+            <CardTitle className="text-2xl">
+              {LL.auth.registerTitle()}
+              {/* Register your account */}
+            </CardTitle>
             <CardDescription>
-              Enter your email below to register your account
+              {LL.auth.registerSubtitle()}
+              {/* Enter your email below to register your account */}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -128,7 +140,10 @@ export function Register() {
                   name="email"
                   children={(field) => (
                     <div className="grid gap-2">
-                      <Label htmlFor="email">Email</Label>
+                      <Label htmlFor="email">
+                        {LL.auth.email()}
+                        {/* Email */}
+                      </Label>
                       <Input
                         id="email"
                         type="email"
@@ -151,7 +166,10 @@ export function Register() {
                   name="password"
                   children={(field) => (
                     <div className="grid gap-2">
-                      <Label htmlFor="password">Password</Label>
+                      <Label htmlFor="password">
+                        {LL.auth.password()}
+                        {/* Password */}
+                      </Label>
                       <Input
                         id="password"
                         type="password"
@@ -168,7 +186,10 @@ export function Register() {
                   name="confirm_password"
                   children={(field) => (
                     <div className="grid gap-2">
-                      <Label htmlFor="confirm_password">Confirm Password</Label>
+                      <Label htmlFor="confirm_password">
+                        {LL.auth.confirmPassword()}
+                        {/* Confirm Password */}
+                      </Label>
                       <Input
                         id="confirm_password"
                         type="password"
@@ -188,18 +209,23 @@ export function Register() {
               className="w-full"
               onClick={form.handleSubmit}
             >
-              Sign Up
+              {LL.auth.signUp()}
+              {/* Sign Up */}
             </Button>
 
             <CardAction className="w-full my-5">
               <div className="grid grid-cols-2 gap-2 flex items-center">
-                <CardDescription>Already registered?</CardDescription>
+                <CardDescription>
+                  {LL.auth.loginQuestion()}
+                  {/* Already registered? */}
+                </CardDescription>
                 <Link
                   className="justify-self-end text-sm font-semibold 
                   hover:underline hover:underline-offset-4"
-                  to="/login"
+                  to="/$lang/login"
                 >
-                  Please Login
+                  {LL.auth.loginLink()}
+                  {/* Please Login */}
                 </Link>
               </div>
             </CardAction>

@@ -6,6 +6,41 @@ const ru: BaseTranslation = {
     continue: "Продолжить",
     reset: "Сбросить",
   },
+  auth: {
+    headLogin: "E-Shop | Авторизация",
+    headRegister: "E-Shop | Регистрация",
+    back: "Вернуться в магазин",
+    loginTitle: "Вход в аккаунт",
+    loginSubtitle:
+      "Введите свой адрес электронной почты ниже, чтобы войти в свой аккаунт.",
+    registerTitle: "Зарегистрируйте свой аккаунт",
+    registerSubtitle:
+      "Введите свой адрес электронной почты, чтобы зарегистрировать учетную запись.",
+    passResetTitle: "Смена пароля",
+    passResetSubtitle: "Введите свой новый пароль и подтвердите его.",
+    passResetBtn: "Сменить пароль",
+    passResetRequestTitle: "Запрос смены пароля",
+    passResetRequestSubtitle:
+      "Введите свой адрес электронной почты, чтобы запросить смену пароля.",
+    passResetRequestBtn: "Запросить смену пароля",
+    email: "Электронная почта",
+    password: "Пароль",
+    confirmPassword: "Подтвердите пароль",
+    forgot: "Забыли пароль?",
+    noAccount: "У вас ещё нет аккаунта?",
+    signUp: "Зарегистрироваться",
+    login: "Авторизоваться",
+    loginQuestion: "Уже зарегистрированы?",
+    loginLink: "Пожалуйста, авторизуйтесь",
+    or: "Или продолжить c ...",
+    google: "Продолжить с Google",
+    validating: "Проверяем...",
+    authorized: "Ваша авторизация прошла успешно. 👋!",
+    failed:
+      "Вход в систему не удался. Пожалуйста, проверьте свои учетные данные. 🤚 🚨",
+    welcome: "Добро пожаловать! Вы вошли через Google.",
+    failedGoogle: "Аутентификация Google не удалась.",
+  },
   choices: {
     shape: {
       C: "Круглая",

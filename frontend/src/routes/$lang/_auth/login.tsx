@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { googleLoginAction, login } from "@/api/endpoints_auth";
 
 import type { AnyFieldApi } from "@tanstack/react-form";
@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { FcGoogle } from "react-icons/fc";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { AppLink as Link } from "@/components/appLink/AppLink";
 import { MoveLeft } from "lucide-react";
 import { SUPPORTED_LANGUAGES } from "@/routes/$lang.tsx";
 import { toast } from "react-toastify";
@@ -45,6 +46,7 @@ const LoginSchema = z.object({
 type Login = z.infer<typeof LoginSchema>;
 
 function FieldInfo({ field }: { field: AnyFieldApi }) {
+  const { LL } = useI18nContext();
   return (
     <>
       {field.state.meta.isTouched && !field.state.meta.isValid ? (
@@ -56,14 +58,16 @@ function FieldInfo({ field }: { field: AnyFieldApi }) {
           {field.state.meta.errors.map((err) => err.message).join(",")}
         </em>
       ) : null}
-      {field.state.meta.isValidating ? "Validating..." : null}
+      {field.state.meta.isValidating ? `${LL.auth.validating()}` : null}
+      {/* {field.state.meta.isValidating ? "Validating..." : null} */}
     </>
   );
 }
 
 export function Login() {
+  const { LL, locale } = useI18nContext();
+
   const { cartCode, setCartCode } = useCart();
-  const { locale } = useI18nContext();
   const { refreshUser } = useUser(); // Забираем функцию принудительного
   // обновления профиля
 
@@ -152,7 +156,8 @@ export function Login() {
         const response = await login(loginData);
 
         // 2. Если мы здесь, значит статус 200 (благодаря нашему перехватчику в api.ts)
-        toast.success("You have been successfully authorized 👋!");
+        toast.success(`${LL.auth.authorized()}`);
+        // toast.success("You have been successfully authorized 👋!");
 
         localStorage.setItem("Token", response.data.token);
 
@@ -165,8 +170,8 @@ export function Login() {
       } catch (error: any) {
         // 3. Сюда попадем, если сервер вернул 401, 400 или 500
         toast.error(
-          error.response?.data?.error ||
-            "Login has failed. Please check your credentials. 🤚 🚨",
+          error.response?.data?.error || `${LL.auth.failed()}`,
+          // "Login has failed. Please check your credentials. 🤚 🚨",
         );
       }
     },
@@ -182,11 +187,13 @@ export function Login() {
         localStorage.setItem("Token", response.data.token);
         localStorage.setItem("cart_code", response.data.cart_code);
         setCartCode(response.data.cart_code);
-        toast.success("Welcome! Signed in with Google.");
+        toast.success(`${LL.auth.welcome()}`);
+        // toast.success("Welcome! Signed in with Google.");
         onLoginSuccess();
       } catch (error: any) {
         toast.error(
-          error.response?.data?.error || "Google Authentication failed",
+          error.response?.data?.error || `${LL.auth.failedGoogle()}`,
+          // error.response?.data?.error || "Google Authentication failed",
         );
       }
     },
@@ -195,7 +202,10 @@ export function Login() {
   return (
     <>
       <>
-        <title>E-Shop | Login</title>
+        <title>
+          {LL.auth.headLogin()}
+          {/* E-Shop | Login */}
+        </title>
         <meta
           name="description"
           content="LOGIN page is for user's authentication inside the application."
@@ -209,17 +219,22 @@ export function Login() {
         <Card className="w-[90%] max-w-sm m-auto">
           <CardHeader>
             <Link
-              to="/"
+              to="/$lang"
               className="flex items-center gap-2 text-sm text-gray-500
               hover:text-primary transition-colors mb-6"
             >
               <MoveLeft size={16} />
-              Back to Store
+              {LL.auth.back()}
+              {/* Back to Store */}
             </Link>
 
-            <CardTitle className="text-2xl">Login to your account</CardTitle>
+            <CardTitle className="text-2xl">
+              {LL.auth.loginTitle()}
+              {/* Login to your account */}
+            </CardTitle>
             <CardDescription>
-              Enter your email below to login to your account
+              {LL.auth.loginSubtitle()}
+              {/* Enter your email below to login to your account */}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -234,7 +249,10 @@ export function Login() {
                   name="email"
                   children={(field) => (
                     <div className="grid gap-2">
-                      <Label htmlFor="email">Email</Label>
+                      <Label htmlFor="email">
+                        {LL.auth.email()}
+                        {/* Email */}
+                      </Label>
                       <Input
                         id="email"
                         type="email"
@@ -252,14 +270,18 @@ export function Login() {
                   children={(field) => (
                     <div className="grid gap-2">
                       <div className="flex items-center">
-                        <Label htmlFor="password">Password</Label>
-                        <a
-                          href="/passwordResetRequest"
+                        <Label htmlFor="password">
+                          {LL.auth.password()}
+                          {/* Password */}
+                        </Label>
+                        <Link
+                          to="/$lang/passwordResetRequest"
                           className="ml-auto inline-block text-sm 
                               underline-offset-4 hover:underline"
                         >
-                          Forgot your password?
-                        </a>
+                          {LL.auth.forgot()}
+                          {/* Forgot your password? */}
+                        </Link>
                       </div>
                       <Input
                         id="password"
@@ -278,9 +300,15 @@ export function Login() {
           <CardFooter className="flex-col gap-2">
             <CardAction className="w-full">
               <div className="grid grid-cols-2 gap-2 flex items-center">
-                <CardDescription>No account yet?</CardDescription>
+                <CardDescription>
+                  {LL.auth.noAccount()}
+                  {/* No account yet? */}
+                </CardDescription>
                 <Button variant="link" className="justify-self-end">
-                  <Link to="/register">Sign Up</Link>
+                  <Link to="/$lang/register">
+                    {LL.auth.signUp()}
+                    {/* Sign Up */}
+                  </Link>
                 </Button>
               </div>
             </CardAction>
@@ -290,7 +318,8 @@ export function Login() {
               className="w-full h-12 text-lg"
               onClick={form.handleSubmit}
             >
-              Login
+              {LL.auth.login()}
+              {/* Login */}
             </Button>
 
             <div className="mt-6">
@@ -300,7 +329,8 @@ export function Login() {
                 </div>
                 <div className="relative flex justify-center text-xs uppercase">
                   <span className="bg-white px-2 text-muted-foreground">
-                    Or continue with
+                    {LL.auth.or()}
+                    {/* Or continue with */}
                   </span>
                 </div>
               </div>
@@ -312,7 +342,8 @@ export function Login() {
               onClick={() => googleLogin()}
             >
               <FcGoogle className="mr-2 size-6" />
-              Continue with Google
+              {LL.auth.google()}
+              {/* Continue with Google */}
             </Button>
           </CardFooter>
         </Card>
