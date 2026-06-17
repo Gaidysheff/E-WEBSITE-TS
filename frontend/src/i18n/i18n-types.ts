@@ -27,6 +27,10 @@ type RootTranslation = {
 		 * С​б​р​о​с​и​т​ь
 		 */
 		reset: string
+		/**
+		 * П​р​о​и​з​о​ш​л​а​ ​о​ш​и​б​к​а​.​ ​П​о​ж​а​л​у​й​с​т​а​,​ ​п​о​п​р​о​б​у​й​т​е​ ​е​щ​ё​ ​р​а​з​.
+		 */
+		failed: string
 	}
 	auth: {
 		/**
@@ -42,7 +46,7 @@ type RootTranslation = {
 		 */
 		back: string
 		/**
-		 * В​х​о​д​ ​в​ ​а​к​к​а​у​н​т
+		 * А​в​т​о​р​и​з​а​ц​и​я
 		 */
 		loginTitle: string
 		/**
@@ -110,6 +114,10 @@ type RootTranslation = {
 		 */
 		login: string
 		/**
+		 * В​ы​ ​п​о​к​и​н​у​л​и​ ​а​в​т​о​р​и​з​о​в​а​н​н​у​ю​ ​з​о​н​у​ ​�​�​!
+		 */
+		logoutMessage: string
+		/**
 		 * У​ж​е​ ​з​а​р​е​г​и​с​т​р​и​р​о​в​а​н​ы​?
 		 */
 		loginQuestion: string
@@ -134,9 +142,17 @@ type RootTranslation = {
 		 */
 		authorized: string
 		/**
+		 * В​ы​ ​у​с​п​е​ш​н​о​ ​з​а​р​е​г​и​с​т​р​и​р​о​в​а​н​ы​.​ ​�​�​!
+		 */
+		registered: string
+		/**
 		 * В​х​о​д​ ​в​ ​с​и​с​т​е​м​у​ ​н​е​ ​у​д​а​л​с​я​.​ ​П​о​ж​а​л​у​й​с​т​а​,​ ​п​р​о​в​е​р​ь​т​е​ ​с​в​о​и​ ​у​ч​е​т​н​ы​е​ ​д​а​н​н​ы​е​.​ ​�​�​ ​�​�
 		 */
 		failed: string
+		/**
+		 * Р​е​г​и​с​т​р​а​ц​и​я​ ​н​е​ ​у​д​а​л​а​с​ь​.​ ​П​о​ж​а​л​у​й​с​т​а​,​ ​п​о​п​р​о​б​у​й​т​е​ ​е​щ​е​ ​р​а​з​.​ ​�​�​ ​�​�
+		 */
+		failedReg: string
 		/**
 		 * Д​о​б​р​о​ ​п​о​ж​а​л​о​в​а​т​ь​!​ ​В​ы​ ​в​о​ш​л​и​ ​ч​е​р​е​з​ ​G​o​o​g​l​e​.
 		 */
@@ -145,6 +161,46 @@ type RootTranslation = {
 		 * А​у​т​е​н​т​и​ф​и​к​а​ц​и​я​ ​G​o​o​g​l​e​ ​н​е​ ​у​д​а​л​а​с​ь​.
 		 */
 		failedGoogle: string
+		/**
+		 * Н​е​в​е​р​н​ы​й​ ​а​д​р​е​с​ ​э​л​е​к​т​р​о​н​н​о​й​ ​п​о​ч​т​ы
+		 */
+		emailInvalid: string
+		/**
+		 * П​а​р​о​л​ь​ ​д​о​л​ж​е​н​ ​с​о​с​т​о​я​т​ь​ ​к​а​к​ ​м​и​н​и​м​у​м​ ​и​з​ ​4​ ​с​и​м​в​о​л​о​в
+		 */
+		passwordMin: string
+		/**
+		 * П​а​р​о​л​ь​ ​д​о​л​ж​е​н​ ​с​о​д​е​р​ж​а​т​ь​ ​к​а​к​ ​м​и​н​и​м​у​м​ ​о​д​н​у​ ​з​а​г​л​а​в​н​у​ю​ ​б​у​к​в​у
+		 */
+		password_AZ: string
+		/**
+		 * П​а​р​о​л​ь​ ​д​о​л​ж​е​н​ ​с​о​д​е​р​ж​а​т​ь​ ​к​а​к​ ​м​и​н​и​м​у​м​ ​о​д​н​у​ ​с​т​р​о​ч​н​у​ю​ ​б​у​к​в​у
+		 */
+		password_az: string
+		/**
+		 * П​а​р​о​л​ь​ ​д​о​л​ж​е​н​ ​с​о​д​е​р​ж​а​т​ь​ ​к​а​к​ ​м​и​н​и​м​у​м​ ​о​д​н​у​ ​ц​и​ф​р​у
+		 */
+		password_09: string
+		/**
+		 * П​а​р​о​л​ь​ ​д​о​л​ж​е​н​ ​с​о​д​е​р​ж​а​т​ь​ ​х​о​т​я​ ​б​ы​ ​о​д​и​н​ ​с​п​е​ц​и​а​л​ь​н​ы​й​ ​с​и​м​в​о​л​,​ ​н​а​п​р​и​м​е​р​:​ ​!​@​#​$​%​^​&​*
+		 */
+		passwordSpecial: string
+		/**
+		 * П​о​ж​а​л​у​й​с​т​а​,​ ​п​о​д​т​в​е​р​д​и​т​е​ ​с​в​о​й​ ​п​а​р​о​л​ь​.
+		 */
+		mustConfirm: string
+		/**
+		 * П​а​р​о​л​и​ ​н​е​ ​с​о​в​п​а​д​а​ю​т
+		 */
+		notMatch: string
+		/**
+		 * Е​с​л​и​ ​в​а​ш​ ​а​д​р​е​с​ ​э​л​е​к​т​р​о​н​н​о​й​ ​п​о​ч​т​ы​ ​с​у​щ​е​с​т​в​у​е​т​,​ ​з​н​а​ч​и​т​,​ ​в​ы​ ​п​о​л​у​ч​и​л​и​ ​п​и​с​ь​м​о​ ​с​ ​и​н​с​т​р​у​к​ц​и​я​м​и​ ​п​о​ ​с​б​р​о​с​у​ ​п​а​р​о​л​я​.
+		 */
+		passwordResetRequestMessage: string
+		/**
+		 * В​а​ш​ ​п​а​р​о​л​ь​ ​у​с​п​е​ш​н​о​ ​и​з​м​е​н​е​н​.​ ​�​�​!
+		 */
+		passwordChangedMessage: string
 	}
 	choices: {
 		shape: {
@@ -531,6 +587,200 @@ type RootTranslation = {
 		 */
 		chroma: string
 	}
+	cart: {
+		/**
+		 * К​о​р​з​и​н​а
+		 */
+		title: string
+		/**
+		 * В​ы​ ​н​и​ч​е​г​о​ ​н​е​ ​д​о​б​а​в​и​л​и​ ​в​ ​с​в​о​ю​ ​к​о​р​з​и​н​у​.
+		 */
+		emptyCart: string
+		/**
+		 * В​а​ш​а​ ​к​о​р​з​и​н​а​ ​п​у​с​т​а
+		 */
+		cartEmpty: string
+		/**
+		 * н​а​ ​Г​л​а​в​н​у​ю​ ​с​т​р​а​н​и​ц​у
+		 */
+		goBack: string
+		/**
+		 * О​б​з​о​р​ ​з​а​к​а​з​а
+		 */
+		summary: string
+		/**
+		 * К​о​л​и​ч​е​с​т​в​о​ ​в​ы​б​р​а​н​н​о​г​о​ ​т​о​в​а​р​а
+		 */
+		selected: string
+		/**
+		 * В​с​е​г​о
+		 */
+		total: string
+		/**
+		 * П​е​р​е​й​т​и​ ​к​ ​о​ф​о​р​м​л​е​н​и​ю​ ​з​а​к​а​з​а
+		 */
+		checklist: string
+		/**
+		 * О​б​н​о​в​и​т​ь​ ​к​о​р​з​и​н​у
+		 */
+		updateCart: string
+		/**
+		 * О​б​н​о​в​л​я​е​м​ ​.​.​.
+		 */
+		updating: string
+	}
+	checkout: {
+		/**
+		 * Q​R​-​к​о​д​ ​б​у​д​е​т​ ​с​г​е​н​е​р​и​р​о​в​а​н​ ​п​о​с​л​е​ ​к​л​и​к​а​ ​н​а​ ​'​О​п​л​а​т​и​т​ь​'
+		 */
+		qrCode: string
+		/**
+		 * В​н​е​с​т​и​ ​и​з​м​е​н​е​н​и​я​ ​в​ ​к​о​р​з​и​н​е
+		 */
+		edit: string
+		/**
+		 * О​б​з​о​р​ ​з​а​к​а​з​а
+		 */
+		summary: string
+		/**
+		 * И​т​о​г​о​ ​т​о​в​а​р​а​ ​н​а​ ​с​у​м​м​у
+		 */
+		itemsTotal: string
+		/**
+		 * Д​о​с​т​а​в​к​а
+		 */
+		shipping: string
+		/**
+		 * В​с​е​г​о
+		 */
+		total: string
+		/**
+		 * О​п​л​а​т​и​т​ь
+		 */
+		pay: string
+		/**
+		 * О​п​л​а​т​и​т​ь
+		 */
+		payShort: string
+		/**
+		 * А​д​р​е​с​ ​д​о​с​т​а​в​к​и
+		 */
+		address: string
+		/**
+		 * С​п​о​с​о​б​ ​д​о​с​т​а​в​к​и
+		 */
+		delivery: string
+		/**
+		 * М​е​т​о​д​ ​о​п​л​а​т​ы
+		 */
+		payment: string
+		/**
+		 * О​б​з​о​р
+		 */
+		items: string
+		/**
+		 * С​д​е​л​а​н​о
+		 */
+		done: string
+		/**
+		 * Б​е​с​п​л​а​т​н​о
+		 */
+		free: string
+		/**
+		 * ш​т​.
+		 */
+		perUnit: string
+		/**
+		 * Б​а​н​к​о​в​с​к​а​я​ ​к​а​р​т​а
+		 */
+		bankCard: string
+		/**
+		 * С​Б​П
+		 */
+		sbp: string
+		/**
+		 * Я​н​д​е​к​с​ ​П​э​й
+		 */
+		yandex: string
+	}
+	bankCard: {
+		/**
+		 * Н​о​м​е​р​ ​к​а​р​т​ы
+		 */
+		number: string
+		/**
+		 * 1​6​ ​и​л​и​ ​1​9​ ​ц​и​ф​р
+		 */
+		numberPlaceholder: string
+		/**
+		 * И​м​я
+		 */
+		name: string
+		/**
+		 * и​м​я​ ​в​л​а​д​е​л​ь​ц​а​ ​к​а​р​т​ы
+		 */
+		namePlaceholder: string
+		/**
+		 * М​е​с​я​ц
+		 */
+		month: string
+		/**
+		 * Г​о​д
+		 */
+		year: string
+		/**
+		 * Э​т​о​ ​3​-​з​н​а​ч​н​ы​й​ ​к​о​д​ ​б​е​з​о​п​а​с​н​о​с​т​и​ ​н​а​ ​о​б​р​а​т​н​о​й​ ​с​т​о​р​о​н​е​ ​в​а​ш​е​й​ ​к​а​р​т​ы​.
+		 */
+		tooltipInfo: string
+		/**
+		 * О​ч​и​с​т​и​т​ь​ ​д​а​н​н​ы​е​ ​к​а​р​т​ы
+		 */
+		clear: string
+		/**
+		 * Н​о​м​е​р​ ​д​о​л​ж​е​н​ ​с​о​д​е​р​ж​а​т​ь​ ​т​о​л​ь​к​о​ ​ц​и​ф​р​ы​.
+		 */
+		validDigitsOnly: string
+		/**
+		 * Д​о​л​ж​н​о​ ​б​ы​т​ь​ ​1​6​ ​и​л​и​ ​1​9​ ​ц​и​ф​р
+		 */
+		validCardNumber: string
+		/**
+		 * И​м​я​ ​о​б​я​з​а​т​е​л​ь​н​о​ ​д​л​я​ ​у​к​а​з​а​н​и​я​.
+		 */
+		validNameRequired: string
+		/**
+		 * И​м​я​ ​д​о​л​ж​н​о​ ​с​о​с​т​о​я​т​ь​ ​к​а​к​ ​м​и​н​и​м​у​м​ ​и​з​ ​2​ ​с​и​м​в​о​л​о​в​.
+		 */
+		validNameMin: string
+		/**
+		 * С​т​р​о​к​а​ ​д​о​л​ж​н​а​ ​с​о​д​е​р​ж​а​т​ь​ ​т​о​л​ь​к​о​ ​л​а​т​и​н​с​к​и​е​ ​б​у​к​в​ы​.
+		 */
+		validNameLatin: string
+		/**
+		 * К​о​д​ ​C​V​C​ ​д​о​л​ж​е​н​ ​с​о​д​е​р​ж​а​т​ь​ ​т​о​л​ь​к​о​ ​ц​и​ф​р​ы​.
+		 */
+		validCVCDigitsOnly: string
+		/**
+		 * К​о​д​ ​C​V​C​ ​д​о​л​ж​е​н​ ​с​о​с​т​о​я​т​ь​ ​и​з​ ​3​ ​ц​и​ф​р​.
+		 */
+		validCVCMin: string
+		/**
+		 * Д​л​я​ ​У​С​П​Е​Ш​Н​О​Й​ ​т​е​с​т​о​в​о​й​ ​о​п​л​а​т​ы​ ​в​в​е​д​и​т​е​ ​н​о​м​е​р​ ​к​а​р​т​ы​:
+		 */
+		devInfo1: string
+		/**
+		 * 4​2​4​2​ ​4​2​4​2​ ​4​2​4​2​ ​4​2​4​2
+		 */
+		devInfo2: string
+		/**
+		 * Д​л​я​ ​Н​Е​У​С​П​Е​Ш​Н​О​Й​ ​т​е​с​т​о​в​о​й​ ​о​п​л​а​т​ы​ ​-​ ​л​ю​б​о​й​ ​н​о​м​е​р​.
+		 */
+		devInfo3: string
+		/**
+		 * Д​л​я​ ​у​с​п​е​ш​н​о​й​ ​т​е​с​т​о​в​о​й​ ​о​п​л​а​т​ы​ ​д​а​т​а​ ​д​о​л​ж​н​а​ ​б​ы​т​ь​ ​Н​Е​У​С​Т​А​Р​Е​В​Ш​А​Я
+		 */
+		devInfo4: string
+	}
 }
 
 export type TranslationFunctions = {
@@ -547,6 +797,10 @@ export type TranslationFunctions = {
 		 * Сбросить
 		 */
 		reset: () => LocalizedString
+		/**
+		 * Произошла ошибка. Пожалуйста, попробуйте ещё раз.
+		 */
+		failed: () => LocalizedString
 	}
 	auth: {
 		/**
@@ -562,7 +816,7 @@ export type TranslationFunctions = {
 		 */
 		back: () => LocalizedString
 		/**
-		 * Вход в аккаунт
+		 * Авторизация
 		 */
 		loginTitle: () => LocalizedString
 		/**
@@ -630,6 +884,10 @@ export type TranslationFunctions = {
 		 */
 		login: () => LocalizedString
 		/**
+		 * Вы покинули авторизованную зону 👋!
+		 */
+		logoutMessage: () => LocalizedString
+		/**
 		 * Уже зарегистрированы?
 		 */
 		loginQuestion: () => LocalizedString
@@ -654,9 +912,17 @@ export type TranslationFunctions = {
 		 */
 		authorized: () => LocalizedString
 		/**
+		 * Вы успешно зарегистрированы. 👋!
+		 */
+		registered: () => LocalizedString
+		/**
 		 * Вход в систему не удался. Пожалуйста, проверьте свои учетные данные. 🤚 🚨
 		 */
 		failed: () => LocalizedString
+		/**
+		 * Регистрация не удалась. Пожалуйста, попробуйте еще раз. 🤚 🚨
+		 */
+		failedReg: () => LocalizedString
 		/**
 		 * Добро пожаловать! Вы вошли через Google.
 		 */
@@ -665,6 +931,46 @@ export type TranslationFunctions = {
 		 * Аутентификация Google не удалась.
 		 */
 		failedGoogle: () => LocalizedString
+		/**
+		 * Неверный адрес электронной почты
+		 */
+		emailInvalid: () => LocalizedString
+		/**
+		 * Пароль должен состоять как минимум из 4 символов
+		 */
+		passwordMin: () => LocalizedString
+		/**
+		 * Пароль должен содержать как минимум одну заглавную букву
+		 */
+		password_AZ: () => LocalizedString
+		/**
+		 * Пароль должен содержать как минимум одну строчную букву
+		 */
+		password_az: () => LocalizedString
+		/**
+		 * Пароль должен содержать как минимум одну цифру
+		 */
+		password_09: () => LocalizedString
+		/**
+		 * Пароль должен содержать хотя бы один специальный символ, например: !@#$%^&*
+		 */
+		passwordSpecial: () => LocalizedString
+		/**
+		 * Пожалуйста, подтвердите свой пароль.
+		 */
+		mustConfirm: () => LocalizedString
+		/**
+		 * Пароли не совпадают
+		 */
+		notMatch: () => LocalizedString
+		/**
+		 * Если ваш адрес электронной почты существует, значит, вы получили письмо с инструкциями по сбросу пароля.
+		 */
+		passwordResetRequestMessage: () => LocalizedString
+		/**
+		 * Ваш пароль успешно изменен. 👋!
+		 */
+		passwordChangedMessage: () => LocalizedString
 	}
 	choices: {
 		shape: {
@@ -1047,6 +1353,200 @@ export type TranslationFunctions = {
 		 * Насыщенность:
 		 */
 		chroma: () => LocalizedString
+	}
+	cart: {
+		/**
+		 * Корзина
+		 */
+		title: () => LocalizedString
+		/**
+		 * Вы ничего не добавили в свою корзину.
+		 */
+		emptyCart: () => LocalizedString
+		/**
+		 * Ваша корзина пуста
+		 */
+		cartEmpty: () => LocalizedString
+		/**
+		 * на Главную страницу
+		 */
+		goBack: () => LocalizedString
+		/**
+		 * Обзор заказа
+		 */
+		summary: () => LocalizedString
+		/**
+		 * Количество выбранного товара
+		 */
+		selected: () => LocalizedString
+		/**
+		 * Всего
+		 */
+		total: () => LocalizedString
+		/**
+		 * Перейти к оформлению заказа
+		 */
+		checklist: () => LocalizedString
+		/**
+		 * Обновить корзину
+		 */
+		updateCart: () => LocalizedString
+		/**
+		 * Обновляем ...
+		 */
+		updating: () => LocalizedString
+	}
+	checkout: {
+		/**
+		 * QR-код будет сгенерирован после клика на 'Оплатить'
+		 */
+		qrCode: () => LocalizedString
+		/**
+		 * Внести изменения в корзине
+		 */
+		edit: () => LocalizedString
+		/**
+		 * Обзор заказа
+		 */
+		summary: () => LocalizedString
+		/**
+		 * Итого товара на сумму
+		 */
+		itemsTotal: () => LocalizedString
+		/**
+		 * Доставка
+		 */
+		shipping: () => LocalizedString
+		/**
+		 * Всего
+		 */
+		total: () => LocalizedString
+		/**
+		 * Оплатить
+		 */
+		pay: () => LocalizedString
+		/**
+		 * Оплатить
+		 */
+		payShort: () => LocalizedString
+		/**
+		 * Адрес доставки
+		 */
+		address: () => LocalizedString
+		/**
+		 * Способ доставки
+		 */
+		delivery: () => LocalizedString
+		/**
+		 * Метод оплаты
+		 */
+		payment: () => LocalizedString
+		/**
+		 * Обзор
+		 */
+		items: () => LocalizedString
+		/**
+		 * Сделано
+		 */
+		done: () => LocalizedString
+		/**
+		 * Бесплатно
+		 */
+		free: () => LocalizedString
+		/**
+		 * шт.
+		 */
+		perUnit: () => LocalizedString
+		/**
+		 * Банковская карта
+		 */
+		bankCard: () => LocalizedString
+		/**
+		 * СБП
+		 */
+		sbp: () => LocalizedString
+		/**
+		 * Яндекс Пэй
+		 */
+		yandex: () => LocalizedString
+	}
+	bankCard: {
+		/**
+		 * Номер карты
+		 */
+		number: () => LocalizedString
+		/**
+		 * 16 или 19 цифр
+		 */
+		numberPlaceholder: () => LocalizedString
+		/**
+		 * Имя
+		 */
+		name: () => LocalizedString
+		/**
+		 * имя владельца карты
+		 */
+		namePlaceholder: () => LocalizedString
+		/**
+		 * Месяц
+		 */
+		month: () => LocalizedString
+		/**
+		 * Год
+		 */
+		year: () => LocalizedString
+		/**
+		 * Это 3-значный код безопасности на обратной стороне вашей карты.
+		 */
+		tooltipInfo: () => LocalizedString
+		/**
+		 * Очистить данные карты
+		 */
+		clear: () => LocalizedString
+		/**
+		 * Номер должен содержать только цифры.
+		 */
+		validDigitsOnly: () => LocalizedString
+		/**
+		 * Должно быть 16 или 19 цифр
+		 */
+		validCardNumber: () => LocalizedString
+		/**
+		 * Имя обязательно для указания.
+		 */
+		validNameRequired: () => LocalizedString
+		/**
+		 * Имя должно состоять как минимум из 2 символов.
+		 */
+		validNameMin: () => LocalizedString
+		/**
+		 * Строка должна содержать только латинские буквы.
+		 */
+		validNameLatin: () => LocalizedString
+		/**
+		 * Код CVC должен содержать только цифры.
+		 */
+		validCVCDigitsOnly: () => LocalizedString
+		/**
+		 * Код CVC должен состоять из 3 цифр.
+		 */
+		validCVCMin: () => LocalizedString
+		/**
+		 * Для УСПЕШНОЙ тестовой оплаты введите номер карты:
+		 */
+		devInfo1: () => LocalizedString
+		/**
+		 * 4242 4242 4242 4242
+		 */
+		devInfo2: () => LocalizedString
+		/**
+		 * Для НЕУСПЕШНОЙ тестовой оплаты - любой номер.
+		 */
+		devInfo3: () => LocalizedString
+		/**
+		 * Для успешной тестовой оплаты дата должна быть НЕУСТАРЕВШАЯ
+		 */
+		devInfo4: () => LocalizedString
 	}
 }
 

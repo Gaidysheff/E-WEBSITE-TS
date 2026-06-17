@@ -4,6 +4,7 @@ import { ListChecks } from "lucide-react";
 import { NumericFormat } from "react-number-format";
 import { useAppNavigate } from "@/hooks/useAppNavigate.ts";
 import { useCart } from "@/store/CartContext.tsx";
+import { useI18nContext } from "@/i18n/i18n-react";
 
 // ----------------- Version for STRIPE -----------------------
 // import { initiatePaymentAction } from "@/api/actions.ts";
@@ -18,6 +19,8 @@ interface Props {
 }
 
 const CartSummary = ({ total }: Props) => {
+  const { LL } = useI18nContext();
+
   const navigate = useAppNavigate();
 
   const { items, cartItemsCount } = useCart();
@@ -60,7 +63,8 @@ const CartSummary = ({ total }: Props) => {
       rounded-lg shadow-xl bg-card px-8 py-6"
     >
       <h2 className="font-semibold text-2xl text-primaryDark mb-6">
-        Order Summary
+        {LL.cart.summary()}
+        {/* Order Summary */}
       </h2>
 
       {/* Images of selected Products  */}
@@ -88,7 +92,8 @@ const CartSummary = ({ total }: Props) => {
 
       <div className="w-full flex items-center justify-between py-2">
         <p className="text-primary text-sm 2xsm:text-base sm:text-lg">
-          Number of selected goods
+          {LL.cart.selected()}
+          {/* Number of selected goods */}
         </p>
         <p className="text-sm 2xsm:text-lg text-primaryDark font-semibold">
           {/* $100.00 */}
@@ -130,7 +135,8 @@ const CartSummary = ({ total }: Props) => {
           className="text-sm 2xsm:text-base sm:text-lg font-semibold
           text-primaryDark"
         >
-          Total
+          {LL.cart.total()}
+          {/* Total */}
         </p>
         <p className="text-sm 2xsm:text-lg font-bold text-primaryDark">
           <NumericFormat
@@ -208,7 +214,10 @@ const CartSummary = ({ total }: Props) => {
         className="checkout-btn"
       >
         <div className="inline-flex items-center">
-          <span className="mr-2">Proceed with Checklist</span>
+          <span className="mr-2">
+            {LL.cart.checklist()}
+            {/* Proceed with Checklist */}
+          </span>
           <span>
             <ListChecks className="size-[24px]" />
           </span>

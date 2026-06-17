@@ -30,7 +30,7 @@ import { useCart } from "@/store/CartContext.tsx";
 import { useUser } from "@/store/UserContext.tsx";
 import { useForm } from "@tanstack/react-form";
 import { createLazyFileRoute } from "@tanstack/react-router";
-
+import { useI18nContext } from "@/i18n/i18n-react";
 import { CreditCard, MapPin, PackageSearch, Truck, Zap } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { NumericFormat } from "react-number-format";
@@ -43,6 +43,8 @@ export const Route = createLazyFileRoute(
 });
 
 function CheckoutPage() {
+  const { LL } = useI18nContext();
+
   const [isAddressModalOpen, setIsAddressModalOpen] = useState<boolean>(false);
   const [is3DSModalOpen, setIs3DSModalOpen] = useState<boolean>(false);
 
@@ -381,7 +383,8 @@ function CheckoutPage() {
         >
           {/* ----------------- 1. Получатель и Адрес ----------------- */}
           <CheckoutSection
-            title="1. Shipping Address"
+            title={`1. ${LL.checkout.address()}`}
+            // title="1. Shipping Address"
             icon={<MapPin />}
             isCompleted={!!user?.address?.street}
           >
@@ -401,7 +404,8 @@ function CheckoutPage() {
           {/* ---------------------- 2. Доставка ---------------------- */}
 
           <CheckoutSection
-            title="2. Delivery Method"
+            title={`2. ${LL.checkout.delivery()}`}
+            // title="2. Delivery Method"
             icon={<Truck />}
             isCompleted
           >
@@ -423,7 +427,8 @@ function CheckoutPage() {
             selector={(state) => state.canSubmit}
             children={(canSubmit) => (
               <CheckoutSection
-                title="3. Payment Method"
+                title={`3. ${LL.checkout.payment()}`}
+                // title="3. Payment Method"
                 icon={<CreditCard />}
                 isCompleted={paymentMethod === "card" ? canSubmit : true}
                 // Теперь маркер "Done" будет загораться мгновенно
@@ -457,7 +462,11 @@ function CheckoutPage() {
           />
 
           {/* ---------- 4. Обзор товаров (Компактный список) ---------- */}
-          <CheckoutSection title="4. Review Items" icon={<PackageSearch />}>
+          <CheckoutSection
+            title={`4. ${LL.checkout.items()}`}
+            // title="4. Review Items"
+            icon={<PackageSearch />}
+          >
             <div className="space-y-1">
               {items.map((item) => (
                 <MiniCartItem key={item.id} cartItem={item} />
@@ -471,7 +480,8 @@ function CheckoutPage() {
               className="text-xs text-primaryDark/50 hover:underline mt-4
                 inline-block"
             >
-              Edit order in cart
+              {LL.checkout.edit()}
+              {/* Edit order in cart */}
             </Link>
           </CheckoutSection>
         </div>
@@ -482,10 +492,16 @@ function CheckoutPage() {
             className="sticky top-24 p-6 rounded-2xl border
               border-gray-100"
           >
-            <h2 className="text-xl font-bold mb-6">Order Summary</h2>
+            <h2 className="text-xl font-bold mb-6">
+              {LL.checkout.summary()}
+              {/* Order Summary */}
+            </h2>
             <div className="space-y-3 text-sm">
               <div className="flex justify-between">
-                <span>Items total</span>
+                <span>
+                  {LL.checkout.itemsTotal()}
+                  {/* Items total */}
+                </span>
                 <span>
                   <NumericFormat
                     value={totalPrice}
@@ -500,7 +516,10 @@ function CheckoutPage() {
                 </span>
               </div>
               <div className="flex justify-between">
-                <span>Shipping</span>
+                <span>
+                  {LL.checkout.shipping()}
+                  {/* Shipping */}
+                </span>
                 <span>
                   <NumericFormat
                     value={delivery?.price}
@@ -518,7 +537,10 @@ function CheckoutPage() {
                 className="border-t pt-3 mt-3 flex justify-between
                   font-bold text-lg"
               >
-                <span>Total</span>
+                <span>
+                  {LL.checkout.total()}
+                  {/* Total */}
+                </span>
                 <span className="text-myMainColor">
                   <NumericFormat
                     value={finalTotal}
@@ -563,10 +585,12 @@ function CheckoutPage() {
                       <PaymentLoader />
                     ) : (
                       <>
-                        <span className="lg:hidden">Place Order & Pay </span>
+                        <span className="lg:hidden">
+                          {LL.checkout.pay()} {/* Place Order & Pay  */}
+                        </span>
                         <span className="max-lg:hidden">
-                          Place Order <br /> & <br />
-                          Pay{" "}
+                          {LL.checkout.payShort()}{" "}
+                          {/* Place Order <br /> & <br /> Pay{" "} */}
                         </span>
                         <NumericFormat
                           value={finalTotal}

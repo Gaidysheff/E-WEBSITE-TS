@@ -26,11 +26,11 @@ import {
 } from "@/components/ui/tooltip";
 import type { AnyFieldApi } from "@tanstack/react-form";
 import { Info } from "lucide-react";
-
+import { useI18nContext } from "@/i18n/i18n-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CURRENT_YEAR } from "@/lib/utilities.ts";
-
+import { getZodTranslation } from "@/lib/i18nHelper.ts";
 import {
   useEffect,
   type Dispatch,
@@ -52,9 +52,45 @@ interface FormProps {
 }
 
 export function CvcBubbleError({ field }: { field: AnyFieldApi }) {
-  const error = field.state.meta.errors[0]?.message;
+  const { LL } = useI18nContext();
 
+  // const error = field.state.meta.errors[0]?.message;
+
+  const error = getZodTranslation(field.state.meta.errors[0]?.message, LL);
   if (!field.state.meta.isTouched || !error) return null;
+
+  // Весь этот функционал переведен в файл src/lib/i18nHelper.ts
+  // ------------------------------------------------------------------
+  // Берем только первое сообщение об ошибке
+  // const rawError = field.state.meta.errors[0]?.message;
+
+  // // Функция перевода ключей Zod (например, "payment.cvcInvalid")
+  // const getTranslatedMessage = (errorKey: string): string => {
+  //   if (!errorKey) return "";
+  //   try {
+  //     const parts = errorKey.split(".");
+  //     let currentObj: any = LL;
+
+  //     for (const part of parts) {
+  //       if (currentObj && part in currentObj) {
+  //         currentObj = currentObj[part];
+  //       } else {
+  //         return errorKey; // Если ключ не найден, возвращаем исходную строку
+  //       }
+  //     }
+  //     return typeof currentObj === "function" ? currentObj() : errorKey;
+  //   } catch {
+  //     return errorKey;
+  //   }
+  // };
+
+  // // Если поле еще не трогали или ошибок нет — ничего не рендерим
+  // if (!field.state.meta.isTouched || !rawError) return null;
+
+  // // Переводим сырую строку ошибки из Zod
+  // const translatedError = rawError.includes(".")
+  //   ? getTranslatedMessage(rawError)
+  //   : rawError;
 
   return (
     <div
@@ -66,6 +102,10 @@ export function CvcBubbleError({ field }: { field: AnyFieldApi }) {
       rounded-md whitespace-nowrap shadow-lg relative"
       >
         {error}
+
+        {/* Отображаем переведенный текст */}
+        {/* {translatedError} */}
+
         {/* Маленький треугольник (хвостик) снизу */}
         <div
           className="absolute -bottom-1 w-2 h-2 bg-destructive rotate-45
@@ -83,6 +123,7 @@ const CardForm = ({
   setCardType,
   onFieldChange,
 }: FormProps) => {
+  const { LL } = useI18nContext();
   // const { cartCode } = useCart();
 
   // Подписываемся на значения через useStore
@@ -162,15 +203,21 @@ const CardForm = ({
             children={(field) => (
               <div>
                 <p className="italic text-red-500">
-                  Для успешной тестовой оплаты введите номер карты:
+                  {LL.bankCard.devInfo1()}
+                  {/* Для успешной тестовой оплаты введите номер карты: */}
                 </p>
                 <p className="italic font-bold text-red-500">
-                  4242 4242 4242 4242
+                  {LL.bankCard.devInfo2()}
+                  {/* 4242 4242 4242 4242 */}
                 </p>
                 <p className="italic text-red-500">
-                  Для неуспешной тестовой оплаты - любой номер:
+                  {LL.bankCard.devInfo3()}
+                  {/* Для неуспешной тестовой оплаты - любой номер: */}
                 </p>
-                <FieldLabel htmlFor="cardNumber">Number</FieldLabel>
+                <FieldLabel htmlFor="cardNumber">
+                  {LL.bankCard.number()}
+                  {/* Number */}
+                </FieldLabel>
                 <Input
                   id="cardNumber"
                   autoComplete="cc-number"
@@ -189,7 +236,8 @@ const CardForm = ({
                   }
                   onClick={() => setIsFlipped(false)}
                   inputMode="numeric"
-                  placeholder="16 or 19 digits"
+                  placeholder={`${LL.bankCard.numberPlaceholder()}`}
+                  // placeholder="16 or 19 digits"
                   pattern="(\d{16}|\d{19})"
                   required
                 />
@@ -202,7 +250,10 @@ const CardForm = ({
             name="userName"
             children={(field) => (
               <div>
-                <FieldLabel htmlFor="userName">Name</FieldLabel>
+                <FieldLabel htmlFor="userName">
+                  {LL.bankCard.name()}
+                  {/* Name */}
+                </FieldLabel>
                 <Input
                   id="userName"
                   autoComplete="cc-name"
@@ -220,7 +271,8 @@ const CardForm = ({
                     field.state.meta.isTouched ? field.state.meta.errors : []
                   }
                   onClick={() => setIsFlipped(false)}
-                  placeholder="card holder's name"
+                  placeholder={`${LL.bankCard.namePlaceholder()}`}
+                  // placeholder="card holder's name"
                   required
                 />
                 <FieldInfo field={field} />
@@ -229,7 +281,8 @@ const CardForm = ({
           />
 
           <p className="italic text-red-500">
-            Для успешной тестовой оплаты дата должна быть неустаревшая
+            {LL.bankCard.devInfo4()}
+            {/* Для успешной тестовой оплаты дата должна быть неустаревшая */}
           </p>
           <div className="grid grid-cols-4 xsm:grid-cols-5 gap-4">
             <div className="">
@@ -238,7 +291,11 @@ const CardForm = ({
                 children={(field) => (
                   <Field>
                     <div>
-                      <FieldLabel htmlFor="form-month">Month</FieldLabel>
+                      <FieldLabel htmlFor="form-month">
+                        {" "}
+                        {LL.bankCard.month()}
+                        {/* Month */}
+                      </FieldLabel>
                       {/* 1. value связываем со стейтом формы */}
                       {/* 2. onValueChange заменяет нам стандартный onChange */}
                       <Select
@@ -282,7 +339,10 @@ const CardForm = ({
                 children={(field) => (
                   <Field>
                     <div>
-                      <FieldLabel htmlFor="form-year">Year</FieldLabel>
+                      <FieldLabel htmlFor="form-year">
+                        {LL.bankCard.year()}
+                        {/* Year */}
+                      </FieldLabel>
                       {/* 1. value связываем со стейтом формы */}
                       {/* 2. onValueChange заменяет нам стандартный onChange */}
                       <Select
@@ -348,8 +408,9 @@ const CardForm = ({
                             side="top"
                             className="max-w-[200px] text-xs"
                           >
-                            Это 3-значный код безопасности на обратной стороне
-                            вашей карты.
+                            {LL.bankCard.tooltipInfo()}
+                            {/* Это 3-значный код безопасности на обратной стороне
+вашей карты. */}
                           </TooltipContent>
                         </Tooltip>
                       </TooltipProvider>
@@ -393,7 +454,8 @@ const CardForm = ({
               className="text-[10px] text-gray-400 hover:text-red-500
               transition-colors uppercase tracking-widest mt-2"
             >
-              Clear card details
+              {LL.bankCard.clear()}
+              {/* Clear card details */}
             </Button>
             {/* <Button type="button" variant="outline" asChild>
               <Link from="/" to={`cart/${cartCode}`}>

@@ -40,7 +40,7 @@ const OrderContainer = () => {
       className="w-full h-[320px] sm:h-[410px] overflow-y-auto space-y-6
       rounded-md bg-card"
     >
-      {isPending && <Spinner className="size-30 text-red-500 mx-auto" />}
+      {isPending && <Spinner className="size-30 text-myMainColor mx-auto" />}
       {orders &&
         orders.map((order) => <IndividualOrder key={order.id} order={order} />)}
     </div>

@@ -2,6 +2,7 @@ import { BASE_URL } from "@/api/api";
 import { type DeliveryOption } from "@/lib/types.ts";
 import { cn } from "@/lib/utils";
 import DeliveryOptionsSkeleton from "./DeliveryOptionsSkeleton.tsx";
+import { useI18nContext } from "@/i18n/i18n-react";
 
 interface Props {
   options: DeliveryOption[];
@@ -11,6 +12,8 @@ interface Props {
 }
 
 const DeliveryOptions = ({ options, selectedId, onSelect, loading }: Props) => {
+  const { LL } = useI18nContext();
+
   // const numberCards = options.length;
 
   if (loading)
@@ -23,38 +26,41 @@ const DeliveryOptions = ({ options, selectedId, onSelect, loading }: Props) => {
     );
 
   return (
-    // <div className="grid sm:grid-cols-3 gap-4">
-
     <div className="flex justify-center flex-wrap gap-3">
-      {options.map((option) => (
-        <button
-          key={option.id}
-          type="button"
-          onClick={() => onSelect(option)}
-          className={cn(
-            "flex flex-col items-center gap-3 p-4 rounded-xl border-2 transition-all text-center min-w-[150px]",
-            selectedId === option.id
-              ? "border-myMainColor bg-primaryLight/10 shadow-md"
-              : "border-gray-100 hover:border-gray-300",
-          )}
-        >
-          {/* Контент кнопки тот же самый */}
-          {option.icon && (
-            <img
-              src={`${BASE_URL}${option.icon}`}
-              alt={option.name}
-              className="h-8 object-contain"
-            />
-          )}
-          <div>
-            <div className="font-bold text-sm">{option.name}</div>
-            <div className="text-xs text-gray-500">{option.description}</div>
-          </div>
-          <div className="mt-auto font-bold text-primaryDark">
-            {Number(option.price) === 0 ? "Free" : `${option.price} ₽`}
-          </div>
-        </button>
-      ))}
+      <div className="grid sm:grid-cols-3 gap-4">
+        {options.map((option) => (
+          <button
+            key={option.id}
+            type="button"
+            onClick={() => onSelect(option)}
+            className={cn(
+              "flex flex-col items-center gap-3 p-4 rounded-xl border-2 transition-all text-center min-w-[150px]",
+              selectedId === option.id
+                ? "border-myMainColor bg-primaryLight/10 shadow-md"
+                : "border-gray-100 hover:border-gray-300",
+            )}
+          >
+            {/* Контент кнопки тот же самый */}
+            {option.icon && (
+              <img
+                src={`${BASE_URL}${option.icon}`}
+                alt={option.name}
+                className="h-8 object-contain"
+              />
+            )}
+            <div>
+              <div className="font-bold text-sm">{option.name}</div>
+              <div className="text-xs text-gray-500">{option.description}</div>
+            </div>
+            <div className="mt-auto font-bold text-primaryDark">
+              {Number(option.price) === 0
+                ? `${LL.checkout.free()}`
+                : `${option.price} ₽`}
+              {/* {Number(option.price) === 0 ? "Free" : `${option.price} ₽`} */}
+            </div>
+          </button>
+        ))}
+      </div>
     </div>
   );
 };

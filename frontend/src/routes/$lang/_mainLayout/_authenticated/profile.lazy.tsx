@@ -12,7 +12,9 @@ import { useUser } from "@/store/UserContext.tsx";
 
 // import { Spinner } from "@/components/ui/spinner";
 
-export const Route = createLazyFileRoute("/$lang/_mainLayout/_authenticated/profile")({
+export const Route = createLazyFileRoute(
+  "/$lang/_mainLayout/_authenticated/profile",
+)({
   component: ProfilePage,
 });
 
@@ -53,7 +55,7 @@ function ProfilePage() {
         />
       </Modal>
 
-      {/* {isPending && <Spinner className="size-30 text-red-500 mx-auto" />} */}
+      {/* {isPending && <Spinner className="size-30 text-myMainColor mx-auto" />} */}
 
       <Orders />
       <Wishlist />

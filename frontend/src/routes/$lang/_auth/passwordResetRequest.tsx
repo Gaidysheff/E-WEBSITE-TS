@@ -11,11 +11,15 @@ import type { AnyFieldApi } from "@tanstack/react-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Spinner } from "@/components/ui/spinner";
 import { createFileRoute } from "@tanstack/react-router";
+import { getZodTranslation } from "@/lib/i18nHelper.ts";
 import { passwordResetRequest } from "@/api/endpoints_auth";
+import { toast } from "react-toastify";
 import { useAppNavigate } from "@/hooks/useAppNavigate.ts";
 import { useForm } from "@tanstack/react-form";
 import { useI18nContext } from "@/i18n/i18n-react";
+import { useState } from "react";
 import { z } from "zod";
 
 export const Route = createFileRoute("/$lang/_auth/passwordResetRequest")({
@@ -23,27 +27,70 @@ export const Route = createFileRoute("/$lang/_auth/passwordResetRequest")({
 });
 
 const schema = z.object({
-  email: z.email(),
+  email: z.email("auth.emailInvalid"),
+  // email: z.email(),
 });
 
 function FieldInfo({ field }: { field: AnyFieldApi }) {
+  const { LL } = useI18nContext();
+
+  // Весь этот функционал переведен в файл src/lib/i18nHelper.ts
+  // ------------------------------------------------------------------
+  // Функция динамического чтения глубоких ключей (например, "auth.passwordMin") из LL
+  // const getTranslatedMessage = (errorKey: string) => {
+  //   try {
+  //     const parts = errorKey.split("."); // Разделяем "auth" и "passwordMin"
+  //     let currentObj: any = LL;
+
+  //     for (const part of parts) {
+  //       if (currentObj && part in currentObj) {
+  //         currentObj = currentObj[part];
+  //       } else {
+  //         return errorKey; // Если ключ не найден в словаре, вернем исходный текст Zod
+  //       }
+  //     }
+
+  //     // typesafe-i18n хранит конечные переводы как функции, вызываем её
+  //     return typeof currentObj === "function" ? currentObj() : errorKey;
+  //   } catch {
+  //     return errorKey;
+  //   }
+  // };
+
   return (
     <>
       {field.state.meta.isTouched && !field.state.meta.isValid ? (
         <em
           className={
-            field.state.meta.errors.length ? "text-destructive text-sm" : ""
+            field.state.meta.errors.length
+              ? "text-destructive text-sm not-italic"
+              : ""
           }
         >
-          {field.state.meta.errors.map((err) => err.message).join(",")}
+          {field.state.meta.errors
+            .map((err) => {
+              // Если ошибка прилетела от Zod (строка содержит точку), переводим её
+              const errMsg = err?.message || String(err);
+              return errMsg.includes(".")
+                ? // ? getTranslatedMessage(errMsg)
+                  getZodTranslation(errMsg, LL)
+                : errMsg;
+            })
+            .join(", ")}
         </em>
       ) : null}
-      {field.state.meta.isValidating ? "Validating..." : null}
+
+      {/* Мгновенный перевод статуса проверки */}
+      {field.state.meta.isValidating ? (
+        <span className="text-gray-400 text-sm">{LL.auth.validating()}</span>
+      ) : null}
     </>
   );
 }
 
 export function PasswordResetRequest() {
+  const [loading, setLoading] = useState<boolean>(false);
+
   const { LL } = useI18nContext();
 
   const navigate = useAppNavigate();
@@ -57,21 +104,35 @@ export function PasswordResetRequest() {
     },
 
     onSubmit: async ({ value }) => {
-      console.log("🚀 ~ PasswordResetRequest ~ value:", value);
-      passwordResetRequest(value);
+      try {
+        setLoading(true);
+        await passwordResetRequest(value);
+        toast.success(
+          LL.auth.passwordResetRequestMessage(),
+          { autoClose: 5000 },
+          // "If your email exists you have received an email with \
+          //   instructions for resetting the password",
+          // { autoClose: 5000 },
+        );
 
-      setTimeout(() => {
         navigate({ to: `/$lang/login` });
-      }, 3000);
+      } catch (error) {
+        toast.error(LL.general.failed());
+        throw error;
+      } finally {
+        setLoading(false);
+      }
     },
   });
 
   return (
     <section
       className="mt-10 xsm:mt-0 xsm:h-dvh
-              flex flex-col justify-content-center align-items-center"
+      flex flex-col justify-content-center align-items-center"
     >
       <div className="w-[90%] max-w-sm m-auto">
+        {loading && <Spinner className="size-30 text-myMainColor mx-auto" />}
+
         <Card className="">
           <CardHeader>
             <CardTitle className="text-2xl">

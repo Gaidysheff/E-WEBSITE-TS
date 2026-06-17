@@ -13,6 +13,7 @@ from rest_framework.permissions import IsAuthenticated
 from knox.models import AuthToken
 from rest_framework.permissions import AllowAny
 import requests
+from rest_framework import status
 
 User = get_user_model()
 
@@ -109,10 +110,27 @@ class RegisterViewset(viewsets.ViewSet):
     def create(self, request):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
+            user = serializer.save()  # Сохраняем и получаем объект созданного юзера
+
+            # Возвращаем минимальный безопасный ответ и правильный статус 201 Created
+            return Response(
+                {"status": "success", "user_id": user.id, "email": user.email},
+                status=status.HTTP_201_CREATED,
+            )
         else:
-            return Response(serializer.errors, status=400)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# class RegisterViewset(viewsets.ViewSet):
+#     permission_classes = []  # Максимально открываем доступ
+#     authentication_classes = []  # Отключаем любые интерцепторы токенов/сессий Django
+
+#     def create(self, request):
+#         print("--- МЫ ТУТ: Запрос дошел до бэкенда! ---")
+#         print("Данные с фронта:", request.data)
+
+#         # Просто возвращаем заглушку, НИЧЕГО не сохраняя в БД
+#         return Response({"message": "Test success"}, status=status.HTTP_200_OK)
 
 
 class UserViewset(viewsets.ViewSet):

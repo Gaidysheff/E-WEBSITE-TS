@@ -22,7 +22,9 @@ interface CartContextType {
   setCartCode: React.Dispatch<React.SetStateAction<string>>;
   cartItemsCount: number;
   setCartItemsCount: React.Dispatch<React.SetStateAction<number>>;
-  clearCart: () => void;
+  // clearCart: () => void;
+  clearCartAfterOrder: () => void;
+  clearCartAndLogout: () => void;
   items: Cartitem[];
   totalPrice: number;
   refreshCart: () => void;
@@ -100,21 +102,57 @@ export const CartContextProvider = ({ children }: CartProviderProps) => {
     }
   }, [cartCode, lang]);
 
-  const clearCart = () => {
-    const newCode = generateRandomString(); // Сразу создаем новый код
-    localStorage.setItem("cart_code", newCode);
-    setCartCode(newCode); // Засели новый код
+  // const clearCart = () => {
+  //   // Полностью чистим LocalStorage от следов старого юзера
+  //   // localStorage.removeItem("Token");
+  //   localStorage.removeItem("cart_code");
+  //   // localStorage.removeItem("user_id"); // Если сохраняли
 
-    // localStorage.removeItem("cart_code");
-    // setCartCode("");
-    // -----------------------------
-    // Чтобы иконка корзины в шапке (счетчик) обнулилась мгновенно
-    // после оплаты без window.location.reload()
+  //   // Чтобы иконка корзины в шапке (счетчик) обнулилась мгновенно
+  //   // после оплаты без window.location.reload()
+  //   // Обнуляем ВСЕ стейты React корзины
+  //   setItems([]);
+  //   setTotalPrice(0);
+  //   setCartItemsCount(0);
+
+  //   // Генерируем чистый код для нового гостя БЕЗ привязок к БД
+  //   const newCode = generateRandomString(); // Сразу создаем новый код
+  //   localStorage.setItem("cart_code", newCode);
+  //   setCartCode(newCode); // Засели новый код
+  // };
+
+  // ============== функция clearCart разбита на 2 отдельные ==========
+
+  // 1. Вызываем СТРОГО на странице Success после успешной оплаты
+  const clearCartAfterOrder = () => {
+    // Токен НЕ трогаем! Пользователь остается авторизован.
+    localStorage.removeItem("cart_code");
+
+    // Обнуляем только товары в стейте React
     setItems([]);
     setTotalPrice(0);
     setCartItemsCount(0);
+
+    // Создаем чистый код корзины для следующих покупок
+    const newCode = generateRandomString();
+    localStorage.setItem("cart_code", newCode);
+    setCartCode(newCode);
   };
 
+  // 2. Вызываем СТРОГО при целенаправленном выходе (Logout)
+  const clearCartAndLogout = () => {
+    localStorage.removeItem("Token"); // Вот теперь стираем токен!
+    localStorage.removeItem("cart_code");
+
+    setItems([]);
+    setTotalPrice(0);
+    setCartItemsCount(0);
+
+    const newCode = generateRandomString();
+    localStorage.setItem("cart_code", newCode);
+    setCartCode(newCode);
+  };
+  // =====================================================================
   const refreshCart = useCallback(() => {
     if (cartCode) fetchFullCartData(cartCode);
   }, [cartCode]);
@@ -149,7 +187,9 @@ export const CartContextProvider = ({ children }: CartProviderProps) => {
     setCartCode,
     cartItemsCount,
     setCartItemsCount,
-    clearCart,
+    // clearCart,
+    clearCartAfterOrder,
+    clearCartAndLogout,
     items,
     totalPrice,
     refreshCart,

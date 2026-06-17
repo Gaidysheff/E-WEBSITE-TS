@@ -1,14 +1,11 @@
 import api from "@/api/api";
 import { env } from "@/lib/env";
 import { type User } from "@/lib/types";
-
-import { toast } from "react-toastify";
-
 const BASE_URL = env.VITE_API_URL;
+const LOGOUT_URL = `${BASE_URL}/logoutall/`;
 
 const REGISTER_URL = `${BASE_URL}/users/register/`;
 const LOGIN_URL = `${BASE_URL}/users/login/`;
-const LOGOUT_URL = `${BASE_URL}/logoutall/`;
 const PASSWORD_RESET_URL = `${BASE_URL}/password_reset/`;
 const PASSWORD_CONFIRM_URL = `${BASE_URL}/password_reset/confirm/`;
 
@@ -24,17 +21,14 @@ type PassConfirm = {
 // ==================== Register =======================
 
 export const register = async (value: Auth) => {
+  const credentials = {
+    email: value.email,
+    password: value.password,
+  };
   try {
-    await api
-      .post(REGISTER_URL, {
-        email: value.email,
-        password: value.password,
-      })
-      .then(() => {
-        toast.success("You have been successfully registered 👋!");
-      });
-  } catch (error) {
-    console.log("🚀 ~ Register ~ error:", error);
+    await api.post(REGISTER_URL, credentials);
+  } catch (error: any) {
+    throw error;
   }
 };
 
@@ -49,7 +43,7 @@ export const login = async (value: AuthCart) => {
   try {
     const response = await api.post(LOGIN_URL, credentials);
     return response;
-  } catch (error) {
+  } catch (error: any) {
     throw error;
   }
 };
@@ -98,17 +92,13 @@ export const googleLoginAction = async (
 
 export const logout = async () => {
   try {
-    await api.post(LOGOUT_URL, {}).then(() => {
-      localStorage.removeItem("Token");
-      toast.info("You have left the authorized area 👋! ");
-      // -------- Delay for showing toaster ------------
-      const reloadDelay = () => {
-        window.location.reload();
-      };
-      setTimeout(reloadDelay, 3000);
-    });
-  } catch (error) {
-    console.log("🚀 ~ Register ~ error:", error);
+    // 1. Отправляем запрос на бэкенд,
+    // чтобы Django удалил токен/сессию у себя
+    await api.post(LOGOUT_URL, {});
+
+    localStorage.removeItem("Token");
+  } catch (error: any) {
+    throw error;
   }
 };
 
@@ -116,47 +106,25 @@ export const logout = async () => {
 
 export const passwordResetRequest = async (value: Reset) => {
   try {
-    await api
-      .post(PASSWORD_RESET_URL, {
-        email: value.email,
-      })
-      .then((response) => {
-        console.log("🚀 ~ Response:", response);
-        toast.success(
-          "If your email exists you have received an email with \
-          instructions for resetting the password",
-          { autoClose: 60000, hideProgressBar: true },
-        );
-      });
-  } catch (error) {
-    console.log("🚀 ~ passwordResetRequest ~ error:", error);
+    await api.post(PASSWORD_RESET_URL, {
+      email: value.email,
+    });
+  } catch (error: any) {
+    throw error;
   }
 };
 
 // ================== Password Confirm ======================
 
 export const passwordConfirm = async (value: PassConfirm, token: string) => {
-  console.log("🚀 ~ passwordConfirm ~ value:", value);
+  const credentials = {
+    password: value.password,
+    token: token,
+  };
 
   try {
-    await api
-      .post(PASSWORD_CONFIRM_URL, {
-        password: value.password,
-        token: token,
-      })
-      .then(() => {
-        // .then((response) => {
-        //   console.log("🚀 ~ Login ~ Response:", response.data);
-        toast.success(
-          "Your password reset was successful, \
-          you will be directed to the login page in a second 👋!",
-        );
-      });
-  } catch (error) {
-    console.log("🚀 ~ Register ~ error:", error);
-    toast.error(
-      "Login has failed, please try again, or reset your password 🤚 🚨",
-      { autoClose: 10000, hideProgressBar: true },
-    );
+    await api.post(PASSWORD_CONFIRM_URL, credentials);
+  } catch (error: any) {
+    throw error;
   }
 };

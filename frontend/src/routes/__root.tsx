@@ -17,6 +17,9 @@ import { ToastContainer } from "react-toastify";
 import TypesafeI18n from "@/i18n/i18n-react";
 import { UserContextProvider } from "@/store/UserContext.tsx";
 import { loadLocale } from "@/i18n/i18n-util.sync"; // Импортируем загрузчик
+import { useNavigate, useSearch } from "@tanstack/react-router";
+import { toast } from "react-toastify";
+import { type Locales } from "@/i18n/i18n-types"; // Импортируем ваш автогенерируемый тип языков
 import { useI18nContext } from "@/i18n/i18n-react";
 import { useTheme } from "@/store/ThemeContext";
 
@@ -41,6 +44,11 @@ function LanguageSync({ currentLanguage }: { currentLanguage: string }) {
 }
 
 function RootComponent() {
+  // Получаем параметры из URL (например, для TanStack Router)
+  const search = useSearch({ strict: false });
+
+  const navigate = useNavigate();
+
   const location = useLocation();
   const currentPath = location.pathname;
 
@@ -149,6 +157,54 @@ function RootComponent() {
   //     document.removeEventListener("visibilitychange", handleVisibility);
   //   };
   // }, [currentPath, getFaviconPath]);
+
+  useEffect(() => {
+    // Если в URL есть ?logout=true
+    if (search?.logout) {
+      // 1. Прямо из адресной строки браузера смотрим, есть ли там "/ru"
+      // Регулярное выражение ищет "/ru/" или "/ru" в начале пути
+      // Динамически определяем локаль из URL, но кастуем её к типу Locales
+      // Если язык в URL не распознан, принудительно ставим дефолтный (например, 'en')
+      const isRussian = /\/(ru)(\/|$)/i.test(window.location.pathname);
+      const currentLang: Locales = isRussian ? "ru" : "en";
+
+      // 2. СТРОГИЙ СЛОВАРЬ (Record<Locales, string> гарантирует, что ТУТ
+      // обязаны быть ВСЕ языки из типа Locales!)
+      const messages: Record<Locales, string> = {
+        ru: "Вы успешно вышли из личного кабинета 👋!",
+        en: "You have left the authorized area 👋!",
+        // Если в будущем тип Locales станет 'ru' | 'en' | 'de',
+        // TypeScript ТУТ ЖЕ подчеркнет этот объект красным, требуя добавить ключ 'de'!
+      };
+
+      // 3. Дополнительная железная проверка на Exhaustiveness через switch
+      // Это нужно на случай, если кто-то обойдет тип Record через анонимный объект
+      switch (currentLang) {
+        case "ru":
+        case "en":
+          // Перечисляем все текущие кейсы. Они валидны.
+          break;
+        default: {
+          // Если в Locales добавится 'de', то currentLang сможет быть 'de'.
+          // В этот момент TypeScript увидит, что мы пытаемся передать 'de' в функцию,
+          // которая принимает ТОЛЬКО тип 'never', и проект НЕ СОБЕРЕТСЯ!
+          const strictNever: never = currentLang;
+          throw new Error(`Unhandled language: ${strictNever}`);
+        }
+      }
+
+      // 4. Показываем тост на реальном языке страницы
+      toast.info(messages[currentLang]);
+
+      // 5. Сразу мягко убираем параметр из URL, чтобы ссылка снова стала чистой
+      navigate({
+        search: {},
+        replace: true,
+      } as any); // as any нужен, если роутер требует строго типизированный
+      // search для текущего роута
+    }
+  }, [search?.logout]);
+  // currentLang в зависимостях, чтобы React реагировал на смену языка
 
   return (
     <React.Fragment>

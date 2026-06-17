@@ -1,5 +1,4 @@
 from rest_framework import serializers
-
 from api.models import CustomerAddress
 
 # Импортируем МОДЕЛЬ, а не сериализатор
@@ -23,10 +22,14 @@ class LoginSerializer(serializers.Serializer):
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ("id", "email", "password", "image")
+        fields = ("id", "email", "password")
         extra_kwargs = {"password": {"write_only": True}}
 
     def create(self, validated_data):
+        # Если username не пришел с фронтенда, делаем его равным email
+        if "username" not in validated_data or not validated_data["username"]:
+            validated_data["username"] = validated_data["email"]
+
         user = User.objects.create_user(**validated_data)
         return user
 

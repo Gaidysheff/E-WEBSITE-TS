@@ -19,7 +19,9 @@ export function Success() {
     cryptogram?: string;
   };
 
-  const { clearCart } = useCart();
+  // const { clearCart } = useCart();
+
+  const { clearCartAfterOrder } = useCart();
 
   // const { width, height } = useWindowSize();
   // const [showConfetti, setShowConfetti] = useState(false);
@@ -49,7 +51,10 @@ export function Success() {
 
   useEffect(() => {
     // Корзина очистится один раз, когда страница успеха полностью отрендерится
-    clearCart();
+
+    clearCartAfterOrder();
+
+    // clearCart();
 
     window.onresize = () => handleWindowSize();
     // Имитируем небольшую задержку для красоты или ждем данных

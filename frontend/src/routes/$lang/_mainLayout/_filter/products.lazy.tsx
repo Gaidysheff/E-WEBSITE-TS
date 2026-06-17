@@ -30,7 +30,7 @@ function RouteComponent() {
 
   return (
     <div className="container">
-      {isFetching && <Spinner className="size-30 text-red-500 mx-auto" />}
+      {isFetching && <Spinner className="size-30 text-myMainColor mx-auto" />}
       <FilteredResult
         filteredResults={data?.results}
         isFetching={isFetching}

@@ -28,7 +28,7 @@ const ShippingInfo = ({ user, isLoading, forCheckoutPage }: Props) => {
       <div className="col-span-2 flex flex-col">
         <div className="text-2xl font-semibold my-3">Your Shipping Info</div>
         {isLoading ? (
-          <Spinner className="size-20 text-red-500 mx-auto" />
+          <Spinner className="size-20 text-myMainColor mx-auto" />
         ) : (
           <div>
             <div className="grid grid-cols-3 gap-2 my-2">

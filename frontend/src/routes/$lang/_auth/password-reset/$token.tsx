@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { passwordConfirm } from "@/api/endpoints_auth";
+import { toast } from "react-toastify";
 import { useAppNavigate } from "@/hooks/useAppNavigate.ts";
 import { useForm } from "@tanstack/react-form";
 import { useI18nContext } from "@/i18n/i18n-react";
@@ -26,28 +27,34 @@ const PasswordResetSchema = z
   .object({
     password: z
       .string()
-      .min(4, "Password must be at least 4 characters")
-      // .max(20, "Password must be not more than 20 characters")
+      .min(4, "auth.passwordMin")
+      // .min(4, "Password must be at least 4 characters")
       .refine(
         (password) => /[A-Z]/.test(password),
-        "Password must contain at least one uppercase letter",
+        "auth.password_AZ",
+        // "Password must contain at least one uppercase letter",
       )
       .refine(
         (password) => /[a-z]/.test(password),
-        "Password must contain at least one lowercase letter",
+        "auth.password_az",
+        // "Password must contain at least one lowercase letter",
       )
       .refine(
         (password) => /[0-9]/.test(password),
-        "Password must contain at least one number",
+        "auth.password_09",
+        // "Password must contain at least one number",
       )
       .refine(
         (password) => /[!@#$%^&*]/.test(password),
-        "Password must contain at least one special character, for example: !@#$%^&*",
+        "auth.passwordSpecial",
+        // "Password must contain at least one special character, for example: !@#$%^&*",
       ),
-    confirm_password: z.string().min(1, "Please confirm your password"),
+    confirm_password: z.string().min(1, "auth.mustConfirm"),
+    // confirm_password: z.string().min(1, "Please confirm your password"),
   })
   .refine((data) => data.password === data.confirm_password, {
-    message: "Passwords don't match",
+    message: "auth.notMatch",
+    // message: "Passwords don't match",
     path: ["confirm_password"], // Specifies where the error message should appear
   });
 
@@ -92,11 +99,23 @@ export function PasswordReset() {
     },
 
     onSubmit: async ({ value }) => {
-      passwordConfirm(value, token);
+      try {
+        await passwordConfirm(value, token);
 
-      setTimeout(() => {
+        toast.success(
+          LL.auth.passwordChangedMessage(),
+          // "Your password has been successfully changed."
+        );
+
         navigate({ to: `/$lang/login` });
-      }, 3000);
+
+        // setTimeout(() => {
+        //   navigate({ to: `/$lang/login` });
+        // }, 3000);
+      } catch (error) {
+        toast.error(LL.general.failed());
+        // toast.error("Something went wrong. Please, try again");
+      }
     },
   });
 

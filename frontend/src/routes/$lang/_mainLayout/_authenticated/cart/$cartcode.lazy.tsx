@@ -1,4 +1,4 @@
-import { useRouterState, createLazyFileRoute } from "@tanstack/react-router";
+import { createLazyFileRoute, useRouterState } from "@tanstack/react-router";
 
 import { BASE_URL } from "@/api/api";
 import CartItem from "@/components/cart/CartItem";
@@ -7,13 +7,18 @@ import CartSummary from "@/components/cart/CartSummary";
 import CartSummarySkeleton from "@/components/cart/CartSummarySkeleton.tsx";
 import { useCart } from "@/store/CartContext.tsx";
 import { useEffect } from "react";
+import { useI18nContext } from "@/i18n/i18n-react";
 import usePageSEO from "@/hooks/usePageSEO.ts";
 
-export const Route = createLazyFileRoute("/$lang/_mainLayout/_authenticated/cart/$cartcode")({
+export const Route = createLazyFileRoute(
+  "/$lang/_mainLayout/_authenticated/cart/$cartcode",
+)({
   component: CartItemPage,
 });
 
 function CartItemPage() {
+  const { LL } = useI18nContext();
+
   const { cartcode } = Route.useParams();
 
   const { items, totalPrice, refreshCart, isLoading } = useCart();
@@ -53,8 +58,11 @@ function CartItemPage() {
 
         <link rel="canonical" href={`${BASE_URL}${currentPathname}`} />
       </>
-      <section className="py-9">
-        <h1 className="font-semibold text-2xl text-primaryDark mb-6">Cart</h1>
+      <section className="container py-9">
+        <h1 className="font-semibold text-2xl text-primaryDark mb-6">
+          {LL.cart.title()}
+          {/* Cart */}
+        </h1>
         <div className="flex flex-wrap gap-6 lg:gap-8 justify-between w-full">
           {/* Cartitem */}
           <div
@@ -71,7 +79,8 @@ function CartItemPage() {
                 items.map((item) => <CartItem key={item.id} cartItem={item} />)
               ) : (
                 <p className="text-center text-gray-500 py-10">
-                  Your cart is empty.
+                  {LL.cart.cartEmpty()}
+                  {/* Your cart is empty. */}
                 </p>
               )}
             </div>

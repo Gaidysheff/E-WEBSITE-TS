@@ -1,6 +1,7 @@
 import { type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { BadgeCheck } from "lucide-react";
+import { useI18nContext } from "@/i18n/i18n-react";
 
 interface Props {
   title: string;
@@ -17,6 +18,8 @@ const CheckoutSection = ({
   isCompleted,
   className,
 }: Props) => {
+  const { LL } = useI18nContext();
+
   return (
     <div
       className={cn(
@@ -35,7 +38,9 @@ const CheckoutSection = ({
         </div>
         {isCompleted && (
           <span className="text-green-500 text-sm font-medium flex items-center gap-1">
-            <BadgeCheck className="size-6" /> Done
+            <BadgeCheck className="size-6" />
+            {LL.checkout.done()}
+            {/* Done */}
           </span>
         )}
       </div>

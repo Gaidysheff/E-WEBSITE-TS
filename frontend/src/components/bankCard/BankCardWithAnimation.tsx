@@ -4,28 +4,69 @@ import { type AnyReactForm } from "@/lib/types.ts";
 import { useStore, type AnyFieldApi } from "@tanstack/react-form";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import "./style.css";
-
+import { getZodTranslation } from "@/lib/i18nHelper.ts";
 import CardDisplay from "./CardDisplay.tsx";
 import CardForm from "./CardForm.tsx";
+import { useI18nContext } from "@/i18n/i18n-react";
 
 interface FormProps {
   bankCardForm: AnyReactForm<BankCardSchemaType>;
 }
 
 export function FieldInfo({ field }: { field: AnyFieldApi }) {
+  const { LL } = useI18nContext();
+
+  // Весь этот функционал переведен в файл src/lib/i18nHelper.ts
+  // ------------------------------------------------------------------
+  // Функция динамического чтения глубоких ключей (например, "auth.passwordMin") из LL
+  // const getTranslatedMessage = (errorKey: string) => {
+  //   try {
+  //     const parts = errorKey.split("."); // Разделяем "auth" и "passwordMin"
+  //     let currentObj: any = LL;
+
+  //     for (const part of parts) {
+  //       if (currentObj && part in currentObj) {
+  //         currentObj = currentObj[part];
+  //       } else {
+  //         return errorKey; // Если ключ не найден в словаре, вернем исходный текст Zod
+  //       }
+  //     }
+
+  //     // typesafe-i18n хранит конечные переводы как функции, вызываем её
+  //     return typeof currentObj === "function" ? currentObj() : errorKey;
+  //   } catch {
+  //     return errorKey;
+  //   }
+  // };
+
   return (
     <>
       {field.state.meta.isTouched && !field.state.meta.isValid ? (
         <em
           className={
-            field.state.meta.errors.length ? "text-destructive text-sm" : ""
+            field.state.meta.errors.length
+              ? "text-destructive text-sm not-italic"
+              : ""
           }
         >
-          {field.state.meta.errors.map((err) => err.message)[0]}
-          {/* {field.state.meta.errors.map((err) => err.message).join(",")} */}
+          {
+            field.state.meta.errors.map((err) => {
+              // Если ошибка прилетела от Zod (строка содержит точку), переводим её
+              const errMsg = err?.message || String(err);
+              return errMsg.includes(".")
+                ? getZodTranslation(errMsg, LL)
+                : // ? getTranslatedMessage(errMsg)
+                  errMsg;
+            })[0]
+            // .join(", ")
+          }
         </em>
       ) : null}
-      {field.state.meta.isValidating ? "Validating..." : null}
+
+      {/* Мгновенный перевод статуса проверки */}
+      {field.state.meta.isValidating ? (
+        <span className="text-gray-400 text-sm">{LL.auth.validating()}</span>
+      ) : null}
     </>
   );
 }

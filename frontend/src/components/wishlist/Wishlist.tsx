@@ -34,7 +34,7 @@ const Wishlist = () => {
         className="flex items-center w-[full] gap-4 px-6 py-6 bg-card
         custom-overflow rounded-lg shadow-sm"
       >
-        {isPending && <Spinner className="size-30 text-red-500 mx-auto" />}
+        {isPending && <Spinner className="size-30 text-myMainColor mx-auto" />}
 
         {!wishlists || wishlists.length == 0 ? (
           <div className="w-full p-6 text-center bg-gray-50 rounded-lg">

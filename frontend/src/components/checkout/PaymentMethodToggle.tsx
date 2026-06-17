@@ -1,6 +1,7 @@
 import { CreditCard, SmartphoneNfc, Zap } from "lucide-react";
 import { type PaymentMethod } from "@/lib/types.ts";
 import { cn } from "@/lib/utils";
+import { useI18nContext } from "@/i18n/i18n-react";
 
 interface Props {
   selected: PaymentMethod;
@@ -8,10 +9,12 @@ interface Props {
 }
 
 const PaymentMethodToggle = ({ selected, onSelect }: Props) => {
+  const { LL } = useI18nContext();
+
   const methods = [
-    { id: "card", title: "Bank Card", icon: CreditCard },
-    { id: "sbp", title: "SBP", icon: Zap },
-    { id: "yandex", title: "Yandex Pay", icon: SmartphoneNfc },
+    { id: "card", title: `${LL.checkout.bankCard()}`, icon: CreditCard },
+    { id: "sbp", title: `${LL.checkout.sbp()}`, icon: Zap },
+    { id: "yandex", title: `${LL.checkout.yandex()}`, icon: SmartphoneNfc },
   ] as const;
 
   return (

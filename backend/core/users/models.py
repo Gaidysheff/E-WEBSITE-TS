@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.base_user import BaseUserManager
+from django.utils import translation
 
 from django_rest_passwordreset.signals import reset_password_token_created
 from django.dispatch import receiver
@@ -54,11 +55,25 @@ class CustomUser(AbstractUser):
 def password_reset_token_created(reset_password_token, *args, **kwargs):
     sitelink = os.getenv("BASE_URL_FRONTEND")
     # sitelink = "http://localhost:5173"
-    token = "{}".format(reset_password_token.key)
-    full_link = str(sitelink) + str("/password-reset/") + str(token)
 
-    print(token)
-    print(full_link)
+    # token = "{}".format(reset_password_token.key)
+
+    token = reset_password_token.key
+
+    # 1. Получаем текущий язык запроса (например, 'ru' или 'en')
+    # Если Django его не определил, ставим дефолтный 'en'
+    lang = translation.get_language() or "en"
+
+    # Сокращаем локали типа 'ru-ru' до чистых двух букв 'ru'
+    lang = lang.split("-")[0]
+
+    # 2. Собираем идеальную мультиязычную ссылку для TanStack Router
+    full_link = f"{sitelink}/{lang}/password-reset/{token}"
+
+    # full_link = str(sitelink) + str("/password-reset/") + str(token)
+
+    # print(token)
+    # print(full_link)
 
     context = {"full_link": full_link, "email_adress": reset_password_token.user.email}
 

@@ -9,12 +9,14 @@ import { updateCartItemAction, deleteCartItemAction } from "@/api/actions.ts";
 import DeleteModal from "@/components/uiComponents/DeleteModal.tsx";
 import { useCart } from "@/store/CartContext.tsx";
 import { toast } from "react-toastify";
-
+import { useI18nContext } from "@/i18n/i18n-react";
 interface Props {
   cartItem: Cartitem;
 }
 
 const CartItem = ({ cartItem }: Props) => {
+  const { LL } = useI18nContext();
+
   const { setCartItemsCount, refreshCart, updateLocalQuantity } = useCart();
 
   const subTotal = cartItem.sub_total;
@@ -201,7 +203,10 @@ const CartItem = ({ cartItem }: Props) => {
         handleClick={updateCartItemHandler}
         className="update-item-btn ml-auto"
       >
-        {cartItemUpdateLoader ? "Updating ..." : "Update Cart"}
+        {cartItemUpdateLoader
+          ? `${LL.cart.updating()}`
+          : `${LL.cart.updateCart()}`}
+        {/* {cartItemUpdateLoader ? "Updating ..." : "Update Cart"} */}
       </Button>
     </div>
   );

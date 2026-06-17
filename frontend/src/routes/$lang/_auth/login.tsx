@@ -19,6 +19,7 @@ import { Label } from "@/components/ui/label";
 import { AppLink as Link } from "@/components/appLink/AppLink";
 import { MoveLeft } from "lucide-react";
 import { SUPPORTED_LANGUAGES } from "@/routes/$lang.tsx";
+import { getZodTranslation } from "@/lib/i18nHelper.ts";
 import { toast } from "react-toastify";
 import { useCart } from "@/store/CartContext.tsx";
 import { useForm } from "@tanstack/react-form";
@@ -39,29 +40,86 @@ export const Route = createFileRoute("/$lang/_auth/login")({
 });
 
 const LoginSchema = z.object({
-  email: z.email(),
-  password: z.string().min(4, "Password must be at least 4 characters"),
+  email: z.email("auth.emailInvalid"), // Зашиваем путь к ключу в словаре
+  password: z.string().min(4, "auth.passwordMin"),
+
+  // email: z.email(),
+  // password: z.string().min(4, "Password must be at least 4 characters"),
 });
 
 type Login = z.infer<typeof LoginSchema>;
 
 function FieldInfo({ field }: { field: AnyFieldApi }) {
   const { LL } = useI18nContext();
+
+  // Весь этот функционал переведен в файл src/lib/i18nHelper.ts
+  // ------------------------------------------------------------------
+  // Функция динамического чтения глубоких ключей (например, "auth.passwordMin") из LL
+  // const getTranslatedMessage = (errorKey: string) => {
+  //   try {
+  //     const parts = errorKey.split("."); // Разделяем "auth" и "passwordMin"
+  //     let currentObj: any = LL;
+
+  //     for (const part of parts) {
+  //       if (currentObj && part in currentObj) {
+  //         currentObj = currentObj[part];
+  //       } else {
+  //         return errorKey; // Если ключ не найден в словаре, вернем исходный текст Zod
+  //       }
+  //     }
+
+  //     // typesafe-i18n хранит конечные переводы как функции, вызываем её
+  //     return typeof currentObj === "function" ? currentObj() : errorKey;
+  //   } catch {
+  //     return errorKey;
+  //   }
+  // };
+
   return (
     <>
       {field.state.meta.isTouched && !field.state.meta.isValid ? (
         <em
           className={
-            field.state.meta.errors.length ? "text-destructive text-sm" : ""
+            field.state.meta.errors.length
+              ? "text-destructive text-sm not-italic"
+              : ""
           }
         >
-          {field.state.meta.errors.map((err) => err.message).join(",")}
+          {
+            field.state.meta.errors.map((err) => {
+              // Если ошибка прилетела от Zod (строка содержит точку), переводим её
+              const errMsg = err?.message || String(err);
+              return errMsg.includes(".")
+                ? // ? getTranslatedMessage(errMsg)
+                  getZodTranslation(errMsg, LL)
+                : errMsg;
+            })[0]
+            // .join(", ")
+          }
         </em>
       ) : null}
-      {field.state.meta.isValidating ? `${LL.auth.validating()}` : null}
-      {/* {field.state.meta.isValidating ? "Validating..." : null} */}
+
+      {/* Мгновенный перевод статуса проверки */}
+      {field.state.meta.isValidating ? (
+        <span className="text-gray-400 text-sm">{LL.auth.validating()}</span>
+      ) : null}
     </>
   );
+  // return (
+  //   <>
+  //     {field.state.meta.isTouched && !field.state.meta.isValid ? (
+  //       <em
+  //         className={
+  //           field.state.meta.errors.length ? "text-destructive text-sm" : ""
+  //         }
+  //       >
+  //         {field.state.meta.errors.map((err) => err.message).join(",")}
+  //       </em>
+  //     ) : null}
+  //     {field.state.meta.isValidating ? `${LL.auth.validating()}` : null}
+  //     {/* {field.state.meta.isValidating ? "Validating..." : null} */}
+  //   </>
+  // );
 }
 
 export function Login() {
@@ -156,7 +214,7 @@ export function Login() {
         const response = await login(loginData);
 
         // 2. Если мы здесь, значит статус 200 (благодаря нашему перехватчику в api.ts)
-        toast.success(`${LL.auth.authorized()}`);
+        toast.success(LL.auth.authorized());
         // toast.success("You have been successfully authorized 👋!");
 
         localStorage.setItem("Token", response.data.token);
@@ -170,7 +228,10 @@ export function Login() {
       } catch (error: any) {
         // 3. Сюда попадем, если сервер вернул 401, 400 или 500
         toast.error(
-          error.response?.data?.error || `${LL.auth.failed()}`,
+          LL.auth.failed(),
+
+          // error.response?.data?.error || LL.auth.failed(),
+
           // "Login has failed. Please check your credentials. 🤚 🚨",
         );
       }
@@ -187,12 +248,13 @@ export function Login() {
         localStorage.setItem("Token", response.data.token);
         localStorage.setItem("cart_code", response.data.cart_code);
         setCartCode(response.data.cart_code);
-        toast.success(`${LL.auth.welcome()}`);
+        toast.success(LL.auth.welcome());
         // toast.success("Welcome! Signed in with Google.");
         onLoginSuccess();
       } catch (error: any) {
         toast.error(
-          error.response?.data?.error || `${LL.auth.failedGoogle()}`,
+          LL.auth.failedGoogle(),
+          // error.response?.data?.error || LL.auth.failedGoogle(),
           // error.response?.data?.error || "Google Authentication failed",
         );
       }

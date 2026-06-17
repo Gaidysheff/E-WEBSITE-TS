@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { logout } from "@/api/endpoints_auth";
 import { useAppNavigate } from "@/hooks/useAppNavigate.ts";
 import { useCart } from "@/store/CartContext.tsx";
+import { useI18nContext } from "@/i18n/i18n-react";
 import { useLocation } from "@tanstack/react-router";
 import { useUser } from "@/store/UserContext.tsx";
 
@@ -13,7 +14,9 @@ type Props = {
 };
 
 const NavItems = ({ mobile }: Props) => {
-  const { cartItemsCount, cartCode } = useCart();
+  const { locale } = useI18nContext();
+
+  const { cartItemsCount, cartCode, clearCartAndLogout } = useCart();
 
   const { user, isLoading } = useUser();
 
@@ -27,11 +30,17 @@ const NavItems = ({ mobile }: Props) => {
 
   const logoutHandler = async () => {
     await logout();
-    // Перенаправляем на главную страницу текущего языка (например, /ru или /en)
-    await navigate({
-      to: "/$lang",
-      // params: { lang: locale },
-    });
+
+    // 2. Вызываем нашу функцию полной очистки стейтов корзины
+
+    // clearCart();
+
+    // Чистим и корзину, и токен
+    clearCartAndLogout();
+
+    // Мгновенный и чистый переход роутера без перезагрузки страницы
+    // Параметр ?logout=true скажет главной странице, что нужно показать тост
+    navigate({ to: `/${locale}`, search: { logout: true } });
   };
 
   const loginHandler = async () => {
