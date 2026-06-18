@@ -58,7 +58,11 @@ const Modal = ({
               className="default-btn max-sm:text-sm max-sm:px-4 my-6 mx-auto"
               onClick={() => setIsModalOpen(true)} // Явно открываем
             >
-              {address?.street ? "Update Address" : "Add Address"}
+              {address?.street
+                ? LL.profile.updateAddress()
+                : LL.profile.addAddress()}
+
+              {/* {address?.street ? "Update Address" : "Add Address"} */}
             </button>
           ) : (
             <button

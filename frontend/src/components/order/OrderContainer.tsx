@@ -3,10 +3,13 @@ import { PackageSearch } from "lucide-react";
 import { Spinner } from "@/components/ui/spinner";
 import getOrdersOptions from "@/api/queryOptions/getOrdersOptions.ts";
 import { toast } from "react-toastify";
+import { useI18nContext } from "@/i18n/i18n-react";
 import { useQuery } from "@tanstack/react-query";
 import { useUser } from "@/store/UserContext.tsx";
 
 const OrderContainer = () => {
+  const { LL } = useI18nContext();
+
   const { user } = useUser();
   const email = typeof user === "undefined" ? "" : user.email;
 
@@ -24,11 +27,13 @@ const OrderContainer = () => {
             <PackageSearch className="w-10 h-10 text-gray-400" />
           </div>
           <div className="text-2xl font-semibold text-gray-700">
-            No Orders Yet
+            {LL.profile.ordersNoYet()}
+            {/* No Orders Yet */}
           </div>
           <p className="text-gray-500 max-w-md">
-            It looks like you haven't placed any orders yet. When you do,
-            they'll appear here.
+            {LL.profile.ordersEmptyText()}
+            {/* It looks like you haven't placed any orders yet. When you do,
+            they'll appear here. */}
           </p>
         </div>
       </div>

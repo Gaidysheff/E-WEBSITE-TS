@@ -3,11 +3,15 @@ import MiniProductCard from "@/components/order/MiniProductCard";
 import { Spinner } from "@/components/ui/spinner";
 import getWishListsOptions from "@/api/queryOptions/getWishListsOptions.ts";
 import { toast } from "react-toastify";
+import { useI18nContext } from "@/i18n/i18n-react";
 import { useQuery } from "@tanstack/react-query";
 import { useUser } from "@/store/UserContext.tsx";
 
 const Wishlist = () => {
+  const { LL } = useI18nContext();
+
   const { user } = useUser();
+
   const email = typeof user === "undefined" ? "" : user.email;
 
   const {
@@ -26,7 +30,9 @@ const Wishlist = () => {
         className="text-center font-bold text-primaryDark mt-2 mb-4 
         text-base xsm:text-lg sm:text-2xl"
       >
-        Products added to Wishlist
+        {" "}
+        {LL.profile.wishlistTitle()}
+        {/* Products added to Wishlist */}
       </h2>
 
       {/* Content */}
@@ -43,12 +49,14 @@ const Wishlist = () => {
                 <HeartOff className="w-10 h-10 text-gray-400" />
               </div>
               <div className="text-2xl font-semibold text-gray-700">
-                Your Wishlist is empty
+                {LL.profile.wishlistEmpty()}
+                {/* Your Wishlist is empty */}
               </div>
               <p className="text-gray-500 max-w-md text-wrap">
-                It looks like you haven't placed any item in your Wishlist yet.
-                Start exploring ans save your favourites! When you do, it'll
-                appear here.
+                {LL.profile.wishlistEmptyText()}
+                {/* It looks like you haven't placed any item in your Wishlist yet.
+Start exploring ans save your favourites! When you do, it'll
+appear here. */}
               </p>
             </div>
           </div>

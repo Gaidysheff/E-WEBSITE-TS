@@ -781,6 +781,130 @@ type RootTranslation = {
 		 */
 		devInfo4: string
 	}
+	address: {
+		/**
+		 * А​д​р​е​с​ ​у​с​п​е​ш​н​о​ ​с​о​х​р​а​н​ё​н
+		 */
+		addressSaved: string
+		/**
+		 * А​д​р​е​с​ ​д​о​с​т​а​в​к​и
+		 */
+		shippingTitle: string
+		/**
+		 * У​л​и​ц​а
+		 */
+		streetPlaceholder: string
+		/**
+		 * Г​о​р​о​д
+		 */
+		cityPlaceholder: string
+		/**
+		 * С​т​р​а​н​а
+		 */
+		statePlaceholder: string
+		/**
+		 * Т​е​л​е​ф​о​н
+		 */
+		phonePlaceholder: string
+		/**
+		 * С​о​х​р​а​н​я​е​м​ ​а​д​р​е​с​.​.​.
+		 */
+		savingAddress: string
+		/**
+		 * О​б​н​о​в​и​т​ь​ ​а​д​р​е​с
+		 */
+		updateAddress: string
+		/**
+		 * С​о​х​р​а​н​и​т​ь​ ​а​д​р​е​с
+		 */
+		saveAddress: string
+		/**
+		 * Н​а​з​в​а​н​и​е​ ​д​о​л​ж​н​о​ ​с​о​с​т​о​я​т​ь​ ​м​и​н​и​м​у​м​ ​и​з​ ​3​ ​б​у​к​в​.
+		 */
+		street_too_short: string
+		/**
+		 * Н​а​з​в​а​н​и​е​ ​д​о​л​ж​н​о​ ​с​о​с​т​о​я​т​ь​ ​м​и​н​и​м​у​м​ ​и​з​ ​2​ ​б​у​к​в​.
+		 */
+		city_too_short: string
+		/**
+		 * Н​а​з​в​а​н​и​е​ ​д​о​л​ж​н​о​ ​с​о​с​т​о​я​т​ь​ ​м​и​н​и​м​у​м​ ​и​з​ ​2​ ​б​у​к​в​.
+		 */
+		state_too_short: string
+		/**
+		 * Н​о​м​е​р​ ​д​о​л​ж​е​н​ ​с​о​д​е​р​ж​а​т​ь​ ​т​о​л​ь​к​о​ ​ц​и​ф​р​ы​.
+		 */
+		invalid_phone: string
+		/**
+		 * В​о​з​н​и​к​л​а​ ​н​е​п​р​е​д​в​и​д​е​н​н​а​я​ ​о​ш​и​б​к​а​ ​п​р​и​ ​с​о​х​р​а​н​е​н​и​и
+		 */
+		saveError: string
+	}
+	profile: {
+		/**
+		 * Т​о​в​а​р​ы​,​ ​д​о​б​а​в​л​е​н​н​ы​е​ ​в​ ​с​п​и​с​о​к​ ​'​И​з​б​р​а​н​н​о​е​'
+		 */
+		wishlistTitle: string
+		/**
+		 * В​а​ш​ ​с​п​и​с​о​к​ ​'​И​з​б​р​а​н​н​о​е​'​ ​п​у​с​т
+		 */
+		wishlistEmpty: string
+		/**
+		 * П​о​х​о​ж​е​,​ ​в​ы​ ​е​щ​е​ ​н​е​ ​д​о​б​а​в​и​л​и​ ​н​и​ ​о​д​н​о​г​о​ ​т​о​в​а​р​а​ ​в​ ​с​в​о​й​ ​с​п​и​с​о​к​ ​'​И​з​б​р​а​н​н​о​е​'​.​ ​Н​а​ч​н​и​т​е​ ​п​р​о​с​м​а​т​р​и​в​а​т​ь​ ​и​ ​с​о​х​р​а​н​я​т​ь​ ​п​о​н​р​а​в​и​в​ш​и​е​с​я​ ​т​о​в​а​р​ы​!​ ​К​о​г​д​а​ ​в​ы​ ​э​т​о​ ​с​д​е​л​а​е​т​е​,​ ​о​н​и​ ​п​о​я​в​я​т​с​я​ ​з​д​е​с​ь​.
+		 */
+		wishlistEmptyText: string
+		/**
+		 * В​а​ш​а​ ​и​н​ф​о​р​м​а​ц​и​я​ ​о​ ​д​о​с​т​а​в​к​е
+		 */
+		shippingTitle: string
+		/**
+		 * А​д​р​е​с​ ​д​о​с​т​а​в​к​и​ ​п​о​к​а​ ​н​е​ ​у​к​а​з​а​н​.
+		 */
+		shippingNoYet: string
+		/**
+		 * В​ы​ ​е​щ​е​ ​н​е​ ​у​к​а​з​а​л​и​ ​с​в​о​й​ ​а​д​р​е​с​ ​д​о​с​т​а​в​к​и​.​ ​К​о​г​д​а​ ​в​ы​ ​э​т​о​ ​с​д​е​л​а​е​т​е​,​ ​о​н​ ​п​о​я​в​и​т​с​я​ ​з​д​е​с​ь​.
+		 */
+		shippingEmptyText: string
+		/**
+		 * э​л​е​к​т​р​о​н​н​а​я​ ​п​о​ч​т​а
+		 */
+		email: string
+		/**
+		 * у​л​и​ц​а
+		 */
+		street: string
+		/**
+		 * г​о​р​о​д
+		 */
+		city: string
+		/**
+		 * с​т​р​а​н​а
+		 */
+		state: string
+		/**
+		 * т​е​л​е​ф​о​н
+		 */
+		phone: string
+		/**
+		 * О​б​н​о​в​и​т​ь​ ​а​д​р​е​с
+		 */
+		updateAddress: string
+		/**
+		 * Д​о​б​а​в​и​т​ь​ ​а​д​р​е​с
+		 */
+		addAddress: string
+		/**
+		 * В​а​ш​и​ ​з​а​к​а​з​ы
+		 */
+		ordersTitle: string
+		/**
+		 * З​а​к​а​з​о​в​ ​п​о​к​а​ ​н​е​т​.
+		 */
+		ordersNoYet: string
+		/**
+		 * П​о​х​о​ж​е​,​ ​в​ы​ ​е​щ​е​ ​н​е​ ​р​а​з​м​е​щ​а​л​и​ ​з​а​к​а​з​ы​.​ ​К​о​г​д​а​ ​в​ы​ ​э​т​о​ ​с​д​е​л​а​е​т​е​,​ ​о​н​и​ ​п​о​я​в​я​т​с​я​ ​з​д​е​с​ь​.
+		 */
+		ordersEmptyText: string
+	}
 }
 
 export type TranslationFunctions = {
@@ -1547,6 +1671,130 @@ export type TranslationFunctions = {
 		 * Для успешной тестовой оплаты дата должна быть НЕУСТАРЕВШАЯ
 		 */
 		devInfo4: () => LocalizedString
+	}
+	address: {
+		/**
+		 * Адрес успешно сохранён
+		 */
+		addressSaved: () => LocalizedString
+		/**
+		 * Адрес доставки
+		 */
+		shippingTitle: () => LocalizedString
+		/**
+		 * Улица
+		 */
+		streetPlaceholder: () => LocalizedString
+		/**
+		 * Город
+		 */
+		cityPlaceholder: () => LocalizedString
+		/**
+		 * Страна
+		 */
+		statePlaceholder: () => LocalizedString
+		/**
+		 * Телефон
+		 */
+		phonePlaceholder: () => LocalizedString
+		/**
+		 * Сохраняем адрес...
+		 */
+		savingAddress: () => LocalizedString
+		/**
+		 * Обновить адрес
+		 */
+		updateAddress: () => LocalizedString
+		/**
+		 * Сохранить адрес
+		 */
+		saveAddress: () => LocalizedString
+		/**
+		 * Название должно состоять минимум из 3 букв.
+		 */
+		street_too_short: () => LocalizedString
+		/**
+		 * Название должно состоять минимум из 2 букв.
+		 */
+		city_too_short: () => LocalizedString
+		/**
+		 * Название должно состоять минимум из 2 букв.
+		 */
+		state_too_short: () => LocalizedString
+		/**
+		 * Номер должен содержать только цифры.
+		 */
+		invalid_phone: () => LocalizedString
+		/**
+		 * Возникла непредвиденная ошибка при сохранении
+		 */
+		saveError: () => LocalizedString
+	}
+	profile: {
+		/**
+		 * Товары, добавленные в список 'Избранное'
+		 */
+		wishlistTitle: () => LocalizedString
+		/**
+		 * Ваш список 'Избранное' пуст
+		 */
+		wishlistEmpty: () => LocalizedString
+		/**
+		 * Похоже, вы еще не добавили ни одного товара в свой список 'Избранное'. Начните просматривать и сохранять понравившиеся товары! Когда вы это сделаете, они появятся здесь.
+		 */
+		wishlistEmptyText: () => LocalizedString
+		/**
+		 * Ваша информация о доставке
+		 */
+		shippingTitle: () => LocalizedString
+		/**
+		 * Адрес доставки пока не указан.
+		 */
+		shippingNoYet: () => LocalizedString
+		/**
+		 * Вы еще не указали свой адрес доставки. Когда вы это сделаете, он появится здесь.
+		 */
+		shippingEmptyText: () => LocalizedString
+		/**
+		 * электронная почта
+		 */
+		email: () => LocalizedString
+		/**
+		 * улица
+		 */
+		street: () => LocalizedString
+		/**
+		 * город
+		 */
+		city: () => LocalizedString
+		/**
+		 * страна
+		 */
+		state: () => LocalizedString
+		/**
+		 * телефон
+		 */
+		phone: () => LocalizedString
+		/**
+		 * Обновить адрес
+		 */
+		updateAddress: () => LocalizedString
+		/**
+		 * Добавить адрес
+		 */
+		addAddress: () => LocalizedString
+		/**
+		 * Ваши заказы
+		 */
+		ordersTitle: () => LocalizedString
+		/**
+		 * Заказов пока нет.
+		 */
+		ordersNoYet: () => LocalizedString
+		/**
+		 * Похоже, вы еще не размещали заказы. Когда вы это сделаете, они появятся здесь.
+		 */
+		ordersEmptyText: () => LocalizedString
 	}
 }
 

@@ -6,7 +6,13 @@ import { useUser } from "@/store/UserContext";
 import { type PureAddress } from "@/lib/types.ts";
 import { cn } from "@/lib/utils.ts";
 import { useForm, type AnyFieldApi } from "@tanstack/react-form";
-import { ERRORS, TRANSLATIONS } from "@/lib/translation.ts";
+// import { ERRORS, TRANSLATIONS } from "@/lib/translation.ts";
+
+import { type AddressFormValues } from "./addressSchema.ts";
+
+import { getZodTranslation } from "@/lib/i18nHelper.ts";
+
+import { useI18nContext } from "@/i18n/i18n-react";
 
 import { useState, type Dispatch, type SetStateAction } from "react";
 
@@ -33,33 +39,69 @@ interface Props {
 //     </>
 //   );
 // }
-// ------------ ВАРИАНТ с переводом ошибок --------------------------
-export function FieldInfo({ field, e }: { field: AnyFieldApi; e: any }) {
-  // Достаем саму ошибку (обычно это первый элемент массива)
-  const error = field.state.meta.errors[0];
-  // Вытаскиваем ключ (если это объект Zod, ключ будет в .message)
-  const errorKey = typeof error === "string" ? error : error?.message;
+// ------------ ВАРИАНТ ВРЕМЕННЫЙ с переводом ошибок --------------------------
+// export function FieldInfo({ field, e }: { field: AnyFieldApi; e: any }) {
+//   // Достаем саму ошибку (обычно это первый элемент массива)
+//   const error = field.state.meta.errors[0];
+//   // Вытаскиваем ключ (если это объект Zod, ключ будет в .message)
+//   const errorKey = typeof error === "string" ? error : error?.message;
 
-  if (!field.state.meta.isTouched || !errorKey) return null;
+//   if (!field.state.meta.isTouched || !errorKey) return null;
 
-  // Ищем перевод. Если не нашли — выводим сам ключ (для отладки)
-  const errorMessage = e?.[errorKey] || errorKey;
-  // const errorMessage = e?.errors?.[errorKey] || errorKey;
+//   // Ищем перевод. Если не нашли — выводим сам ключ (для отладки)
+//   const errorMessage = e?.[errorKey] || errorKey;
+//   // const errorMessage = e?.errors?.[errorKey] || errorKey;
+
+//   return (
+//     <div className="h-4">
+//       {/* Резервируем место, чтобы верстка не прыгала */}
+//       <em className="text-destructive text-xs italic">{errorMessage}</em>
+//     </div>
+//   );
+// }
+// -----------------------------------------------------------------------------
+function FieldInfo({ field }: { field: AnyFieldApi }) {
+  const { LL } = useI18nContext();
 
   return (
-    <div className="h-4">
-      {/* Резервируем место, чтобы верстка не прыгала */}
-      <em className="text-destructive text-xs italic">{errorMessage}</em>
-    </div>
+    <>
+      {field.state.meta.isTouched && !field.state.meta.isValid ? (
+        <em
+          className={
+            field.state.meta.errors.length
+              ? "text-destructive text-sm not-italic"
+              : ""
+          }
+        >
+          {
+            field.state.meta.errors.map((err) => {
+              // Если ошибка прилетела от Zod (строка содержит точку), переводим её
+              const errMsg = err?.message || String(err);
+              return errMsg.includes(".")
+                ? getZodTranslation(errMsg, LL)
+                : errMsg;
+            })[0]
+            // .join(", ")
+          }
+        </em>
+      ) : null}
+
+      {/* Мгновенный перевод статуса проверки */}
+      {field.state.meta.isValidating ? (
+        <span className="text-gray-400 text-sm">{LL.auth.validating()}</span>
+      ) : null}
+    </>
   );
 }
 
 const AddressFormTanstack = ({ address, setIsModalOpen }: Props) => {
-  // ------------- времено для перевода -----------------
-  const lang = "en";
+  const { LL } = useI18nContext();
 
-  const t = TRANSLATIONS[lang]; // Помощник для перевода основного
-  const e = ERRORS[lang]; // Помощник для перевода ошибок
+  // ------------- времено для перевода -----------------
+  // const lang = "en";
+
+  // const t = TRANSLATIONS[lang]; // Помощник для перевода основного
+  // const e = ERRORS[lang]; // Помощник для перевода ошибок
   // ----------------------------------------------------------
 
   const { user, setUser } = useUser();
@@ -72,7 +114,8 @@ const AddressFormTanstack = ({ address, setIsModalOpen }: Props) => {
       city: address?.city ?? "",
       state: address?.state ?? "",
       phone: address?.phone ?? "",
-    },
+    } as AddressFormValues,
+
     validators: {
       onChange: addressSchema,
       // onChangeAsync: addressSchema,
@@ -96,9 +139,11 @@ const AddressFormTanstack = ({ address, setIsModalOpen }: Props) => {
         // Закрываем Модальное окно ТОЛЬКО после успешного ответа
         setIsModalOpen(false);
 
-        toast.success(t.addressSaved); // Используем перевод
+        toast.success(LL.address.addressSaved()); // Используем перевод
+        // toast.success(t.addressSaved); // Используем перевод
       } catch (err) {
-        toast.error(e.saveError);
+        toast.error(LL.address.saveError());
+        // toast.error(e.saveError);
       } finally {
         setBtnLoader(false);
       }
@@ -114,13 +159,17 @@ const AddressFormTanstack = ({ address, setIsModalOpen }: Props) => {
       }}
       className="w-full mx-auto bg-white p-8 rounded-2xl space-y-4 shadow-sm"
     >
-      <h2 className="text-xl font-bold text-center mb-4">{t.shippingTitle}</h2>
+      <h2 className="text-xl font-bold text-center mb-4">
+        {LL.address.shippingTitle()}
+        {/* {t.shippingTitle} */}
+      </h2>
 
       <form.Field name="street">
         {(field) => (
           <div className="flex flex-col gap-1">
             <Input
-              placeholder={t.streetPlaceholder}
+              placeholder={LL.address.streetPlaceholder()}
+              // placeholder={t.streetPlaceholder}
               value={field.state.value}
               onBlur={field.handleBlur}
               onChange={(e) => field.handleChange(e.target.value)}
@@ -129,7 +178,8 @@ const AddressFormTanstack = ({ address, setIsModalOpen }: Props) => {
                   "focus-visible:border-red-500 focus-visible:ring-red-500 ring-red-500 border-red-500 bg-red-100",
               )}
             />
-            <FieldInfo field={field} e={e} />
+            <FieldInfo field={field} />
+            {/* <FieldInfo field={field} e={e} /> */}
           </div>
         )}
       </form.Field>
@@ -138,7 +188,8 @@ const AddressFormTanstack = ({ address, setIsModalOpen }: Props) => {
         {(field) => (
           <div className="flex flex-col gap-1">
             <Input
-              placeholder={t.cityPlaceholder}
+              placeholder={LL.address.cityPlaceholder()}
+              // placeholder={t.cityPlaceholder}
               value={field.state.value}
               onBlur={field.handleBlur}
               onChange={(e) => field.handleChange(e.target.value)}
@@ -147,7 +198,8 @@ const AddressFormTanstack = ({ address, setIsModalOpen }: Props) => {
                   "focus-visible:border-red-500 focus-visible:ring-red-500 ring-red-500 border-red-500 bg-red-100",
               )}
             />
-            <FieldInfo field={field} e={e} />
+            <FieldInfo field={field} />
+            {/* <FieldInfo field={field} e={e} /> */}
           </div>
         )}
       </form.Field>
@@ -155,7 +207,8 @@ const AddressFormTanstack = ({ address, setIsModalOpen }: Props) => {
         {(field) => (
           <div className="flex flex-col gap-1">
             <Input
-              placeholder={t.statePlaceholder}
+              placeholder={LL.address.statePlaceholder()}
+              // placeholder={t.statePlaceholder}
               value={field.state.value}
               onBlur={field.handleBlur}
               onChange={(e) => field.handleChange(e.target.value)}
@@ -164,7 +217,8 @@ const AddressFormTanstack = ({ address, setIsModalOpen }: Props) => {
                   "focus-visible:border-red-500 focus-visible:ring-red-500 ring-red-500 border-red-500 bg-red-100",
               )}
             />
-            <FieldInfo field={field} e={e} />
+            <FieldInfo field={field} />
+            {/* <FieldInfo field={field} e={e} /> */}
           </div>
         )}
       </form.Field>
@@ -172,7 +226,8 @@ const AddressFormTanstack = ({ address, setIsModalOpen }: Props) => {
         {(field) => (
           <div className="flex flex-col gap-1">
             <Input
-              placeholder={t.phonePlaceholder}
+              placeholder={LL.address.phonePlaceholder()}
+              // placeholder={t.phonePlaceholder}
               value={field.state.value}
               onBlur={field.handleBlur}
               onChange={(e) => field.handleChange(e.target.value)}
@@ -181,7 +236,8 @@ const AddressFormTanstack = ({ address, setIsModalOpen }: Props) => {
                   "focus-visible:border-red-500 focus-visible:ring-red-500 ring-red-500 border-red-500 bg-red-100",
               )}
             />
-            <FieldInfo field={field} e={e} />
+            <FieldInfo field={field} />
+            {/* <FieldInfo field={field} e={e} /> */}
           </div>
         )}
       </form.Field>
@@ -200,11 +256,16 @@ const AddressFormTanstack = ({ address, setIsModalOpen }: Props) => {
               : address?.id
                 ? "Update Address"
                 : "Save Address"} */}
-            {btnLoader
+            {/* {btnLoader
               ? t.savingAddress
               : address?.id
                 ? t.updateAddress
-                : t.saveAddress}
+                : t.saveAddress} */}
+            {btnLoader
+              ? LL.address.savingAddress()
+              : address?.id
+                ? LL.address.updateAddress()
+                : LL.address.saveAddress()}
           </button>
         )}
       </form.Subscribe>

@@ -50,7 +50,7 @@ function CheckoutPage() {
 
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("card");
 
-  const { items, totalPrice, cartCode, clearCart } = useCart();
+  const { items, totalPrice, cartCode, clearCartAfterOrder } = useCart();
   const { user, isLoading } = useUser();
 
   const address = user?.address;
@@ -271,7 +271,7 @@ function CheckoutPage() {
       if (result.Success) {
         toast.success("Payment successful!");
 
-        // clearCart(); // Очищаем стейт
+        // clearCartAfterOrder(); // Очищаем стейт
 
         await navigate({
           to: "/$lang/success",
@@ -290,7 +290,7 @@ function CheckoutPage() {
       //   if (result.Success) {
       //     toast.success("Payment successful!");
 
-      //     clearCart(); // Метод из useCart()
+      //     clearCartAfterOrder(); // Метод из useCart()
 
       //     navigate({
       //       to: "/$lang/success", // Улетаем на страницу успеха
@@ -357,7 +357,7 @@ function CheckoutPage() {
     const handleMessage = (event: MessageEvent) => {
       if (event.data === "3ds-success") {
         setIs3DSModalOpen(false);
-        clearCart(); // Очищаем корзину
+        clearCartAfterOrder(); // Очищаем корзину
         navigate({ to: "/$lang/success" });
       }
       if (event.data === "3ds-fail") {

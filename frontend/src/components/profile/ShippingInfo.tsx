@@ -3,6 +3,9 @@ import { Spinner } from "@/components/ui/spinner";
 import { MapPinHouse } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { type UserLoggedIn } from "@/lib/types.ts";
+
+import { useI18nContext } from "@/i18n/i18n-react";
+
 interface Props {
   user: UserLoggedIn | undefined;
   isLoading: boolean;
@@ -10,6 +13,8 @@ interface Props {
 }
 
 const ShippingInfo = ({ user, isLoading, forCheckoutPage }: Props) => {
+  const { LL } = useI18nContext();
+
   const email = typeof user === "undefined" ? "" : user.email;
   const address = user?.address;
   const imgURL = `${BASE_URL}${user?.image}`;
@@ -26,13 +31,19 @@ const ShippingInfo = ({ user, isLoading, forCheckoutPage }: Props) => {
       </div>
 
       <div className="col-span-2 flex flex-col">
-        <div className="text-2xl font-semibold my-3">Your Shipping Info</div>
+        <div className="text-2xl font-semibold my-3">
+          {LL.profile.shippingTitle()}
+          {/* Your Shipping Info */}
+        </div>
         {isLoading ? (
           <Spinner className="size-20 text-myMainColor mx-auto" />
         ) : (
           <div>
             <div className="grid grid-cols-3 gap-2 my-2">
-              <div className="">Email</div>
+              <div className="">
+                {LL.profile.email()}
+                {/* Email */}
+              </div>
               <div className="col-span-2">{email}</div>
             </div>
             {!address?.street ? (
@@ -42,30 +53,44 @@ const ShippingInfo = ({ user, isLoading, forCheckoutPage }: Props) => {
                     <MapPinHouse className="w-10 h-10 text-gray-400" />
                   </div>
                   <div className="text-2xl font-semibold text-gray-700">
-                    No Shipping Address Yet
+                    {LL.profile.shippingNoYet()}
+                    {/* No Shipping Address Yet */}
                   </div>
                   <p className="text-gray-500 max-w-md">
-                    You haven't placed your shipping address yet. When you do,
-                    it'll appear here.
+                    {LL.profile.shippingEmptyText()}
+                    {/* You haven't placed your shipping address yet. When you do,
+                    it'll appear here. */}
                   </p>
                 </div>
               </div>
             ) : (
               <div>
                 <div className="grid grid-cols-3 gap-2 my-2">
-                  <div className="">Street</div>
+                  <div className="">
+                    {LL.profile.street()}
+                    {/* Street */}
+                  </div>
                   <div className="col-span-2">{address?.street}</div>
                 </div>
                 <div className="grid grid-cols-3 gap-2 my-2">
-                  <div className="">City</div>
+                  <div className="">
+                    {LL.profile.city()}
+                    {/* City */}
+                  </div>
                   <div className="col-span-2">{address?.city}</div>
                 </div>
                 <div className="grid grid-cols-3 gap-2 my-2">
-                  <div className="">State</div>
+                  <div className="">
+                    {LL.profile.state()}
+                    {/* State */}
+                  </div>
                   <div className="col-span-2">{address?.state}</div>
                 </div>
                 <div className="grid grid-cols-3 gap-2 my-2">
-                  <div className="">Phone</div>
+                  <div className="">
+                    {LL.profile.phone()}
+                    {/* Phone */}
+                  </div>
                   <div className="col-span-2">{address?.phone}</div>
                 </div>
               </div>

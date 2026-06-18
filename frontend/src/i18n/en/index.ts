@@ -230,6 +230,43 @@ const en: Translation = {
     devInfo3: "For an UNSUCCESSFUL test payment - any number.",
     devInfo4: "For a successful test payment, the date must be NOT STALE.",
   },
+  address: {
+    addressSaved: "Адрес успешно сохранён",
+    shippingTitle: "Shipping Address",
+    streetPlaceholder: "Street",
+    cityPlaceholder: "City",
+    statePlaceholder: "State",
+    phonePlaceholder: "Telephone",
+    savingAddress: "Saving Address...",
+    updateAddress: "Update Address",
+    saveAddress: "Save Address",
+    street_too_short: "Name must be at least 3 characters.",
+    city_too_short: "Name must be at least 2 characters.",
+    state_too_short: "Name must be at least 2 characters.",
+    invalid_phone: "Phone number must contain only digits.",
+    saveError: "An unexpected error occurred while saving",
+  },
+  profile: {
+    wishlistTitle: "Products added to Wishlist",
+    wishlistEmpty: "Your Wishlist is empty",
+    wishlistEmptyText:
+      "It looks like you haven't placed any item in your Wishlist yet. Start exploring ans save your favourites! When you do, it'll appear here.",
+    shippingTitle: "Your Shipping Info",
+    shippingNoYet: "No Shipping Address Yet",
+    shippingEmptyText:
+      "You haven't placed your shipping address yet. When you do, it'll appear here.",
+    email: "email",
+    street: "street",
+    city: "city",
+    state: "state",
+    phone: "phone",
+    updateAddress: "Update Address",
+    addAddress: "Add Address",
+    ordersTitle: "Your Orders",
+    ordersNoYet: "No Orders Yet",
+    ordersEmptyText:
+      "It looks like you haven't placed any orders yet. When you do, they'll appear here.",
+  },
 };
 
 export default en;
