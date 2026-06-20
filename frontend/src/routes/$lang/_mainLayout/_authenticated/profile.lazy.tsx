@@ -5,6 +5,8 @@ import { BASE_URL } from "@/api/api";
 import Modal from "@/components/uiComponents/Modal.tsx";
 import Orders from "@/components/order/Orders";
 import ShippingInfo from "@/components/profile/ShippingInfo.tsx";
+import UserInfo from "@/components/profile/UserInfo.tsx";
+import UserInfoForm from "@/components/profile/UserInfoForm.tsx";
 import Wishlist from "@/components/wishlist/Wishlist";
 import usePageSEO from "@/hooks/usePageSEO.ts";
 import { useState } from "react";
@@ -19,7 +21,8 @@ export const Route = createLazyFileRoute(
 });
 
 function ProfilePage() {
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  // Может принимать значения: null, "user_info", "address", "review"
+  const [activeModal, setActiveModal] = useState<string | null>(null);
 
   const { user, isLoading } = useUser();
 
@@ -40,18 +43,29 @@ function ProfilePage() {
     <div className="container">
       <link rel="canonical" href={`${BASE_URL}${currentPathname}`} />
 
+      <UserInfo user={user} isLoading={isLoading} />
+      <Modal
+        userInfo
+        user={user}
+        isModalOpen={activeModal === "user_info"}
+        // Откроется, только если стейт равен "user_info"
+        setIsModalOpen={(open) => setActiveModal(open ? "user_info" : null)}
+      >
+        <UserInfoForm setIsModalOpen={() => setActiveModal(null)} />
+      </Modal>
+
       <ShippingInfo user={user} isLoading={isLoading} />
 
       <Modal
         addressForm
         address={address}
-        isModalOpen={isModalOpen}
-        setIsModalOpen={setIsModalOpen}
+        isModalOpen={activeModal === "address"}
+        // Откроется, только если стейт равен "address"
+        setIsModalOpen={(open) => setActiveModal(open ? "address" : null)}
       >
         <AddressFormTanstack
           address={address}
-          // isModalOpen={isModalOpen}
-          setIsModalOpen={setIsModalOpen}
+          setIsModalOpen={() => setActiveModal(null)}
         />
       </Modal>
 

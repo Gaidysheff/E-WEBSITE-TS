@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils.ts";
 import { PenIcon } from "lucide-react";
 import { type PureAddress } from "@/lib/types.ts";
 import { useI18nContext } from "@/i18n/i18n-react";
-
+import { type UserLoggedIn } from "@/lib/types.ts";
 import { type Dispatch, type SetStateAction } from "react";
 
 type Props = {
@@ -18,6 +18,8 @@ type Props = {
   userAlreadyHaveReview?: boolean;
   updateReviewModal?: boolean;
   addressForm?: boolean;
+  userInfo?: boolean;
+  user?: UserLoggedIn | undefined;
   iframe?: boolean;
   address?: PureAddress | null | undefined;
   isModalOpen: boolean;
@@ -29,6 +31,8 @@ const Modal = ({
   userAlreadyHaveReview,
   updateReviewModal,
   addressForm,
+  userInfo,
+  user,
   address,
   isModalOpen,
   setIsModalOpen,
@@ -63,6 +67,20 @@ const Modal = ({
                 : LL.profile.addAddress()}
 
               {/* {address?.street ? "Update Address" : "Add Address"} */}
+            </button>
+          ) : userInfo ? (
+            <button
+              type="button"
+              className="default-btn max-sm:text-sm max-sm:px-4 my-6 mx-auto"
+              onClick={() => setIsModalOpen(true)} // Явно открываем
+            >
+              {/* {address?.street
+                ? LL.profile.updateAddress()
+                : LL.profile.addAddress()} */}
+
+              {user?.birthday && user?.first_name && user?.last_name
+                ? "Update User's Info"
+                : "Add User's Info"}
             </button>
           ) : (
             <button

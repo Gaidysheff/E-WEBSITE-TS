@@ -6,17 +6,18 @@ import {
   CART_PRODUCT_ADDED_URL,
   CHECKOUT_URL,
   CLOUD_PAYMENTS_URL,
+  CURRENT_USER_DATA_URL,
+  CURRENT_USER_URL,
+  DELIVERY_OPTIONS_URL,
   REVIEW_ADD_URL,
   REVIEW_DELETE_URL,
   REVIEW_UPDATE_URL,
   WISHLIST_ADD_AND_DELETE_URL,
   WISHLIST_PRODUCT_ADDED_URL,
-  DELIVERY_OPTIONS_URL,
 } from "@/api/endpoints.ts";
+import type { CPResponse, PureAddress, UserLoggedIn } from "@/lib/types";
 
 import api from "@/api/api.ts";
-
-import { type CPResponse, type PureAddress } from "@/lib/types";
 
 type FormSubmitHandler = (formData: FormData) => Promise<any>;
 
@@ -32,6 +33,15 @@ type AddressHandler = (addressData: {
   state: string;
   phone: string;
 }) => Promise<PureAddress>;
+
+type UserInfoHandler = (userData: {
+  email: string;
+  username?: string;
+  birthday?: string;
+  firstName?: string;
+  lastName?: string;
+  phone?: string;
+}) => Promise<UserLoggedIn>;
 
 type CloudPaymentsHandler = (paymentData: {
   amount: number;
@@ -277,6 +287,20 @@ export const addAddressAction: AddressHandler = async (
     if (error instanceof Error) {
       throw new Error(error.message);
     }
+  }
+};
+
+// =================== Add User's Info ======================
+
+export const addUserInfoAction: UserInfoHandler = async (
+  userData: UserLoggedIn,
+) => {
+  try {
+    const response = await api.post(CURRENT_USER_DATA_URL, userData);
+    console.log("🚀 ~ addUserInfoAction ~ response:", response);
+    return response.data;
+  } catch (error: any) {
+    throw error;
   }
 };
 

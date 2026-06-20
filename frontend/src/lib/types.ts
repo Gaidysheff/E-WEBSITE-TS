@@ -8,6 +8,7 @@ export type User = {
   birthday: string;
   image: string;
   username: string;
+  phone: string;
   address: {
     street: string;
     city: string;

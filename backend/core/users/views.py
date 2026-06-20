@@ -160,6 +160,33 @@ def get_user_cart_code(request):
     return Response({"cart_code": cart.cart_code})
 
 
+@api_view(["PUT"])
+@permission_classes([IsAuthenticated])
+def update_user_data(request):
+    email = request.data.get("email")
+    username = request.data.get("username")
+    birthday = request.data.get("birthday")
+    firstName = request.data.get("firstName")
+    lastName = request.data.get("lastName")
+    phone = request.data.get("phone")
+
+    if not email:
+        return Response({"error": "Email is required"}, status=400)
+
+    customer = User.objects.get(email=email)
+
+    customer.email = email
+    customer.username = username
+    customer.birthday = birthday
+    customer.firstName = firstName
+    customer.lastName = lastName
+    customer.phone = phone
+    customer.save()
+
+    serializer = UserSerializer(customer)
+    return Response(serializer.data)
+
+
 # ====================== Google Auth ==========================
 
 

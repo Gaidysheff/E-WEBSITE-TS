@@ -5,7 +5,9 @@ import { env } from "@/lib/env";
 const BASE_URL = env.VITE_API_URL;
 
 export const USERS_URL = `${BASE_URL}/users/users/`;
-export const CURRENT_USER_URL = `${BASE_URL}/users/current-user/`;
+export const CURRENT_USER_URL = `${BASE_URL}/users/current_user/`;
+export const CURRENT_USER_DATA_URL = `${BASE_URL}/users/user_data/`;
+
 export const CATEGORY_LIST_URL = `${BASE_URL}/api/category_list/`;
 export const CATEGORY_DETAIL_PAGE_URL = `${BASE_URL}/api/categories/`;
 

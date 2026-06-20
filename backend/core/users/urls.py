@@ -10,7 +10,8 @@ router.register("users", UserViewset, basename="users")
 
 urlpatterns = [
     path("", include(router.urls)),
-    path("current-user/", CurrentUserView.as_view(), name="current_user"),
+    path("current_user/", CurrentUserView.as_view(), name="current_user"),
+    path("user_data/", update_user_data, name="user_data"),
     path("get_user_cart_code/", get_user_cart_code, name="get_user_cart_code"),
     path("google-auth/", google_auth, name="google-auth"),
 ]
