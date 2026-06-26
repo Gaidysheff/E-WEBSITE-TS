@@ -7,7 +7,6 @@ import {
   CHECKOUT_URL,
   CLOUD_PAYMENTS_URL,
   CURRENT_USER_DATA_URL,
-  CURRENT_USER_URL,
   DELIVERY_OPTIONS_URL,
   REVIEW_ADD_URL,
   REVIEW_DELETE_URL,
@@ -15,7 +14,7 @@ import {
   WISHLIST_ADD_AND_DELETE_URL,
   WISHLIST_PRODUCT_ADDED_URL,
 } from "@/api/endpoints.ts";
-import type { CPResponse, PureAddress, UserLoggedIn } from "@/lib/types";
+import type { CPResponse, PureAddress } from "@/lib/types";
 
 import api from "@/api/api.ts";
 import { type UserInfoFormValues } from "@/components/profile/userInfoSchema";
@@ -36,7 +35,6 @@ type AddressHandler = (addressData: {
   zip: string;
   region: string;
   state: string;
-  // phone: string;
 }) => Promise<PureAddress>;
 
 type UserInfoHandler = (userData: {
@@ -45,7 +43,7 @@ type UserInfoHandler = (userData: {
   firstName: string;
   lastName: string;
   phone: string;
-  image: string;
+  image?: any;
 }) => Promise<UserInfoFormValues>;
 
 type CloudPaymentsHandler = (paymentData: {
@@ -298,10 +296,23 @@ export const addAddressAction: AddressHandler = async (
 // =================== Add User's Info ======================
 
 export const addUserInfoAction: UserInfoHandler = async (
-  userData: UserInfoFormValues,
+  userData: any,
+  // userData: UserInfoFormValues,
 ) => {
+  const formData = new FormData();
+
+  // Раскладываем все поля формы в FormData
+  Object.keys(userData).forEach((key) => {
+    if (userData[key] !== undefined && userData[key] !== null) {
+      formData.append(key, userData[key]);
+    }
+  });
+
   try {
-    const response = await api.put(CURRENT_USER_DATA_URL, userData);
+    // Axios автоматически выставит 'Content-Type': 'multipart/form-data'
+    const response = await api.put(CURRENT_USER_DATA_URL, formData);
+
+    // const response = await api.put(CURRENT_USER_DATA_URL, userData);
     console.log("🚀 ~ addUserInfoAction ~ response:", response);
     return response.data;
   } catch (error: any) {
