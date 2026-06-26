@@ -40,15 +40,7 @@ const ShippingInfo = ({ user, isLoading, forCheckoutPage }: Props) => {
           <Spinner className="size-20 text-myMainColor mx-auto" />
         ) : (
           <div>
-            <div className="grid grid-cols-3 gap-2 my-2">
-              <div className="">
-                {LL.profile.email()}
-                {/* Email */}
-              </div>
-              <div className="col-span-2">{email}</div>
-            </div>
-
-            {!address?.street ? (
+            {!address ? (
               <div className="w-full p-6 text-center bg-gray-50 rounded-lg">
                 <div className="flex flex-col items-center space-y-4">
                   <div className="bg-white p-4 rounded-full shadow">
@@ -76,6 +68,20 @@ const ShippingInfo = ({ user, isLoading, forCheckoutPage }: Props) => {
                 </div>
                 <div className="grid grid-cols-3 gap-2 my-2">
                   <div className="">
+                    {LL.profile.house()}
+                    {/* house */}
+                  </div>
+                  <div className="col-span-2">{address?.house}</div>
+                </div>
+                <div className="grid grid-cols-3 gap-2 my-2">
+                  <div className="">
+                    {LL.profile.apartment()}
+                    {/* apartment */}
+                  </div>
+                  <div className="col-span-2">{address?.apartment}</div>
+                </div>
+                <div className="grid grid-cols-3 gap-2 my-2">
+                  <div className="">
                     {LL.profile.city()}
                     {/* City */}
                   </div>
@@ -83,17 +89,24 @@ const ShippingInfo = ({ user, isLoading, forCheckoutPage }: Props) => {
                 </div>
                 <div className="grid grid-cols-3 gap-2 my-2">
                   <div className="">
+                    {LL.profile.zip()}
+                    {/* zip */}
+                  </div>
+                  <div className="col-span-2">{address?.zip}</div>
+                </div>
+                <div className="grid grid-cols-3 gap-2 my-2">
+                  <div className="">
+                    {LL.profile.region()}
+                    {/* region */}
+                  </div>
+                  <div className="col-span-2">{address?.region}</div>
+                </div>
+                <div className="grid grid-cols-3 gap-2 my-2">
+                  <div className="">
                     {LL.profile.state()}
                     {/* State */}
                   </div>
                   <div className="col-span-2">{address?.state}</div>
-                </div>
-                <div className="grid grid-cols-3 gap-2 my-2">
-                  <div className="">
-                    {LL.profile.phone()}
-                    {/* Phone */}
-                  </div>
-                  <div className="col-span-2">{address?.phone}</div>
                 </div>
               </div>
             )}

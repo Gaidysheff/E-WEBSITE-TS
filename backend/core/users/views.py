@@ -160,31 +160,40 @@ def get_user_cart_code(request):
     return Response({"cart_code": cart.cart_code})
 
 
-@api_view(["PUT"])
+@api_view(["PUT"])  # Меняем на PUT
 @permission_classes([IsAuthenticated])
 def update_user_data(request):
     email = request.data.get("email")
-    username = request.data.get("username")
-    birthday = request.data.get("birthday")
-    firstName = request.data.get("firstName")
-    lastName = request.data.get("lastName")
-    phone = request.data.get("phone")
-
     if not email:
-        return Response({"error": "Email is required"}, status=400)
+        return Response(
+            {"error": "Email is required"}, status=status.HTTP_400_BAD_REQUEST
+        )
 
-    customer = User.objects.get(email=email)
+    try:
+        # Берем пользователя
+        customer = User.objects.get(email=email)
+    except User.DoesNotExist:
+        return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
 
-    customer.email = email
-    customer.username = username
-    customer.birthday = birthday
-    customer.firstName = firstName
-    customer.lastName = lastName
-    customer.phone = phone
+    # Приводим фронтенд-поля (CamelCase) к полям Django (snake_case)
+    customer.username = request.data.get("username", customer.username)
+    customer.birthday = request.data.get("birthday", customer.birthday)
+    customer.first_name = request.data.get(
+        "firstName", customer.first_name
+    )  # Исправлено
+    customer.last_name = request.data.get("lastName", customer.last_name)  # Исправлено
+    customer.phone = request.data.get("phone", customer.phone)
+
+    # Картинку обрабатываем отдельно: обновляем только если пришел реальный файл.
+    # Если пришла строка или пустота — игнорируем, чтобы не вызвать ошибку 500
+    if "image" in request.FILES:
+        customer.image = request.FILES["image"]
+
     customer.save()
 
+    # Возвращаем обновленные данные через сериализатор
     serializer = UserSerializer(customer)
-    return Response(serializer.data)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 # ====================== Google Auth ==========================

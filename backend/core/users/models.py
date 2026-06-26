@@ -31,8 +31,9 @@ class CustomUserManager(BaseUserManager):
 
 class CustomUser(AbstractUser):
     email = models.EmailField(max_length=200, unique=True)
-    birthday = models.DateField(null=True, blank=True)
     username = models.CharField(max_length=200, null=True, blank=True)
+    birthday = models.DateField(null=True, blank=True)
+    phone = models.CharField(max_length=13, blank=True, null=True)
 
     image = models.ImageField(
         upload_to="images_users/%Y/%m/%d/",
@@ -46,6 +47,15 @@ class CustomUser(AbstractUser):
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
+
+    def save(self, *args, **kwargs):
+        # 1. Проверяем, что email заполнен, а username пустой (или равен None)
+        if self.email and not self.username:
+            # 2. Извлекаем часть до собаки и записываем в username
+            self.username = self.email.split("@")[0]
+
+        # 3. Обязательно вызываем стандартный метод сохранения родительского класса
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.email

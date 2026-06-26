@@ -111,9 +111,13 @@ const AddressFormTanstack = ({ address, setIsModalOpen }: Props) => {
   const form = useForm({
     defaultValues: {
       street: address?.street ?? "",
+      house: address?.house ?? "",
+      apartment: address?.apartment ?? "",
       city: address?.city ?? "",
+      zip: address?.zip ?? "",
+      region: address?.region ?? "",
       state: address?.state ?? "",
-      phone: address?.phone ?? "",
+      // phone: user?.phone ?? "",
     } as AddressFormValues,
 
     validators: {
@@ -183,7 +187,46 @@ const AddressFormTanstack = ({ address, setIsModalOpen }: Props) => {
           </div>
         )}
       </form.Field>
-
+      {/* ---------------------------------------------------------- */}
+      <div className="flex justify between gap-5">
+        <form.Field name="house">
+          {(field) => (
+            <div className="flex flex-col gap-1">
+              <Input
+                // placeholder={LL.address.streetPlaceholder()}
+                placeholder="house"
+                value={field.state.value}
+                onBlur={field.handleBlur}
+                onChange={(e) => field.handleChange(e.target.value)}
+                className={cn(
+                  field.state.meta.errors.length &&
+                    "focus-visible:border-red-500 focus-visible:ring-red-500 ring-red-500 border-red-500 bg-red-100",
+                )}
+              />
+              <FieldInfo field={field} />
+            </div>
+          )}
+        </form.Field>
+        <form.Field name="apartment">
+          {(field) => (
+            <div className="flex flex-col gap-1">
+              <Input
+                // placeholder={LL.address.streetPlaceholder()}
+                placeholder="apartment"
+                value={field.state.value}
+                onBlur={field.handleBlur}
+                onChange={(e) => field.handleChange(e.target.value)}
+                className={cn(
+                  field.state.meta.errors.length &&
+                    "focus-visible:border-red-500 focus-visible:ring-red-500 ring-red-500 border-red-500 bg-red-100",
+                )}
+              />
+              <FieldInfo field={field} />
+            </div>
+          )}
+        </form.Field>
+      </div>
+      {/* ---------------------------------------------------------- */}
       <form.Field name="city">
         {(field) => (
           <div className="flex flex-col gap-1">
@@ -203,31 +246,59 @@ const AddressFormTanstack = ({ address, setIsModalOpen }: Props) => {
           </div>
         )}
       </form.Field>
+      {/* ---------------------------------------------------------- */}
+      <div className="flex gap-5">
+        {/* <div className="grid grid-flow-col grid-col-12 gap-3"> */}
+        <div className="w-20 flex-none">
+          {/* <div className="col-span-1"> */}
+          <form.Field name="zip">
+            {(field) => (
+              <div className="flex flex-col gap-1">
+                <Input
+                  // placeholder={LL.address.streetPlaceholder()}
+                  placeholder="zip"
+                  value={field.state.value}
+                  onBlur={field.handleBlur}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  className={cn(
+                    field.state.meta.errors.length &&
+                      "focus-visible:border-red-500 focus-visible:ring-red-500 ring-red-500 border-red-500 bg-red-100",
+                  )}
+                />
+                <FieldInfo field={field} />
+              </div>
+            )}
+          </form.Field>
+        </div>
+        <div className="w-full">
+          {/* <div className="col-span-11"> */}
+          <form.Field name="region">
+            {(field) => (
+              <div className="flex flex-col gap-1">
+                <Input
+                  // placeholder={LL.address.streetPlaceholder()}
+                  placeholder="region"
+                  value={field.state.value}
+                  onBlur={field.handleBlur}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  className={cn(
+                    field.state.meta.errors.length &&
+                      "focus-visible:border-red-500 focus-visible:ring-red-500 ring-red-500 border-red-500 bg-red-100",
+                  )}
+                />
+                <FieldInfo field={field} />
+              </div>
+            )}
+          </form.Field>
+        </div>
+      </div>
+      {/* ---------------------------------------------------------- */}
       <form.Field name="state">
         {(field) => (
           <div className="flex flex-col gap-1">
             <Input
               placeholder={LL.address.statePlaceholder()}
               // placeholder={t.statePlaceholder}
-              value={field.state.value}
-              onBlur={field.handleBlur}
-              onChange={(e) => field.handleChange(e.target.value)}
-              className={cn(
-                field.state.meta.errors.length &&
-                  "focus-visible:border-red-500 focus-visible:ring-red-500 ring-red-500 border-red-500 bg-red-100",
-              )}
-            />
-            <FieldInfo field={field} />
-            {/* <FieldInfo field={field} e={e} /> */}
-          </div>
-        )}
-      </form.Field>
-      <form.Field name="phone">
-        {(field) => (
-          <div className="flex flex-col gap-1">
-            <Input
-              placeholder={LL.address.phonePlaceholder()}
-              // placeholder={t.phonePlaceholder}
               value={field.state.value}
               onBlur={field.handleBlur}
               onChange={(e) => field.handleChange(e.target.value)}

@@ -18,6 +18,7 @@ import {
 import type { CPResponse, PureAddress, UserLoggedIn } from "@/lib/types";
 
 import api from "@/api/api.ts";
+import { type UserInfoFormValues } from "@/components/profile/userInfoSchema";
 
 type FormSubmitHandler = (formData: FormData) => Promise<any>;
 
@@ -29,19 +30,23 @@ type PaymentHandler = (paymentObject: {
 type AddressHandler = (addressData: {
   email: string;
   street: string;
+  house: string;
+  apartment: string;
   city: string;
+  zip: string;
+  region: string;
   state: string;
-  phone: string;
+  // phone: string;
 }) => Promise<PureAddress>;
 
 type UserInfoHandler = (userData: {
-  email: string;
-  username?: string;
-  birthday?: string;
-  firstName?: string;
-  lastName?: string;
-  phone?: string;
-}) => Promise<UserLoggedIn>;
+  username: string;
+  birthday: string;
+  firstName: string;
+  lastName: string;
+  phone: string;
+  image: string;
+}) => Promise<UserInfoFormValues>;
 
 type CloudPaymentsHandler = (paymentData: {
   amount: number;
@@ -293,10 +298,10 @@ export const addAddressAction: AddressHandler = async (
 // =================== Add User's Info ======================
 
 export const addUserInfoAction: UserInfoHandler = async (
-  userData: UserLoggedIn,
+  userData: UserInfoFormValues,
 ) => {
   try {
-    const response = await api.post(CURRENT_USER_DATA_URL, userData);
+    const response = await api.put(CURRENT_USER_DATA_URL, userData);
     console.log("🚀 ~ addUserInfoAction ~ response:", response);
     return response.data;
   } catch (error: any) {

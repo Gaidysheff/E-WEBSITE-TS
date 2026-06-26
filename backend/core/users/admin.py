@@ -5,10 +5,11 @@ from .models import *
 
 # admin.site.register(CustomUser)
 @admin.register(CustomUser)
-class CategoryAdmin(admin.ModelAdmin):
+class CustomUserAdmin(admin.ModelAdmin):
     list_display = [
         "email",
         "username",
+        "phone",
         "icon_image",
         "first_name",
         "last_name",
@@ -17,6 +18,7 @@ class CategoryAdmin(admin.ModelAdmin):
     readonly_fields = [
         "email",
         "username",
+        "phone",
         "icon_image",
         "first_name",
         "last_name",
@@ -32,6 +34,7 @@ class CategoryAdmin(admin.ModelAdmin):
                 "fields": (
                     "email",
                     "username",
+                    "phone",
                     "icon_image",
                     "first_name",
                     "last_name",

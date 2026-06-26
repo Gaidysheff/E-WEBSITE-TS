@@ -41,7 +41,15 @@ class RegisterSerializer(serializers.ModelSerializer):
 class UserAddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomerAddress
-        fields = ["street", "state", "city", "phone"]
+        fields = [
+            "street",
+            "house",
+            "apartment",
+            "city",
+            "zip",
+            "region",
+            "state",
+        ]
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -60,7 +68,7 @@ class UserSerializer(serializers.ModelSerializer):
             "birthday",
             "image",
             "address",
-            # "phone",
+            "phone",
         ]
 
     def get_address(self, obj):

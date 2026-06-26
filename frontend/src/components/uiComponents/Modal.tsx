@@ -60,7 +60,7 @@ const Modal = ({
             <button
               type="button"
               className="default-btn max-sm:text-sm max-sm:px-4 my-6 mx-auto"
-              onClick={() => setIsModalOpen(true)} // Явно открываем
+              // onClick={() => setIsModalOpen(true)} // Явно открываем
             >
               {address?.street
                 ? LL.profile.updateAddress()
@@ -72,21 +72,27 @@ const Modal = ({
             <button
               type="button"
               className="default-btn max-sm:text-sm max-sm:px-4 my-6 mx-auto"
-              onClick={() => setIsModalOpen(true)} // Явно открываем
+              // onClick={() => setIsModalOpen(true)} // Явно открываем
             >
-              {/* {address?.street
-                ? LL.profile.updateAddress()
-                : LL.profile.addAddress()} */}
+              {user?.birthday &&
+              user?.first_name &&
+              user?.last_name &&
+              user?.phone
+                ? LL.profile.updateUserInfo()
+                : LL.profile.addUserInfo()}
 
-              {user?.birthday && user?.first_name && user?.last_name
+              {/* {user?.birthday &&
+              user?.first_name &&
+              user?.last_name &&
+              user?.phone
                 ? "Update User's Info"
-                : "Add User's Info"}
+                : "Add User's Info"} */}
             </button>
           ) : (
             <button
               type="button"
               className="default-btn max-sm:text-sm max-sm:px-4 my-6"
-              onClick={() => setIsModalOpen(true)} // Явно открываем
+              // onClick={() => setIsModalOpen(true)} // Явно открываем
             >
               {LL.productSection.addReview()}
               {/* Click to add a review */}

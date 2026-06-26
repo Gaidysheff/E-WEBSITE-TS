@@ -11,6 +11,7 @@ interface Props {
 }
 
 const AddressForm = ({ address }: Props) => {
+  const { user } = useUser();
   const [street, setStreet] = useState<string>(
     address?.street ? address.street : "",
   );
@@ -19,12 +20,12 @@ const AddressForm = ({ address }: Props) => {
     address?.state ? address.state : "",
   );
   const [phone, setPhone] = useState<string>(
-    address?.phone ? address.phone : "",
+    user?.phone ? user.phone : "",
+    // address?.phone ? address.phone : "",
   );
 
   const [btnLoader, setBtnLoader] = useState<boolean>(false);
 
-  const { user } = useUser();
   const email = typeof user === "undefined" ? "" : user.email;
 
   const disableButtonHandler = () => {

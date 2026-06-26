@@ -3,19 +3,32 @@ export type User = {
   email: string;
   password: string;
   confirm_password: string;
-  first_name: string;
-  last_name: string;
+  firstName: string;
+  lastName: string;
   birthday: string;
   image: string;
   username: string;
   phone: string;
   address: {
     street: string;
+    house: string;
+    apartment: string;
     city: string;
+    zip: string;
+    region: string;
     state: string;
-    phone: string;
+    // phone: string;
   };
 };
+
+// export type UserData = {
+//   first_name?: string;
+//   last_name?: string;
+//   birthday?: string;
+//   image?: string;
+//   username?: string;
+//   phone?: string;
+// };
 
 export type UserLoggedIn = AugmentedRequired<DeepPartial<User>, "email">;
 
@@ -199,9 +212,13 @@ export type WishList = {
 export type PureAddress = {
   id?: string;
   street?: string;
+  house?: string;
+  apartment?: string;
   state?: string;
   city?: string;
-  phone?: string;
+  zip?: string;
+  region?: string;
+  // phone?: string;
 };
 export type Address = {
   id: string;

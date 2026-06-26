@@ -47,6 +47,7 @@ export const UserContextProvider = ({ children }: UserProviderProps) => {
     try {
       const response = await api.get(CURRENT_USER_URL);
       setUser(response.data); // Если поля совпадают с UserLoggedIn
+
       console.log("🚀 ~ getUser ~ data:", response?.data);
 
       // await api.get(CURRENT_USER_URL).then((response) => {

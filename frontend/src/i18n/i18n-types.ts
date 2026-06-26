@@ -827,6 +827,10 @@ type RootTranslation = {
 		 */
 		city_too_short: string
 		/**
+		 * и​н​д​е​к​с​ ​д​о​л​ж​е​н​ ​с​о​д​е​р​ж​а​т​ь​ ​т​о​л​ь​к​о​ ​ц​и​ф​р​ы​.
+		 */
+		zipDigitsOnly: string
+		/**
 		 * Н​а​з​в​а​н​и​е​ ​д​о​л​ж​н​о​ ​с​о​с​т​о​я​т​ь​ ​м​и​н​и​м​у​м​ ​и​з​ ​2​ ​б​у​к​в​.
 		 */
 		state_too_short: string
@@ -865,17 +869,65 @@ type RootTranslation = {
 		 */
 		shippingEmptyText: string
 		/**
-		 * э​л​е​к​т​р​о​н​н​а​я​ ​п​о​ч​т​а
+		 * В​а​ш​и​ ​п​е​р​с​о​н​а​л​ь​н​ы​е​ ​д​а​н​н​ы​е
+		 */
+		personalInfoTitle: string
+		/**
+		 * Д​а​н​н​ы​е​ ​о​ ​п​о​л​ь​з​о​в​а​т​е​л​е​ ​п​о​к​а​ ​о​т​с​у​т​с​т​в​у​ю​т​.
+		 */
+		personalInfoNoYet: string
+		/**
+		 * В​ы​ ​е​щ​ё​ ​н​е​ ​у​к​а​з​а​л​и​ ​с​в​о​и​ ​п​е​р​с​о​н​а​л​ь​н​ы​е​ ​д​а​н​н​ы​е​.​ ​К​о​г​д​а​ ​в​ы​ ​э​т​о​ ​с​д​е​л​а​е​т​е​,​ ​о​н​и​ ​п​о​я​в​я​т​с​я​ ​з​д​е​с​ь​,​ ​и​ ​в​ы​ ​с​м​о​ж​е​т​е​ ​и​х​ ​о​т​р​е​д​а​к​т​и​р​о​в​а​т​ь​.
+		 */
+		personalInfoEmptyText: string
+		/**
+		 * э​л​.​ ​п​о​ч​т​а
 		 */
 		email: string
+		/**
+		 * и​м​я​ ​п​о​л​ь​з​о​в​а​т​е​л​я
+		 */
+		username: string
+		/**
+		 * и​м​я
+		 */
+		firstName: string
+		/**
+		 * ф​а​м​и​л​и​я
+		 */
+		lastName: string
+		/**
+		 * д​а​т​а​ ​р​о​ж​д​е​н​и​я
+		 */
+		birthday: string
+		/**
+		 * ф​а​й​л
+		 */
+		image: string
 		/**
 		 * у​л​и​ц​а
 		 */
 		street: string
 		/**
+		 * к​в​а​р​т​и​р​а
+		 */
+		house: string
+		/**
+		 * д​о​м
+		 */
+		apartment: string
+		/**
 		 * г​о​р​о​д
 		 */
 		city: string
+		/**
+		 * и​н​д​е​к​с
+		 */
+		zip: string
+		/**
+		 * о​б​л​а​с​т​ь
+		 */
+		region: string
 		/**
 		 * с​т​р​а​н​а
 		 */
@@ -892,6 +944,26 @@ type RootTranslation = {
 		 * Д​о​б​а​в​и​т​ь​ ​а​д​р​е​с
 		 */
 		addAddress: string
+		/**
+		 * О​б​н​о​в​и​т​ь​ ​д​а​н​н​ы​е
+		 */
+		updateUserInfo: string
+		/**
+		 * Д​о​б​а​в​и​т​ь​ ​д​а​н​н​ы​е
+		 */
+		addUserInfo: string
+		/**
+		 * С​о​х​р​а​н​я​е​м​ ​В​а​ш​и​ ​д​а​н​н​ы​е​.​.​.
+		 */
+		saving: string
+		/**
+		 * О​б​н​о​в​и​т​ь​ ​В​а​ш​и​ ​д​а​н​н​ы​е
+		 */
+		updateData: string
+		/**
+		 * С​о​х​р​а​н​и​т​ь​ ​В​а​ш​и​ ​д​а​н​н​ы​е
+		 */
+		saveData: string
 		/**
 		 * В​а​ш​и​ ​з​а​к​а​з​ы
 		 */
@@ -1718,6 +1790,10 @@ export type TranslationFunctions = {
 		 */
 		city_too_short: () => LocalizedString
 		/**
+		 * индекс должен содержать только цифры.
+		 */
+		zipDigitsOnly: () => LocalizedString
+		/**
 		 * Название должно состоять минимум из 2 букв.
 		 */
 		state_too_short: () => LocalizedString
@@ -1756,17 +1832,65 @@ export type TranslationFunctions = {
 		 */
 		shippingEmptyText: () => LocalizedString
 		/**
-		 * электронная почта
+		 * Ваши персональные данные
+		 */
+		personalInfoTitle: () => LocalizedString
+		/**
+		 * Данные о пользователе пока отсутствуют.
+		 */
+		personalInfoNoYet: () => LocalizedString
+		/**
+		 * Вы ещё не указали свои персональные данные. Когда вы это сделаете, они появятся здесь, и вы сможете их отредактировать.
+		 */
+		personalInfoEmptyText: () => LocalizedString
+		/**
+		 * эл. почта
 		 */
 		email: () => LocalizedString
+		/**
+		 * имя пользователя
+		 */
+		username: () => LocalizedString
+		/**
+		 * имя
+		 */
+		firstName: () => LocalizedString
+		/**
+		 * фамилия
+		 */
+		lastName: () => LocalizedString
+		/**
+		 * дата рождения
+		 */
+		birthday: () => LocalizedString
+		/**
+		 * файл
+		 */
+		image: () => LocalizedString
 		/**
 		 * улица
 		 */
 		street: () => LocalizedString
 		/**
+		 * квартира
+		 */
+		house: () => LocalizedString
+		/**
+		 * дом
+		 */
+		apartment: () => LocalizedString
+		/**
 		 * город
 		 */
 		city: () => LocalizedString
+		/**
+		 * индекс
+		 */
+		zip: () => LocalizedString
+		/**
+		 * область
+		 */
+		region: () => LocalizedString
 		/**
 		 * страна
 		 */
@@ -1783,6 +1907,26 @@ export type TranslationFunctions = {
 		 * Добавить адрес
 		 */
 		addAddress: () => LocalizedString
+		/**
+		 * Обновить данные
+		 */
+		updateUserInfo: () => LocalizedString
+		/**
+		 * Добавить данные
+		 */
+		addUserInfo: () => LocalizedString
+		/**
+		 * Сохраняем Ваши данные...
+		 */
+		saving: () => LocalizedString
+		/**
+		 * Обновить Ваши данные
+		 */
+		updateData: () => LocalizedString
+		/**
+		 * Сохранить Ваши данные
+		 */
+		saveData: () => LocalizedString
 		/**
 		 * Ваши заказы
 		 */

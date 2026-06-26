@@ -75,7 +75,8 @@ export function Failure() {
             window.jivo_api.setContactInfo({
               name: clientName || `Покупатель (${cartCode?.slice(0, 4)})`,
               email: clientEmail,
-              phone: user?.address?.phone || "",
+              phone: user?.phone || "",
+              // phone: user?.address?.phone || "",
               description: `Сбой оплаты. Корзина: ${cartCode}`,
             });
 

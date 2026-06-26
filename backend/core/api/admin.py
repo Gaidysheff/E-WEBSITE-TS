@@ -293,18 +293,22 @@ class OrderItemAdmin(admin.ModelAdmin):
 @admin.register(CustomerAddress)
 class CustomerAddressAdmin(admin.ModelAdmin):
     list_display = [
-        "customer",
         "street",
-        "state",
+        "house",
+        "apartment",
         "city",
-        "phone",
+        "zip",
+        "region",
+        "state",
     ]
     readonly_fields = [
-        "customer",
         "street",
-        "state",
+        "house",
+        "apartment",
         "city",
-        "phone",
+        "zip",
+        "region",
+        "state",
     ]
     list_filter = [
         "city",

@@ -15,8 +15,11 @@ interface Props {
 const UserInfo = ({ user, isLoading, forCheckoutPage }: Props) => {
   const { LL } = useI18nContext();
 
-  const email = typeof user === "undefined" ? "" : user.email;
+  // const email = typeof user === "undefined" ? "" : user.email;
+  // const email = user?.email ?? "";
+
   // const address = user?.address;
+
   const imgURL = `${BASE_URL}${user?.image}`;
   return (
     <div
@@ -31,8 +34,8 @@ const UserInfo = ({ user, isLoading, forCheckoutPage }: Props) => {
 
       <div className="col-span-2 flex flex-col">
         <div className="text-2xl font-semibold my-3">
-          {/* {LL.profile.shippingTitle()} */}
-          Your Personal Info
+          {LL.profile.personalInfoTitle()}
+          {/* Your Personal Info */}
         </div>
         {isLoading ? (
           <Spinner className="size-20 text-myMainColor mx-auto" />
@@ -40,25 +43,28 @@ const UserInfo = ({ user, isLoading, forCheckoutPage }: Props) => {
           <div>
             <div className="grid grid-cols-3 gap-2 my-2">
               <div className="">
-                {/* {LL.profile.email()} */}
-                Email
+                {LL.profile.email()}
+                {/* Email */}
               </div>
-              <div className="col-span-2">{email}</div>
+              <div className="col-span-2">{user?.email}</div>
             </div>
-            {!user?.birthday && !user?.first_name && !user?.last_name ? (
+            {!user?.birthday &&
+            !user?.firstName &&
+            !user?.lastName &&
+            !user?.phone ? (
               <div className="w-full p-6 text-center bg-gray-50 rounded-lg">
                 <div className="flex flex-col items-center space-y-4">
                   <div className="bg-white p-4 rounded-full shadow">
                     <MapPinHouse className="w-10 h-10 text-gray-400" />
                   </div>
                   <div className="text-2xl font-semibold text-gray-700">
-                    {/* {LL.profile.shippingNoYet()} */}
-                    No Personal Info Yet.
+                    {LL.profile.personalInfoNoYet()}
+                    {/* No Personal Info Yet. */}
                   </div>
                   <p className="text-gray-500 max-w-md">
-                    {/* {LL.profile.shippingEmptyText()} */}
-                    You haven't placed your personal information yet. When you
-                    do, it'll appear here and you'll be able to edit it.
+                    {LL.profile.personalInfoEmptyText()}
+                    {/* You haven't placed your personal information yet. When you
+                    do, it'll appear here and you'll be able to edit it. */}
                   </p>
                 </div>
               </div>
@@ -66,38 +72,38 @@ const UserInfo = ({ user, isLoading, forCheckoutPage }: Props) => {
               <div>
                 <div className="grid grid-cols-3 gap-2 my-2">
                   <div className="">
-                    {/* {LL.profile.street()} */}
-                    email
+                    {LL.profile.username()}
+                    {/* username */}
                   </div>
-                  <div className="col-span-2">user?.email</div>
+                  <div className="col-span-2">{user?.username}</div>
                 </div>
                 <div className="grid grid-cols-3 gap-2 my-2">
                   <div className="">
-                    {/* {LL.profile.street()} */}
-                    username
+                    {LL.profile.phone()}
+                    {/* Phone */}
                   </div>
-                  <div className="col-span-2">user?.username</div>
+                  <div className="col-span-2">{user?.phone}</div>
                 </div>
                 <div className="grid grid-cols-3 gap-2 my-2">
                   <div className="">
-                    {/* {LL.profile.city()} */}
-                    first name
+                    {LL.profile.firstName()}
+                    {/* first name */}
                   </div>
-                  <div className="col-span-2">user?.first_name</div>
+                  <div className="col-span-2">{user?.firstName}</div>
                 </div>
                 <div className="grid grid-cols-3 gap-2 my-2">
                   <div className="">
-                    {/* {LL.profile.state()} */}
-                    last name
+                    {LL.profile.lastName()}
+                    {/* last name */}
                   </div>
-                  <div className="col-span-2">user?.last_name</div>
+                  <div className="col-span-2">{user?.lastName}</div>
                 </div>
                 <div className="grid grid-cols-3 gap-2 my-2">
                   <div className="">
-                    {/* {LL.profile.phone()} */}
-                    phone
+                    {LL.profile.birthday()}
+                    {/* birthday */}
                   </div>
-                  <div className="col-span-2">user?.NOT_EXISTS_YET</div>
+                  <div className="col-span-2">{user?.birthday}</div>
                 </div>
               </div>
             )}

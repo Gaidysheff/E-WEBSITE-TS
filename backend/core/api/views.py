@@ -707,9 +707,13 @@ def user_orders_list(request):
 def add_address(request):
     email = request.data.get("email")
     street = request.data.get("street")
+    house = request.data.get("house")
+    apartment = request.data.get("apartment")
     city = request.data.get("city")
+    zip = request.data.get("zip")
+    region = request.data.get("region")
     state = request.data.get("state")
-    phone = request.data.get("phone")
+    # phone = request.data.get("phone")
 
     if not email:
         return Response({"error": "Email is required"}, status=400)
@@ -719,9 +723,13 @@ def add_address(request):
     address, created = CustomerAddress.objects.get_or_create(customer=customer)
     address.email = email
     address.street = street
+    address.house = house
+    address.apartment = apartment
     address.city = city
+    address.zip = zip
+    address.region = region
     address.state = state
-    address.phone = phone
+    # address.phone = phone
     address.save()
 
     serializer = CustomerAddressSerializer(address)

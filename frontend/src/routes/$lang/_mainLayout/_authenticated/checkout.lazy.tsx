@@ -181,7 +181,8 @@ function CheckoutPage() {
     if (isLoading) return; // Ждем загрузки профиля
 
     const userEmail = user?.email || "guest@example.com";
-    const userPhone = user?.address?.phone;
+    const userPhone = user?.phone;
+    // const userPhone = user?.address?.phone;
     const fullName = `${user?.first_name} ${user?.last_name}`;
     const orderAddress = `${user?.address?.street}, ${user?.address?.city}, ${user?.address?.state}`;
 
