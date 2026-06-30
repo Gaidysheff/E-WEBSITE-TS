@@ -398,3 +398,19 @@ html {
     @apply size-10 rounded-full bg-white dark:bg-gray-900;
   }
 }
+
+/* .dark .react-tel-input .form-control {
+  background-color: #09090b !important;
+  color: #ffffff !important;
+  border-color: #27272a !important;
+}
+
+.dark .react-tel-input .flag-dropdown {
+  background-color: #09090b !important;
+  border-color: #27272a !important;
+}
+
+.dark .react-tel-input .country-list {
+  background-color: #09090b !important;
+  color: #ffffff !important;
+} */

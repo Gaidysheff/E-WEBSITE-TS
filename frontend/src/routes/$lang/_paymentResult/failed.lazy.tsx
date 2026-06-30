@@ -67,7 +67,7 @@ export function Failure() {
           window.jivo_api.open();
 
           const clientName = user
-            ? `${user.first_name} ${user.last_name}`.trim()
+            ? `${user.firstName} ${user.lastName}`.trim()
             : "";
           const clientEmail = user?.email || "";
 

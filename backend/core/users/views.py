@@ -177,7 +177,7 @@ def update_user_data(request):
 
     # Приводим фронтенд-поля (CamelCase) к полям Django (snake_case)
     customer.username = request.data.get("username", customer.username)
-    customer.birthday = request.data.get("birthday", customer.birthday)
+    # customer.birthday = request.data.get("birthday", customer.birthday)
     customer.first_name = request.data.get(
         "firstName", customer.first_name
     )  # Исправлено
@@ -188,6 +188,13 @@ def update_user_data(request):
     # Если пришла строка или пустота — игнорируем, чтобы не вызвать ошибку 500
     if "image" in request.FILES:
         customer.image = request.FILES["image"]
+
+    birthday_val = request.data.get("birthday")
+    # Если пришла пустота, "null" или None — пишем в БД честный NULL
+    if birthday_val in ["", "null", None]:
+        customer.birthday = None
+    else:
+        customer.birthday = birthday_val
 
     customer.save()
 

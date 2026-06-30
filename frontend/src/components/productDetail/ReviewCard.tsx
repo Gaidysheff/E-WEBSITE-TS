@@ -116,8 +116,8 @@ const ReviewCard = ({ review, user, product }: Props) => {
         {/* Review content including name, rating, and review text */}
         <div className="flex flex-col flex-1">
           <p className="font-semibold text-sm xsm:text-lg text-primaryDark">
-            {review.user.first_name || review.user.last_name
-              ? `${review.user.first_name} ${review.user.last_name}`
+            {review.user.firstName || review.user.lastName
+              ? `${review.user.firstName} ${review.user.lastName}`
               : `${review.user.email.split("@")[0]}`}
           </p>
 

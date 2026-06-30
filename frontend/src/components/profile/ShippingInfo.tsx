@@ -1,10 +1,8 @@
-import { BASE_URL } from "@/api/api.ts";
 import { Spinner } from "@/components/ui/spinner";
-import { MapPinHouse } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { type UserLoggedIn } from "@/lib/types.ts";
-import { Truck } from "lucide-react";
 import { useI18nContext } from "@/i18n/i18n-react";
+import { type UserLoggedIn } from "@/lib/types.ts";
+import { cn } from "@/lib/utils";
+import { MapPinHouse, Truck } from "lucide-react";
 
 interface Props {
   user: UserLoggedIn | undefined;
@@ -15,9 +13,9 @@ interface Props {
 const ShippingInfo = ({ user, isLoading, forCheckoutPage }: Props) => {
   const { LL } = useI18nContext();
 
-  const email = typeof user === "undefined" ? "" : user.email;
+  // const email = typeof user === "undefined" ? "" : user.email;
   const address = user?.address;
-  const imgURL = `${BASE_URL}${user?.image}`;
+  // const imgURL = `${BASE_URL}${user?.image}`;
 
   return (
     <div

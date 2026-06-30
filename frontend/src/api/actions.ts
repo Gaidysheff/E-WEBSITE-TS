@@ -39,12 +39,20 @@ type AddressHandler = (addressData: {
 
 type UserInfoHandler = (userData: {
   username: string;
-  birthday: string;
+  birthday: string | null;
   firstName: string;
   lastName: string;
   phone: string;
   image?: any;
-}) => Promise<UserInfoFormValues>;
+}) => Promise<{
+  username: string;
+  birthday: string;
+  first_name: string;
+  last_name: string;
+  phone: string;
+  image?: any;
+}>;
+// }) => Promise<UserInfoFormValues>;
 
 type CloudPaymentsHandler = (paymentData: {
   amount: number;

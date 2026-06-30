@@ -5,12 +5,14 @@ export const addressSchema = z.object({
   house: z.string(),
   apartment: z.string(),
   city: z.string().min(2, "address.city_too_short"),
-  zip: z.string().regex(/^\+?[1-9]\d{5}$/, "address.zipDigitsOnly"),
+
+  zip: z
+    .string()
+    .regex(/^\d{6}$/, "address.zipDigitsOnly") // Строго 6 цифр
+    .or(z.literal("")), // ИЛИ разрешаем пустую строку
+
   region: z.string(),
   state: z.string().min(2, "address.state_too_short"),
-
-  // phone: z.string().regex(/^\+?[1-9]\d{1,12}$/, "address.invalid_phone"),
-  // Простая проверка телефона
 });
 
 export type AddressFormValues = z.infer<typeof addressSchema>;

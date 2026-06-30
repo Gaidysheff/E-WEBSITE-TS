@@ -1,10 +1,4 @@
-import { Input } from "../ui/input";
 import { addUserInfoAction } from "@/api/actions.ts";
-import { toast } from "react-toastify";
-import { useUser } from "@/store/UserContext";
-import { cn } from "@/lib/utils.ts";
-import { format, parseISO } from "date-fns";
-import { CalendarIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -12,15 +6,26 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { ru, enUS } from "date-fns/locale"; // Импортируем локали из date-fns
+import { cn } from "@/lib/utils.ts";
+import { useUser } from "@/store/UserContext";
+import { format, parseISO } from "date-fns";
+import { enUS, ru } from "date-fns/locale"; // Импортируем локали из date-fns
+import { CalendarIcon } from "lucide-react";
+import { toast } from "react-toastify";
+import { Input } from "../ui/input";
 
 import { useForm, type AnyFieldApi } from "@tanstack/react-form";
 import { userInfoSchema, type UserInfoFormValues } from "./userInfoSchema.ts";
-// import { type UserLoggedIn, type UserData } from "@/lib/types.ts";
-import { getZodTranslation } from "@/lib/i18nHelper.ts";
+
 import { useI18nContext } from "@/i18n/i18n-react";
+import { getZodTranslation } from "@/lib/i18nHelper.ts";
 
 import { useState, type Dispatch, type SetStateAction } from "react";
+
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css"; // Базовые стили флажков
+
+import { FileImageIcon, UploadIcon } from "lucide-react";
 
 interface Props {
   setIsModalOpen: Dispatch<SetStateAction<boolean>>;
@@ -103,7 +108,24 @@ const UserInfoForm = ({ setIsModalOpen }: Props) => {
         // Теперь во всем приложении адрес обновится МГНОВЕННО без перезагрузки
         // Разворачиваем новые данные в стейт через спред ...newUserData
 
-        setUser((prev) => (prev ? { ...prev, newUserData } : prev));
+        // setUser((prev) => (prev ? { ...prev, ...newUserData } : prev));
+
+        // Альтернативный железобетонный вариант маппинга, если бэкенд и фронт
+        // имеют разные ключи:
+        setUser((prev) => {
+          if (!prev) return prev;
+
+          return {
+            ...prev,
+            username: newUserData.username,
+            birthday: newUserData.birthday,
+            phone: newUserData.phone,
+            image: newUserData.image,
+            // Переводим прилетевший snake_case в camelCase вашего контекста:
+            firstName: newUserData.first_name,
+            lastName: newUserData.last_name,
+          };
+        });
 
         // Закрываем Модальное окно ТОЛЬКО после успешного ответа
         setIsModalOpen(false);
@@ -126,7 +148,7 @@ const UserInfoForm = ({ setIsModalOpen }: Props) => {
         e.stopPropagation();
         form.handleSubmit();
       }}
-      className="w-full mx-auto bg-white p-8 rounded-2xl space-y-4 shadow-sm"
+      className="w-full mx-auto p-8 rounded-2xl space-y-4 shadow-sm"
     >
       <h2 className="text-xl font-bold text-center mb-4">
         {LL.profile.personalInfoTitle()}
@@ -135,6 +157,9 @@ const UserInfoForm = ({ setIsModalOpen }: Props) => {
       <form.Field name="username">
         {(field) => (
           <div className="flex flex-col gap-1">
+            <label className="text-sm font-medium">
+              {LL.profile.username()}
+            </label>
             <Input
               placeholder={LL.profile.username()}
               // placeholder="username"
@@ -152,25 +177,76 @@ const UserInfoForm = ({ setIsModalOpen }: Props) => {
       </form.Field>
 
       <form.Field name="image">
-        {(field) => (
-          <div className="flex flex-col gap-1">
-            <Input
-              type="file"
-              accept="image/*"
-              // Записываем сам объект File в стейт TanStack Form
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (file) {
-                  field.handleChange(file);
-                }
-              }}
-            />
-            <FieldInfo field={field} />
-          </div>
-        )}
+        {(field) => {
+          // Получаем имя выбранного файла (если это объект File), иначе берем
+          // из данных юзера строку-url
+          const fileValue = field.state.value;
+          const fileName =
+            fileValue instanceof File
+              ? fileValue.name
+              : typeof fileValue === "string" && fileValue
+                ? fileValue.split("/").pop() // Вытаскиваем имя картинки из URL для красоты
+                : null;
+
+          return (
+            <div className="flex flex-col gap-2">
+              <span className="text-sm font-medium">
+                {LL.profile.fileUpload()}
+                {/* {locale === "ru" ? "Аватар профиля" : "Profile Avatar"} */}
+              </span>
+
+              <div className="flex items-center gap-3">
+                {/* Скрытый реальный инпут */}
+                <input
+                  id="avatar-upload"
+                  type="file"
+                  accept="image/*"
+                  className="sr-only" // Полностью скрывает инпут, сохраняя
+                  // доступность для скринридеров
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      field.handleChange(file);
+                    }
+                  }}
+                />
+
+                {/* Кастомный видимый UI, обернутый в label */}
+                <label htmlFor="avatar-upload" className="cursor-pointer">
+                  {/* Используем компонент Button как обертку для стилей Shadcn */}
+                  <Button
+                    type="button"
+                    variant="outline"
+                    asChild
+                    className="pointer-events-none"
+                  >
+                    <span className="flex items-center gap-2">
+                      <UploadIcon className="size-4" />
+                      {locale === "ru" ? "Загрузить фото" : "Upload Photo"}
+                    </span>
+                  </Button>
+                </label>
+
+                {/* Отображаем имя выбранного файла, если оно есть */}
+                {fileName && (
+                  <div
+                    className="flex items-center gap-1.5 text-sm
+                  text-muted-foreground bg-secondary px-2 py-1 rounded-md
+                  max-w-[115px] truncate"
+                  >
+                    <FileImageIcon className="size-4 shrink-0" />
+                    <span className="truncate">{fileName}</span>
+                  </div>
+                )}
+              </div>
+
+              <FieldInfo field={field} />
+            </div>
+          );
+        }}
       </form.Field>
 
-      <form.Field name="phone">
+      {/* <form.Field name="phone">
         {(field) => (
           <div className="flex flex-col gap-1">
             <Input
@@ -183,6 +259,37 @@ const UserInfoForm = ({ setIsModalOpen }: Props) => {
                 field.state.meta.errors.length &&
                   "focus-visible:border-red-500 focus-visible:ring-red-500 ring-red-500 border-red-500 bg-red-100",
               )}
+            />
+            <FieldInfo field={field} />
+          </div>
+        )}
+      </form.Field> */}
+
+      <form.Field name="phone">
+        {(field) => (
+          <div className="flex flex-col gap-1">
+            <label className="text-sm font-medium">
+              {LL.profile.phone()}
+              {/* Phone Number */}
+            </label>
+            <PhoneInput
+              country="ru" // Дефолтная страна (ru, us, ua, kz...)
+              value={field.state.value}
+              // Передаем отформатированную строку с плюсом прямо в форму
+              onChange={(phone) => field.handleChange(`+${phone}`)}
+              // 🌟 СТИЛИЗУЕМ САМ ИНПУТ ЧЕРЕЗ TAILWIND
+              inputClass="!w-full !h-8 !rounded-md !border !border-input
+                !bg-background !text-foreground dark:!bg-zinc-950
+                focus-visible:!border-ring focus-visible:!ring-3
+                focus-visible:!ring-ring/50 dark:!border-zinc-800"
+              // 🌟 СТИЛИЗУЕМ КНОПКУ ВЫБОРА ФЛАГА ЧЕРЕЗ TAILWIND
+              buttonClass="!bg-background !border !border-input !rounded-l-md
+                dark:!bg-zinc-950 dark:!border-zinc-800"
+              // 🌟 СТИЛИЗУЕМ ВЫПАДАЮЩИЙ СПИСОК СТРАН
+              dropdownClass="dark:!bg-zinc-950 dark:!text-white"
+              containerStyle={{
+                width: "100%",
+              }}
             />
             <FieldInfo field={field} />
           </div>
@@ -220,16 +327,11 @@ const UserInfoForm = ({ setIsModalOpen }: Props) => {
                 <Button
                   variant={"outline"}
                   className={cn(
-                    "w-full justify-start text-left font-normal",
+                    "h-8 w-full justify-start text-left font-normal",
                     !field.state.value && "text-muted-foreground",
                   )}
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
-                  {/* {field.state.value ? (
-                    format(parseISO(field.state.value), "PPP")
-                  ) : (
-                    <span>Pick a date</span>
-                  )} */}
                   {field.state.value ? (
                     format(
                       parseISO(field.state.value),
@@ -277,6 +379,10 @@ const UserInfoForm = ({ setIsModalOpen }: Props) => {
       <form.Field name="firstName">
         {(field) => (
           <div className="flex flex-col gap-1">
+            <label className="text-sm font-medium">
+              {LL.profile.firstName()}
+              {/* First Name */}
+            </label>
             <Input
               placeholder={LL.profile.firstName()}
               // placeholder="first_name"
@@ -295,6 +401,10 @@ const UserInfoForm = ({ setIsModalOpen }: Props) => {
       <form.Field name="lastName">
         {(field) => (
           <div className="flex flex-col gap-1">
+            <label className="text-sm font-medium">
+              {LL.profile.lastName()}
+              {/* Last Name */}
+            </label>
             <Input
               placeholder={LL.profile.lastName()}
               // placeholder="last_name"

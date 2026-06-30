@@ -105,9 +105,11 @@ const NavItems = ({ mobile }: Props) => {
               group-hover/profile:text-primaryDark/50 "
             >
               {/* User's Name */}
-              {user?.first_name || user?.last_name
-                ? user?.first_name || user?.last_name
-                : user?.email.split("@")[0]}
+              {user?.firstName || user?.lastName
+                ? user?.firstName || user?.lastName
+                : user?.username
+                  ? user?.username
+                  : user?.email.split("@")[0]}
             </div>
           </Link>
 

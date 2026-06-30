@@ -18,6 +18,14 @@ class CustomUserManager(BaseUserManager):
             raise ValueError("Email is a required field")
 
         email = self.normalize_email(email)
+
+        # 🔥 ЖЕСТКАЯ ПРОВЕРКА:
+        # Если username не пришел, равен пустоте,
+        # ИЛИ равен самому email (проделки DRF)
+        current_username = extra_fields.get("username")
+        if not current_username or current_username == email:
+            extra_fields["username"] = email.split("@")[0]
+
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)

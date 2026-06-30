@@ -6,11 +6,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { useI18nContext } from "@/i18n/i18n-react";
+import { type PureAddress, type UserLoggedIn } from "@/lib/types.ts";
 import { cn } from "@/lib/utils.ts";
 import { PenIcon } from "lucide-react";
-import { type PureAddress } from "@/lib/types.ts";
-import { useI18nContext } from "@/i18n/i18n-react";
-import { type UserLoggedIn } from "@/lib/types.ts";
 import { type Dispatch, type SetStateAction } from "react";
 
 type Props = {
@@ -75,8 +74,8 @@ const Modal = ({
               // onClick={() => setIsModalOpen(true)} // Явно открываем
             >
               {user?.birthday &&
-              user?.first_name &&
-              user?.last_name &&
+              user?.firstName &&
+              user?.lastName &&
               user?.phone
                 ? LL.profile.updateUserInfo()
                 : LL.profile.addUserInfo()}

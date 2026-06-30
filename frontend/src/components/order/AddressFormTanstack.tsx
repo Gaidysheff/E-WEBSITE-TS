@@ -1,11 +1,11 @@
-import { Input } from "../ui/input";
 import { addAddressAction } from "@/api/actions.ts";
-import { addressSchema } from "./addressSchema";
-import { toast } from "react-toastify";
-import { useUser } from "@/store/UserContext";
 import { type PureAddress } from "@/lib/types.ts";
 import { cn } from "@/lib/utils.ts";
+import { useUser } from "@/store/UserContext";
 import { useForm, type AnyFieldApi } from "@tanstack/react-form";
+import { toast } from "react-toastify";
+import { Input } from "../ui/input";
+import { addressSchema } from "./addressSchema";
 // import { ERRORS, TRANSLATIONS } from "@/lib/translation.ts";
 
 import { type AddressFormValues } from "./addressSchema.ts";
@@ -15,6 +15,23 @@ import { getZodTranslation } from "@/lib/i18nHelper.ts";
 import { useI18nContext } from "@/i18n/i18n-react";
 
 import { useState, type Dispatch, type SetStateAction } from "react";
+// import countryList from "react-select-country-list";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+import countries from "i18n-iso-countries";
+import { useMemo } from "react";
+
+// 1. В самом верху файла (вне компонента) регистрируем языковые паки
+import enCountries from "i18n-iso-countries/langs/en.json";
+import ruCountries from "i18n-iso-countries/langs/ru.json";
+countries.registerLocale(enCountries);
+countries.registerLocale(ruCountries);
 
 interface Props {
   address: PureAddress | undefined;
@@ -95,7 +112,26 @@ function FieldInfo({ field }: { field: AnyFieldApi }) {
 }
 
 const AddressFormTanstack = ({ address, setIsModalOpen }: Props) => {
-  const { LL } = useI18nContext();
+  const { LL, locale } = useI18nContext();
+
+  const countryOptions = useMemo(() => {
+    // Получаем объект типа { "RU": "Россия", "US": "Соединенные Штаты" } для текущего языка
+    const countriesObj = countries.getNames(locale === "ru" ? "ru" : "en", {
+      select: "official",
+    });
+
+    // Пересобираем его в удобный для Shadcn Select массив
+    // [{ value: "Россия", label: "Россия" }]
+    return Object.entries(countriesObj)
+      .map(([code, name]) => ({
+        value: name, // Передаем само название (или code, если в БД хотите хранить "RU")
+        label: name,
+      }))
+      .sort((a, b) => a.label.localeCompare(b.label)); // Сортируем по алфавиту А-Я / A-Z
+  }, [locale]);
+
+  // const countryOptions = useMemo(() => countryList().getData(), []);
+  // Получаем массив [{value: 'RU', label: 'Russian Federation'}, ...]
 
   // ------------- времено для перевода -----------------
   // const lang = "en";
@@ -116,8 +152,12 @@ const AddressFormTanstack = ({ address, setIsModalOpen }: Props) => {
       city: address?.city ?? "",
       zip: address?.zip ?? "",
       region: address?.region ?? "",
-      state: address?.state ?? "",
-      // phone: user?.phone ?? "",
+      // Устанавливаем дефолтную страну: "Россия" или "Russian Federation"
+      // state:
+      //   user?.address?.state ??
+      //   (locale === "ru" ? "Россия" : "Russian Federation"),
+      state: address?.state ?? LL.address.defaultState(),
+      // state: address?.state ?? "",
     } as AddressFormValues,
 
     validators: {
@@ -161,7 +201,7 @@ const AddressFormTanstack = ({ address, setIsModalOpen }: Props) => {
         e.stopPropagation();
         form.handleSubmit();
       }}
-      className="w-full mx-auto bg-white p-8 rounded-2xl space-y-4 shadow-sm"
+      className="w-full mx-auto p-8 rounded-2xl space-y-4 shadow-sm"
     >
       <h2 className="text-xl font-bold text-center mb-4">
         {LL.address.shippingTitle()}
@@ -193,8 +233,8 @@ const AddressFormTanstack = ({ address, setIsModalOpen }: Props) => {
           {(field) => (
             <div className="flex flex-col gap-1">
               <Input
-                // placeholder={LL.address.streetPlaceholder()}
-                placeholder="house"
+                placeholder={`${LL.address.house()}`}
+                // placeholder="house"
                 value={field.state.value}
                 onBlur={field.handleBlur}
                 onChange={(e) => field.handleChange(e.target.value)}
@@ -211,8 +251,8 @@ const AddressFormTanstack = ({ address, setIsModalOpen }: Props) => {
           {(field) => (
             <div className="flex flex-col gap-1">
               <Input
-                // placeholder={LL.address.streetPlaceholder()}
-                placeholder="apartment"
+                placeholder={`${LL.address.apartment()}`}
+                // placeholder="apartment"
                 value={field.state.value}
                 onBlur={field.handleBlur}
                 onChange={(e) => field.handleChange(e.target.value)}
@@ -255,8 +295,7 @@ const AddressFormTanstack = ({ address, setIsModalOpen }: Props) => {
             {(field) => (
               <div className="flex flex-col gap-1">
                 <Input
-                  // placeholder={LL.address.streetPlaceholder()}
-                  placeholder="zip"
+                  placeholder={`${LL.address.zip()}`}
                   value={field.state.value}
                   onBlur={field.handleBlur}
                   onChange={(e) => field.handleChange(e.target.value)}
@@ -276,8 +315,7 @@ const AddressFormTanstack = ({ address, setIsModalOpen }: Props) => {
             {(field) => (
               <div className="flex flex-col gap-1">
                 <Input
-                  // placeholder={LL.address.streetPlaceholder()}
-                  placeholder="region"
+                  placeholder={`${LL.address.region()}`}
                   value={field.state.value}
                   onBlur={field.handleBlur}
                   onChange={(e) => field.handleChange(e.target.value)}
@@ -293,22 +331,51 @@ const AddressFormTanstack = ({ address, setIsModalOpen }: Props) => {
         </div>
       </div>
       {/* ---------------------------------------------------------- */}
+
       <form.Field name="state">
         {(field) => (
           <div className="flex flex-col gap-1">
-            <Input
-              placeholder={LL.address.statePlaceholder()}
-              // placeholder={t.statePlaceholder}
+            {/* 
+            <label className="text-sm font-medium">
+              {LL.address.stateLabel()}
+            </label> */}
+
+            <Select
               value={field.state.value}
-              onBlur={field.handleBlur}
-              onChange={(e) => field.handleChange(e.target.value)}
-              className={cn(
-                field.state.meta.errors.length &&
-                  "focus-visible:border-red-500 focus-visible:ring-red-500 ring-red-500 border-red-500 bg-red-100",
-              )}
-            />
+              onValueChange={(value) => field.handleChange(value)}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue
+                  placeholder={
+                    LL.address.statePlaceholder()
+                    // locale === "ru" ? "Выберите страну" : "Select a country"
+                  }
+                />
+              </SelectTrigger>
+              <SelectContent className="max-h-[300px]">
+                {countryOptions.map((country) => (
+                  <SelectItem key={country.value} value={country.value}>
+                    {country.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {/* <Select
+              value={field.state.value}
+              onValueChange={(value) => field.handleChange(value)}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select a country" />
+              </SelectTrigger>
+              <SelectContent className="max-h-[300px]">
+                {countryOptions.map((country) => (
+                  <SelectItem key={country.value} value={country.label}>
+                    {country.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select> */}
             <FieldInfo field={field} />
-            {/* <FieldInfo field={field} e={e} /> */}
           </div>
         )}
       </form.Field>

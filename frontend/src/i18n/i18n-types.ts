@@ -791,17 +791,41 @@ type RootTranslation = {
 		 */
 		shippingTitle: string
 		/**
-		 * У​л​и​ц​а
+		 * у​л​и​ц​а
 		 */
 		streetPlaceholder: string
 		/**
-		 * Г​о​р​о​д
+		 * г​о​р​о​д
 		 */
 		cityPlaceholder: string
 		/**
-		 * С​т​р​а​н​а
+		 * с​т​р​а​н​а
+		 */
+		stateLabel: string
+		/**
+		 * в​ы​б​е​р​и​т​е​ ​с​т​р​а​н​у
 		 */
 		statePlaceholder: string
+		/**
+		 * д​о​м
+		 */
+		house: string
+		/**
+		 * к​в​а​р​т​и​р​а
+		 */
+		apartment: string
+		/**
+		 * и​н​д​е​к​с
+		 */
+		zip: string
+		/**
+		 * р​е​г​и​о​н
+		 */
+		region: string
+		/**
+		 * Р​о​с​с​и​й​с​к​а​я​ ​Ф​е​д​е​р​а​ц​и​я
+		 */
+		defaultState: string
 		/**
 		 * Т​е​л​е​ф​о​н
 		 */
@@ -827,7 +851,7 @@ type RootTranslation = {
 		 */
 		city_too_short: string
 		/**
-		 * и​н​д​е​к​с​ ​д​о​л​ж​е​н​ ​с​о​д​е​р​ж​а​т​ь​ ​т​о​л​ь​к​о​ ​ц​и​ф​р​ы​.
+		 * 6​ ​ц​и​ф​р
 		 */
 		zipDigitsOnly: string
 		/**
@@ -881,29 +905,33 @@ type RootTranslation = {
 		 */
 		personalInfoEmptyText: string
 		/**
-		 * э​л​.​ ​п​о​ч​т​а
+		 * Э​л​.​ ​п​о​ч​т​а
 		 */
 		email: string
 		/**
-		 * и​м​я​ ​п​о​л​ь​з​о​в​а​т​е​л​я
+		 * Л​о​г​и​н
 		 */
 		username: string
 		/**
-		 * и​м​я
+		 * И​м​я
 		 */
 		firstName: string
 		/**
-		 * ф​а​м​и​л​и​я
+		 * Ф​а​м​и​л​и​я
 		 */
 		lastName: string
 		/**
-		 * д​а​т​а​ ​р​о​ж​д​е​н​и​я
+		 * Д​а​т​а​ ​р​о​ж​д​е​н​и​я
 		 */
 		birthday: string
 		/**
-		 * ф​а​й​л
+		 * Т​е​л​е​ф​о​н
 		 */
-		image: string
+		phone: string
+		/**
+		 * А​в​а​т​а​р​ ​п​р​о​ф​и​л​я
+		 */
+		fileUpload: string
 		/**
 		 * у​л​и​ц​а
 		 */
@@ -932,10 +960,6 @@ type RootTranslation = {
 		 * с​т​р​а​н​а
 		 */
 		state: string
-		/**
-		 * т​е​л​е​ф​о​н
-		 */
-		phone: string
 		/**
 		 * О​б​н​о​в​и​т​ь​ ​а​д​р​е​с
 		 */
@@ -1754,17 +1778,41 @@ export type TranslationFunctions = {
 		 */
 		shippingTitle: () => LocalizedString
 		/**
-		 * Улица
+		 * улица
 		 */
 		streetPlaceholder: () => LocalizedString
 		/**
-		 * Город
+		 * город
 		 */
 		cityPlaceholder: () => LocalizedString
 		/**
-		 * Страна
+		 * страна
+		 */
+		stateLabel: () => LocalizedString
+		/**
+		 * выберите страну
 		 */
 		statePlaceholder: () => LocalizedString
+		/**
+		 * дом
+		 */
+		house: () => LocalizedString
+		/**
+		 * квартира
+		 */
+		apartment: () => LocalizedString
+		/**
+		 * индекс
+		 */
+		zip: () => LocalizedString
+		/**
+		 * регион
+		 */
+		region: () => LocalizedString
+		/**
+		 * Российская Федерация
+		 */
+		defaultState: () => LocalizedString
 		/**
 		 * Телефон
 		 */
@@ -1790,7 +1838,7 @@ export type TranslationFunctions = {
 		 */
 		city_too_short: () => LocalizedString
 		/**
-		 * индекс должен содержать только цифры.
+		 * 6 цифр
 		 */
 		zipDigitsOnly: () => LocalizedString
 		/**
@@ -1844,29 +1892,33 @@ export type TranslationFunctions = {
 		 */
 		personalInfoEmptyText: () => LocalizedString
 		/**
-		 * эл. почта
+		 * Эл. почта
 		 */
 		email: () => LocalizedString
 		/**
-		 * имя пользователя
+		 * Логин
 		 */
 		username: () => LocalizedString
 		/**
-		 * имя
+		 * Имя
 		 */
 		firstName: () => LocalizedString
 		/**
-		 * фамилия
+		 * Фамилия
 		 */
 		lastName: () => LocalizedString
 		/**
-		 * дата рождения
+		 * Дата рождения
 		 */
 		birthday: () => LocalizedString
 		/**
-		 * файл
+		 * Телефон
 		 */
-		image: () => LocalizedString
+		phone: () => LocalizedString
+		/**
+		 * Аватар профиля
+		 */
+		fileUpload: () => LocalizedString
 		/**
 		 * улица
 		 */
@@ -1895,10 +1947,6 @@ export type TranslationFunctions = {
 		 * страна
 		 */
 		state: () => LocalizedString
-		/**
-		 * телефон
-		 */
-		phone: () => LocalizedString
 		/**
 		 * Обновить адрес
 		 */

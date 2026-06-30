@@ -20,6 +20,7 @@ import AddressFormTanstack from "@/components/order/AddressFormTanstack.tsx";
 import ShippingInfo from "@/components/profile/ShippingInfo.tsx";
 import Modal from "@/components/uiComponents/Modal.tsx";
 import { useAppNavigate } from "@/hooks/useAppNavigate.ts";
+import { useI18nContext } from "@/i18n/i18n-react";
 import {
   type CPResponse,
   type DeliveryOption,
@@ -30,7 +31,6 @@ import { useCart } from "@/store/CartContext.tsx";
 import { useUser } from "@/store/UserContext.tsx";
 import { useForm } from "@tanstack/react-form";
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { useI18nContext } from "@/i18n/i18n-react";
 import { CreditCard, MapPin, PackageSearch, Truck, Zap } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { NumericFormat } from "react-number-format";
@@ -183,7 +183,7 @@ function CheckoutPage() {
     const userEmail = user?.email || "guest@example.com";
     const userPhone = user?.phone;
     // const userPhone = user?.address?.phone;
-    const fullName = `${user?.first_name} ${user?.last_name}`;
+    const fullName = `${user?.firstName} ${user?.lastName}`;
     const orderAddress = `${user?.address?.street}, ${user?.address?.city}, ${user?.address?.state}`;
 
     // 1. Собираем данные для чека (Customer & Items)

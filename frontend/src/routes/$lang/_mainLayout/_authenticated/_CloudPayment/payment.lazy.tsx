@@ -99,7 +99,7 @@ function Payment() {
       const userEmail = user?.email || "guest@example.com";
       const userPhone = user?.phone;
       // const userPhone = user?.address?.phone;
-      const fullName = `${user?.first_name} ${user?.last_name}`;
+      const fullName = `${user?.firstName} ${user?.lastName}`;
       const orderAddress = `${user?.address?.state}, ${user?.address?.city}, ${user?.address?.street}`;
 
       // 1. Собираем данные для чека (Customer & Items)

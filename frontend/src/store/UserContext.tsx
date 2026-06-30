@@ -46,23 +46,23 @@ export const UserContextProvider = ({ children }: UserProviderProps) => {
     // if (token) {
     try {
       const response = await api.get(CURRENT_USER_URL);
-      setUser(response.data); // Если поля совпадают с UserLoggedIn
+      // setUser(response.data); // Если поля совпадают с UserLoggedIn
 
       console.log("🚀 ~ getUser ~ data:", response?.data);
 
-      // await api.get(CURRENT_USER_URL).then((response) => {
-      //   const loadedData = {
-      //     id: response.data.id,
-      //     email: response.data.email,
-      //     first_name: response.data.first_name,
-      //     last_name: response.data.last_name,
-      //     birthday: response.data.birthday,
-      //     image: response.data.image,
-      //     address: response.data.address,
-      //     // { street, city, phone ... } или null
-      //   };
-      //   setUser(loadedData);
-      // });
+      const loadedData = {
+        id: response.data.id,
+        email: response.data.email,
+        username: response.data.username,
+        firstName: response.data.first_name,
+        lastName: response.data.last_name,
+        birthday: response.data.birthday,
+        image: response.data.image,
+        phone: response.data.phone,
+        address: response.data.address,
+        // { street, city, phone ... } или null
+      };
+      setUser(loadedData);
     } catch (error) {
       setUser(undefined);
       console.log("🚀 ~ Ошибка загрузки пользователя", error);
