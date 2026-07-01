@@ -1,10 +1,12 @@
 import { BASE_URL } from "@/api/api.ts";
 import Button from "@/components/uiComponents/Button";
 import { ListChecks } from "lucide-react";
-import { NumericFormat } from "react-number-format";
 import { useAppNavigate } from "@/hooks/useAppNavigate.ts";
 import { useCart } from "@/store/CartContext.tsx";
+import { useCurrency } from "@/store/CurrencyContext";
 import { useI18nContext } from "@/i18n/i18n-react";
+
+// import { NumericFormat } from "react-number-format";
 
 // ----------------- Version for STRIPE -----------------------
 // import { initiatePaymentAction } from "@/api/actions.ts";
@@ -19,6 +21,8 @@ interface Props {
 }
 
 const CartSummary = ({ total }: Props) => {
+  const { formatPrice } = useCurrency();
+
   const { LL } = useI18nContext();
 
   const navigate = useAppNavigate();
@@ -96,8 +100,9 @@ const CartSummary = ({ total }: Props) => {
           {/* Number of selected goods */}
         </p>
         <p className="text-sm 2xsm:text-lg text-primaryDark font-semibold">
-          {/* $100.00 */}
-          <NumericFormat
+          {cartItemsCount}
+
+          {/* <NumericFormat
             value={cartItemsCount}
             displayType={"text"}
             decimalScale={0}
@@ -106,7 +111,7 @@ const CartSummary = ({ total }: Props) => {
             decimalSeparator="."
             // prefix={"$ "}
             // suffix={" ₽"}
-          />
+          /> */}
         </p>
       </div>
 
@@ -139,7 +144,9 @@ const CartSummary = ({ total }: Props) => {
           {/* Total */}
         </p>
         <p className="text-sm 2xsm:text-lg font-bold text-primaryDark">
-          <NumericFormat
+          {formatPrice(total)}
+
+          {/* <NumericFormat
             value={total}
             displayType={"text"}
             decimalScale={2}
@@ -148,7 +155,7 @@ const CartSummary = ({ total }: Props) => {
             decimalSeparator="."
             prefix={"$ "}
             // suffix={" ₽"}
-          />
+          /> */}
         </p>
       </div>
 

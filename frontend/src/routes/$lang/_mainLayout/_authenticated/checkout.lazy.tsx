@@ -33,7 +33,10 @@ import { useForm } from "@tanstack/react-form";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { CreditCard, MapPin, PackageSearch, Truck, Zap } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { NumericFormat } from "react-number-format";
+
+// import { NumericFormat } from "react-number-format";
+import { useCurrency } from "@/store/CurrencyContext";
+
 import { toast } from "react-toastify";
 
 export const Route = createLazyFileRoute(
@@ -44,6 +47,8 @@ export const Route = createLazyFileRoute(
 
 function CheckoutPage() {
   const { LL } = useI18nContext();
+
+  const { formatPrice } = useCurrency();
 
   const [isAddressModalOpen, setIsAddressModalOpen] = useState<boolean>(false);
   const [is3DSModalOpen, setIs3DSModalOpen] = useState<boolean>(false);
@@ -504,7 +509,9 @@ function CheckoutPage() {
                   {/* Items total */}
                 </span>
                 <span>
-                  <NumericFormat
+                  {formatPrice(totalPrice)}
+
+                  {/* <NumericFormat
                     value={totalPrice}
                     displayType={"text"}
                     decimalScale={2}
@@ -513,7 +520,7 @@ function CheckoutPage() {
                     decimalSeparator="."
                     // prefix={"$ "}
                     suffix={" ₽"}
-                  />
+                  /> */}
                 </span>
               </div>
               <div className="flex justify-between">
@@ -522,7 +529,9 @@ function CheckoutPage() {
                   {/* Shipping */}
                 </span>
                 <span>
-                  <NumericFormat
+                  {formatPrice(delivery?.price ?? 0)}
+
+                  {/* <NumericFormat
                     value={delivery?.price}
                     displayType={"text"}
                     decimalScale={2}
@@ -531,7 +540,7 @@ function CheckoutPage() {
                     decimalSeparator="."
                     // prefix={"$ "}
                     suffix={" ₽"}
-                  />
+                  /> */}
                 </span>
               </div>
               <div
@@ -543,7 +552,9 @@ function CheckoutPage() {
                   {/* Total */}
                 </span>
                 <span className="text-myMainColor">
-                  <NumericFormat
+                  {formatPrice(finalTotal)}
+
+                  {/* <NumericFormat
                     value={finalTotal}
                     displayType={"text"}
                     decimalScale={2}
@@ -552,7 +563,7 @@ function CheckoutPage() {
                     decimalSeparator="."
                     // prefix={"$ "}
                     suffix={" ₽"}
-                  />
+                  /> */}
                 </span>
               </div>
             </div>
@@ -593,7 +604,10 @@ function CheckoutPage() {
                           {LL.checkout.payShort()}{" "}
                           {/* Place Order <br /> & <br /> Pay{" "} */}
                         </span>
-                        <NumericFormat
+
+                        {formatPrice(finalTotal)}
+
+                        {/* <NumericFormat
                           value={finalTotal}
                           displayType={"text"}
                           decimalScale={2}
@@ -603,7 +617,7 @@ function CheckoutPage() {
                           // prefix={"$ "}
                           suffix={" ₽"}
                           className="font-bold"
-                        />
+                        /> */}
                       </>
                     )}
                   </button>

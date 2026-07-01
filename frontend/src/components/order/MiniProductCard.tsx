@@ -1,6 +1,8 @@
 import Image from "@/assets/images/product/a_box.png";
 import { BASE_URL } from "@/api/api";
-import { NumericFormat } from "react-number-format";
+// import { NumericFormat } from "react-number-format";
+import { useCurrency } from "@/store/CurrencyContext";
+
 import { type OrderItem, type WishList } from "@/lib/types.ts";
 // import { useNavigate } from "@tanstack/react-router";
 import { useCart } from "@/store/CartContext.tsx";
@@ -15,6 +17,8 @@ interface Props {
 }
 
 const MiniProductCard = ({ item, usedForOrder }: Props) => {
+  const { formatPrice } = useCurrency();
+
   const { refreshCart, cartCode } = useCart();
 
   const handleBuyAgain = async () => {
@@ -76,14 +80,16 @@ const MiniProductCard = ({ item, usedForOrder }: Props) => {
           className="text-xs sm:text-base text-center font-bold 
           text-primaryDark"
         >
-          <NumericFormat
+          {formatPrice(item.product.price)}
+
+          {/* <NumericFormat
             value={item.product.price}
             displayType={"text"}
             thousandSeparator="."
             decimalSeparator=","
             prefix={"$ "}
             // suffix={" ₽"}
-          />
+          /> */}
         </p>
       </Link>
 

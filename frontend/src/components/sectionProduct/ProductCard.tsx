@@ -1,14 +1,19 @@
 import { type Product } from "@/lib/types.ts";
 import { BASE_URL } from "@/api/api";
-import { NumericFormat } from "react-number-format";
+
+// import { NumericFormat } from "react-number-format";
+
 // import { Link } from "@tanstack/react-router";
 import { AppLink as Link } from "@/components/appLink/AppLink";
+import { useCurrency } from "@/store/CurrencyContext";
 
 type Props = {
   product: Product;
 };
 
 const ProductCard = ({ product }: Props) => {
+  const { formatPrice } = useCurrency();
+
   return (
     <Link to={`/products/${product.slug}`}>
       <div
@@ -26,7 +31,6 @@ const ProductCard = ({ product }: Props) => {
             alt="thumbnail"
           />
         </div>
-
         {/* Product Name */}
         <p className="text-center text-lg font-semibold text-primaryDark">
           {product.name}
@@ -34,14 +38,18 @@ const ProductCard = ({ product }: Props) => {
 
         {/* Product Price */}
         <p className="text-[18px] text-center font-bold text-primaryDark">
-          <NumericFormat
-            value={product.price}
+          {formatPrice(product.price)}
+
+          {/* <NumericFormat
+            value={formatPrice(product.price)}
+            // value={product.price}
             displayType={"text"}
             thousandSeparator="."
             decimalSeparator=","
-            prefix={"$ "}
+            // prefix={"$ "}
             // suffix={" ₽"}
-          />
+          /> */}
+
           {/* ${product.price} */}
         </p>
       </div>

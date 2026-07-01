@@ -53,7 +53,7 @@ const CustomerReviews = ({ product, isAuthorized, reviews }: Props) => {
   const { user } = useUser();
 
   const userAlreadyHaveReview = reviews.some(
-    (review) => review.user.email === user?.email,
+    (review) => review?.user?.email === user?.email,
   );
 
   // Вычисляем правильное слово на основе текущего активного языка сайта

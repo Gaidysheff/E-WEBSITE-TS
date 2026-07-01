@@ -9,6 +9,7 @@ import {
   useParams,
 } from "@tanstack/react-router";
 import { useCallback, useEffect } from "react";
+import { CurrencyProvider } from "@/store/CurrencyContext";
 
 import { CartContextProvider } from "@/store/CartContext.tsx";
 import { CategoryContextProvider } from "@/store/CategoryContext.tsx";
@@ -209,29 +210,31 @@ function RootComponent() {
   return (
     <React.Fragment>
       <TypesafeI18n locale={currentLanguage}>
-        <CartContextProvider>
-          <UserContextProvider>
-            <CategoryContextProvider>
-              <SkeletonTheme baseColor="#abababff" highlightColor="#eaeaeaff">
-                {/* ОДИН контейнер тостов с динамической темой */}
-                <ToastContainer
-                  position="top-center"
-                  theme={theme === "light" ? "dark" : "light"}
-                  // Инверсия темы для контраста тостов
-                  autoClose={2000}
-                  // hideProgressBar={true}
-                  className="text-center"
-                />
+        <CurrencyProvider>
+          <CartContextProvider>
+            <UserContextProvider>
+              <CategoryContextProvider>
+                <SkeletonTheme baseColor="#abababff" highlightColor="#eaeaeaff">
+                  {/* ОДИН контейнер тостов с динамической темой */}
+                  <ToastContainer
+                    position="top-center"
+                    theme={theme === "light" ? "dark" : "light"}
+                    // Инверсия темы для контраста тостов
+                    autoClose={2000}
+                    // hideProgressBar={true}
+                    className="text-center"
+                  />
 
-                {/* ТОЛЬКО ОДИН OUTLET НА ВЕСЬ КОРЕНЬ */}
-                {/* <Outlet /> */}
+                  {/* ТОЛЬКО ОДИН OUTLET НА ВЕСЬ КОРЕНЬ */}
+                  {/* <Outlet /> */}
 
-                {/* Вместо прямого <Outlet /> вставляем наш синхронизатор */}
-                <LanguageSync currentLanguage={currentLanguage} />
-              </SkeletonTheme>
-            </CategoryContextProvider>
-          </UserContextProvider>
-        </CartContextProvider>
+                  {/* Вместо прямого <Outlet /> вставляем наш синхронизатор */}
+                  <LanguageSync currentLanguage={currentLanguage} />
+                </SkeletonTheme>
+              </CategoryContextProvider>
+            </UserContextProvider>
+          </CartContextProvider>
+        </CurrencyProvider>
       </TypesafeI18n>
     </React.Fragment>
   );

@@ -3,6 +3,7 @@ import { type DeliveryOption } from "@/lib/types.ts";
 import { cn } from "@/lib/utils";
 import DeliveryOptionsSkeleton from "./DeliveryOptionsSkeleton.tsx";
 import { useI18nContext } from "@/i18n/i18n-react";
+import { useCurrency } from "@/store/CurrencyContext";
 
 interface Props {
   options: DeliveryOption[];
@@ -13,6 +14,8 @@ interface Props {
 
 const DeliveryOptions = ({ options, selectedId, onSelect, loading }: Props) => {
   const { LL } = useI18nContext();
+
+  const { formatPrice } = useCurrency();
 
   // const numberCards = options.length;
 
@@ -55,7 +58,10 @@ const DeliveryOptions = ({ options, selectedId, onSelect, loading }: Props) => {
             <div className="mt-auto font-bold text-primaryDark">
               {Number(option.price) === 0
                 ? `${LL.checkout.free()}`
-                : `${option.price} ₽`}
+                : `${formatPrice(option.price)}`}
+
+              {/* : `${option.price} ₽`} */}
+
               {/* {Number(option.price) === 0 ? "Free" : `${option.price} ₽`} */}
             </div>
           </button>

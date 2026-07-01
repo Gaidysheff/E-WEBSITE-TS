@@ -1,6 +1,7 @@
 import { BASE_URL } from "@/api/api";
 import { type Cartitem } from "@/lib/types.ts";
 import { useI18nContext } from "@/i18n/i18n-react";
+import { useCurrency } from "@/store/CurrencyContext";
 
 interface Props {
   cartItem: Cartitem;
@@ -8,6 +9,8 @@ interface Props {
 
 const MiniCartItem = ({ cartItem }: Props) => {
   const { LL } = useI18nContext();
+
+  const { formatPrice } = useCurrency();
 
   const subTotal = cartItem.product.price * cartItem.quantity;
 
@@ -44,13 +47,18 @@ const MiniCartItem = ({ cartItem }: Props) => {
             {cartItem.product.name}
           </h4>
           <p className="text-xs text-gray-400">
-            {cartItem.product.price} ₽ / {LL.checkout.perUnit()}
+            {/* {cartItem.product.price} ₽  */}
+            {formatPrice(cartItem.product.price)} / {LL.checkout.perUnit()}
           </p>
         </div>
       </div>
 
       {/* Итоговая сумма за позицию */}
-      <div className="text-sm font-semibold text-primaryDark">{subTotal} ₽</div>
+      <div className="text-sm font-semibold text-primaryDark">
+        {formatPrice(subTotal)}
+
+        {/* {subTotal} ₽ */}
+      </div>
     </div>
   );
 };

@@ -3,18 +3,24 @@ import Button from "@/components/uiComponents/Button";
 // import Image from "@/assets/images/product/Product-1.png";
 import { type Cartitem } from "@/lib/types.ts";
 import { BASE_URL } from "@/api/api.ts";
-import { NumericFormat } from "react-number-format";
+
+// import { NumericFormat } from "react-number-format";
+import { useCurrency } from "@/store/CurrencyContext";
+
 import { useEffect, useState } from "react";
 import { updateCartItemAction, deleteCartItemAction } from "@/api/actions.ts";
 import DeleteModal from "@/components/uiComponents/DeleteModal.tsx";
 import { useCart } from "@/store/CartContext.tsx";
 import { toast } from "react-toastify";
 import { useI18nContext } from "@/i18n/i18n-react";
+
 interface Props {
   cartItem: Cartitem;
 }
 
 const CartItem = ({ cartItem }: Props) => {
+  const { formatPrice } = useCurrency();
+
   const { LL } = useI18nContext();
 
   const { setCartItemsCount, refreshCart, updateLocalQuantity } = useCart();
@@ -119,7 +125,8 @@ const CartItem = ({ cartItem }: Props) => {
               {cartItem.product.name}
             </p>
             <p className="text-primary/50 text-sm mt-1">
-              {cartItem.product.price}
+              {formatPrice(cartItem.product.price)}
+              {/* {cartItem.product.price} */}
             </p>
           </div>
         </div>
@@ -176,8 +183,9 @@ const CartItem = ({ cartItem }: Props) => {
             className="text-sm 2xsm:text-base sm:text-lg font-semibold 
               text-primaryDark"
           >
-            {/* ${formattedSubTotal} */}
-            <NumericFormat
+            {formatPrice(subTotal)}
+
+            {/* <NumericFormat
               value={subTotal}
               displayType={"text"}
               decimalScale={2}
@@ -186,7 +194,7 @@ const CartItem = ({ cartItem }: Props) => {
               decimalSeparator="."
               prefix={"$ "}
               // suffix={" ₽"}
-            />
+            /> */}
           </p>
 
           {/* Remove Item Button */}

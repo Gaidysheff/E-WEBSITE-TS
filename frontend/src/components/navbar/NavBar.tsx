@@ -1,3 +1,4 @@
+import CurrencySelector from "@/components/currency/CurrencySelector.tsx";
 import FilterDrawer from "@/components/filter/FilterDrawer.tsx";
 import { LayoutGrid } from "lucide-react";
 import { AppLink as Link } from "@/components/appLink/AppLink";
@@ -130,6 +131,8 @@ const NavBar = () => {
                 )}
               </button>
             </div>
+
+            <CurrencySelector />
 
             {theme === "light" ? (
               <ThemeSwitch id="dark-btn" />

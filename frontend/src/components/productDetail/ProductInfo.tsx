@@ -4,8 +4,10 @@ import WishlistTooltip from "@/components/uiComponents/WishlistTooltip.tsx";
 import { type Product } from "@/lib/types.ts";
 import { useCart } from "@/store/CartContext.tsx";
 import { useEffect, useState } from "react";
-import { NumericFormat } from "react-number-format";
 import { useI18nContext } from "@/i18n/i18n-react";
+
+// import { NumericFormat } from "react-number-format";
+import { useCurrency } from "@/store/CurrencyContext";
 
 import {
   addToCartAction,
@@ -24,6 +26,8 @@ interface Props {
 
 const ProductInfo = ({ product, isAuthorized }: Props) => {
   const { LL } = useI18nContext();
+
+  const { formatPrice } = useCurrency();
 
   const { user } = useUser();
   const email = typeof user === "undefined" ? "" : user.email;
@@ -162,14 +166,16 @@ const ProductInfo = ({ product, isAuthorized }: Props) => {
             {product.name}
           </h1>
           <h3 className="text-xl sm:text-2xl font-semibold text-primaryDark">
-            <NumericFormat
+            {formatPrice(product.price)}
+
+            {/* <NumericFormat
               value={product?.price}
               displayType={"text"}
               thousandSeparator="."
               decimalSeparator=","
               prefix={"$ "}
               // suffix={" ₽"}
-            />
+            /> */}
           </h3>
         </div>
 

@@ -54,7 +54,7 @@ const ReviewCard = ({ review, user, product }: Props) => {
     >
       {/* Action buttons for editing and deleting the review */}
       <div className="flex justify-between items-center">
-        {user?.email == review.user.email ? (
+        {user?.email == review?.user?.email ? (
           <span className="flex gap-4">
             <>
               {/* Trash button to delete review */}
@@ -105,7 +105,7 @@ const ReviewCard = ({ review, user, product }: Props) => {
           border-2 border-gray-200"
         >
           <img
-            src={`${BASE_URL}${review.user.image}`}
+            src={`${BASE_URL}${review?.user?.image}`}
             // src={review.user.image ? `${BASE_URL}${review.user.image}` : Image}
             alt="profile_pic"
             className="object-cover rounded-full"
@@ -116,9 +116,9 @@ const ReviewCard = ({ review, user, product }: Props) => {
         {/* Review content including name, rating, and review text */}
         <div className="flex flex-col flex-1">
           <p className="font-semibold text-sm xsm:text-lg text-primaryDark">
-            {review.user.firstName || review.user.lastName
-              ? `${review.user.firstName} ${review.user.lastName}`
-              : `${review.user.email.split("@")[0]}`}
+            {review?.user?.firstName || review?.user?.lastName
+              ? `${review?.user?.firstName} ${review?.user?.lastName}`
+              : `${review?.user?.email.split("@")[0]}`}
           </p>
 
           <div className="flex gap-1 mt-2">
