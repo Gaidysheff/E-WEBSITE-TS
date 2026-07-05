@@ -702,6 +702,10 @@ type RootTranslation = {
 		 * Я​н​д​е​к​с​ ​П​э​й
 		 */
 		yandex: string
+		/**
+		 * *​ ​О​п​л​а​т​а​ ​п​р​о​и​з​в​о​д​и​т​с​я​ ​в​ ​р​у​б​л​я​х​.​ ​C​у​м​м​а​ ​п​о​ ​к​у​р​с​у​ ​с​а​й​т​а​:​ ​~​ 
+		 */
+		footnote: string
 	}
 	bankCard: {
 		/**
@@ -1689,6 +1693,10 @@ export type TranslationFunctions = {
 		 * Яндекс Пэй
 		 */
 		yandex: () => LocalizedString
+		/**
+		 * * Оплата производится в рублях. Cумма по курсу сайта: ~ 
+		 */
+		footnote: () => LocalizedString
 	}
 	bankCard: {
 		/**

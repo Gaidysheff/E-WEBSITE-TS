@@ -48,8 +48,6 @@ export const Route = createLazyFileRoute(
 function CheckoutPage() {
   const { LL } = useI18nContext();
 
-  const { formatPrice } = useCurrency();
-
   const [isAddressModalOpen, setIsAddressModalOpen] = useState<boolean>(false);
   const [is3DSModalOpen, setIs3DSModalOpen] = useState<boolean>(false);
 
@@ -61,6 +59,14 @@ function CheckoutPage() {
   const address = user?.address;
 
   const navigate = useAppNavigate();
+
+  const { currency, formatPrice } = useCurrency();
+
+  // Рассчитываем и форматируем справочную цену для иностранца
+  const displayedPrice = formatPrice(totalPrice);
+
+  // Всегда выводим строгую сумму в рублях для платежного шлюза
+  const rubPriceString = `${Math.round(totalPrice).toLocaleString()} ₽`;
 
   // ====================== DeliveryOptions ===========================
 
@@ -543,27 +549,24 @@ function CheckoutPage() {
                   /> */}
                 </span>
               </div>
-              <div
-                className="border-t pt-3 mt-3 flex justify-between
-                  font-bold text-lg"
-              >
+              <div className="border-t pt-3 mt-3 flex justify-between font-bold text-lg">
                 <span>
                   {LL.checkout.total()}
                   {/* Total */}
                 </span>
                 <span className="text-myMainColor">
                   {formatPrice(finalTotal)}
-
+                  {currency === "RUB" ? "" : "*"}
                   {/* <NumericFormat
-                    value={finalTotal}
-                    displayType={"text"}
-                    decimalScale={2}
-                    fixedDecimalScale
-                    thousandSeparator=" "
-                    decimalSeparator="."
-                    // prefix={"$ "}
-                    suffix={" ₽"}
-                  /> */}
+                  value={finalTotal}
+                  displayType={"text"}
+                  decimalScale={2}
+                  fixedDecimalScale
+                  thousandSeparator=" "
+                  decimalSeparator="."
+                  // prefix={"$ "}
+                  suffix={" ₽"}
+                   /> */}
                 </span>
               </div>
             </div>
@@ -578,49 +581,64 @@ function CheckoutPage() {
                 const canPay = isAddressReady && isPaymentReady && !isLoading;
 
                 return (
-                  <button
-                    type="button"
-                    disabled={!canPay || isSubmitting}
-                    onClick={() => bankCardForm.handleSubmit()}
-                    className="w-full mt-8 bg-primaryDarker text-primaryLighter
-                      h-auto p-3 rounded-xl transition-transform cursor-pointer
-                      text-sm xsm:text-base sm:text-lg lg:text-base xl:text-lg
-                      border-2 border-primaryDark transition-all duration-300
-                      active:hover:bg-primary hover:scale-105
-                      disabled:hover:scale-100 disabled:opacity-50
-                      disabled:cursor-not-allowed disabled:text-primary
-                      drop-shadow-[5px_5px_5px_rgba(0,0,0,0.5)]
-                      dark:shadow-[5px_5px_5px_rgba(255,255,255,0.5)]"
-                  >
-                    {isSubmitting ? (
-                      // <Loader className="animate-spin mx-auto" />
-                      <PaymentLoader />
-                    ) : (
-                      <>
-                        <span className="lg:hidden">
-                          {LL.checkout.pay()} {/* Place Order & Pay  */}
-                        </span>
-                        <span className="max-lg:hidden">
-                          {LL.checkout.payShort()}{" "}
-                          {/* Place Order <br /> & <br /> Pay{" "} */}
-                        </span>
+                  <div>
+                    <button
+                      type="button"
+                      disabled={!canPay || isSubmitting}
+                      onClick={() => bankCardForm.handleSubmit()}
+                      className="w-full mt-8 bg-primaryDarker text-primaryLighter
+                        h-auto p-3 rounded-xl transition-transform cursor-pointer
+                        text-sm xsm:text-base sm:text-lg lg:text-base xl:text-lg
+                        border-2 border-primaryDark transition-all duration-300
+                        active:hover:bg-primary hover:scale-105
+                        disabled:hover:scale-100 disabled:opacity-50
+                        disabled:cursor-not-allowed disabled:text-primary
+                        drop-shadow-[5px_5px_5px_rgba(0,0,0,0.5)]
+                        dark:shadow-[5px_5px_5px_rgba(255,255,255,0.5)]"
+                    >
+                      {isSubmitting ? (
+                        // <Loader className="animate-spin mx-auto" />
+                        <PaymentLoader />
+                      ) : (
+                        <>
+                          <span className="lg:hidden">
+                            {LL.checkout.pay()} {/* Place Order & Pay  */}
+                          </span>
+                          <span className="max-lg:hidden">
+                            {LL.checkout.payShort()}{" "}
+                            {/* Place Order <br /> & <br /> Pay{" "} */}
+                          </span>
 
-                        {formatPrice(finalTotal)}
+                          {rubPriceString}
+                          {/* {formatPrice(finalTotal)} */}
 
-                        {/* <NumericFormat
-                          value={finalTotal}
-                          displayType={"text"}
-                          decimalScale={2}
-                          fixedDecimalScale
-                          thousandSeparator=" "
-                          decimalSeparator="."
-                          // prefix={"$ "}
-                          suffix={" ₽"}
-                          className="font-bold"
-                        /> */}
-                      </>
-                    )}
-                  </button>
+                          {/* <NumericFormat
+                            value={finalTotal}
+                            displayType={"text"}
+                            decimalScale={2}
+                            fixedDecimalScale
+                            thousandSeparator=" "
+                            decimalSeparator="."
+                            // prefix={"$ "}
+                            suffix={" ₽"}
+                            className="font-bold"
+                          /> */}
+                        </>
+                      )}
+                    </button>
+                    <div>
+                      {/* Если выбраны USD или EUR, пишем под кнопкой вежливую подсказку-объяснение */}
+                      {currency !== "RUB" && (
+                        <p className="text-xs text-center text-muted-foreground italic p-2">
+                          {LL.checkout.footnote()}
+                          {displayedPrice}
+                          {/* {locale === "ru"
+? `* Оплата производится в рублях. Примерная сумма по курсу сайта: ~ ${displayedPrice}`
+: `* Payments are processed in RUB. Approximate amount in your currency: ~ ${displayedPrice}`} */}
+                        </p>
+                      )}
+                    </div>
+                  </div>
                 );
               }}
             </bankCardForm.Subscribe>

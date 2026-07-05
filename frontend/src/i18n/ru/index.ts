@@ -211,6 +211,7 @@ const ru: BaseTranslation = {
     bankCard: "Банковская карта",
     sbp: "СБП",
     yandex: "Яндекс Пэй",
+    footnote: "* Оплата производится в рублях. Cумма по курсу сайта: ~ ",
   },
   bankCard: {
     number: "Номер карты",

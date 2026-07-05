@@ -47,6 +47,8 @@ export const ORDER_GET_URL = `${BASE_URL}/api/get_orders?email=`;
 
 export const CLOUD_PAYMENTS_URL = `${BASE_URL}/api/process_from_cloud_payments/`;
 
+export const CURRENCY_RATES_URL = `${BASE_URL}/api/currency_rates/`;
+
 // ======================= API Requests =================================
 
 // export const getCategories = async () => {

@@ -207,6 +207,8 @@ const en: Translation = {
     bankCard: "Bank Card",
     sbp: "SBP",
     yandex: "Yandex Pay",
+    footnote:
+      "* Payments are processed in RUB. The amount in your currency: ~ ",
   },
   bankCard: {
     number: "Number",

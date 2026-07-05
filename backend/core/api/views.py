@@ -53,6 +53,9 @@ from rest_framework.permissions import AllowAny
 
 from django.http import HttpResponse
 from rest_framework.authentication import SessionAuthentication
+from api.utils.currency import get_actual_rates
+
+# from .utils.currency import get_actual_rates  # Скорректируйте путь
 
 
 class UnsafeSessionAuthentication(SessionAuthentication):
@@ -1115,3 +1118,14 @@ def delivery_options(request):
     options = DeliveryOption.objects.filter(is_active=True)
     serializer = DeliveryOptionSerializer(options, many=True)
     return Response(serializer.data)
+
+
+@api_view(["GET"])
+@permission_classes([AllowAny])  # Курсы должны видеть даже неавторизованные гости
+def global_currency_rates(request):
+    # Локальный импорт решает проблему инициализации раз и навсегда!
+    # from api.utils.currency import get_actual_rates
+
+    rates = get_actual_rates()
+    # Возвращает структуру типа: {"USD": 90.5200, "EUR": 98.1500}
+    return Response(rates)

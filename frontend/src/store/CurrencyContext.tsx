@@ -1,5 +1,8 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 
+import { CURRENCY_RATES_URL } from "@/api/endpoints.ts";
+import api from "@/api/api.ts";
+
 // 1. Определяем доступные валюты как тип
 export type CurrencyType = "RUB" | "USD" | "EUR";
 
@@ -25,10 +28,39 @@ export const CurrencyProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // Временные хардкод-курсы для старта фронтенда (позже мы заменим их на fetch от нашего Django)
   // Курс означает: сколько рублей стоит 1 доллар / 1 евро
-  const [rates] = useState({
-    USD: 90.5, // 1 USD = 90.5 RUB
-    EUR: 98.2, // 1 EUR = 98.2 RUB
+  // const [rates] = useState({
+  //   USD: 90.5, // 1 USD = 90.5 RUB
+  //   EUR: 98.2, // 1 EUR = 98.2 RUB
+  // });
+
+  // Инициализируем курсы дефолтными значениями (на случай задержки сети)
+  const [rates, setRates] = useState({
+    USD: 77.0,
+    EUR: 88.0,
   });
+
+  // Стягиваем живые курсы из Django при первой загрузке приложения
+  useEffect(() => {
+    const fetchLiveRates = async () => {
+      try {
+        const response = await api.get(CURRENCY_RATES_URL);
+        if (response.data && response.data.USD && response.data.EUR) {
+          setRates({
+            USD: Number(response.data.USD),
+            EUR: Number(response.data.EUR),
+          });
+          console.log(
+            "🌟 ФРОНТЕНД: Живые курсы валют успешно получены от Django!",
+            response.data,
+          );
+        }
+      } catch (error) {
+        console.error("Ошибка при получении курсов валют с бэкенда:", error);
+      }
+    };
+
+    fetchLiveRates();
+  }, []);
 
   const setCurrency = (newCurrency: CurrencyType) => {
     setCurrencyState(newCurrency);

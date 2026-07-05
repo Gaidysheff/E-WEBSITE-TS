@@ -64,4 +64,9 @@ urlpatterns = [
         views.delivery_options,
         name="delivery_options",
     ),
+    path(
+        "currency_rates/",
+        views.global_currency_rates,
+        name="currency_rates",
+    ),
 ]

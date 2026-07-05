@@ -84,6 +84,22 @@ class Color(AutoTranslationMixin, models.Model):
         ]
 
 
+# ------------------------------------------
+# 1. Создаем функцию вверху файла models.py
+def get_default_brand():
+    try:
+        return Brand.objects.get(name="unknown").id
+    except Brand.DoesNotExist:
+        return None  # Или любой другой резервный ID
+
+
+def get_default_color():
+    try:
+        return Color.objects.get(color_code="#FF0000").id
+    except Color.DoesNotExist:
+        return None  # Или любой другой резервный ID
+
+
 class Product(AutoTranslationMixin, models.Model):
 
     MALE = "M"
@@ -116,7 +132,9 @@ class Product(AutoTranslationMixin, models.Model):
         # blank=True,
         # null=True,
         related_name="products",
-        default=Brand.objects.get(name="unknown").id,
+        # default=Brand.objects.get(name="unknown").id,
+        default=get_default_brand,
+        # 🔥 ПЕРЕДАЕМ ИМЯ ФУНКЦИИ БЕЗ СКОБОК! Django вызовет её сам, когда будет нужно
         verbose_name="Бренд",
     )
 
@@ -127,7 +145,8 @@ class Product(AutoTranslationMixin, models.Model):
         # blank=True,
         # null=True,
         related_name="goods",
-        default=Color.objects.get(color_code="#FF0000").id,
+        # default=Color.objects.get(color_code="#FF0000").id,
+        default=get_default_color,
         verbose_name="Цвет",
     )
 
@@ -383,3 +402,14 @@ class PricePresets(models.Model):
 
     def __str__(self):
         return self.label
+
+
+class CurrencyRate(models.Model):
+    code = models.CharField(max_length=3, unique=True)  # USD, EUR
+    rate = models.DecimalField(
+        max_digits=10, decimal_places=4
+    )  # Сколько рублей стоит 1 единица
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"1 {self.code} = {self.rate} RUB (updated: {self.updated_at.strftime('%Y-%m-%d %H:%M')})"

@@ -15,6 +15,7 @@ from .models import (
     Brand,
     Color,
     PricePresets,
+    CurrencyRate,
 )
 from modeltranslation.admin import TranslationAdmin
 
@@ -404,4 +405,23 @@ class PricePresetsAdmin(admin.ModelAdmin):
     ]
     list_editable = [
         "order",
+    ]
+
+
+@admin.register(CurrencyRate)
+class CurrencyRateAdmin(admin.ModelAdmin):
+    list_display = [
+        "code",
+        "rate",
+        "updated_at",
+    ]
+    list_display_links = [
+        "code",
+        "rate",
+        "updated_at",
+    ]
+    readonly_fields = [
+        "code",
+        "rate",
+        "updated_at",
     ]
