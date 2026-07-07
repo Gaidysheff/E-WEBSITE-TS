@@ -8,12 +8,15 @@ import { useCallback } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import { type Product } from "@/lib/types.ts";
 import { BASE_URL } from "@/api/api.ts";
+import { useCurrency } from "@/store/CurrencyContext";
 
 interface Props {
   productsForCarousel: Product[];
 }
 
 export function EmblaCarousel({ productsForCarousel }: Props) {
+  const { formatPrice } = useCurrency();
+
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [
     Autoplay({
       delay: 2000,
@@ -57,7 +60,8 @@ export function EmblaCarousel({ productsForCarousel }: Props) {
                   text-lg 2xsm:text-xl xsm:text-2xl sm:text-3xl md:text-4xl 
                   lg:text-5xl xl:text-6xl 2xl:text-7xl"
                 >
-                  {slide.price} ₽
+                  {formatPrice(slide.price)}
+                  {/* {slide.price} ₽ */}
                 </span>
               </span>
             </div>

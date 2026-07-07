@@ -4,6 +4,7 @@ import PricePresets from "./PricePresets.tsx";
 import { Slider } from "@/components/ui/slider";
 import { useDebounce } from "@/hooks/useDebounce.ts";
 import { useI18nContext } from "@/i18n/i18n-react";
+import { useCurrency } from "@/store/CurrencyContext";
 
 interface Props {
   maxPrice: number;
@@ -21,6 +22,8 @@ const Price = ({
   presets,
 }: Props) => {
   const { LL } = useI18nContext();
+
+  const { formatPrice } = useCurrency(); // Извлекаем функцию-конвертер
 
   // Локальный стейт слайдера
   const [localRange, setLocalRange] = useState<number[]>([
@@ -52,10 +55,26 @@ const Price = ({
         {LL.filter.price()}
         {/* Price */}
       </div>
-      <div className="flex items-center">
+      {/* <div className="flex items-center">
         {localRange[0]} ₽ — {localRange[1]} ₽{" "}
         {localRange[1] == maxLimit && <span className="text-2xl ml-1">+</span>}
+      </div> */}
+      <div
+        className="flex items-center text-sm font-medium text-gray-700
+      dark:text-zinc-300"
+      >
+        {/* 🌟 МАКСИМАЛЬНАЯ МАГИЯ: Автоматически переведет рубли слайдера в
+        нужную валюту на лету! */}
+        <span>{formatPrice(localRange[0])}</span>
+        <span className="mx-2">—</span>
+        <span>{formatPrice(localRange[1])}</span>
+
+        {/* Если ползунок дошел до самого конца, выводим плюс */}
+        {localRange[1] === maxLimit && (
+          <span className="text-xl ml-1 font-bold text-myMainColor">+</span>
+        )}
       </div>
+
       <div
         className="my-5"
         onPointerDown={(e) => e.stopPropagation()}

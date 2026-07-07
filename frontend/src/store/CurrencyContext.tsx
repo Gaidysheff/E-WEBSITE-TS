@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 
 import { CURRENCY_RATES_URL } from "@/api/endpoints.ts";
 import api from "@/api/api.ts";
+import { useI18nContext } from "@/i18n/i18n-react";
 
 // 1. Определяем доступные валюты как тип
 export type CurrencyType = "RUB" | "USD" | "EUR";
@@ -12,6 +13,7 @@ interface CurrencyContextProps {
   setCurrency: (currency: CurrencyType) => void;
   formatPrice: (priceInRub: number) => string;
   rates: Record<Exclude<CurrencyType, "RUB">, number>; // Курсы USD и EUR по отношению к RUB
+  getPresetLabel: (minRub: number, maxRub: number | null) => string;
 }
 
 const CurrencyContext = createContext<CurrencyContextProps | undefined>(
@@ -21,6 +23,8 @@ const CurrencyContext = createContext<CurrencyContextProps | undefined>(
 export const CurrencyProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
+  const { locale } = useI18nContext();
+
   // Загружаем сохраненную валюту из localStorage или ставим RUB по дефолту
   const [currency, setCurrencyState] = useState<CurrencyType>(() => {
     return (localStorage.getItem("user_currency") as CurrencyType) || "RUB";
@@ -88,9 +92,57 @@ export const CurrencyProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  const getPresetLabel = (minRub: number, maxRub: number | null): string => {
+    // Функция для красивого округления валютных значений
+    const roundToNiceNumber = (amountInCurrency: number): number => {
+      if (amountInCurrency <= 0) return 0;
+
+      // Если цена маленькая (до 20 долларов/евро), округляем до ближайших 5 единиц
+      if (amountInCurrency <= 20) {
+        return Math.round(amountInCurrency / 5) * 5 || 5;
+      }
+      // Если цена средняя (до 100), округляем до ближайших 10 единиц
+      if (amountInCurrency <= 100) {
+        return Math.round(amountInCurrency / 10) * 10;
+      }
+      // Для больших цен округляем до ближайших 50 единиц
+      return Math.round(amountInCurrency / 50) * 50;
+    };
+
+    // 1. Обработка для базовой рублевой валюты (оставляем как есть, без копеек)
+    if (currency === "RUB") {
+      const minStr = Math.round(minRub).toLocaleString();
+      if (maxRub === null) return `от ${minStr} ₽`;
+      return `${minStr} – ${Math.round(maxRub).toLocaleString()} ₽`;
+    }
+
+    // # 2. Расчет курса для USD или EUR
+    const currentRate = rates[currency as Exclude<CurrencyType, "RUB">];
+
+    const minConverted = roundToNiceNumber(minRub / currentRate);
+    const maxConverted =
+      maxRub !== null ? roundToNiceNumber(maxRub / currentRate) : null;
+
+    // Оформляем красивый вывод с символом валюты в зависимости от языка сайта
+    const symbol = currency === "USD" ? "$" : "€";
+    const isRu = locale === "ru"; // Ваша переменная текущего языка
+
+    if (maxConverted === null) {
+      return isRu
+        ? `от ${symbol} ${minConverted}`
+        : `from ${symbol} ${minConverted}`;
+    }
+
+    // Защита: если из-за округления min и max совпали, искусственно раздвигаем шаг
+    const finalMax =
+      maxConverted <= minConverted ? minConverted + 5 : maxConverted;
+
+    return `${symbol} ${minConverted} – ${symbol} ${finalMax}`;
+  };
+
   return (
     <CurrencyContext.Provider
-      value={{ currency, setCurrency, formatPrice, rates }}
+      value={{ currency, setCurrency, formatPrice, rates, getPresetLabel }}
     >
       {children}
     </CurrencyContext.Provider>

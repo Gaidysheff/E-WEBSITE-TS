@@ -9,6 +9,7 @@ interface Props {
 
 const Hero = ({ productsForCarousel }: Props) => {
   const { LL } = useI18nContext();
+
   return (
     <section className="mt-20">
       <div className="bg-card">

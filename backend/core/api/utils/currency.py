@@ -56,11 +56,32 @@ def update_live_currency_rates():
 
 def get_actual_rates():
     rates = CurrencyRate.objects.all()
-    if not rates.exists() or (timezone.now() - rates.first().updated_at) > timedelta(
-        hours=24
-    ):
+
+    # if not rates.exists() or (timezone.now() - rates.first().updated_at) > timedelta(
+    #     hours=24
+    # ):
+    #     update_live_currency_rates()
+    #     rates = CurrencyRate.objects.all()
+
+    # 1. Если базы нет, сразу обновляем
+    if not rates.exists():
         update_live_currency_rates()
         rates = CurrencyRate.objects.all()
+    else:
+        # 2. 🔥 БЕРЕМ САМУЮ СТАРУЮ ЗАПИСЬ по времени обновления
+        # Сортируем по возрастанию времени (сначала самые старые)
+        oldest_rate = CurrencyRate.objects.order_by("updated_at").first()
+
+        # Если самая старая запись обновлялась больше суток назад — принудительно обновляем
+        if oldest_rate and (timezone.now() - oldest_rate.updated_at) > timedelta(
+            hours=24
+        ):
+            print(
+                "--- БЭКЕНД: Курсы устарели. Запускаю автоматическое обновление... ---"
+            )
+            update_live_currency_rates()
+            rates = CurrencyRate.objects.all()  # Перезапрашиваем обновленные данные
+
     return {r.code: float(r.rate) for r in rates}
 
 
