@@ -32,7 +32,7 @@ else:
     ALLOWED_HOSTS = [
         "test.gaidysheff.ru",
         "www.test.gaidysheff.ru",
-        "https://mwu0o2-83-217-13-197.ru.tuna.am",
+        # "https://mwu0o2-83-217-13-197.ru.tuna.am",
     ]
 
 CSRF_TRUSTED_ORIGINS = ["https://mwu0o2-83-217-13-197.ru.tuna.am"]
@@ -199,6 +199,8 @@ if DEBUG:
     CORS_ALLOWED_ORIGINS = [
         "http://localhost:5173",  # Порт Vite/React фронтенда
         "http://127.0.0.1:5173",
+        "https://e-shop-ts-back.onrender.com/",
+        "https://e-shop-ts-back.onrender.com",
     ]
 else:
     CORS_ALLOWED_ORIGINS = [
@@ -248,7 +250,8 @@ STRIPE_PUBLIC_KEY = os.getenv("STRIPE_PUBLIC_KEY")
 WEBHOOK_SECRET = os.getenv("WEBHOOK_SECRET")
 
 # Если переменная в .env пустая, подставится локальный адрес разработки
-BASE_URL_FRONTEND = os.getenv("BASE_URL_FRONTEND", "http://localhost:5173")
+BASE_URL_FRONTEND = os.getenv("BASE_URL_FRONTEND", "test.gaidysheff.ru")
+# BASE_URL_FRONTEND = os.getenv("BASE_URL_FRONTEND", "http://localhost:5173")
 
 # =================== Cloud Payments =======================
 
