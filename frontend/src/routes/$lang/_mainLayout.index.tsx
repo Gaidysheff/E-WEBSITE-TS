@@ -15,10 +15,18 @@ export const Route = createFileRoute("/$lang/_mainLayout/")({
   //     throw error;
   //   }
   // },
-  loader: () => {
-    axios
-      .get("https://e-shop-ts-back.onrender.com")
-      .then((res) => console.log(res.data))
-      .catch((err) => console.error(err));
+  loader: async () => {
+    try {
+      // Обязательно добавляем await и сохраняем в переменную
+      const response = await axios.get("https://e-shop-ts-back.onrender.com");
+      console.log("Данные успешно получены:", response.data);
+
+      // СТРОГО ОБЯЗАТЕЛЬНО возвращаем данные для useLoaderData()
+      return response.data;
+    } catch (err) {
+      console.error("Ошибка запроса внутри лоадера:", err);
+      // Возвращаем пустой массив или null, чтобы компонент не падал при ошибке
+      return [];
+    }
   },
 });
