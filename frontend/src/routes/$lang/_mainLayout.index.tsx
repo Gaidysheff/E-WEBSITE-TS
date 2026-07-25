@@ -21,10 +21,11 @@ export const Route = createFileRoute("/$lang/_mainLayout/")({
       const response = await axios.get(
         "https://e-shop-ts-back.onrender.com/api/products_for_carousel/",
       );
-      console.log("Данные успешно получены:", response.data);
+      // ВНИМАТЕЛЬНО посмотрите в консоль браузера на этот объект!
+      console.log("Данные от Django:", response.data);
 
-      // СТРОГО ОБЯЗАТЕЛЬНО возвращаем данные для useLoaderData()
-      return response.data;
+      // Временно возвращаем пустой массив, чтобы компонент не падал из-за .map()
+      return [];
     } catch (err) {
       console.error("Ошибка запроса внутри лоадера:", err);
       // Возвращаем пустой массив или null, чтобы компонент не падал при ошибке
