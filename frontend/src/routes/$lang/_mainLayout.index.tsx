@@ -17,7 +17,7 @@ export const Route = createFileRoute("/$lang/_mainLayout/")({
   // },
   loader: () => {
     axios
-      .get("https://onrender.com")
+      .get("https://e-shop-ts-back.onrender.com")
       .then((res) => console.log(res.data))
       .catch((err) => console.error(err));
   },
