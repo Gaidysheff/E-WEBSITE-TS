@@ -25,7 +25,7 @@ export const Route = createFileRoute("/$lang/_mainLayout/")({
       console.log("Данные от Django:", response.data);
 
       // Временно возвращаем пустой массив, чтобы компонент не падал из-за .map()
-      return response.data.data;
+      return response.data;
     } catch (err) {
       console.error("Ошибка запроса внутри лоадера:", err);
       // Возвращаем пустой массив или null, чтобы компонент не падал при ошибке
