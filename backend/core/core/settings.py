@@ -21,22 +21,30 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-if DEBUG:
-    ALLOWED_HOSTS = [
-        "http://localhost:5173",
-        "http://172.27.32.1:5173",
-        "http://192.168.20.2:5173",
-        # "*"
-        "https://e-website-ts.vercel.app",
-        "https://e-website-ts.vercel.app/ru",
-        "https://e-website-ts.vercel.app/en",
-    ]
-else:
-    ALLOWED_HOSTS = [
-        "test.gaidysheff.ru",
-        "www.test.gaidysheff.ru",
-        # "https://mwu0o2-83-217-13-197.ru.tuna.am",
-    ]
+ALLOWED_HOSTS = [
+    "e-shop-ts-back.onrender.com",
+    "localhost",
+    "127.0.0.1",
+    "192.168.20.2",
+    #         "test.gaidysheff.ru",
+    #         "www.test.gaidysheff.ru",
+    #         "eshop.gaidysheff.ru",
+    #         "www.eshop.gaidysheff.ru",
+]
+
+# if DEBUG:
+#     ALLOWED_HOSTS = [
+#         "e-shop-ts-back.onrender.com",
+#         "localhost",
+#         "127.0.0.1",
+#         "192.168.20.2",
+#     ]
+# else:
+#     ALLOWED_HOSTS = [
+#         "test.gaidysheff.ru",
+#         "www.test.gaidysheff.ru",
+#         # "https://mwu0o2-83-217-13-197.ru.tuna.am",
+#     ]
 
 CSRF_TRUSTED_ORIGINS = ["https://mwu0o2-83-217-13-197.ru.tuna.am"]
 
@@ -197,25 +205,34 @@ CORS_ALLOW_HEADERS = list(default_headers) + [
     "accept-language",  # Разрешаем читать этот заголовок при CORS-запросах
 ]
 
-if DEBUG:
-    # CORS_ALLOW_ALL_ORIGINS = True
-    CORS_ALLOWED_ORIGINS = [
-        "http://localhost:5173",  # Порт Vite/React фронтенда
-        "http://127.0.0.1:5173",
-        "https://e-shop-ts-back.onrender.com/",
-        "https://e-shop-ts-back.onrender.com",
-        "https://e-website-ts.vercel.app",
-        "https://e-website-ts.vercel.app/ru",
-        "https://e-website-ts.vercel.app/en",
-    ]
-else:
-    CORS_ALLOWED_ORIGINS = [
-        "https://test.gaidysheff.ru",
-        "https://www.test.gaidysheff.ru",
-        "http://test.gaidysheff.ru",
-        "http://www.test.gaidysheff.ru",
-    ]
+# 2. CORS_ALLOWED_ORIGINS — это домены ФРОНТЕНДА, которым разрешено делать запросы.
+# ВАЖНО: без путей (/ru, /en) на конце! Только протокол и домен.
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "http://172.27.32.1:5173",
+    "http://192.168.20.2:5173",
+    "https://e-website-ts.vercel.app",  # Без /ru и /en!
+]
 
+# if DEBUG:
+#     # CORS_ALLOW_ALL_ORIGINS = True
+#     CORS_ALLOWED_ORIGINS = [
+#         "http://localhost:5173",  # Порт Vite/React фронтенда
+#         "http://127.0.0.1:5173",
+#         "https://e-shop-ts-back.onrender.com/",
+#         "https://e-shop-ts-back.onrender.com",
+#         "https://e-website-ts.vercel.app",
+#         "https://e-website-ts.vercel.app/ru",
+#         "https://e-website-ts.vercel.app/en",
+#     ]
+# else:
+#     CORS_ALLOWED_ORIGINS = [
+#         "https://test.gaidysheff.ru",
+#         "https://www.test.gaidysheff.ru",
+#         "http://test.gaidysheff.ru",
+#         "http://www.test.gaidysheff.ru",
+#     ]
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
