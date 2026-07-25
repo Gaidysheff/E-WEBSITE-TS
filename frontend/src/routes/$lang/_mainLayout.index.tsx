@@ -22,7 +22,7 @@ export const Route = createFileRoute("/$lang/_mainLayout/")({
         "https://e-shop-ts-back.onrender.com/api/products_for_carousel/",
       );
       // ВНИМАТЕЛЬНО посмотрите в консоль браузера на этот объект!
-      console.log("Данные от Django:", response.data);
+      console.log("Данные от Django:", response);
 
       // Временно возвращаем пустой массив, чтобы компонент не падал из-за .map()
       return [];
