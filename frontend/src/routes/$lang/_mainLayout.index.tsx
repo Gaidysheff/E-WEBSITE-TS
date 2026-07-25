@@ -18,7 +18,9 @@ export const Route = createFileRoute("/$lang/_mainLayout/")({
   loader: async () => {
     try {
       // Обязательно добавляем await и сохраняем в переменную
-      const response = await axios.get("https://e-shop-ts-back.onrender.com");
+      const response = await axios.get(
+        "https://e-shop-ts-back.onrender.com/api/products_for_carousel/",
+      );
       console.log("Данные успешно получены:", response.data);
 
       // СТРОГО ОБЯЗАТЕЛЬНО возвращаем данные для useLoaderData()
