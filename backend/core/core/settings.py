@@ -23,10 +23,13 @@ DEBUG = True
 
 if DEBUG:
     ALLOWED_HOSTS = [
-        # "http://localhost:5173",
-        # "http://172.27.32.1:5173",
-        # "http://192.168.20.2:5173",
-        "*"
+        "http://localhost:5173",
+        "http://172.27.32.1:5173",
+        "http://192.168.20.2:5173",
+        # "*"
+        "https://e-website-ts.vercel.app",
+        "https://e-website-ts.vercel.app/ru",
+        "https://e-website-ts.vercel.app/en",
     ]
 else:
     ALLOWED_HOSTS = [
@@ -201,6 +204,9 @@ if DEBUG:
         "http://127.0.0.1:5173",
         "https://e-shop-ts-back.onrender.com/",
         "https://e-shop-ts-back.onrender.com",
+        "https://e-website-ts.vercel.app",
+        "https://e-website-ts.vercel.app/ru",
+        "https://e-website-ts.vercel.app/en",
     ]
 else:
     CORS_ALLOWED_ORIGINS = [
