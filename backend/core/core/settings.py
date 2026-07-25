@@ -207,13 +207,14 @@ CORS_ALLOW_HEADERS = list(default_headers) + [
 
 # 2. CORS_ALLOWED_ORIGINS — это домены ФРОНТЕНДА, которым разрешено делать запросы.
 # ВАЖНО: без путей (/ru, /en) на конце! Только протокол и домен.
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-    "http://172.27.32.1:5173",
-    "http://192.168.20.2:5173",
-    "https://e-website-ts.vercel.app",  # Без /ru и /en!
-]
+CORS_ALLOW_ALL_ORIGINS = True
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:5173",
+#     "http://127.0.0.1:5173",
+#     "http://172.27.32.1:5173",
+#     "http://192.168.20.2:5173",
+#     "https://e-website-ts.vercel.app",  # Без /ru и /en!
+# ]
 
 # if DEBUG:
 #     # CORS_ALLOW_ALL_ORIGINS = True
@@ -286,3 +287,5 @@ CLOUD_PAYMENTS_PUBLIC_ID = os.getenv("CLOUD_PAYMENTS_PUBLIC_ID")
 SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin-allow-popups"
 # Необязательно, но полезно для работы с внешними ресурсами (Google, карты)
 SECURE_REFERRER_POLICY = "no-referrer-when-downgrade"
+
+APPEND_SLASH = False
