@@ -15,21 +15,21 @@ export const Route = createFileRoute("/$lang/_mainLayout/")({
   //     throw error;
   //   }
   // },
-  loader: async () => {
-    try {
-      // Обязательно добавляем await и сохраняем в переменную
-      const response = await axios.get(
-        "https://e-shop-ts-back.onrender.com/api/products_for_carousel/",
-      );
-      // ВНИМАТЕЛЬНО посмотрите в консоль браузера на этот объект!
-      // console.log("Данные от Django:", response.data);
-
-      // Временно возвращаем пустой массив, чтобы компонент не падал из-за .map()
-      return response.data;
-    } catch (err) {
-      console.error("Ошибка запроса внутри лоадера:", err);
-      // Возвращаем пустой массив или null, чтобы компонент не падал при ошибке
-      return [];
-    }
-  },
+  // ------------------------------------------------------------------------
+  // loader: async () => {
+  //   try {
+  //     // Обязательно добавляем await и сохраняем в переменную
+  //     const response = await axios.get(
+  //       "https://e-shop-ts-back.onrender.com/api/products_for_carousel/",
+  //     );
+  //     // ВНИМАТЕЛЬНО посмотрите в консоль браузера на этот объект!
+  //     // console.log("Данные от Django:", response.data);
+  //     // Временно возвращаем пустой массив, чтобы компонент не падал из-за .map()
+  //     return response.data;
+  //   } catch (err) {
+  //     console.error("Ошибка запроса внутри лоадера:", err);
+  //     // Возвращаем пустой массив или null, чтобы компонент не падал при ошибке
+  //     return [];
+  //   }
+  // },
 });
