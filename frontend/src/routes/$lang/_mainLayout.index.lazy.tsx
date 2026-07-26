@@ -2,7 +2,7 @@ import CategorySection from "@/components/sectionCategory/CategorySection.tsx";
 import Hero from "@/components/hero/Hero.tsx";
 import Introduction from "@/components/introduction/Introduction.tsx";
 import ProductSection from "@/components/sectionProduct/ProductSection.tsx";
-import { createLazyFileRoute } from "@tanstack/react-router";
+import { createLazyFileRoute, getRouteApi } from "@tanstack/react-router";
 import { type Product } from "@/lib/types.ts";
 import { BASE_URL } from "@/api/api.ts";
 import { useI18nContext } from "@/i18n/i18n-react";
@@ -11,12 +11,23 @@ interface LoaderData {
   productsForCarousel: Product[];
 }
 
+// Передаем точный путь роута в функцию api
+const routeApi = getRouteApi("/$lang/_mainLayout/");
+
 export const Route = createLazyFileRoute("/$lang/_mainLayout/")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  const { productsForCarousel } = Route.useLoaderData() as LoaderData;
+  // Вызываем хук из созданного api-объекта
+  const data = routeApi.useLoaderData();
+
+  // Защитная проверка, чтобы TypeScript и React не ругались на undefined
+  if (!data || !Array.isArray(data)) {
+    return <div>Загрузка товаров карусели...</div>;
+  }
+
+  // const { productsForCarousel } = Route.useLoaderData() as LoaderData;
   const { LL } = useI18nContext();
 
   return (
@@ -38,7 +49,8 @@ function RouteComponent() {
       <main className="min-h-[85vh]">
         <Introduction />
 
-        <Hero productsForCarousel={productsForCarousel} />
+        <Hero productsForCarousel={data} />
+        {/* <Hero productsForCarousel={productsForCarousel} /> */}
 
         <CategorySection />
 
