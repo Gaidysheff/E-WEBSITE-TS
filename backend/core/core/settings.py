@@ -25,7 +25,7 @@ ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
     "192.168.20.2",
-    "e-website-ts.vercel.app",
+    "e-shop-ts-back.onrender.com",  # Домен вашего сервера на Render
     #         "test.gaidysheff.ru",
     #         "www.test.gaidysheff.ru",
     #         "eshop.gaidysheff.ru",
