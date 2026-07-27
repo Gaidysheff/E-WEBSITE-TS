@@ -46,7 +46,10 @@ ALLOWED_HOSTS = [
 #         # "https://mwu0o2-83-217-13-197.ru.tuna.am",
 #     ]
 
-CSRF_TRUSTED_ORIGINS = ["https://mwu0o2-83-217-13-197.ru.tuna.am"]
+CSRF_TRUSTED_ORIGINS = [
+    "https://e-website-ts.vercel.app",
+]
+# CSRF_TRUSTED_ORIGINS = ["https://mwu0o2-83-217-13-197.ru.tuna.am"]
 
 # ALLOWED_HOSTS = []
 
