@@ -211,7 +211,7 @@ CORS_ALLOW_HEADERS = list(default_headers) + [
 
 # 2. CORS_ALLOWED_ORIGINS — это домены ФРОНТЕНДА, которым разрешено делать запросы.
 # ВАЖНО: без путей (/ru, /en) на конце! Только протокол и домен.
-# CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",  # СТРОГО БЕЗ слэша на конце!
     "http://127.0.0.1:5173",
