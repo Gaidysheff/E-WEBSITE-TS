@@ -3,7 +3,13 @@ import { env } from "@/lib/env";
 
 export const BASE_URL = env.VITE_API_URL;
 
-const api = axios.create({
+// 1. Для публичных запросов (БЕЗ перехватчиков и токенов)
+export const publicApi = axios.create({
+  baseURL: BASE_URL,
+});
+
+// 2. Для приватных запросов (С авторизацией)
+const privateApi = axios.create({
   baseURL: env.VITE_API_URL,
   timeout: 5000,
   withCredentials: true, // Передает куки сессии (sessionid) на бэкенд автоматически
@@ -15,7 +21,7 @@ const api = axios.create({
   },
 });
 
-api.interceptors.request.use((config) => {
+privateApi.interceptors.request.use((config) => {
   const token = localStorage.getItem("Token");
   if (token) {
     config.headers.Authorization = `Token ${token}`;
@@ -32,7 +38,7 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-api.interceptors.response.use(
+privateApi.interceptors.response.use(
   (response) => {
     return response;
   },
@@ -48,4 +54,4 @@ api.interceptors.response.use(
   },
 );
 
-export default api;
+export default privateApi;

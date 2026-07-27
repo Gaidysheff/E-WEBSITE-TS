@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 
 import { CURRENCY_RATES_URL } from "@/api/endpoints.ts";
-import api from "@/api/api.ts";
+import { publicApi } from "@/api/api.ts";
 import { useI18nContext } from "@/i18n/i18n-react";
 
 // 1. Определяем доступные валюты как тип
@@ -47,7 +47,7 @@ export const CurrencyProvider: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     const fetchLiveRates = async () => {
       try {
-        const response = await api.get(CURRENCY_RATES_URL);
+        const response = await publicApi.get(CURRENCY_RATES_URL);
         if (response.data && response.data.USD && response.data.EUR) {
           setRates({
             USD: Number(response.data.USD),

@@ -7,7 +7,7 @@ import {
 } from "react";
 import { type Category } from "@/lib/types.ts";
 import { CATEGORY_LIST_URL } from "@/api/endpoints.ts";
-import api from "@/api/api.ts";
+import { publicApi } from "@/api/api.ts";
 import { useParams } from "@tanstack/react-router";
 
 interface CatProviderProps {
@@ -44,7 +44,7 @@ export const CategoryContextProvider = ({ children }: CatProviderProps) => {
       // await new Promise((resolve) => setTimeout(resolve, 4000));
       try {
         setIsLoading(true);
-        await api.get<Category[]>(CATEGORY_LIST_URL).then((response) => {
+        await publicApi.get<Category[]>(CATEGORY_LIST_URL).then((response) => {
           const res = response.data;
           const loadedData: Category[] = [];
 

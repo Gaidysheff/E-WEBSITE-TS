@@ -1,5 +1,6 @@
 import { ADDRESS_GET_URL } from "@/api/endpoints.js";
-import api from "@/api/api.js";
+import privateApi from "@/api/api.ts";
+
 import { queryOptions } from "@tanstack/react-query";
 import { type Address } from "@/lib/types.ts";
 
@@ -15,7 +16,7 @@ const getAddressAction = async (email: string): Promise<Address | null> => {
     // --------------- Fetching delay ----------------------
     // await new Promise((resolve) => setTimeout(resolve, 4000));
     // -----------------------------------------------------
-    const response = await api.get(`${ADDRESS_GET_URL}${email}`);
+    const response = await privateApi.get(`${ADDRESS_GET_URL}${email}`);
 
     // console.log("🚀 ~ getAddressAction ~ response:", response);
 

@@ -1,8 +1,8 @@
 import Error from "@/components/error/Error.tsx";
 import { PRODUCT_SEARCH_URL } from "@/api/endpoints.ts";
 import SearchSkeleton from "@/components/search/SearchSkeleton.tsx";
-import api from "@/api/api.ts";
 import { createFileRoute } from "@tanstack/react-router";
+import { publicApi } from "@/api/api.ts";
 import { toast } from "react-toastify";
 
 export const Route = createFileRoute("/_search/search")({
@@ -20,7 +20,7 @@ export const Route = createFileRoute("/_search/search")({
 
     // ---------- Product Search ----------
     try {
-      const response = await api.get(`${PRODUCT_SEARCH_URL}${query}`);
+      const response = await publicApi.get(`${PRODUCT_SEARCH_URL}${query}`);
       return {
         searchedProducts: response.data,
       };

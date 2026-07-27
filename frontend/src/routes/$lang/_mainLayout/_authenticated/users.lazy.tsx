@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { type User } from "@/lib/types.ts";
 import { USERS_URL } from "@/api/endpoints";
-import api from "@/api/api";
+import privateApi from "@/api/api.ts";
 import { createLazyFileRoute } from "@tanstack/react-router";
 
-export const Route = createLazyFileRoute("/$lang/_mainLayout/_authenticated/users")({
+export const Route = createLazyFileRoute(
+  "/$lang/_mainLayout/_authenticated/users",
+)({
   component: Users,
 });
 
@@ -13,7 +15,7 @@ function Users() {
   const [loading, setLoading] = useState<boolean>(true);
 
   const GetData = () => {
-    api.get(USERS_URL).then((res) => {
+    privateApi.get(USERS_URL).then((res) => {
       setMyData(res.data);
       // console.log(res.data);
       setLoading(false);

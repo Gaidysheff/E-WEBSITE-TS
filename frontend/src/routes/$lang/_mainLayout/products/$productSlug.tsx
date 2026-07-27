@@ -10,14 +10,16 @@ import CustomerReviewsSkeleton from "@/components/productDetail/CustomerReviewsS
 
 import { type ProductInDetails } from "@/lib/types.ts";
 import { PRODUCT_DETAIL_PAGE_URL } from "@/api/endpoints.ts";
-import api from "@/api/api.ts";
+import { publicApi } from "@/api/api.ts";
 
-export const Route = createFileRoute("/$lang/_mainLayout/products/$productSlug")({
+export const Route = createFileRoute(
+  "/$lang/_mainLayout/products/$productSlug",
+)({
   loader: async ({ params: { productSlug } }) => {
     // ---------- Loading Delay ----------
     // await new Promise((resolve) => setTimeout(resolve, 5000));
     try {
-      const response = await api.get<ProductInDetails>(
+      const response = await publicApi.get<ProductInDetails>(
         `${PRODUCT_DETAIL_PAGE_URL}${productSlug}`,
       );
       return {

@@ -1,4 +1,5 @@
-import api from "@/api/api";
+import privateApi from "@/api/api.ts";
+
 import { env } from "@/lib/env";
 import { type User } from "@/lib/types";
 const BASE_URL = env.VITE_API_URL;
@@ -26,7 +27,7 @@ export const register = async (value: Auth) => {
     password: value.password,
   };
   try {
-    await api.post(REGISTER_URL, credentials);
+    await privateApi.post(REGISTER_URL, credentials);
   } catch (error: any) {
     throw error;
   }
@@ -41,7 +42,7 @@ export const login = async (value: AuthCart) => {
     cart_code: value.cart_code,
   };
   try {
-    const response = await api.post(LOGIN_URL, credentials);
+    const response = await privateApi.post(LOGIN_URL, credentials);
     return response;
   } catch (error: any) {
     throw error;
@@ -59,7 +60,7 @@ export const googleLoginAction = async (
     access_token: authResponse.access_token, // Токен от Google
     cart_code: cartCode, // Твой cart_code для слияния корзин
   };
-  return await api.post("/users/google-auth/", data);
+  return await privateApi.post("/users/google-auth/", data);
 };
 
 // export const login = async (value: Auth) => {
@@ -70,7 +71,7 @@ export const googleLoginAction = async (
 //     // cart_code: cartCode,
 //   };
 //   try {
-//     await api.post(LOGIN_URL, loginData).then((response) => {
+//     await privateApi.post(LOGIN_URL, loginData).then((response) => {
 //       localStorage.setItem("Token", response.data.token);
 //       toast.success("You have been successfully authorized 👋!");
 //       // -------- Delay for showing toaster ------------
@@ -94,7 +95,7 @@ export const logout = async () => {
   try {
     // 1. Отправляем запрос на бэкенд,
     // чтобы Django удалил токен/сессию у себя
-    await api.post(LOGOUT_URL, {});
+    await privateApi.post(LOGOUT_URL, {});
 
     localStorage.removeItem("Token");
   } catch (error: any) {
@@ -106,7 +107,7 @@ export const logout = async () => {
 
 export const passwordResetRequest = async (value: Reset) => {
   try {
-    await api.post(PASSWORD_RESET_URL, {
+    await privateApi.post(PASSWORD_RESET_URL, {
       email: value.email,
     });
   } catch (error: any) {
@@ -123,7 +124,7 @@ export const passwordConfirm = async (value: PassConfirm, token: string) => {
   };
 
   try {
-    await api.post(PASSWORD_CONFIRM_URL, credentials);
+    await privateApi.post(PASSWORD_CONFIRM_URL, credentials);
   } catch (error: any) {
     throw error;
   }

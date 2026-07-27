@@ -16,7 +16,9 @@ import {
 } from "@/api/endpoints.ts";
 import type { CPResponse, PureAddress } from "@/lib/types";
 
-import api from "@/api/api.ts";
+import privateApi from "@/api/api.ts";
+import { publicApi } from "@/api/api.ts";
+
 import { type UserInfoFormValues } from "@/components/profile/userInfoSchema";
 
 type FormSubmitHandler = (formData: FormData) => Promise<any>;
@@ -88,7 +90,7 @@ export const createReviewAction: FormSubmitHandler = async (formData) => {
   // -----------------------------------------------------
 
   try {
-    const response = await api.post(REVIEW_ADD_URL, reviewObject);
+    const response = await privateApi.post(REVIEW_ADD_URL, reviewObject);
     return response;
   } catch (error) {
     if (error instanceof Error) {
@@ -108,7 +110,7 @@ export const updateReviewAction: FormSubmitHandler = async (formData) => {
   };
 
   try {
-    const response = await api.put(
+    const response = await privateApi.put(
       `${REVIEW_UPDATE_URL}${review_id}/`,
       reviewObject,
     );
@@ -127,7 +129,9 @@ export const deleteReviewAction: FormSubmitHandler = async (formData) => {
   const review_id = formData.get("review_id");
 
   try {
-    const response = await api.delete(`${REVIEW_DELETE_URL}${review_id}/`);
+    const response = await privateApi.delete(
+      `${REVIEW_DELETE_URL}${review_id}/`,
+    );
     return response;
   } catch (error) {
     if (error instanceof Error) {
@@ -148,7 +152,7 @@ export const addToCartAction: FormSubmitHandler = async (formData) => {
   // -----------------------------------------------------
 
   try {
-    const response = await api.post(CART_ADD_URL, cartObject);
+    const response = await privateApi.post(CART_ADD_URL, cartObject);
     return response;
   } catch (error: any) {
     throw error;
@@ -162,7 +166,7 @@ export const isProductInCartAction: IsProductInCartType = async (
   productId,
 ) => {
   try {
-    const response = await api.get(
+    const response = await privateApi.get(
       `${CART_PRODUCT_ADDED_URL}?cart_code=${cartCode}&product_id=${productId}`,
     );
     return response;
@@ -182,7 +186,10 @@ export const updateCartItemAction: FormSubmitHandler = async (formData) => {
   };
 
   try {
-    const response = await api.put(CARTITEM_UPDATE_QUANTITY_URL, cartObject);
+    const response = await privateApi.put(
+      CARTITEM_UPDATE_QUANTITY_URL,
+      cartObject,
+    );
     return response;
   } catch (error: any) {
     throw error;
@@ -195,7 +202,9 @@ export const deleteCartItemAction: FormSubmitHandler = async (formData) => {
   const item_id = Number(formData.get("item_id"));
 
   try {
-    const response = await api.delete(`${CARTITEM_DELETE_URL}${item_id}/`);
+    const response = await privateApi.delete(
+      `${CARTITEM_DELETE_URL}${item_id}/`,
+    );
     return response;
   } catch (error) {
     throw new Error("Failed to delete item");
@@ -229,7 +238,10 @@ export const wishlistAddAndDeleteAction: FormSubmitHandler = async (
   };
 
   try {
-    const response = await api.post(WISHLIST_ADD_AND_DELETE_URL, wishObject);
+    const response = await privateApi.post(
+      WISHLIST_ADD_AND_DELETE_URL,
+      wishObject,
+    );
     return response;
   } catch (error: any) {
     throw error;
@@ -243,7 +255,7 @@ export const isProductInWishlistAction: IsProductInWishlistType = async (
   productId,
 ) => {
   try {
-    const response = await api.get(
+    const response = await privateApi.get(
       `${WISHLIST_PRODUCT_ADDED_URL}?email=${email}&product_id=${productId}`,
     );
     return response;
@@ -256,7 +268,7 @@ export const isProductInWishlistAction: IsProductInWishlistType = async (
 
 export const initiatePaymentAction: PaymentHandler = async (paymentObject) => {
   try {
-    await api.post(CHECKOUT_URL, paymentObject).then((response) => {
+    await privateApi.post(CHECKOUT_URL, paymentObject).then((response) => {
       window.location.href = response.data.data.url;
 
       // console.log("🚀 ~ initiatePaymentAction ~ response:", response);
@@ -280,7 +292,7 @@ export const initiatePaymentAction: PaymentHandler = async (paymentObject) => {
 //     // --------------- Fetching delay ----------------------
 //     // await new Promise((resolve) => setTimeout(resolve, 4000));
 //     // -----------------------------------------------------
-//     await api.get(`${ORDER_GET_URL}${email}`).then((response) => {
+//     await privateApi.get(`${ORDER_GET_URL}${email}`).then((response) => {
 //       return response;
 //     });
 //   }
@@ -292,7 +304,7 @@ export const addAddressAction: AddressHandler = async (
   addressData: PureAddress,
 ) => {
   try {
-    const response = await api.post(ADDRESS_ADD_URL, addressData);
+    const response = await privateApi.post(ADDRESS_ADD_URL, addressData);
     return response.data; // ВОЗВРАЩАЕМ ДАННЫЕ
   } catch (error) {
     if (error instanceof Error) {
@@ -318,9 +330,9 @@ export const addUserInfoAction: UserInfoHandler = async (
 
   try {
     // Axios автоматически выставит 'Content-Type': 'multipart/form-data'
-    const response = await api.put(CURRENT_USER_DATA_URL, formData);
+    const response = await privateApi.put(CURRENT_USER_DATA_URL, formData);
 
-    // const response = await api.put(CURRENT_USER_DATA_URL, userData);
+    // const response = await privateApi.put(CURRENT_USER_DATA_URL, userData);
     console.log("🚀 ~ addUserInfoAction ~ response:", response);
     return response.data;
   } catch (error: any) {
@@ -332,7 +344,7 @@ export const addUserInfoAction: UserInfoHandler = async (
 
 export const paymentActionCP: CloudPaymentsHandler = async (paymentData) => {
   try {
-    const response = await api.post(CLOUD_PAYMENTS_URL, paymentData);
+    const response = await privateApi.post(CLOUD_PAYMENTS_URL, paymentData);
     return response.data; // Возвращаем данные от Django (Success: true и т.д.)
   } catch (error: any) {
     // Чтобы в будущем не гадать, выводим реальную ошибку запроса в консоль
@@ -351,7 +363,7 @@ export const paymentActionCP: CloudPaymentsHandler = async (paymentData) => {
 
 export const getDeliveryOptionsAction = async () => {
   try {
-    const response = await api.get(DELIVERY_OPTIONS_URL);
+    const response = await publicApi.get(DELIVERY_OPTIONS_URL);
     return response;
   } catch (error: any) {
     throw error;

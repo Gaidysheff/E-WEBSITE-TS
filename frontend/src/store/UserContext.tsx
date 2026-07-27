@@ -12,7 +12,7 @@ import {
   type AugmentedRequired,
 } from "@/lib/types.ts";
 import { CURRENT_USER_URL } from "@/api/endpoints.ts";
-import api from "@/api/api.ts";
+import privateApi from "@/api/api.ts";
 
 export type UserLoggedIn = AugmentedRequired<DeepPartial<User>, "email">;
 
@@ -45,7 +45,7 @@ export const UserContextProvider = ({ children }: UserProviderProps) => {
 
     // if (token) {
     try {
-      const response = await api.get(CURRENT_USER_URL);
+      const response = await privateApi.get(CURRENT_USER_URL);
       // setUser(response.data); // Если поля совпадают с UserLoggedIn
 
       console.log("🚀 ~ getUser ~ data:", response?.data);

@@ -3,15 +3,17 @@ import { toast } from "react-toastify";
 import { type User } from "@/lib/types.ts";
 import { USERS_URL } from "@/api/endpoints";
 import Error from "@/components/error/Error";
-import api from "@/api/api";
+import privateApi from "@/api/api.ts";
 
-export const Route = createFileRoute("/$lang/_mainLayout/_authenticated/users_tanstack")({
+export const Route = createFileRoute(
+  "/$lang/_mainLayout/_authenticated/users_tanstack",
+)({
   // component: UsersPage,
 
   loader: async () => {
     // ---------- Loading Delay ----------
     // await new Promise((resolve) => setTimeout(resolve, 5000));
-    const response = await api.get<Array<User>>(USERS_URL);
+    const response = await privateApi.get<Array<User>>(USERS_URL);
 
     return {
       users: response.data,

@@ -8,7 +8,7 @@ import {
 } from "react";
 import { generateRandomString } from "@/lib/utilities.ts";
 import { CARTITEMS_WITH_TOTAL_URL } from "@/api/endpoints.ts";
-import api from "@/api/api.ts";
+import privateApi from "@/api/api.ts";
 import { type Cartitem } from "@/lib/types.ts";
 import { GET_USER_CARTCODE_URL } from "@/api/endpoints_auth.ts";
 import { useParams } from "@tanstack/react-router";
@@ -51,7 +51,7 @@ export const CartContextProvider = ({ children }: CartProviderProps) => {
   const fetchFullCartData = async (code: string) => {
     setIsLoading(true);
     try {
-      const response = await api.get(
+      const response = await privateApi.get(
         `${CARTITEMS_WITH_TOTAL_URL}?cart_code=${code}`,
       );
 
@@ -169,7 +169,7 @@ export const CartContextProvider = ({ children }: CartProviderProps) => {
   useEffect(() => {
     const syncCart = async () => {
       if (isAuthenticated) {
-        const response = await api.get(GET_USER_CARTCODE_URL);
+        const response = await privateApi.get(GET_USER_CARTCODE_URL);
         const serverCartCode = response.data.cart_code;
 
         if (serverCartCode !== localStorage.getItem("cart_code")) {

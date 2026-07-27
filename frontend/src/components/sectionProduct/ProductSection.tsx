@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { FEATURED_PRODUCT_LIST_URL } from "@/api/endpoints.ts";
 import ProductCard from "./ProductCard";
-import api from "@/api/api.ts";
+import { publicApi } from "@/api/api.ts";
 import { type Product } from "@/lib/types.ts";
 import ProductCardSkeleton from "./ProductCardSkeleton.tsx";
 import Skeleton from "react-loading-skeleton";
@@ -24,7 +24,7 @@ const ProductSection = ({
 
   const getProducts = async () => {
     try {
-      await api.get(FEATURED_PRODUCT_LIST_URL).then((response) => {
+      await publicApi.get(FEATURED_PRODUCT_LIST_URL).then((response) => {
         // console.log("🚀 ~ getProducts ~ response:", response);
         // console.log("🚀 ~ getProducts ~ response:", response.data);
 

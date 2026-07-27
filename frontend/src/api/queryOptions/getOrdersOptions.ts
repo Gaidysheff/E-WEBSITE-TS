@@ -1,5 +1,6 @@
 import { ORDER_GET_URL } from "@/api/endpoints.js";
-import api from "@/api/api.js";
+import privateApi from "@/api/api.ts";
+
 import { queryOptions } from "@tanstack/react-query";
 import { type Order } from "@/lib/types.ts";
 
@@ -16,7 +17,7 @@ const getOrdersAction = async (email: string): Promise<Order[] | null> => {
     // await new Promise((resolve) => setTimeout(resolve, 4000));
     // -----------------------------------------------------
     // ВАРИАНТ-1 ASYNC AXIOS
-    const response = await api.get(`${ORDER_GET_URL}${email}`);
+    const response = await privateApi.get(`${ORDER_GET_URL}${email}`);
     // console.log("🚀 ~ getOrdersAction ~ response:", response);
     return response.data;
     // -----------------------------------------------------

@@ -5,7 +5,9 @@ import RatingFilter from "./filters/RatingFilter.tsx";
 import Searching from "./filters/Searching.tsx";
 import { Separator } from "@/components/ui/separator";
 import Shape from "./filters/Shape.tsx";
-import api from "@/api/api.ts";
+
+import { publicApi } from "@/api/api.ts";
+
 import { useQuery } from "@tanstack/react-query";
 import filteringOptions from "@/api/queryOptions/filteringOptions.ts";
 import { useSearch } from "@tanstack/react-router";
@@ -45,7 +47,8 @@ const FilterDrawerInnerSection = ({
   const { locale } = useI18nContext();
   const { data: metadata, isPending } = useQuery({
     queryKey: ["filter-metadata", locale],
-    queryFn: () => api.get("/api/get_filter_metadata/").then((res) => res.data),
+    queryFn: () =>
+      publicApi.get("/api/get_filter_metadata/").then((res) => res.data),
     staleTime: 1000 * 60 * 60, //Данные фильтров меняются редко, кешируем на час
   });
 

@@ -1,5 +1,3 @@
-// import api from "@/api/api";
-
 import { env } from "@/lib/env";
 
 const BASE_URL = env.VITE_API_URL;
