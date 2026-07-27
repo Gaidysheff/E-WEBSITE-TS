@@ -5,7 +5,7 @@ export const BASE_URL = env.VITE_API_URL;
 
 // 1. Для публичных запросов (БЕЗ перехватчиков и токенов)
 export const publicApi = axios.create({
-  baseURL: BASE_URL,
+  baseURL: env.VITE_API_URL,
 });
 
 // 2. Для приватных запросов (С авторизацией)
@@ -26,7 +26,10 @@ privateApi.interceptors.request.use((config) => {
   if (token) {
     config.headers.Authorization = `Token ${token}`;
   } else {
-    config.headers.Authorization = ``;
+    // config.headers.Authorization = ``;
+    // Если токена нет (например, при логине), полностью удаляем заголовок,
+    // чтобы не провоцировать проверки CORS у Cloudflare
+    delete config.headers.Authorization;
   }
 
   // Вытаскиваем текущий сохраненный язык из localStorage ('ru' или 'en')

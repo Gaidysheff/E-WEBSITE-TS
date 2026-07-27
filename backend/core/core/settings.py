@@ -22,10 +22,10 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    "e-shop-ts-back.onrender.com",
     "localhost",
     "127.0.0.1",
     "192.168.20.2",
+    "e-website-ts.vercel.app",
     #         "test.gaidysheff.ru",
     #         "www.test.gaidysheff.ru",
     #         "eshop.gaidysheff.ru",
@@ -210,11 +210,11 @@ CORS_ALLOW_HEADERS = list(default_headers) + [
 # ВАЖНО: без путей (/ru, /en) на конце! Только протокол и домен.
 # CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
+    "http://localhost:5173",  # СТРОГО БЕЗ слэша на конце!
     "http://127.0.0.1:5173",
     "http://172.27.32.1:5173",
     "http://192.168.20.2:5173",
-    "https://e-website-ts.vercel.app",  # Без /ru и /en!
+    "https://e-website-ts.vercel.app",  # Без /ru и /en! и СТРОГО БЕЗ слэша на конце!
 ]
 
 # if DEBUG:
