@@ -1,4 +1,4 @@
-import privateApi from "@/api/api.ts";
+import privateApi, { publicApi } from "@/api/api.ts";
 
 import { env } from "@/lib/env";
 import { type User } from "@/lib/types";
@@ -42,7 +42,9 @@ export const login = async (value: AuthCart) => {
     cart_code: value.cart_code,
   };
   try {
-    const response = await privateApi.post(LOGIN_URL, credentials);
+    // const response = await privateApi.post(LOGIN_URL, credentials);
+
+    const response = await publicApi.post(LOGIN_URL, credentials);
     return response;
   } catch (error: any) {
     throw error;

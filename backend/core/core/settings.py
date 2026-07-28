@@ -26,10 +26,10 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
     "192.168.20.2",
     "e-shop-ts-back.onrender.com",  # Домен вашего сервера на Render
-    #         "test.gaidysheff.ru",
-    #         "www.test.gaidysheff.ru",
-    #         "eshop.gaidysheff.ru",
-    #         "www.eshop.gaidysheff.ru",
+    "test.gaidysheff.ru",
+    "www.test.gaidysheff.ru",
+    "eshop.gaidysheff.ru",
+    "www.eshop.gaidysheff.ru",
 ]
 
 # if DEBUG:
@@ -47,6 +47,8 @@ ALLOWED_HOSTS = [
 #     ]
 
 CSRF_TRUSTED_ORIGINS = [
+    "https://test.gaidysheff.ru",
+    "https://eshop.gaidysheff.ru",
     "https://e-website-ts.vercel.app",
 ]
 # CSRF_TRUSTED_ORIGINS = ["https://mwu0o2-83-217-13-197.ru.tuna.am"]
@@ -203,22 +205,28 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # CORS settings
 
-CORS_ALLOW_CREDENTIALS = True  # Обязательно разрешаем передачу кук/авторизации
 
 CORS_ALLOW_HEADERS = list(default_headers) + [
     "accept-language",  # Разрешаем читать этот заголовок при CORS-запросах
 ]
 
+# 1. ОТКЛЮЧАЕМ разрешение для всех (это ломает запросы с credentials)
+CORS_ALLOW_ALL_ORIGINS = False
+
 # 2. CORS_ALLOWED_ORIGINS — это домены ФРОНТЕНДА, которым разрешено делать запросы.
 # ВАЖНО: без путей (/ru, /en) на конце! Только протокол и домен.
-CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",  # СТРОГО БЕЗ слэша на конце!
     "http://127.0.0.1:5173",
     "http://172.27.32.1:5173",
     "http://192.168.20.2:5173",
+    "https://test.gaidysheff.ru",  # Без /ru и /en! и СТРОГО БЕЗ слэша на конце!
+    "https://eshop.gaidysheff.ru",  # Без /ru и /en! и СТРОГО БЕЗ слэша на конце!
     "https://e-website-ts.vercel.app",  # Без /ru и /en! и СТРОГО БЕЗ слэша на конце!
 ]
+
+# 3. Обязательно разрешаем передачу учетных данных (куки/токены)
+CORS_ALLOW_CREDENTIALS = True  # Обязательно разрешаем передачу кук/авторизации
 
 # if DEBUG:
 #     # CORS_ALLOW_ALL_ORIGINS = True
@@ -246,6 +254,15 @@ CORS_ALLOW_HEADERS = list(default_headers) + [
     "accept",
     "origin",
     "x-csrftoken",
+]
+
+CORS_ALLOW_METHODS = [
+    "DELETE",
+    "GET",
+    "OPTIONS",
+    "PATCH",
+    "POST",
+    "PUT",
 ]
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
