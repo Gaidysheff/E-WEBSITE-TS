@@ -4,9 +4,10 @@ import type {
   ProductSearch,
   ProductUrlQuery,
 } from "@/lib/types";
-import api, { BASE_URL } from "@/api/api";
 import { keepPreviousData, queryOptions } from "@tanstack/react-query";
 
+import { FILTERING_URL } from "@/api/endpoints.ts";
+import { publicApi } from "@/api/api";
 import { useParams } from "@tanstack/react-router";
 
 const filteringOptions = (options: ProductUrlQuery) => {
@@ -66,7 +67,8 @@ export default filteringOptions;
 
 const fetchProducts = async (options: ProductSearch) => {
   try {
-    const response = await api.get(`${BASE_URL}/api/filtering`, {
+    const response = await publicApi.get(FILTERING_URL, {
+      // const response = await publicApi.get(`${BASE_URL}/api/core_app/filtering`, {
       params: {
         shape: options.shape || undefined, // и ?shape=...
         brand: options.brand || undefined, // и ?brand=...
@@ -80,8 +82,7 @@ const fetchProducts = async (options: ProductSearch) => {
         rating: options.rating || undefined,
       },
     });
-
-    // console.log("🚀 ~ fetchProducts ~ response:", response);
+    console.log("🚀 ~ fetchProducts ~ response:", response);
 
     return response.data;
   } catch (error) {

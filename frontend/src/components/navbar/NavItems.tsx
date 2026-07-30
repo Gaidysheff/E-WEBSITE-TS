@@ -109,7 +109,10 @@ const NavItems = ({ mobile }: Props) => {
                 ? user?.firstName || user?.lastName
                 : user?.username
                   ? user?.username
-                  : user?.email.split("@")[0]}
+                  : // Сначала проверяем наличие email, и только потом split
+                    user?.email
+                    ? user.email.split("@")[0]
+                    : "Гость"}
             </div>
           </Link>
 

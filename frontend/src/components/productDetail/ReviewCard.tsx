@@ -118,7 +118,9 @@ const ReviewCard = ({ review, user, product }: Props) => {
           <p className="font-semibold text-sm xsm:text-lg text-primaryDark">
             {review?.user?.firstName || review?.user?.lastName
               ? `${review?.user?.firstName} ${review?.user?.lastName}`
-              : `${review?.user?.email.split("@")[0]}`}
+              : review?.user?.email
+                ? `${review?.user?.email.split("@")[0]}`
+                : "Гость"}
           </p>
 
           <div className="flex gap-1 mt-2">

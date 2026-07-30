@@ -384,7 +384,7 @@ export function Login() {
               {/* Login */}
             </Button>
 
-            <div className="mt-6">
+            {/* <div className="mt-6">
               <div className="relative mb-4">
                 <div className="absolute inset-0 flex items-center">
                   <span className="w-full border-t" />
@@ -392,21 +392,21 @@ export function Login() {
                 <div className="relative flex justify-center text-xs uppercase">
                   <span className="bg-white px-2 text-muted-foreground">
                     {LL.auth.or()}
-                    {/* Or continue with */}
+                    Or continue with
                   </span>
                 </div>
               </div>
-            </div>
+            </div> */}
 
-            <Button
+            {/* <Button
               variant="outline"
               className="w-full rounded-xl h-12"
               onClick={() => googleLogin()}
             >
               <FcGoogle className="mr-2 size-6" />
               {LL.auth.google()}
-              {/* Continue with Google */}
-            </Button>
+              Continue with Google
+            </Button> */}
           </CardFooter>
         </Card>
       </section>

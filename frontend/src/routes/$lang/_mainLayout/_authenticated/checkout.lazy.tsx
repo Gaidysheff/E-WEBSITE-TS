@@ -680,7 +680,7 @@ function CheckoutPage() {
             <input
               type="hidden"
               name="TermUrl"
-              value={`${BASE_URL}/api/payments/post3ds/`}
+              value={`${BASE_URL}/api/core_app/payments/post3ds/`}
             />
           </form>
         </Modal>

@@ -13,16 +13,16 @@ from drf_spectacular.views import (
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("users/", include("users.urls")),
-    path("api/", include("api.urls")),
+    path("api/users/", include("users.urls")),
+    path("api/core_app/", include("api.urls")),
     # path("auth/", include("knox.urls")),
-    path("mailing/", include("mailing.urls")),
+    path("api/mailing/", include("mailing.urls")),
     path(
-        "password_reset/",
+        "api/password_reset/",
         include("django_rest_passwordreset.urls", namespace="password_reset"),
     ),
-    path("logout/", knox_views.LogoutView.as_view(), name="knox_logout"),
-    path("logoutall/", knox_views.LogoutAllView.as_view(), name="knox_logoutall"),
+    path("api/logout/", knox_views.LogoutView.as_view(), name="knox_logout"),
+    path("api/logoutall/", knox_views.LogoutAllView.as_view(), name="knox_logoutall"),
     path("schema/", SpectacularAPIView.as_view(), name="schema"),
     # Optional UI:
     path(

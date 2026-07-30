@@ -3,14 +3,14 @@ import privateApi, { publicApi } from "@/api/api.ts";
 import { env } from "@/lib/env";
 import { type User } from "@/lib/types";
 const BASE_URL = env.VITE_API_URL;
-const LOGOUT_URL = `${BASE_URL}/logoutall/`;
 
-const REGISTER_URL = `${BASE_URL}/users/register/`;
-const LOGIN_URL = `${BASE_URL}/users/login/`;
-const PASSWORD_RESET_URL = `${BASE_URL}/password_reset/`;
-const PASSWORD_CONFIRM_URL = `${BASE_URL}/password_reset/confirm/`;
+const LOGOUT_URL = `${BASE_URL}/api/logoutall/`;
+const REGISTER_URL = `${BASE_URL}/api/users/register/`;
+const LOGIN_URL = `${BASE_URL}/api/users/login/`;
+const PASSWORD_RESET_URL = `${BASE_URL}/api/password_reset/`;
+const PASSWORD_CONFIRM_URL = `${BASE_URL}/api/password_reset/confirm/`;
 
-export const GET_USER_CARTCODE_URL = `${BASE_URL}/users/get_user_cart_code/`;
+export const GET_USER_CARTCODE_URL = `${BASE_URL}/api/users/get_user_cart_code/`;
 
 type Auth = Pick<User, "email" | "password">;
 type AuthCart = Auth & { cart_code: string };
@@ -42,9 +42,7 @@ export const login = async (value: AuthCart) => {
     cart_code: value.cart_code,
   };
   try {
-    // const response = await privateApi.post(LOGIN_URL, credentials);
-
-    const response = await publicApi.post(LOGIN_URL, credentials);
+    const response = await privateApi.post(LOGIN_URL, credentials);
     return response;
   } catch (error: any) {
     throw error;

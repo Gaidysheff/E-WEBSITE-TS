@@ -25,9 +25,9 @@ ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
     "192.168.20.2",
-    "e-shop-ts-back.onrender.com",  # Домен вашего сервера на Render
-    "test.gaidysheff.ru",
-    "www.test.gaidysheff.ru",
+    # "e-shop-ts-back.onrender.com",  # Домен вашего сервера на Render
+    # "test.gaidysheff.ru",
+    # "www.test.gaidysheff.ru",
     "eshop.gaidysheff.ru",
     "www.eshop.gaidysheff.ru",
 ]
@@ -47,7 +47,7 @@ ALLOWED_HOSTS = [
 #     ]
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://test.gaidysheff.ru",
+    # "https://test.gaidysheff.ru",
     "https://eshop.gaidysheff.ru",
     "https://e-website-ts.vercel.app",
 ]
@@ -192,11 +192,16 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = "static/"
+MEDIA_URL = "/media/"
+
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "mailing/static")]
 
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-MEDIA_URL = "/media/"
+# !!! ДЛЯ ДЕПЛОЯ - Пути должны быть абсолютными
+# STATIC_ROOT = '/home/g/gaidys2d/eshop/backend_app/static'
+# MEDIA_ROOT = '/home/g/gaidys2d/eshop/backend_app/media'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
