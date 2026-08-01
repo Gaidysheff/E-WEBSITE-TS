@@ -22,12 +22,14 @@ const ThemeSwitch = ({ id }: Props) => {
         >
           <div
             className="p-1 ml-3 border-2 border-primaryDark rounded-md
-						group-hover/button:border-primaryBase transition duration-500
-						group-hover/button:scale-110 cursor-pointer"
+						group-hover/button:border-primaryDark transition duration-500
+						group-hover/button:scale-110 cursor-pointer
+            group-hover:text-primaryDark/50"
           >
             <Sun
               className="group-hover/button:stroke-primaryBase transition
-							duration-500 group-hover/button:scale-110"
+							duration-500 group-hover/button:scale-110 hover:text-primaryDark/50"
+              size={30}
             />
           </div>
         </button>
@@ -44,12 +46,14 @@ const ThemeSwitch = ({ id }: Props) => {
         >
           <div
             className="p-1 ml-3 border-2 border-primaryDark rounded-md
-						group-hover/button:border-primaryBase transition duration-500
-						group-hover/button:scale-110 cursor-pointer"
+						group-hover/button:border-primaryDark transition duration-500
+						group-hover/button:scale-110 cursor-pointer
+            group-hover:text-primaryDark/50"
           >
             <Moon
               className="group-hover/button:stroke-primaryBase transition
-							duration-500 group-hover/button:scale-110"
+							duration-500 group-hover/button:scale-110 hover:text-primaryDark/50"
+              size={30}
             />
           </div>
         </button>

@@ -2,7 +2,7 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from "@/components/ui-modified/tooltip";
 
 import { AppLink as Link } from "@/components/appLink/AppLink";
 import { useI18nContext } from "@/i18n/i18n-react";

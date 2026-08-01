@@ -1,62 +1,125 @@
-import CurrencySelector from "@/components/currency/CurrencySelector.tsx";
-import FilterDrawer from "@/components/filter/FilterDrawer.tsx";
-import { LayoutGrid } from "lucide-react";
+// import CurrencySelector from "@/components/currency/CurrencySelector.tsx";
+// import FilterDrawer from "@/components/filter/FilterDrawer.tsx";
+// import { LayoutGrid } from "lucide-react";
+
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui-modified/tooltip";
+
 import { AppLink as Link } from "@/components/appLink/AppLink";
 import MobileNavbar from "./MobileNavbar";
-import NavItems from "./NavItems";
-import SearchButton from "./SearchButton";
-import SearchForm from "./SearchForm";
-import SettingsDrawer from "@/components/settings/SettingsDrawer.tsx";
-import ThemeSwitch from "./ThemeSwitch";
-import { useI18nContext } from "@/i18n/i18n-react";
-import { useRouter } from "@tanstack/react-router";
-import { useState } from "react";
-import { useTheme } from "@/store/ThemeContext";
+import OptionsAuth from "./OptionsAuth";
+import OptionsMain from "./OptionsMain";
+import OptionsSupport from "./OptionsSupport";
+
+// import NavItems from "./NavItems";
+
+// import SearchForm from "./SearchForm";
+// import SettingsDrawer from "@/components/settings/SettingsDrawer.tsx";
+// import ThemeSwitch from "./ThemeSwitch";
+// import { useI18nContext } from "@/i18n/i18n-react";
+// import { useRouter } from "@tanstack/react-router";
+// import { useState } from "react";
+// import { useTheme } from "@/store/ThemeContext";
+
+// import SearchButton from "./SearchButton";
 
 const NavBar = () => {
-  const [showSearchForm, setShowSearchForm] = useState(false);
+  // const [showSearchForm, setShowSearchForm] = useState(false);
 
-  const { theme } = useTheme();
+  // const { theme } = useTheme();
 
-  // Получаем доступ к глобальному состоянию роутера
-  const router = useRouter();
+  // // Получаем доступ к глобальному состоянию роутера
+  // const router = useRouter();
 
-  const { locale } = useI18nContext();
+  // const { locale } = useI18nContext();
 
-  // Определяем, на какой язык мы хотим переключить пользователя
-  const nextLang = locale === "ru" ? "en" : "ru";
+  // // Определяем, на какой язык мы хотим переключить пользователя
+  // const nextLang = locale === "ru" ? "en" : "ru";
 
-  const handleSearch = () => {
-    setShowSearchForm((curr) => !curr);
-  };
+  // const handleSearch = () => {
+  //   setShowSearchForm((curr) => !curr);
+  // };
 
-  const handleLanguageChange = async () => {
-    try {
-      // 1. Берем текущий реальный путь из адресной строки
-      // (например, "/en/products/product-1")
-      const currentPathname = router.state.location.pathname;
+  // const handleLanguageChange = async () => {
+  //   try {
+  //     // 1. Берем текущий реальный путь из адресной строки
+  //     // (например, "/en/products/product-1")
+  //     const currentPathname = router.state.location.pathname;
 
-      // 2. Заменяем языковой префикс в начале строки пути
-      let newPathname = currentPathname;
-      if (currentPathname.startsWith(`/${locale}`)) {
-        newPathname = currentPathname.replace(`/${locale}`, `/${nextLang}`);
-      }
+  //     // 2. Заменяем языковой префикс в начале строки пути
+  //     let newPathname = currentPathname;
+  //     if (currentPathname.startsWith(`/${locale}`)) {
+  //       newPathname = currentPathname.replace(`/${locale}`, `/${nextLang}`);
+  //     }
 
-      // 3. Переходим по новому чистому адресу, сохраняя
-      //  все query-параметры (фильтры)
-      await router.navigate({
-        to: newPathname,
-        // Передаем текущие search-параметры как есть
-        search: (prev: any) => prev,
-      });
-    } catch (error) {
-      console.error("Ошибка при смене языка:", error);
-    }
-  };
+  //     // 3. Переходим по новому чистому адресу, сохраняя
+  //     //  все query-параметры (фильтры)
+  //     await router.navigate({
+  //       to: newPathname,
+  //       // Передаем текущие search-параметры как есть
+  //       search: (prev: any) => prev,
+  //     });
+  //   } catch (error) {
+  //     console.error("Ошибка при смене языка:", error);
+  //   }
+  // };
 
   return (
     <>
       <nav
+        className="bg-card sticky top-0 z-20 w-full py-4
+        border-b border-primaryLight"
+      >
+        <div className="container">
+          <div className="flex justify-between items-center gap-2 lg:gap-8">
+            {/* ----------------- Brand ----------------- */}
+            <Tooltip>
+              <TooltipTrigger>
+                <div className="min-w-[120px]">
+                  <Link to="/">
+                    <h1
+                      className="text-2xl font-extrabold text-primaryDark
+                      hover:text-primaryDark/50 hover:scale-110 
+                      transition duration-300"
+                    >
+                      E-Shop
+                    </h1>
+                  </Link>
+                </div>
+              </TooltipTrigger>
+              <TooltipContent mainColorTooltip side="bottom">
+                <p>на Главную</p>
+              </TooltipContent>
+            </Tooltip>
+
+            {/* ------------ Menu for DeskTop version ------------ */}
+            <div
+              className="max-lg:hidden w-full
+              flex justify-between items-center gap-6"
+            >
+              {/* -------------- Core icons -------------- */}
+              <OptionsMain />
+
+              {/* ------------- Authorization ------------- */}
+              <OptionsAuth />
+
+              {/* ----------------- Other ----------------- */}
+              <OptionsSupport />
+            </div>
+
+            {/* ---------- Hidden Menu for Mobile version ---------- */}
+            <div className="max-lg:block hidden">
+              <div className="flex items-center">
+                <MobileNavbar />
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+      {/* <nav
         className="bg-card sticky top-0 z-20 w-full py-4
         border-b border-primaryLight"
       >
@@ -141,13 +204,13 @@ const NavBar = () => {
             )}
           </div>
         </div>
-      </nav>
+      </nav> */}
 
-      {showSearchForm && (
+      {/* {showSearchForm && (
         <div className="w-[300px] mx-auto mt-4 max-lg:flex justify-center hidden">
           <SearchForm />
         </div>
-      )}
+      )} */}
     </>
   );
 };
