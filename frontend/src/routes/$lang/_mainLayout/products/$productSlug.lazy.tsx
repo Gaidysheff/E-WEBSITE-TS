@@ -81,7 +81,7 @@ function IndividualProductComponent() {
           title={`${LL.productSection.titleRelated()}`}
           similar_products={similar_products}
           detailPage
-          loadingFromDetailPage={false}
+          // loadingFromDetailPage={false}
         />
       </div>
     </>

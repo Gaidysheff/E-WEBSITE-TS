@@ -81,9 +81,9 @@ function RouteComponent() {
 
         <ProductSection
           title={`${LL.productSection.titleFeatured()}`}
-          similar_products={[]}
-          detailPage={false}
-          loadingFromDetailPage={false}
+          // similar_products={[]}
+          // detailPage={false}
+          // loadingFromDetailPage={false}
         />
       </main>
     </>

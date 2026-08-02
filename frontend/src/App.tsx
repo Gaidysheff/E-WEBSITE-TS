@@ -15,6 +15,7 @@ import { routeTree } from "./routeTree.gen";
 
 const router = createRouter({
   routeTree,
+  scrollRestoration: true, // Включает автоматическое управление прокруткой
   // context: { auth },
   defaultNotFoundComponent: () => {
     return <Error404notFound />;

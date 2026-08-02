@@ -36,8 +36,8 @@ export const Route = createFileRoute(
       <CustomerReviewsSkeleton />
       <ReviewCardContainerSkeleton />
       <ProductSection
-        title=""
-        similar_products={[]}
+        // title=""
+        // similar_products={[]}
         detailPage
         loadingFromDetailPage={true}
       />

@@ -7,10 +7,10 @@ import ProductCardSkeleton from "./ProductCardSkeleton.tsx";
 import Skeleton from "react-loading-skeleton";
 
 type Props = {
-  title: string;
-  similar_products: Product[];
-  detailPage: boolean;
-  loadingFromDetailPage: boolean;
+  title?: string;
+  similar_products?: Product[];
+  detailPage?: boolean;
+  loadingFromDetailPage?: boolean;
 };
 
 const ProductSection = ({
@@ -22,12 +22,12 @@ const ProductSection = ({
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
+  // Вытаскиваем сохраненный язык из localStorage или проверяем язык браузера
+  const savedLang = localStorage.getItem("app_lang") || "ru";
+
   const getProducts = async () => {
     try {
       await publicApi.get(FEATURED_PRODUCT_LIST_URL).then((response) => {
-        // console.log("🚀 ~ getProducts ~ response:", response);
-        // console.log("🚀 ~ getProducts ~ response:", response.data);
-
         const res = response.data;
         const loadedData = [];
 
@@ -59,18 +59,33 @@ const ProductSection = ({
     }
   };
 
-  if (detailPage) {
-    useEffect(() => {
-      setProducts(similar_products);
-      // console.log("🚀 ~ XXXXXXX:", similar_products);
+  // if (detailPage) {
+  //   useEffect(() => {
+  //     similar_products && setProducts(similar_products);
+  //     setIsLoading(false);
+  //   });
+  // } else {
+  //   useEffect(() => {
+  //     getProducts();
+  //   }, [savedLang]);
+  // }
+
+  useEffect(() => {
+    if (detailPage) {
+      // Случай 1: Страница товара (берем похожие товары из пропсов)
+      if (similar_products) {
+        setProducts(similar_products);
+      }
       setIsLoading(false);
-    });
-  } else {
-    useEffect(() => {
-      getProducts();
-      // console.log("🚀 ~ YYYYYYY:");
-    }, []);
-  }
+    } else {
+      // Случай 2: Главная страница (загружаем товары с сервера)
+      setIsLoading(true);
+      getProducts(); // Ваша функция загрузки
+    }
+
+    // Принудительный скролл вверх при смене страницы или языка
+    // window.scrollTo(0, 0);
+  }, [detailPage, similar_products, savedLang]); // <--- Теперь всё под контролем
 
   return (
     <section>

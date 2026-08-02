@@ -7,6 +7,8 @@ import {
   createRootRoute,
   useLocation,
   useParams,
+  useNavigate,
+  useSearch,
 } from "@tanstack/react-router";
 import { useCallback, useEffect } from "react";
 import { CurrencyProvider } from "@/store/CurrencyContext";
@@ -18,7 +20,6 @@ import { ToastContainer } from "react-toastify";
 import TypesafeI18n from "@/i18n/i18n-react";
 import { UserContextProvider } from "@/store/UserContext.tsx";
 import { loadLocale } from "@/i18n/i18n-util.sync"; // Импортируем загрузчик
-import { useNavigate, useSearch } from "@tanstack/react-router";
 import { toast } from "react-toastify";
 import { type Locales } from "@/i18n/i18n-types"; // Импортируем ваш автогенерируемый тип языков
 import { useI18nContext } from "@/i18n/i18n-react";
