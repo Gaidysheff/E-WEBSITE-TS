@@ -8,6 +8,16 @@ export const publicApi = axios.create({
   baseURL: env.VITE_API_URL,
 });
 
+//  Интерцептор для публичных запросов (Карусель, товары, категории)
+publicApi.interceptors.request.use((config) => {
+  const currentLang = localStorage.getItem("app_lang") || "ru";
+  // Пишем строго в нижнем регистре, чтобы заголовки не резались серверами
+  config.headers["accept-language"] = currentLang;
+  return config;
+});
+
+// --------------------------------------------------------------------
+
 // 2. Для приватных запросов (С авторизацией)
 const privateApi = axios.create({
   baseURL: env.VITE_API_URL,
@@ -36,7 +46,8 @@ privateApi.interceptors.request.use((config) => {
   const currentLang = localStorage.getItem("app_lang") || "ru";
 
   // Передаем его в стандартный заголовок
-  config.headers["Accept-Language"] = currentLang;
+  // config.headers["Accept-Language"] = currentLang;
+  config.headers["accept-language"] = currentLang; // Тоже в нижнем регистре
 
   return config;
 });
