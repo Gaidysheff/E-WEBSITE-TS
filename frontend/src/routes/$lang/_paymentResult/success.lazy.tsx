@@ -5,6 +5,7 @@ import { AppLink as Link } from "@/components/appLink/AppLink";
 import SuccessSkeleton from "@/components/paymentResult/SuccessSkeleton.tsx";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { useCart } from "@/store/CartContext.tsx";
+import { useI18nContext } from "@/i18n/i18n-react";
 import useWindowSize from "react-use/lib/useWindowSize";
 
 export const Route = createLazyFileRoute("/$lang/_paymentResult/success")({
@@ -12,6 +13,8 @@ export const Route = createLazyFileRoute("/$lang/_paymentResult/success")({
 });
 
 export function Success() {
+  const { LL } = useI18nContext();
+
   const [loading, setLoading] = useState<boolean>(true);
 
   const { orderId, cryptogram } = Route.useSearch() as {
@@ -84,27 +87,31 @@ export function Success() {
           className="text-2xl xsm:text-3xl sm:text-4xl md:text-5xl
           font-semibold text-green-900 leading-snug"
         >
-          🎉 Thank You for Your Purchase!
+          {LL.successPage.thanx()}
+          {/* 🎉 Thank You for Your Purchase! */}
         </h1>
 
         {/* ================ Эмуляция ===================== */}
         <div className="bg-green-900 text-white">
           <h2 className="text-xl pb-5">
-            Эта надпись показана только в тестовом режиме
+            {LL.successPage.signTestOne()}
+            {/* Эта надпись показана только в тестовом режиме */}
           </h2>
           <p className="py-3">
-            С сервера-эквайринга была получена криптограмма, платёжные данные
-            были зашифрованы и переданы на сервер.
+            {LL.successPage.signTestTwo()}
+            {/* С сервера-эквайринга была получена криптограмма, платёжные данные
+  были зашифрованы и переданы на сервер. */}
           </p>
           <p className="break-all text-sm">{cryptogram}</p>
         </div>
         {/* ================================================== */}
 
         <p className="text-lg md:text-xl text-green-800 max-w-2xl mx-auto">
-          Your order
+          {LL.successPage.order()}
+          {/* Your order */}
         </p>
         <p className="text-gray-500">
-          Order number:{" "}
+          {LL.successPage.orderNo()} {/* Order number:{" "} */}
           <span
             className="font-bold text-primaryDark text-sm 2xsm:text-lg
           xsm:text-xl sm:text-2xl"
@@ -113,8 +120,9 @@ export function Success() {
           </span>
         </p>
         <p className="text-lg md:text-xl text-green-800 max-w-2xl mx-auto">
-          was placed successfully! We truly appreciate your business and will
-          send you updates once your order ships.
+          {LL.successPage.messageSuccess()}
+          {/* was placed successfully! We truly appreciate your business and will
+          send you updates once your order ships. */}
         </p>
         <div className="flex flex-col sm:flex-row justify-center gap-4 pt-4">
           <Link
@@ -123,7 +131,8 @@ export function Success() {
             text-white text-base font-medium hover:bg-green-800
             transition duration-300"
           >
-            View Order
+            {LL.successPage.orderView()}
+            {/* View Order */}
           </Link>
           <Link
             to="/$lang/"
@@ -131,7 +140,8 @@ export function Success() {
             text-white text-base font-medium hover:bg-green-800
             transition duration-300"
           >
-            Continue Shopping
+            {LL.successPage.continue()}
+            {/* Continue Shopping */}
           </Link>
         </div>
       </div>

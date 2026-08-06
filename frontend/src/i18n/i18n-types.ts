@@ -514,41 +514,6 @@ type RootTranslation = {
 		 */
 		next: string
 	}
-	failedPage: {
-		/**
-		 * О​й​!​ ​О​ш​и​б​к​а​ ​о​п​л​а​т​ы​.
-		 */
-		title: string
-		/**
-		 * Ч​т​о​-​т​о​ ​п​о​ш​л​о​ ​н​е​ ​т​а​к​ ​п​р​и​ ​о​б​р​а​б​о​т​к​е​ ​в​а​ш​е​г​о​ ​п​л​а​т​е​ж​а​.​ ​Н​е​ ​б​е​с​п​о​к​о​й​т​е​с​ь​ ​—​ ​с​р​е​д​с​т​в​а​ ​с​ ​в​а​ш​е​й​ ​к​а​р​т​ы​ ​н​е​ ​б​ы​л​и​ ​с​п​и​с​а​н​ы​.
-		 */
-		description: string
-		/**
-		 * П​о​п​р​о​б​о​в​а​т​ь​ ​с​н​о​в​а
-		 */
-		tryAgain: string
-		/**
-		 * С​в​я​ж​и​т​е​с​ь​ ​с​ ​н​а​м​и
-		 */
-		contactUs: string
-		/**
-		 * П​о​д​д​е​р​ж​к​а​ ​—​ ​W​h​a​t​s​A​p​p
-		 */
-		contactSupportWa: string
-		/**
-		 * П​о​д​д​е​р​ж​к​а​ ​—​ ​E​m​a​i​l
-		 */
-		contactSupportEmail: string
-		/**
-		 * Ч​а​т​ ​с​ ​п​о​д​д​е​р​ж​к​о​й
-		 */
-		chatWithSupport: string
-		/**
-		 * О​ш​и​б​к​а​ ​о​п​л​а​т​ы​ ​з​а​к​а​з​а​ ​(​К​о​р​з​и​н​а​:​ ​{​c​a​r​t​C​o​d​e​}​)
-		 * @param {string} cartCode
-		 */
-		emailSubject: RequiredParams<'cartCode'>
-	}
 	colorSettings: {
 		/**
 		 * Н​а​с​т​р​о​й​к​и
@@ -1012,6 +977,75 @@ type RootTranslation = {
 		 * И​н​ф​о​р​м​а​ц​и​я​ ​о​т​с​у​т​с​т​в​у​е​т
 		 */
 		absentBirthday: string
+	}
+	successPage: {
+		/**
+		 * �​�​ ​С​п​а​с​и​б​о​ ​з​а​ ​п​о​к​у​п​к​у​!
+		 */
+		thanx: string
+		/**
+		 * Э​т​а​ ​н​а​д​п​и​с​ь​ ​п​о​к​а​з​а​н​а​ ​т​о​л​ь​к​о​ ​в​ ​т​е​с​т​о​в​о​м​ ​р​е​ж​и​м​е
+		 */
+		signTestOne: string
+		/**
+		 * С​ ​с​е​р​в​е​р​а​-​э​к​в​а​й​р​и​н​г​а​ ​б​ы​л​а​ ​п​о​л​у​ч​е​н​а​ ​к​р​и​п​т​о​г​р​а​м​м​а​,​ ​п​л​а​т​ё​ж​н​ы​е​ ​д​а​н​н​ы​е​ ​б​ы​л​и​ ​з​а​ш​и​ф​р​о​в​а​н​ы​ ​и​ ​п​е​р​е​д​а​н​ы​ ​н​а​ ​с​е​р​в​е​р​.
+		 */
+		signTestTwo: string
+		/**
+		 * В​а​ш​ ​з​а​к​а​з
+		 */
+		order: string
+		/**
+		 * Н​о​м​е​р​ ​з​а​к​а​з​а​:
+		 */
+		orderNo: string
+		/**
+		 * З​а​к​а​з​ ​у​с​п​е​ш​н​о​ ​о​ф​о​р​м​л​е​н​!​ ​М​ы​ ​о​ч​е​н​ь​ ​ц​е​н​и​м​ ​В​а​ш​е​ ​с​о​т​р​у​д​н​и​ч​е​с​т​в​о​ ​и​ ​с​о​о​б​щ​и​м​ ​В​а​м​ ​о​ ​е​г​о​ ​о​т​п​р​а​в​к​е​.
+		 */
+		messageSuccess: string
+		/**
+		 * П​р​о​с​м​о​т​р​е​т​ь​ ​з​а​к​а​з
+		 */
+		orderView: string
+		/**
+		 * П​р​о​д​о​л​ж​и​т​ь​ ​п​о​к​у​п​к​и
+		 */
+		'continue': string
+	}
+	failedPage: {
+		/**
+		 * О​й​!​ ​О​ш​и​б​к​а​ ​о​п​л​а​т​ы​.
+		 */
+		title: string
+		/**
+		 * Ч​т​о​-​т​о​ ​п​о​ш​л​о​ ​н​е​ ​т​а​к​ ​п​р​и​ ​о​б​р​а​б​о​т​к​е​ ​в​а​ш​е​г​о​ ​п​л​а​т​е​ж​а​.​ ​Н​е​ ​б​е​с​п​о​к​о​й​т​е​с​ь​ ​—​ ​с​р​е​д​с​т​в​а​ ​с​ ​в​а​ш​е​й​ ​к​а​р​т​ы​ ​н​е​ ​б​ы​л​и​ ​с​п​и​с​а​н​ы​.
+		 */
+		description: string
+		/**
+		 * П​о​п​р​о​б​о​в​а​т​ь​ ​с​н​о​в​а
+		 */
+		tryAgain: string
+		/**
+		 * С​в​я​ж​и​т​е​с​ь​ ​с​ ​н​а​м​и
+		 */
+		contactUs: string
+		/**
+		 * П​о​д​д​е​р​ж​к​а​ ​—​ ​W​h​a​t​s​A​p​p
+		 */
+		contactSupportWa: string
+		/**
+		 * П​о​д​д​е​р​ж​к​а​ ​—​ ​E​m​a​i​l
+		 */
+		contactSupportEmail: string
+		/**
+		 * Ч​а​т​ ​с​ ​п​о​д​д​е​р​ж​к​о​й
+		 */
+		chatWithSupport: string
+		/**
+		 * О​ш​и​б​к​а​ ​о​п​л​а​т​ы​ ​з​а​к​а​з​а​ ​(​К​о​р​з​и​н​а​:​ ​{​c​a​r​t​C​o​d​e​}​)
+		 * @param {string} cartCode
+		 */
+		emailSubject: RequiredParams<'cartCode'>
 	}
 }
 
@@ -1514,40 +1548,6 @@ export type TranslationFunctions = {
 		 */
 		next: () => LocalizedString
 	}
-	failedPage: {
-		/**
-		 * Ой! Ошибка оплаты.
-		 */
-		title: () => LocalizedString
-		/**
-		 * Что-то пошло не так при обработке вашего платежа. Не беспокойтесь — средства с вашей карты не были списаны.
-		 */
-		description: () => LocalizedString
-		/**
-		 * Попробовать снова
-		 */
-		tryAgain: () => LocalizedString
-		/**
-		 * Свяжитесь с нами
-		 */
-		contactUs: () => LocalizedString
-		/**
-		 * Поддержка — WhatsApp
-		 */
-		contactSupportWa: () => LocalizedString
-		/**
-		 * Поддержка — Email
-		 */
-		contactSupportEmail: () => LocalizedString
-		/**
-		 * Чат с поддержкой
-		 */
-		chatWithSupport: () => LocalizedString
-		/**
-		 * Ошибка оплаты заказа (Корзина: {cartCode})
-		 */
-		emailSubject: (arg: { cartCode: string }) => LocalizedString
-	}
 	colorSettings: {
 		/**
 		 * Настройки
@@ -2011,6 +2011,74 @@ export type TranslationFunctions = {
 		 * Информация отсутствует
 		 */
 		absentBirthday: () => LocalizedString
+	}
+	successPage: {
+		/**
+		 * 🎉 Спасибо за покупку!
+		 */
+		thanx: () => LocalizedString
+		/**
+		 * Эта надпись показана только в тестовом режиме
+		 */
+		signTestOne: () => LocalizedString
+		/**
+		 * С сервера-эквайринга была получена криптограмма, платёжные данные были зашифрованы и переданы на сервер.
+		 */
+		signTestTwo: () => LocalizedString
+		/**
+		 * Ваш заказ
+		 */
+		order: () => LocalizedString
+		/**
+		 * Номер заказа:
+		 */
+		orderNo: () => LocalizedString
+		/**
+		 * Заказ успешно оформлен! Мы очень ценим Ваше сотрудничество и сообщим Вам о его отправке.
+		 */
+		messageSuccess: () => LocalizedString
+		/**
+		 * Просмотреть заказ
+		 */
+		orderView: () => LocalizedString
+		/**
+		 * Продолжить покупки
+		 */
+		'continue': () => LocalizedString
+	}
+	failedPage: {
+		/**
+		 * Ой! Ошибка оплаты.
+		 */
+		title: () => LocalizedString
+		/**
+		 * Что-то пошло не так при обработке вашего платежа. Не беспокойтесь — средства с вашей карты не были списаны.
+		 */
+		description: () => LocalizedString
+		/**
+		 * Попробовать снова
+		 */
+		tryAgain: () => LocalizedString
+		/**
+		 * Свяжитесь с нами
+		 */
+		contactUs: () => LocalizedString
+		/**
+		 * Поддержка — WhatsApp
+		 */
+		contactSupportWa: () => LocalizedString
+		/**
+		 * Поддержка — Email
+		 */
+		contactSupportEmail: () => LocalizedString
+		/**
+		 * Чат с поддержкой
+		 */
+		chatWithSupport: () => LocalizedString
+		/**
+		 * Ошибка оплаты заказа (Корзина: {cartCode})
+		 */
+		emailSubject: (arg: { cartCode: string }) => LocalizedString
 	}
 }
 

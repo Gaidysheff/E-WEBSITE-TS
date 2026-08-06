@@ -153,18 +153,6 @@ const en: Translation = {
     previous: "Previous",
     next: "Next",
   },
-
-  failedPage: {
-    title: "Oops! Payment Failed.",
-    description:
-      "Something went wrong while processing your payment. Don't worry — your card hasn't been charged.",
-    tryAgain: "Try Again",
-    contactUs: "Contact us",
-    contactSupportWa: "Contact Support - WhatsApp",
-    contactSupportEmail: "Contact Support - Email",
-    chatWithSupport: "Chat with Support",
-    emailSubject: "Payment error for order (Cart: {cartCode})",
-  },
   colorSettings: {
     settings: "Settings",
     setColor: "Set your preferable color.",
@@ -296,6 +284,29 @@ const en: Translation = {
       "It looks like you haven't placed any orders yet. When you do, they'll appear here.",
     absentPhone: "Number is not specified",
     absentBirthday: "No information available",
+  },
+  successPage: {
+    thanx: "🎉 Thank You for Your Purchase!",
+    signTestOne: "This inscription is shown only in test mode.",
+    signTestTwo:
+      "A cryptogram was received from the acquiring server, the payment data was encrypted and transmitted to the server.",
+    order: "Your order",
+    orderNo: "Order number:",
+    messageSuccess:
+      "was placed successfully! We truly appreciate your business and will send you updates once your order ships.",
+    orderView: "View Order",
+    continue: "Continue Shopping",
+  },
+  failedPage: {
+    title: "Oops! Payment Failed.",
+    description:
+      "Something went wrong while processing your payment. Don't worry — your card hasn't been charged.",
+    tryAgain: "Try Again",
+    contactUs: "Contact us",
+    contactSupportWa: "Contact Support - WhatsApp",
+    contactSupportEmail: "Contact Support - Email",
+    chatWithSupport: "Chat with Support",
+    emailSubject: "Payment error for order (Cart: {cartCode})",
   },
 };
 

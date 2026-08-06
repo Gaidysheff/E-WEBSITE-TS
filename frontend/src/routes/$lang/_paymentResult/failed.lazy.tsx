@@ -134,7 +134,7 @@ export function Failure() {
         <p className="text-lg md:text-xl text-red-800 max-w-2xl mx-auto">
           {LL.failedPage.description()}
           {/* Something went wrong while processing your payment. Do't worry - your
-          order hasn't been charged. */}
+ order hasn't been charged. */}
         </p>
         <div className="flex flex-col sm:flex-row justify-center gap-4 pt-4">
           <div className="flex flex-col">
