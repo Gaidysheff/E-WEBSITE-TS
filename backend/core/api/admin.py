@@ -292,7 +292,8 @@ class OrderItemAdmin(admin.ModelAdmin):
 
 
 @admin.register(CustomerAddress)
-class CustomerAddressAdmin(admin.ModelAdmin):
+class CustomerAddressAdmin(TranslationAdmin):
+    # class CustomerAddressAdmin(admin.ModelAdmin):
     list_display = [
         "street",
         "house",

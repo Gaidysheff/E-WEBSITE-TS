@@ -1,5 +1,5 @@
 from modeltranslation.translator import register, TranslationOptions
-from .models import Product, Category, Color, Review, DeliveryOption
+from .models import Product, Category, Color, Review, DeliveryOption, CustomerAddress
 
 
 @register(Product)
@@ -26,3 +26,8 @@ class ReviewTranslationOptions(TranslationOptions):
 @register(DeliveryOption)
 class DeliveryTranslationOptions(TranslationOptions):
     fields = ("name", "description")
+
+
+@register(CustomerAddress)
+class DeliveryTranslationOptions(TranslationOptions):
+    fields = ("street", "city", "region", "state")

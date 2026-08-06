@@ -294,6 +294,8 @@ const en: Translation = {
     ordersNoYet: "No Orders Yet",
     ordersEmptyText:
       "It looks like you haven't placed any orders yet. When you do, they'll appear here.",
+    absentPhone: "Number is not specified",
+    absentBirthday: "No information available",
   },
 };
 

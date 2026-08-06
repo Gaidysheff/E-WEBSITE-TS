@@ -296,6 +296,8 @@ const ru: BaseTranslation = {
     ordersNoYet: "Заказов пока нет.",
     ordersEmptyText:
       "Похоже, вы еще не размещали заказы. Когда вы это сделаете, они появятся здесь.",
+    absentPhone: "Номер не указан",
+    absentBirthday: "Информация отсутствует",
   },
 };
 

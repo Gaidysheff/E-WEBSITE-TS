@@ -35,6 +35,9 @@ export const UserContextProvider = ({ children }: UserProviderProps) => {
   // console.log("🚀 ~ UserContextProvider ~ user:", user);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  // Вытаскиваем сохраненный язык из localStorage или проверяем язык браузера
+  const savedLang = localStorage.getItem("app_lang") || "ru";
+
   const getUser = useCallback(async () => {
     const token = localStorage.getItem("Token");
     if (!token) {
@@ -74,7 +77,7 @@ export const UserContextProvider = ({ children }: UserProviderProps) => {
 
   useEffect(() => {
     getUser();
-  }, [getUser]);
+  }, [getUser, savedLang]);
 
   // Передаем getUser в значение контекста, чтобы его можно было вызвать
   // из формы логина!

@@ -8,8 +8,9 @@ import { type OrderItem, type WishList } from "@/lib/types.ts";
 import { useCart } from "@/store/CartContext.tsx";
 import { toast } from "react-toastify";
 import { addToCartAction } from "@/api/actions.ts";
-import { Link } from "@tanstack/react-router";
+// import { useParams } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
+import { AppLink as Link } from "@/components/appLink/AppLink";
 
 interface Props {
   item: OrderItem | WishList;
@@ -17,6 +18,13 @@ interface Props {
 }
 
 const MiniProductCard = ({ item, usedForOrder }: Props) => {
+  // / Внутри компонента MiniProductCard
+  // const { lang } = useParams({
+  //   from: "/$lang/_mainLayout/_authenticated/profile",
+  // }); // укажите ваш точный путь профиля
+
+  // const { lang } = useParams({ strict: false });
+
   const { formatPrice } = useCurrency();
 
   const { refreshCart, cartCode } = useCart();
@@ -45,6 +53,12 @@ const MiniProductCard = ({ item, usedForOrder }: Props) => {
   return (
     <div className="flex flex-col gap-2">
       <Link
+        // <Link
+        //   to="/$lang/products/$productId"
+        //   params={{
+        //     lang: lang,
+        //     productId: item.product.slug,
+        //   }}
         to={`/products/${item.product.slug}`}
         className="w-[150px] sm:w-[220px] rounded-lg shadow-md bg-card 
         flex flex-col items-center gap-3 px-4 py-5 transition-all duration-300 

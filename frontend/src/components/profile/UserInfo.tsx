@@ -21,6 +21,58 @@ const UserInfo = ({ user, isLoading, forCheckoutPage }: Props) => {
   // const address = user?.address;
 
   const imgURL = `${BASE_URL}${user?.image}`;
+
+  const savedLang = localStorage.getItem("app_lang") || "ru";
+
+  // ---------------------- Format-Mask for birthday ----------------------
+
+  // Сначала создаем переменную, которая может быть Date или null
+  const birthdayDate = user?.birthday ? new Date(user.birthday) : null;
+
+  // Функция форматирования, использующая Intl.DateTimeFormat для локализации
+  const formatBirthday = (date: Date | null, lang: string) => {
+    if (!date || isNaN(date.getTime())) return LL.profile.absentBirthday();
+
+    // if (!date || isNaN(date.getTime())) return "Информация отсутствует";
+
+    // Используем Intl.DateTimeFormat для автоматического выбора формата
+    // (DD.MM.YYYY для ru)
+    return new Intl.DateTimeFormat(lang === "ru" ? "ru-RU" : "en-GB", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    }).format(date);
+  };
+
+  // Применение в компоненте
+  const displayDate = formatBirthday(birthdayDate, savedLang);
+
+  // ---------------------- Format-Mask for phone ----------------------
+
+  const formatPhone = (phone: string | undefined): string => {
+    if (!phone) return LL.profile.absentPhone();
+
+    // if (!phone) return "Номер не указан";
+
+    // Очищаем строку от всего, кроме цифр
+    const cleaned = phone.replace(/\D/g, "");
+
+    // Применяем маску для формата +7 123 456-78-90
+    // Группируем цифры: 1 (страна), 3 (код), 3, 2, 2
+    const match = cleaned.match(/^(\d{1})(\d{3})(\d{3})(\d{2})(\d{2})$/);
+
+    if (match) {
+      // match[0] — это вся строка (нам не нужна)
+      // match[1]...match[5] — это наши группы цифр
+      return `+${match[1]} ${match[2]} ${match[3]}-${match[4]}-${match[5]}`;
+    }
+
+    return phone; // Возвращаем как есть, если формат не совпал
+  };
+
+  // Применение в компоненте
+  const displayPhone = formatPhone(user?.phone);
+
   return (
     <div
       className="sm:grid sm:grid-cols-3 gap-4 mt-5
@@ -82,7 +134,8 @@ const UserInfo = ({ user, isLoading, forCheckoutPage }: Props) => {
                     {LL.profile.phone()}
                     {/* Phone */}
                   </div>
-                  <div className="col-span-2">{user?.phone}</div>
+                  <div className="col-span-2">{displayPhone}</div>
+                  {/* <div className="col-span-2">{user?.phone}</div> */}
                 </div>
                 <div className="grid grid-cols-3 gap-2 my-2">
                   <div className="">
@@ -103,7 +156,8 @@ const UserInfo = ({ user, isLoading, forCheckoutPage }: Props) => {
                     {LL.profile.birthday()}
                     {/* birthday */}
                   </div>
-                  <div className="col-span-2">{user?.birthday}</div>
+                  <div className="col-span-2">{displayDate}</div>
+                  {/* <div className="col-span-2">{user?.birthday}</div> */}
                 </div>
               </div>
             )}

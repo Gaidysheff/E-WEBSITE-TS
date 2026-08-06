@@ -7,10 +7,14 @@ import {
 } from "@/components/ui/sheet";
 
 import { FaHamburger } from "react-icons/fa";
-import NavItems from "./NavItems";
 import OptionsAuth from "./OptionsAuth";
 import OptionsMain from "./OptionsMain";
 import OptionsSupport from "./OptionsSupport";
+
+// import NavItems from "./NavItems";
+
+
+
 
 const MobileNavbar = () => {
   return (

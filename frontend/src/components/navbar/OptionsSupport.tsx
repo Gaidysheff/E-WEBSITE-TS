@@ -52,7 +52,7 @@ const OptionsSupport = () => {
     >
       <div>
         <Tooltip>
-          <TooltipTrigger>
+          <TooltipTrigger asChild>
             <button
               type="button"
               onClick={handleLanguageChange}
@@ -81,8 +81,10 @@ const OptionsSupport = () => {
 
       {/* ------------------------------------- */}
       <Tooltip>
-        <TooltipTrigger>
-          <CurrencySelector />
+        <TooltipTrigger asChild>
+          <div>
+            <CurrencySelector />
+          </div>
         </TooltipTrigger>
         <TooltipContent mainColorTooltip side="bottom">
           <p>Валюта</p>
@@ -91,7 +93,7 @@ const OptionsSupport = () => {
 
       {/* ------------------------------------ */}
       <Tooltip>
-        <TooltipTrigger>
+        <TooltipTrigger asChild>
           {theme === "light" ? (
             <ThemeSwitch id="dark-btn" />
           ) : (

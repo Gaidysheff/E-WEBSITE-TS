@@ -113,8 +113,8 @@ const OptionsAuth = () => {
                     </div>
 
                     <div
-                      className="text-lg font-medium text-primaryDark 
-                  group-hover/profile:text-primaryDark/50 "
+                      className="text-lg font-medium text-primaryDark
+                      group-hover/profile:text-primaryDark/50 "
                     >
                       {/* User's Name */}
                       {user?.firstName || user?.lastName
@@ -134,7 +134,7 @@ const OptionsAuth = () => {
               </Tooltip>
 
               <Tooltip>
-                <TooltipTrigger>
+                <TooltipTrigger asChild>
                   <button
                     type="button"
                     className="text-primaryDark hover:text-primaryDark/50
@@ -156,7 +156,7 @@ const OptionsAuth = () => {
           ) : (
             <div className="flex gap-6">
               <Tooltip>
-                <TooltipTrigger>
+                <TooltipTrigger asChild>
                   <button
                     type="button"
                     className="text-primaryDark hover:text-primaryDark/50
@@ -172,7 +172,7 @@ const OptionsAuth = () => {
               </Tooltip>
 
               <Tooltip>
-                <TooltipTrigger>
+                <TooltipTrigger asChild>
                   <button
                     type="button"
                     className="text-primaryDark hover:text-primaryDark/50
@@ -206,11 +206,11 @@ const OptionsAuth = () => {
             >
               <div
                 className="relative flex items-center h-[60px] w-[60px]
-              justify-center cursor-pointer group/cart hover:scale-110"
+                justify-center cursor-pointer group/cart hover:scale-110"
               >
                 <ShoppingCart
                   className="text-primaryDark hover:text-primaryDark/50
-              transition duration-300"
+                  transition duration-300"
                   size={40}
                 />
                 {/* <FaCartShopping
@@ -220,7 +220,7 @@ const OptionsAuth = () => {
                 {cartItemsCount == 0 || (
                   <span
                     className="absolute top-0 right-0 px-3 py-1 bg-myMainColor
-                  rounded-full text-white group-hover/cart:bg-red-400"
+                    rounded-full text-white group-hover/cart:bg-red-400"
                   >
                     {cartItemsCount}
                   </span>

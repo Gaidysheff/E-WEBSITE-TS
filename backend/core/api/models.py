@@ -2,12 +2,13 @@ from django.conf import settings
 from django.db import models
 import random
 import string
+from transliterate import translit
 
 from colorfield.fields import ColorField
 
 from .mixins import AutoTranslationMixin  # Импортируем наш миксин
 
-from deep_translator import GoogleTranslator  # Бесплатный переводчик
+# from deep_translator import GoogleTranslator  # Бесплатный переводчик
 
 
 # ------------------ Менеджеры для выбора "в наличии" ------------------
@@ -334,7 +335,7 @@ class OrderItem(models.Model):
         # return f"Order {self.product.name} - {self.order.stripe_checkout_id}"
 
 
-class CustomerAddress(models.Model):
+class CustomerAddress(AutoTranslationMixin, models.Model):
     customer = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="address"
     )
@@ -349,6 +350,15 @@ class CustomerAddress(models.Model):
 
     def __str__(self):
         return f"{self.customer.email} - {self.street} - {self.city}"
+
+    def save(self, *args, **kwargs):
+        # Если заполнено только русское название, транслитерируем на английский
+        if self.street_ru and not self.street_en:
+            self.street_en = translit(self.street_ru, "ru", reversed=True)
+        # Если заполнено только английское, выполняем обратную транслитерацию
+        elif self.street_en and not self.street_ru:
+            self.street_ru = translit(self.street_en, "ru")
+        super().save(*args, **kwargs)
 
 
 class DeliveryOption(AutoTranslationMixin, models.Model):

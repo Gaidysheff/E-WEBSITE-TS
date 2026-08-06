@@ -1004,6 +1004,14 @@ type RootTranslation = {
 		 * П​о​х​о​ж​е​,​ ​в​ы​ ​е​щ​е​ ​н​е​ ​р​а​з​м​е​щ​а​л​и​ ​з​а​к​а​з​ы​.​ ​К​о​г​д​а​ ​в​ы​ ​э​т​о​ ​с​д​е​л​а​е​т​е​,​ ​о​н​и​ ​п​о​я​в​я​т​с​я​ ​з​д​е​с​ь​.
 		 */
 		ordersEmptyText: string
+		/**
+		 * Н​о​м​е​р​ ​н​е​ ​у​к​а​з​а​н
+		 */
+		absentPhone: string
+		/**
+		 * И​н​ф​о​р​м​а​ц​и​я​ ​о​т​с​у​т​с​т​в​у​е​т
+		 */
+		absentBirthday: string
 	}
 }
 
@@ -1995,6 +2003,14 @@ export type TranslationFunctions = {
 		 * Похоже, вы еще не размещали заказы. Когда вы это сделаете, они появятся здесь.
 		 */
 		ordersEmptyText: () => LocalizedString
+		/**
+		 * Номер не указан
+		 */
+		absentPhone: () => LocalizedString
+		/**
+		 * Информация отсутствует
+		 */
+		absentBirthday: () => LocalizedString
 	}
 }
 

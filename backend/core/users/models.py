@@ -10,6 +10,10 @@ from django.template.loader import render_to_string
 from django.core.mail import EmailMultiAlternatives
 from django.utils.html import strip_tags
 import os
+from api.mixins import AutoTranslationMixin
+from transliterate import translit
+
+# Импортируем наш миксин из Приложения api
 
 
 class CustomUserManager(BaseUserManager):
@@ -37,7 +41,7 @@ class CustomUserManager(BaseUserManager):
         return self.create_user(email, password, **extra_fields)
 
 
-class CustomUser(AbstractUser):
+class CustomUser(AutoTranslationMixin, AbstractUser):
     email = models.EmailField(max_length=200, unique=True)
     username = models.CharField(max_length=200, null=True, blank=True)
     birthday = models.DateField(null=True, blank=True)
@@ -62,7 +66,21 @@ class CustomUser(AbstractUser):
             # 2. Извлекаем часть до собаки и записываем в username
             self.username = self.email.split("@")[0]
 
-        # 3. Обязательно вызываем стандартный метод сохранения родительского класса
+        # 3. Если заполнено только русское имя, транслитерируем на английский
+        if self.first_name_ru and not self.first_name_en:
+            self.first_name_en = translit(self.first_name_ru, "ru", reversed=True)
+        # 4. Если заполнено только английское, выполняем обратную транслитерацию
+        elif self.first_name_en and not self.first_name_ru:
+            self.first_name_ru = translit(self.first_name_en, "ru")
+
+        # 3. Если заполнено только русская фамилия, транслитерируем на английский
+        if self.last_name_ru and not self.last_name_en:
+            self.last_name_en = translit(self.last_name_ru, "ru", reversed=True)
+        # 4. Если заполнено только английская, выполняем обратную транслитерацию
+        elif self.last_name_en and not self.last_name_ru:
+            self.last_name_ru = translit(self.last_name_en, "ru")
+
+        # 5. Обязательно вызываем стандартный метод сохранения родительского класса
         super().save(*args, **kwargs)
 
     def __str__(self):

@@ -1,11 +1,12 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 from .models import *
+from modeltranslation.admin import TranslationAdmin
 
 
-# admin.site.register(CustomUser)
 @admin.register(CustomUser)
-class CustomUserAdmin(admin.ModelAdmin):
+class CustomUserAdmin(TranslationAdmin):
+    # class CustomUserAdmin(admin.ModelAdmin):
     list_display = [
         "email",
         "username",
