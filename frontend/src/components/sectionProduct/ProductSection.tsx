@@ -46,7 +46,8 @@ const ProductSection = ({
             category: res[key].category.name,
             gender: res[key].gender,
             shape: res[key].shape,
-            is_available: res[key].is_available,
+            isAvailable: res[key].is_available,
+            // is_available: res[key].is_available, сделать замену в типах
           });
         }
 

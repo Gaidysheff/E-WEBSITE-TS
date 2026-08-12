@@ -21,39 +21,37 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [
-    "localhost",
-    "127.0.0.1",
-    "192.168.20.2",
-    # "e-shop-ts-back.onrender.com",  # Домен вашего сервера на Render
-    # "test.gaidysheff.ru",
-    # "www.test.gaidysheff.ru",
-    "eshop.gaidysheff.ru",
-    "www.eshop.gaidysheff.ru",
-]
+if DEBUG:
+    ALLOWED_HOSTS = [
+        "localhost",
+        "127.0.0.1",
+        "192.168.20.2",
+        "e-shop-ts-back.onrender.com",
+    ]
+else:
+    ALLOWED_HOSTS = [
+        "eshop.gaidysheff.ru",
+        "www.eshop.gaidysheff.ru",
+        # "https://mwu0o2-83-217-13-197.ru.tuna.am",
+    ]
 
-# if DEBUG:
-#     ALLOWED_HOSTS = [
-#         "e-shop-ts-back.onrender.com",
-#         "localhost",
-#         "127.0.0.1",
-#         "192.168.20.2",
-#     ]
-# else:
-#     ALLOWED_HOSTS = [
-#         "test.gaidysheff.ru",
-#         "www.test.gaidysheff.ru",
-#         # "https://mwu0o2-83-217-13-197.ru.tuna.am",
-#     ]
+# ALLOWED_HOSTS = [
+#     "localhost",
+#     "127.0.0.1",
+#     "192.168.20.2",
+#     # "e-shop-ts-back.onrender.com",  # Домен вашего сервера на Render
+#     # "test.gaidysheff.ru",
+#     # "www.test.gaidysheff.ru",
+#     "eshop.gaidysheff.ru",
+#     "www.eshop.gaidysheff.ru",
+# ]
+
 
 CSRF_TRUSTED_ORIGINS = [
-    # "https://test.gaidysheff.ru",
     "https://eshop.gaidysheff.ru",
     "https://e-website-ts.vercel.app",
 ]
 # CSRF_TRUSTED_ORIGINS = ["https://mwu0o2-83-217-13-197.ru.tuna.am"]
-
-# ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -67,6 +65,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "api.apps.ApiConfig",
+    "app_news.apps.AppNewsConfig",
     "users.apps.UsersConfig",
     "mailing.apps.MailingConfig",
     "rest_framework",
@@ -195,10 +194,17 @@ USE_TZ = True
 STATIC_URL = "static/"
 MEDIA_URL = "/media/"
 
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-STATICFILES_DIRS = [os.path.join(BASE_DIR, "mailing/static")]
+if DEBUG:
+    STATIC_ROOT = os.path.join(BASE_DIR, "static")
+    MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+    STATICFILES_DIRS = [os.path.join(BASE_DIR, "mailing/static")]
+else:
+    STATIC_ROOT = "/home/g/gaidys2d/eshop/backend_app/static"
+    MEDIA_ROOT = "/home/g/gaidys2d/eshop/backend_app/media"
 
+# STATIC_ROOT = os.path.join(BASE_DIR, "static")
+# MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+# STATICFILES_DIRS = [os.path.join(BASE_DIR, "mailing/static")]
 # !!! ДЛЯ ДЕПЛОЯ - Пути должны быть абсолютными
 # STATIC_ROOT = '/home/g/gaidys2d/eshop/backend_app/static'
 # MEDIA_ROOT = '/home/g/gaidys2d/eshop/backend_app/media'
@@ -234,24 +240,18 @@ CORS_ALLOWED_ORIGINS = [
 # 3. Обязательно разрешаем передачу учетных данных (куки/токены)
 CORS_ALLOW_CREDENTIALS = True  # Обязательно разрешаем передачу кук/авторизации
 
-# if DEBUG:
-#     # CORS_ALLOW_ALL_ORIGINS = True
-#     CORS_ALLOWED_ORIGINS = [
-#         "http://localhost:5173",  # Порт Vite/React фронтенда
-#         "http://127.0.0.1:5173",
-#         "https://e-shop-ts-back.onrender.com/",
-#         "https://e-shop-ts-back.onrender.com",
-#         "https://e-website-ts.vercel.app",
-#         "https://e-website-ts.vercel.app/ru",
-#         "https://e-website-ts.vercel.app/en",
-#     ]
-# else:
-#     CORS_ALLOWED_ORIGINS = [
-#         "https://test.gaidysheff.ru",
-#         "https://www.test.gaidysheff.ru",
-#         "http://test.gaidysheff.ru",
-#         "http://www.test.gaidysheff.ru",
-#     ]
+if DEBUG:
+    CORS_ALLOWED_ORIGINS = [
+        "http://localhost:5173",  # СТРОГО БЕЗ слэша на конце!
+        "http://127.0.0.1:5173",
+        "http://172.27.32.1:5173",
+        "http://192.168.20.2:5173",
+    ]
+else:
+    CORS_ALLOWED_ORIGINS = [
+        "https://gaidysheff.ru",
+        "https://e-website-ts.vercel.app",
+    ]
 
 CORS_ALLOW_HEADERS = list(default_headers) + [
     "accept-language",
@@ -278,7 +278,7 @@ EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = "KALIKA Shop"
+DEFAULT_FROM_EMAIL = "KALIKA Shop <gaidysheff@gmail.com>"
 EMAIL_HOST_USER = os.getenv("GMAIL_EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("GMAIL_EMAIL_HOST_PASSWORD")
 # EMAIL_HOST_USER = os.environ.get("GMAIL_EMAIL_HOST_USER")
@@ -310,7 +310,7 @@ STRIPE_PUBLIC_KEY = os.getenv("STRIPE_PUBLIC_KEY")
 WEBHOOK_SECRET = os.getenv("WEBHOOK_SECRET")
 
 # Если переменная в .env пустая, подставится локальный адрес разработки
-BASE_URL_FRONTEND = os.getenv("BASE_URL_FRONTEND", "test.gaidysheff.ru")
+BASE_URL_FRONTEND = os.getenv("BASE_URL_FRONTEND", "eshop.gaidysheff.ru")
 # BASE_URL_FRONTEND = os.getenv("BASE_URL_FRONTEND", "http://localhost:5173")
 
 # =================== Cloud Payments =======================

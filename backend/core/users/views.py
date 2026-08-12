@@ -1,21 +1,34 @@
-from django.shortcuts import render
+# from django.shortcuts import render
 from rest_framework import viewsets, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import *
 from .models import *
-from api.models import Cart, CartItem
-from rest_framework.response import Response
 from django.contrib.auth import get_user_model, authenticate
 from api.models import Cart
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from knox.models import AuthToken
-from rest_framework.permissions import AllowAny
 import requests
 from rest_framework import status
 
+from django.shortcuts import get_object_or_404
+
+# from django.core.mail import send_mail
+from django.core.mail import EmailMultiAlternatives
+from django.conf import settings
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+
 User = get_user_model()
+
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+from django.conf import settings
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status, permissions
 
 
 def merge_carts(user, guest_cart_code, user_cart):
@@ -201,6 +214,90 @@ def update_user_data(request):
     # Возвращаем обновленные данные через сериализатор
     serializer = UserSerializer(customer)
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+# ======================= User's Email change ========================
+class RequestEmailChangeView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        # Используем созданный ранее сериализатор для валидации данных
+        serializer = EmailChangeRequestSerializer(
+            data=request.data, context={"request": request}
+        )
+
+        if serializer.is_valid(raise_exception=True):
+            # Сохраняем запрос в БД (метод create в сериализаторе вернет объект EmailChangeRequest)
+            change_request = serializer.save()
+
+            # Формируем ссылку для подтверждения
+
+            confirm_link = f"{settings.FRONTEND_URL}/api/users/verify_email_change/{change_request.token}"
+
+            context = {
+                "confirm_link": confirm_link,
+                "email_address": change_request.new_email,  # от куда вытянуть e-mail ???
+            }
+
+            html_message = render_to_string("core/email_reset.html", context=context)
+            plain_message = strip_tags(html_message)
+
+            # --------------- метод send_mail от django.core.mail ----------------
+            # Отправляем письмо на НОВЫЙ адрес
+            # send_mail(
+            #     subject="Подтверждение смены email",
+            #     message=f"Для подтверждения смены адреса перейдите по ссылке: {confirm_link}",
+            #     from_email=settings.DEFAULT_FROM_EMAIL,
+            #     # Рекомендуется использовать этот параметр DEFAULT_FROM_EMAIL - это Company Name
+            #     recipient_list=[change_request.new_email],
+            #     fail_silently=False,
+            # )
+
+            # Использование EmailMultiAlternatives для отправки текста и HTML
+            msg = EmailMultiAlternatives(
+                subject="Подтверждение смены email",
+                body=plain_message,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                # Рекомендуется использовать этот параметр DEFAULT_FROM_EMAIL - это Company Name
+                to=[change_request.new_email],
+            )
+
+            msg.attach_alternative(html_message, "text/html")
+            msg.send()
+
+            return Response(
+                {
+                    "message": "Запрос создан. Проверьте ваш новый почтовый ящик для подтверждения."
+                },
+                status=status.HTTP_201_CREATED,
+            )
+
+
+class ConfirmEmailChangeView(APIView):
+    # Доступ разрешен всем, так как переход осуществляется по уникальному токену
+    permission_classes = [AllowAny]
+
+    def post(self, request, token):
+        # Ищем активный запрос по токену
+        change_request = get_object_or_404(
+            EmailChangeRequest, token=token, is_active=True
+        )
+
+        # Обновляем email основного пользователя
+        user = change_request.user
+        user.email = change_request.new_email
+        # Если email является логином (USERNAME_FIELD), это изменит и логин
+        user.save()
+
+        # Деактивируем запрос после успешного использования
+        change_request.is_active = False
+        change_request.save()
+
+        return Response(
+            {
+                "message": "Email успешно изменен. Теперь вы можете войти с новым адресом."
+            }
+        )
 
 
 # ====================== Google Auth ==========================

@@ -7,11 +7,13 @@ from django_rest_passwordreset.signals import reset_password_token_created
 from django.dispatch import receiver
 from django.urls import reverse
 from django.template.loader import render_to_string
-from django.core.mail import EmailMultiAlternatives
 from django.utils.html import strip_tags
+from django.core.mail import EmailMultiAlternatives
 import os
 from api.mixins import AutoTranslationMixin
 from transliterate import translit
+from django.conf import settings
+import uuid
 
 # Импортируем наш миксин из Приложения api
 
@@ -87,6 +89,21 @@ class CustomUser(AutoTranslationMixin, AbstractUser):
         return self.email
 
 
+class EmailChangeRequest(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="email_change_requests",
+    )
+    new_email = models.EmailField()
+    token = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f"Change to {self.new_email} for {self.user.email}"
+
+
 @receiver(reset_password_token_created)
 def password_reset_token_created(reset_password_token, *args, **kwargs):
     sitelink = os.getenv("BASE_URL_FRONTEND")
@@ -111,7 +128,7 @@ def password_reset_token_created(reset_password_token, *args, **kwargs):
     # print(token)
     # print(full_link)
 
-    context = {"full_link": full_link, "email_adress": reset_password_token.user.email}
+    context = {"full_link": full_link, "email_address": reset_password_token.user.email}
 
     html_message = render_to_string("core/password_reset.html", context=context)
     plain_message = strip_tags(html_message)
@@ -121,7 +138,9 @@ def password_reset_token_created(reset_password_token, *args, **kwargs):
             title=reset_password_token.user.email
         ),
         body=plain_message,
-        from_email="sender@example.com",
+        # from_email="sender@example.com",
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        # Рекомендуется использовать этот параметр DEFAULT_FROM_EMAIL - это Company Name
         to=[reset_password_token.user.email],
     )
 

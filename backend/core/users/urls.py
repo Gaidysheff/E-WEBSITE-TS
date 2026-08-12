@@ -14,4 +14,6 @@ urlpatterns = [
     path("user_data/", update_user_data, name="user_data"),
     path("get_user_cart_code/", get_user_cart_code, name="get_user_cart_code"),
     path("google-auth/", google_auth, name="google-auth"),
+    path("request_email_change/", RequestEmailChangeView.as_view()),
+    path("verify_email_change/", ConfirmEmailChangeView.as_view()),
 ]

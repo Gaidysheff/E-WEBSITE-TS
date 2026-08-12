@@ -14,6 +14,7 @@ from drf_spectacular.views import (
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/users/", include("users.urls")),
+    path("api/app_news/", include("app_news.urls")),
     path("api/core_app/", include("api.urls")),
     # path("auth/", include("knox.urls")),
     path("api/mailing/", include("mailing.urls")),

@@ -59,7 +59,8 @@ export type Product = {
   category: Category;
   gender: string;
   shape: string;
-  is_available: boolean;
+  isAvailable: boolean;
+  // is_available: boolean;
 };
 
 export type Review = {

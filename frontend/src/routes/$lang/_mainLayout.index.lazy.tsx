@@ -1,13 +1,16 @@
+import { createLazyFileRoute, getRouteApi } from "@tanstack/react-router";
+
 import { BASE_URL } from "@/api/api.ts";
+import CategorySection from "@/components/sectionCategory/CategorySection.tsx";
 import Hero from "@/components/hero/Hero.tsx";
 import Introduction from "@/components/introduction/Introduction.tsx";
-import CategorySection from "@/components/sectionCategory/CategorySection.tsx";
 import ProductSection from "@/components/sectionProduct/ProductSection.tsx";
 import { useI18nContext } from "@/i18n/i18n-react";
-import { type Product } from "@/lib/types.ts";
-import { createLazyFileRoute, getRouteApi } from "@tanstack/react-router";
-import axios from "axios";
-import { useEffect, useState } from "react";
+
+// import { type Product } from "@/lib/types.ts";
+
+// import axios from "axios";
+// import { useEffect, useState } from "react";
 
 // interface LoaderData {
 //   productsForCarousel: Product[];

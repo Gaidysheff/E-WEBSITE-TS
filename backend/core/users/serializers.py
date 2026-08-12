@@ -78,3 +78,32 @@ class UserSerializer(serializers.ModelSerializer):
         if address:
             return UserAddressSerializer(address).data
         return None
+
+
+class EmailChangeRequestSerializer(serializers.Serializer):
+    new_email = serializers.EmailField()
+    password = serializers.CharField(write_only=True)
+
+    def validate_new_email(self, value):
+        # Проверка, что email не занят другим пользователем
+        if User.objects.filter(email=value).exists():
+            raise serializers.ValidationError("Этот email уже используется.")
+        return value
+
+    def validate_password(self, value):
+        # Обязательная проверка текущего пароля для безопасности
+        user = self.context["request"].user
+        if not user.check_password(value):
+            raise serializers.ValidationError("Неверный текущий пароль.")
+        return value
+
+    def create(self, validated_data):
+        user = self.context["request"].user
+        # Деактивируем предыдущие запросы этого пользователя, если они были
+        EmailChangeRequest.objects.filter(user=user, is_active=True).update(
+            is_active=False
+        )
+
+        return EmailChangeRequest.objects.create(
+            user=user, new_email=validated_data["new_email"]
+        )

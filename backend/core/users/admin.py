@@ -79,3 +79,21 @@ class CustomUserAdmin(TranslationAdmin):
         if item.image:
             return mark_safe(f"<img src='{item.image.url}' height=25>")
         return "Без фото"
+
+
+@admin.register(EmailChangeRequest)
+class EmailChangeRequestAdmin(admin.ModelAdmin):
+    list_display = [
+        "user",
+        "new_email",
+        "token",
+        "created_at",
+        "is_active",
+    ]
+    readonly_fields = [
+        "user",
+        "new_email",
+        "token",
+        "created_at",
+        "is_active",
+    ]
