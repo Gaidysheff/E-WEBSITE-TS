@@ -322,12 +322,22 @@ html {
   .default-btn {
     @apply w-[250px] max-xsm:w-full h-[45px] rounded-md
     bg-primaryDark border-2 border-primaryDark
-    text-sm xsm:text-lg text-primaryLight transition cursor-pointer
+    text-sm sm:text-lg text-primaryLight transition cursor-pointer
     hover:bg-primary hover:scale-105 transition-all duration-300
     disabled:opacity-50 disabled:cursor-not-allowed
     drop-shadow-[5px_5px_5px_rgba(0,0,0,0.5)]
     dark:shadow-[5px_5px_5px_rgba(255,255,255,0.5)]
     flex items-center justify-center;
+  }
+
+  .outline-btn {
+    @apply border-solid border-2 border-primary rounded-md px-4 py-2
+            text-xs sm:text-sm xl:text-base
+            hover:scale-105 transition-all duration-300
+            hover:text-myMainColor hover:font-semibold
+            hover:border-myMainColor cursor-pointer
+            drop-shadow-[5px_5px_5px_rgba(0,0,0,0.5)]
+            dark:shadow-[5px_5px_5px_rgba(255,255,255,0.5)];
   }
 
   .product-btn {

@@ -15,5 +15,5 @@ urlpatterns = [
     path("get_user_cart_code/", get_user_cart_code, name="get_user_cart_code"),
     path("google-auth/", google_auth, name="google-auth"),
     path("request_email_change/", RequestEmailChangeView.as_view()),
-    path("verify_email_change/", ConfirmEmailChangeView.as_view()),
+    path("verify_email_change/<uuid:token>/", ConfirmEmailChangeView.as_view()),
 ]

@@ -29,11 +29,27 @@ export const Route = createFileRoute("/$lang/_auth/register")({
 
 const RegisterSchema = z
   .object({
-    email: z.email("auth.emailInvalid"),
-    // email: z.email(),
+    email: z
+      .string() // — базовый тип.
+      .min(1, { message: "auth.mustField" })
+      // .min(1, { message: "Поле обязательно" })
+      // — чтобы поймать пустую строку до сложной проверки форма
+      .pipe(
+        z
+          // .email({ message: "auth.emailInvalid" })
+          .email({ message: "auth.emailInvalid" })
+          // .email("Некорректный email")
+          // .min(5, "Слишком короткий email") не работает,
+          // так как поглащается самой валидацией .email
+          .max(254, {
+            message: "auth.tooLong",
+            // message: "Email слишком длинный (RFC допускает до 254 символов)",
+          })
+          .transform((val) => val.toLowerCase()),
+      ),
     password: z
       .string()
-      .min(4, "auth.passwordMin")
+      .min(8, "auth.passwordMin")
       // .min(4, "Password must be at least 4 characters")
       .refine(
         (password) => /[A-Z]/.test(password),
@@ -141,7 +157,7 @@ export function Register() {
 
     onSubmit: async ({ value }) => {
       try {
-        await register(value);
+        await register(RegisterSchema.parse(value));
 
         toast.success(
           LL.auth.registered(),

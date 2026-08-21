@@ -3,16 +3,27 @@ import { Spinner } from "@/components/ui/spinner";
 import { MapPinHouse } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { type UserLoggedIn } from "@/lib/types.ts";
-
+import Modal from "@/components/uiComponents/Modal.tsx";
 import { useI18nContext } from "@/i18n/i18n-react";
+import EmailChangeForm from "./EmailChangeForm";
+import { type Dispatch, type SetStateAction } from "react";
 
 interface Props {
   user: UserLoggedIn | undefined;
   isLoading: boolean;
   forCheckoutPage?: boolean;
+  activeModal: string | null;
+  setActiveModal: Dispatch<SetStateAction<string | null>>;
+  // setActiveModal: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
-const UserInfo = ({ user, isLoading, forCheckoutPage }: Props) => {
+const UserInfo = ({
+  user,
+  isLoading,
+  forCheckoutPage,
+  activeModal,
+  setActiveModal,
+}: Props) => {
   const { LL } = useI18nContext();
 
   // const email = typeof user === "undefined" ? "" : user.email;
@@ -98,7 +109,25 @@ const UserInfo = ({ user, isLoading, forCheckoutPage }: Props) => {
                 {LL.profile.email()}
                 {/* Email */}
               </div>
+
               <div className="col-span-2">{user?.email}</div>
+            </div>
+            <div className="grid grid-cols-3 gap-2 my-2">
+              <span></span>
+              <div className="col-span-2">
+                <Modal
+                  emailChange
+                  isModalOpen={activeModal === "new_email"}
+                  // Откроется, только если стейт равен "new_emai"
+                  setIsModalOpen={(open) =>
+                    setActiveModal(open ? "new_email" : null)
+                  }
+                >
+                  <EmailChangeForm
+                    setIsModalOpen={() => setActiveModal(null)}
+                  />
+                </Modal>
+              </div>
             </div>
             {!user?.birthday &&
             !user?.firstName &&

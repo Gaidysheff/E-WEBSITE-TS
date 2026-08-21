@@ -27,7 +27,7 @@ const PasswordResetSchema = z
   .object({
     password: z
       .string()
-      .min(4, "auth.passwordMin")
+      .min(8, "auth.passwordMin")
       // .min(4, "Password must be at least 4 characters")
       .refine(
         (password) => /[A-Z]/.test(password),

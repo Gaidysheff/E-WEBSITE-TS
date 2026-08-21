@@ -130,7 +130,14 @@ def password_reset_token_created(reset_password_token, *args, **kwargs):
 
     context = {"full_link": full_link, "email_address": reset_password_token.user.email}
 
-    html_message = render_to_string("core/password_reset.html", context=context)
+    # Выбираем нужный шаблон
+    template_name = (
+        "core/password_reset_en.html" if lang == "en" else "core/password_reset_ru.html"
+    )
+
+    html_message = render_to_string(template_name, context=context)
+    # html_message = render_to_string("core/password_reset.html", context=context)
+
     plain_message = strip_tags(html_message)
 
     msg = EmailMultiAlternatives(

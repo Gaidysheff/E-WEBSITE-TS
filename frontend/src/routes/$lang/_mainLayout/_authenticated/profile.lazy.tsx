@@ -43,7 +43,13 @@ function ProfilePage() {
     <div className="container">
       <link rel="canonical" href={`${BASE_URL}${currentPathname}`} />
 
-      <UserInfo user={user} isLoading={isLoading} />
+      <UserInfo
+        user={user}
+        isLoading={isLoading}
+        activeModal={activeModal}
+        setActiveModal={setActiveModal}
+      />
+
       <Modal
         userInfo
         user={user}

@@ -10,14 +10,19 @@ const LOGIN_URL = `${BASE_URL}/api/users/login/`;
 const PASSWORD_RESET_URL = `${BASE_URL}/api/password_reset/`;
 const PASSWORD_CONFIRM_URL = `${BASE_URL}/api/password_reset/confirm/`;
 
+const EMAIL_RESET_URL = `${BASE_URL}/api/users/request_email_change/`;
+const EMAIL_VERIFY_URL = `${BASE_URL}/api/users/verify_email_change/`;
+
 export const GET_USER_CARTCODE_URL = `${BASE_URL}/api/users/get_user_cart_code/`;
 
 type Auth = Pick<User, "email" | "password">;
 type AuthCart = Auth & { cart_code: string };
-type Reset = Pick<User, "email">;
 type PassConfirm = {
   password: string;
 };
+type Reset = Pick<User, "email">;
+type EmailReset = Reset & { password: string };
+type FormSubmitHandler = (formData: EmailReset) => Promise<any>;
 
 // ==================== Register =======================
 
@@ -125,6 +130,33 @@ export const passwordConfirm = async (value: PassConfirm, token: string) => {
 
   try {
     await privateApi.post(PASSWORD_CONFIRM_URL, credentials);
+  } catch (error: any) {
+    throw error;
+  }
+};
+
+// ============== Request Email Change =================
+
+export const requestEmailChange: FormSubmitHandler = async (
+  value: EmailReset,
+) => {
+  try {
+    const response = await privateApi.post(EMAIL_RESET_URL, {
+      new_email: value.email,
+      password: value.password,
+    });
+
+    return response.data;
+  } catch (error: any) {
+    throw error;
+  }
+};
+
+// ============== Verify New Email =================
+
+export const verifyNewEmail = async (token: string) => {
+  try {
+    await privateApi.post(`${EMAIL_VERIFY_URL}${token}/`);
   } catch (error: any) {
     throw error;
   }

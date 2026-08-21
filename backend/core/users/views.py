@@ -29,6 +29,7 @@ from django.conf import settings
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, permissions
+from django.utils import translation
 
 
 def merge_carts(user, guest_cart_code, user_cart):
@@ -230,16 +231,36 @@ class RequestEmailChangeView(APIView):
             # Сохраняем запрос в БД (метод create в сериализаторе вернет объект EmailChangeRequest)
             change_request = serializer.save()
 
-            # Формируем ссылку для подтверждения
+            # 1. Получаем текущий язык запроса (например, 'ru' или 'en')
+            # Если Django его не определил, ставим дефолтный 'en'
+            lang = translation.get_language() or "en"
 
-            confirm_link = f"{settings.FRONTEND_URL}/api/users/verify_email_change/{change_request.token}"
+            # Сокращаем локали типа 'ru-ru' до чистых двух букв 'ru'
+            lang = lang.split("-")[0]
+
+            # 2. Формируем ссылку для подтверждения
+            # Собираем идеальную мультиязычную ссылку для TanStack Router
+
+            confirm_link = f"{settings.BASE_URL_FRONTEND}/{lang}/verify_email_reset/{change_request.token}"
+
+            # print(f"Link to verify: {confirm_link}")
 
             context = {
                 "confirm_link": confirm_link,
                 "email_address": change_request.new_email,  # от куда вытянуть e-mail ???
             }
 
-            html_message = render_to_string("core/email_reset.html", context=context)
+            # Выбираем нужный шаблон
+            template_name = (
+                "core/email_reset_en.html"
+                if lang == "en"
+                else "core/email_reset_ru.html"
+            )
+
+            html_message = render_to_string(template_name, context=context)
+
+            # html_message = render_to_string("core/email_reset.html", context=context)
+
             plain_message = strip_tags(html_message)
 
             # --------------- метод send_mail от django.core.mail ----------------
@@ -295,8 +316,10 @@ class ConfirmEmailChangeView(APIView):
 
         return Response(
             {
-                "message": "Email успешно изменен. Теперь вы можете войти с новым адресом."
-            }
+                "message": "Email успешно изменен. Теперь вы можете войти с новым адресом.",
+                "status": "success",
+            },
+            status=status.HTTP_200_OK,
         )
 
 

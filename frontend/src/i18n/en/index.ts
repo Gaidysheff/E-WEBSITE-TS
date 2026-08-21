@@ -42,7 +42,7 @@ const en: Translation = {
     welcome: "Welcome! Signed in with Google.",
     failedGoogle: "Google Authentication failed",
     emailInvalid: "Invalid email address",
-    passwordMin: "Password must be at least 4 characters",
+    passwordMin: "Password must be at least 8 characters",
     password_AZ: "Password must contain at least one uppercase letter",
     password_az: "Password must contain at least one lowercase letter",
     password_09: "Password must contain at least one number",
@@ -53,6 +53,8 @@ const en: Translation = {
     passwordResetRequestMessage:
       "If your email exists you have received an email with instructions for resetting the password.",
     passwordChangedMessage: "Your password has been successfully changed. 👋!",
+    mustField: "This field is required",
+    tooLong: "Your email is too long (RFC allows up to 254 characters)",
   },
 
   choices: {
@@ -256,7 +258,7 @@ const en: Translation = {
     personalInfoNoYet: "No Personal Info Yet.",
     personalInfoEmptyText:
       "You haven't placed your personal information yet. When you do, it'll appear here and you'll be able to edit it.",
-    email: "Email",
+    email: "Email / Login",
     username: "Username",
     firstName: "First name",
     lastName: "Last name",
@@ -284,6 +286,36 @@ const en: Translation = {
       "It looks like you haven't placed any orders yet. When you do, they'll appear here.",
     absentPhone: "Number is not specified",
     absentBirthday: "No information available",
+    emailChange: {
+      btn: "Confirm",
+      loading: "Sending you email ...",
+      title: "Change Email / Login",
+      attention: "Attention!",
+      infoBefore:
+        "By changing your email, you change your login for authorization into your personal account.",
+      infoAfterA:
+        'After clicking the "Confirm" button, you will receive an email to the address you provided. In this email, you must',
+      infoAfterB: "click a link",
+      infoAfterC: "to verify your new address.",
+      infoAfterII:
+        "After verification, access to your personal account will only be possible using the new email address.",
+      emailChangeBtn: "Change Email",
+      email: "Email",
+      emailPlaceholder: "your new email",
+      password: "Password",
+      passwordPlaceholder: "your current password",
+      success: "A verification email has been sent to the new address.",
+      error: "Error while saving data",
+      verification: {
+        loading:
+          "The process of verifying your new email address is going on ...",
+        success: "🎉 Email address is successfully changed!",
+        loginAgain: "Please, login again using your new email address.",
+        login: "Login",
+        error: "Error!",
+        noToken: "The token is invalid or has expired already.",
+      },
+    },
   },
   successPage: {
     thanx: "🎉 Thank You for Your Purchase!",

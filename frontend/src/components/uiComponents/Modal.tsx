@@ -18,6 +18,7 @@ type Props = {
   updateReviewModal?: boolean;
   addressForm?: boolean;
   userInfo?: boolean;
+  emailChange?: boolean;
   user?: UserLoggedIn | undefined;
   iframe?: boolean;
   address?: PureAddress | null | undefined;
@@ -31,6 +32,7 @@ const Modal = ({
   updateReviewModal,
   addressForm,
   userInfo,
+  emailChange,
   user,
   address,
   isModalOpen,
@@ -58,7 +60,7 @@ const Modal = ({
           ) : addressForm ? (
             <button
               type="button"
-              className="default-btn max-sm:text-sm max-sm:px-4 my-6 mx-auto"
+              className="default-btn my-6 mx-auto"
               // onClick={() => setIsModalOpen(true)} // Явно открываем
             >
               {address?.street
@@ -70,7 +72,7 @@ const Modal = ({
           ) : userInfo ? (
             <button
               type="button"
-              className="default-btn max-sm:text-sm max-sm:px-4 my-6 mx-auto"
+              className="default-btn my-6 mx-auto"
               // onClick={() => setIsModalOpen(true)} // Явно открываем
             >
               {user?.birthday &&
@@ -86,6 +88,11 @@ const Modal = ({
               user?.phone
                 ? "Update User's Info"
                 : "Add User's Info"} */}
+            </button>
+          ) : emailChange ? (
+            <button type="button" className="outline-btn">
+              {LL.profile.emailChange.emailChangeBtn()}
+              {/* Email/Login Change */}
             </button>
           ) : (
             <button

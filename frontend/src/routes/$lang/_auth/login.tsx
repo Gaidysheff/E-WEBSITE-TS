@@ -13,7 +13,6 @@ import { googleLoginAction, login } from "@/api/endpoints_auth";
 import type { AnyFieldApi } from "@tanstack/react-form";
 import { BASE_URL } from "@/api/api.ts";
 import { Button } from "@/components/ui/button";
-import { FcGoogle } from "react-icons/fc";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { AppLink as Link } from "@/components/appLink/AppLink";
@@ -28,6 +27,8 @@ import { useI18nContext } from "@/i18n/i18n-react";
 import { useUser } from "@/store/UserContext";
 import { z } from "zod";
 
+// import { FcGoogle } from "react-icons/fc";
+
 export const Route = createFileRoute("/$lang/_auth/login")({
   validateSearch: (search: Record<string, unknown>) => {
     return {
@@ -40,11 +41,26 @@ export const Route = createFileRoute("/$lang/_auth/login")({
 });
 
 const LoginSchema = z.object({
-  email: z.email("auth.emailInvalid"), // Зашиваем путь к ключу в словаре
-  password: z.string().min(4, "auth.passwordMin"),
-
-  // email: z.email(),
-  // password: z.string().min(4, "Password must be at least 4 characters"),
+  email: z
+    .string() // — базовый тип.
+    .min(1, { message: "auth.mustField" })
+    // .min(1, { message: "Поле обязательно" })
+    // — чтобы поймать пустую строку до сложной проверки форма
+    .pipe(
+      z
+        // .email({ message: "auth.emailInvalid" })
+        .email({ message: "auth.emailInvalid" })
+        // .email("Некорректный email")
+        // .min(5, "Слишком короткий email") не работает,
+        // так как поглащается самой валидацией .email
+        .max(254, {
+          message: "auth.tooLong",
+          // message: "Email слишком длинный (RFC допускает до 254 символов)",
+        })
+        .transform((val) => val.toLowerCase()),
+    ),
+  // приводим к нижнему регистру,
+  password: z.string().min(8, "auth.passwordMin"),
 });
 
 type Login = z.infer<typeof LoginSchema>;

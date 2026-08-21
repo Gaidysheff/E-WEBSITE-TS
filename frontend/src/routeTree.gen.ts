@@ -25,6 +25,7 @@ import { Route as LangMainLayoutProductsProductSlugRouteImport } from './routes/
 import { Route as LangMainLayoutCategoriesCategoryIdRouteImport } from './routes/$lang/_mainLayout/categories/$categoryId'
 import { Route as LangMainLayoutFilterProductsRouteImport } from './routes/$lang/_mainLayout/_filter/products'
 import { Route as LangMainLayoutAuthenticatedUsers_tanstackRouteImport } from './routes/$lang/_mainLayout/_authenticated/users_tanstack'
+import { Route as LangAuthVerify_email_resetTokenRouteImport } from './routes/$lang/_auth/verify_email_reset/$token'
 import { Route as LangAuthPasswordResetTokenRouteImport } from './routes/$lang/_auth/password-reset/$token'
 
 const TestTestLazyRouteImport = createFileRoute('/_test/test')()
@@ -189,6 +190,12 @@ const LangMainLayoutAuthenticatedUsers_tanstackRoute =
       (d) => d.Route,
     ),
   )
+const LangAuthVerify_email_resetTokenRoute =
+  LangAuthVerify_email_resetTokenRouteImport.update({
+    id: '/_auth/verify_email_reset/$token',
+    path: '/verify_email_reset/$token',
+    getParentRoute: () => LangRoute,
+  } as any)
 const LangAuthPasswordResetTokenRoute =
   LangAuthPasswordResetTokenRouteImport.update({
     id: '/_auth/password-reset/$token',
@@ -238,6 +245,7 @@ export interface FileRoutesByFullPath {
   '/$lang/failed': typeof LangPaymentResultFailedLazyRoute
   '/$lang/': typeof LangMainLayoutIndexRoute
   '/$lang/password-reset/$token': typeof LangAuthPasswordResetTokenRoute
+  '/$lang/verify_email_reset/$token': typeof LangAuthVerify_email_resetTokenRoute
   '/$lang/users_tanstack': typeof LangMainLayoutAuthenticatedUsers_tanstackRoute
   '/$lang/products': typeof LangMainLayoutFilterProductsRoute
   '/$lang/categories/$categoryId': typeof LangMainLayoutCategoriesCategoryIdRoute
@@ -260,6 +268,7 @@ export interface FileRoutesByTo {
   '/$lang/success': typeof LangPaymentResultSuccessRoute
   '/$lang/failed': typeof LangPaymentResultFailedLazyRoute
   '/$lang/password-reset/$token': typeof LangAuthPasswordResetTokenRoute
+  '/$lang/verify_email_reset/$token': typeof LangAuthVerify_email_resetTokenRoute
   '/$lang/users_tanstack': typeof LangMainLayoutAuthenticatedUsers_tanstackRoute
   '/$lang/products': typeof LangMainLayoutFilterProductsRoute
   '/$lang/categories/$categoryId': typeof LangMainLayoutCategoriesCategoryIdRoute
@@ -286,6 +295,7 @@ export interface FileRoutesById {
   '/$lang/_paymentResult/failed': typeof LangPaymentResultFailedLazyRoute
   '/$lang/_mainLayout/': typeof LangMainLayoutIndexRoute
   '/$lang/_auth/password-reset/$token': typeof LangAuthPasswordResetTokenRoute
+  '/$lang/_auth/verify_email_reset/$token': typeof LangAuthVerify_email_resetTokenRoute
   '/$lang/_mainLayout/_authenticated/users_tanstack': typeof LangMainLayoutAuthenticatedUsers_tanstackRoute
   '/$lang/_mainLayout/_filter/products': typeof LangMainLayoutFilterProductsRoute
   '/$lang/_mainLayout/categories/$categoryId': typeof LangMainLayoutCategoriesCategoryIdRoute
@@ -311,6 +321,7 @@ export interface FileRouteTypes {
     | '/$lang/failed'
     | '/$lang/'
     | '/$lang/password-reset/$token'
+    | '/$lang/verify_email_reset/$token'
     | '/$lang/users_tanstack'
     | '/$lang/products'
     | '/$lang/categories/$categoryId'
@@ -333,6 +344,7 @@ export interface FileRouteTypes {
     | '/$lang/success'
     | '/$lang/failed'
     | '/$lang/password-reset/$token'
+    | '/$lang/verify_email_reset/$token'
     | '/$lang/users_tanstack'
     | '/$lang/products'
     | '/$lang/categories/$categoryId'
@@ -358,6 +370,7 @@ export interface FileRouteTypes {
     | '/$lang/_paymentResult/failed'
     | '/$lang/_mainLayout/'
     | '/$lang/_auth/password-reset/$token'
+    | '/$lang/_auth/verify_email_reset/$token'
     | '/$lang/_mainLayout/_authenticated/users_tanstack'
     | '/$lang/_mainLayout/_filter/products'
     | '/$lang/_mainLayout/categories/$categoryId'
@@ -512,6 +525,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LangMainLayoutAuthenticatedUsers_tanstackRouteImport
       parentRoute: typeof LangMainLayoutAuthenticatedRoute
     }
+    '/$lang/_auth/verify_email_reset/$token': {
+      id: '/$lang/_auth/verify_email_reset/$token'
+      path: '/verify_email_reset/$token'
+      fullPath: '/$lang/verify_email_reset/$token'
+      preLoaderRoute: typeof LangAuthVerify_email_resetTokenRouteImport
+      parentRoute: typeof LangRoute
+    }
     '/$lang/_auth/password-reset/$token': {
       id: '/$lang/_auth/password-reset/$token'
       path: '/password-reset/$token'
@@ -607,6 +627,7 @@ interface LangRouteChildren {
   LangPaymentResultSuccessRoute: typeof LangPaymentResultSuccessRoute
   LangPaymentResultFailedLazyRoute: typeof LangPaymentResultFailedLazyRoute
   LangAuthPasswordResetTokenRoute: typeof LangAuthPasswordResetTokenRoute
+  LangAuthVerify_email_resetTokenRoute: typeof LangAuthVerify_email_resetTokenRoute
 }
 
 const LangRouteChildren: LangRouteChildren = {
@@ -617,6 +638,7 @@ const LangRouteChildren: LangRouteChildren = {
   LangPaymentResultSuccessRoute: LangPaymentResultSuccessRoute,
   LangPaymentResultFailedLazyRoute: LangPaymentResultFailedLazyRoute,
   LangAuthPasswordResetTokenRoute: LangAuthPasswordResetTokenRoute,
+  LangAuthVerify_email_resetTokenRoute: LangAuthVerify_email_resetTokenRoute,
 }
 
 const LangRouteWithChildren = LangRoute._addFileChildren(LangRouteChildren)

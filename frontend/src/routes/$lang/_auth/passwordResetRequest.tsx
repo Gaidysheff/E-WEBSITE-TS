@@ -27,8 +27,24 @@ export const Route = createFileRoute("/$lang/_auth/passwordResetRequest")({
 });
 
 const schema = z.object({
-  email: z.email("auth.emailInvalid"),
-  // email: z.email(),
+  email: z
+    .string() // — базовый тип.
+    .min(1, { message: "auth.mustField" })
+    // .min(1, { message: "Поле обязательно" })
+    // — чтобы поймать пустую строку до сложной проверки форма
+    .pipe(
+      z
+        // .email({ message: "auth.emailInvalid" })
+        .email({ message: "auth.emailInvalid" })
+        // .email("Некорректный email")
+        // .min(5, "Слишком короткий email") не работает,
+        // так как поглащается самой валидацией .email
+        .max(254, {
+          message: "auth.tooLong",
+          // message: "Email слишком длинный (RFC допускает до 254 символов)",
+        })
+        .transform((val) => val.toLowerCase()),
+    ),
 });
 
 function FieldInfo({ field }: { field: AnyFieldApi }) {
@@ -106,7 +122,8 @@ export function PasswordResetRequest() {
     onSubmit: async ({ value }) => {
       try {
         setLoading(true);
-        await passwordResetRequest(value);
+        await passwordResetRequest(schema.parse(value));
+
         toast.success(
           LL.auth.passwordResetRequestMessage(),
           { autoClose: 5000 },
