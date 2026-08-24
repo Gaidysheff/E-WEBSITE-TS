@@ -1,0 +1,181 @@
+/* .directions__inner {
+  position: relative;
+} */
+
+.directions__inner::before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: -120px;
+  left: -200px;
+  width: 136px;
+  height: 115px;
+  background: url("../images/decor/deco_2-2.svg") 0 0 no-repeat;
+}
+
+.directions__inner::after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 400px;
+  right: -400px;
+  width: 242px;
+  height: 242px;
+  background: url("../images/decor/deco_2-3.svg") 0 0 no-repeat;
+  /* opacity: 0.12; */
+}
+
+/* .directions__heading {
+  margin-bottom: 90px;
+}
+
+.directions__filter-box {
+  display: flex;
+  margin-bottom: 55px;
+  flex-wrap: wrap;
+}
+
+.directions__filter-item {
+  margin-right: 45px;
+  margin-bottom: 15px;
+}
+
+.directions__filter-item:last-child {
+  margin-right: 0;
+} */
+
+.directions__filter-btn {
+  background-color: transparent;
+  color: #9a9ca5;
+  border: 1px solid #9a9ca5;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1.6;
+  padding: 1px 8px;
+  white-space: nowrap;
+}
+
+.active {
+  background: linear-gradient(55.95deg, #ff3f3a 0%, #f75e05 100%);
+  border: none;
+  /* border-style: solid;
+  border-color: linear-gradient(55.95deg, #ff3f3a 0%, #f75e05 100%); */
+  color: #fff;
+  /* line-height: 1.6; */
+  /* padding: 2px 8px; */
+  cursor: auto;
+  scale: none;
+}
+
+.directions__list {
+  display: grid;
+  grid-template: repeat(2, auto) / repeat(3, 1fr);
+  gap: 30px;
+}
+
+.directions__list-item {
+  overflow: hidden;
+}
+
+.directions__list-item--empty {
+  background: #f4f5f7;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 150%;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+.directions__list-item--empty span {
+  max-width: 240px;
+}
+
+.directions__list-link {
+  border-radius: 4px;
+  transition: all 1s;
+}
+
+.marketing .directions__link-tag {
+  background-color: #03cea5;
+}
+
+.directions__list-item--management .directions__link-tag {
+  background-color: #5a87fc;
+}
+
+.directions__list-item--hr .directions__link-tag {
+  background-color: #f89828;
+}
+
+.directions__list-item--design .directions__link-tag {
+  background-color: #f52f6e;
+}
+
+.directions__list-item--development .directions__link-tag {
+  background-color: #7772f1;
+}
+
+.directions__list-link:hover {
+  box-shadow:
+    0px 80px 80px -20px rgba(154, 156, 165, 0.08),
+    0px 30px 24px -10px rgba(154, 156, 165, 0.05),
+    0px 12px 10px -6px rgba(154, 156, 165, 0.04),
+    0px 4px 4px -4px rgba(30, 33, 44, 0.03);
+  transition: all 0.3s;
+}
+
+.directions__list-link:hover .directions__link-btn {
+  color: #ff3f3a;
+  transition: all 0.3s;
+}
+
+.directions__image-box img {
+  width: 100%;
+  height: 100%;
+}
+
+.directions__link-content {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #e5e8ed;
+  border-top: none;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+
+.directions__link-tag {
+  line-height: 1.6;
+  font-weight: 700;
+  color: #fff;
+  background-color: #999;
+  padding: 2px 8px;
+  border-radius: 4px;
+  align-self: flex-start;
+  margin-bottom: 20px;
+}
+
+.directions__link-text {
+  color: #787a80;
+  margin-bottom: 20px;
+}
+
+.directions__link-btn {
+  color: #1e212c;
+  display: flex;
+  font-weight: 700;
+  transition: all 1s;
+}
+
+.directions__link-btn::after {
+  content: "";
+  display: block;
+  width: 24px;
+  height: 24px;
+  background: url("../images/icons/arrow-right-box.svg") 0 2px / 100% no-repeat;
+  margin-left: 11px;
+}

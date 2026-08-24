@@ -4,6 +4,7 @@ import { BASE_URL } from "@/api/api.ts";
 import CategorySection from "@/components/sectionCategory/CategorySection.tsx";
 import Hero from "@/components/hero/Hero.tsx";
 import Introduction from "@/components/introduction/Introduction.tsx";
+import MixItUp from "@/components/mixitup/MixItUp";
 import ProductSection from "@/components/sectionProduct/ProductSection.tsx";
 import { useI18nContext } from "@/i18n/i18n-react";
 
@@ -88,6 +89,7 @@ function RouteComponent() {
           // detailPage={false}
           // loadingFromDetailPage={false}
         />
+        <MixItUp />
       </main>
     </>
   );

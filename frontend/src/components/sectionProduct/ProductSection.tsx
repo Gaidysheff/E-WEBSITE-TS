@@ -101,7 +101,7 @@ const ProductSection = ({
           </h2>
 
           {/* Content */}
-          <div className="flex-center flex-wrap gap-6">
+          <div className="flex-center flex-wrap gap-6 mb-20">
             {isLoading && <ProductCardSkeleton cards={10} />}
 
             {loadingFromDetailPage && <ProductCardSkeleton cards={5} />}
