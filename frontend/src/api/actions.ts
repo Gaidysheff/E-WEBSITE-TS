@@ -8,6 +8,12 @@ import {
   CLOUD_PAYMENTS_URL,
   CURRENT_USER_DATA_URL,
   DELIVERY_OPTIONS_URL,
+  NEWS_CATEGORY_DETAIL_PAGE_URL,
+  NEWS_CATEGORY_LIST_URL,
+  NEWS_POST_DETAIL_PAGE_URL,
+  NEWS_POST_LIST_URL,
+  POST_FILTERING_URL,
+  POST_FILTER_LABELS_URL,
   REVIEW_ADD_URL,
   REVIEW_DELETE_URL,
   REVIEW_UPDATE_URL,
@@ -19,7 +25,7 @@ import type { CPResponse, PureAddress } from "@/lib/types";
 import privateApi from "@/api/api.ts";
 import { publicApi } from "@/api/api.ts";
 
-import { type UserInfoFormValues } from "@/components/profile/userInfoSchema";
+// import { type UserInfoFormValues } from "@/components/profile/userInfoSchema";
 
 type FormSubmitHandler = (formData: FormData) => Promise<any>;
 
@@ -365,6 +371,66 @@ export const getDeliveryOptionsAction = async () => {
   try {
     const response = await publicApi.get(DELIVERY_OPTIONS_URL);
     return response;
+  } catch (error: any) {
+    throw error;
+  }
+};
+
+// ======================== get News ===========================
+
+export const getNewsCategoriesAction = async () => {
+  try {
+    const response = await publicApi.get(NEWS_CATEGORY_LIST_URL);
+    return response;
+  } catch (error: any) {
+    throw error;
+  }
+};
+
+export const getNewsCategoryDetailAction = async (slug: string) => {
+  try {
+    const response = await publicApi.get(
+      `${NEWS_CATEGORY_DETAIL_PAGE_URL}${slug}`,
+    );
+
+    return response;
+  } catch (error: any) {
+    throw error;
+  }
+};
+
+export const getNewsPostsAction = async () => {
+  try {
+    const response = await publicApi.get(NEWS_POST_LIST_URL);
+    return response;
+  } catch (error: any) {
+    throw error;
+  }
+};
+
+export const getNewsPostDetailAction = async (slug: string) => {
+  try {
+    const response = await publicApi.get(`${NEWS_POST_DETAIL_PAGE_URL}${slug}`);
+
+    return response;
+  } catch (error: any) {
+    throw error;
+  }
+};
+
+export const getFilterLabelsAction = async () => {
+  try {
+    const response = await publicApi.get(POST_FILTER_LABELS_URL);
+    return response.data.categories;
+  } catch (error: any) {
+    throw error;
+  }
+};
+
+export const getFilteredNewsAction = async () => {
+  try {
+    const response = await publicApi.get(POST_FILTERING_URL);
+    return response.data.results;
   } catch (error: any) {
     throw error;
   }

@@ -34,6 +34,7 @@
     "embla-carousel-autoplay": "^8.6.0",
     "embla-carousel-fade": "^8.6.0",
     "embla-carousel-react": "^8.6.0",
+    "framer-motion": "^13.1.1",
     "i18n-iso-countries": "^7.14.0",
     "lucide-react": "^0.562.0",
     "mixitup": "^3.3.2",

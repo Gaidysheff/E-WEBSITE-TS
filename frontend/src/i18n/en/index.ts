@@ -340,6 +340,16 @@ const en: Translation = {
     chatWithSupport: "Chat with Support",
     emailSubject: "Payment error for order (Cart: {cartCode})",
   },
+  newsApplication: {
+    title: "Useful Articles",
+    subtitle: "our news and events",
+    allCategories: "All categories",
+    readArticle: "Read the article",
+    subscribeTextOne: "More news coming soon...",
+    subscribeTextTwo: "Don't want to miss it?",
+    subscribeTextThree: "for receiving our freshest news in your email box.",
+    subscribeLink: "Just subscribe",
+  },
 };
 
 export default en;

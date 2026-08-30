@@ -221,6 +221,7 @@ export type PureAddress = {
   region?: string;
   // phone?: string;
 };
+
 export type Address = {
   id: string;
   customer: User;
@@ -275,6 +276,24 @@ export interface CPResponse {
   AcsUrl: string;
   PaReq: string;
 }
+
+// ------------------- News -----------------------------
+export type NewsCategory = {
+  id: string;
+  name: string;
+  slug: string;
+};
+
+export type Post = {
+  id: string;
+  title: string;
+  slug: string;
+  category: NewsCategory;
+  image: string;
+  status: string;
+  text: string;
+  created_at: string;
+};
 
 // ==================== Deep Partial ===========================
 

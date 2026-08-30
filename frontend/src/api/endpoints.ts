@@ -2,9 +2,13 @@ import { env } from "@/lib/env";
 
 const BASE_URL = env.VITE_API_URL;
 
+// ----------------------- Users Application -----------------------
+
 export const USERS_URL = `${BASE_URL}/api/users/users/`;
 export const CURRENT_USER_URL = `${BASE_URL}/api/users/current_user/`;
 export const CURRENT_USER_DATA_URL = `${BASE_URL}/api/users/user_data/`;
+
+// ----------------------- Core Application -----------------------
 
 export const CATEGORY_LIST_URL = `${BASE_URL}/api/core_app/category_list/`;
 export const CATEGORY_DETAIL_PAGE_URL = `${BASE_URL}/api/core_app/categories/`;
@@ -51,30 +55,12 @@ export const FILTERING_URL = `${BASE_URL}/api/core_app/filtering/`;
 export const USER_ORDERS_URL = `${BASE_URL}/api/core_app/user_orders_list/`;
 export const FILTER_METADATA_URL = `${BASE_URL}/api/core_app/get_filter_metadata/`;
 
-// ======================= API Requests =================================
+// ----------------------- News Application -----------------------
 
-// export const getCategories = async () => {
-//   try {
-//     await api.get(CATEGORY_LIST_URL).then((response) => {
-//       console.log("🚀 ~ getCategories ~ RESP:", response.data);
-//       return response.data;
-//     });
-//   } catch (error) {
-//     if (error instanceof Error) {
-//       throw new Error(error.message);
-//     }
-//     throw new Error("an unknown error occurred");
-//   }
-// };
+export const NEWS_CATEGORY_LIST_URL = `${BASE_URL}/api/app_news/category_list/`;
+export const NEWS_CATEGORY_DETAIL_PAGE_URL = `${BASE_URL}/api/app_news/categories/`;
+export const NEWS_POST_LIST_URL = `${BASE_URL}/api/app_news/post_list/`;
+export const NEWS_POST_DETAIL_PAGE_URL = `${BASE_URL}/api/app_news/posts/`;
 
-// export const getFeaturedProducts = async () => {
-//   try {
-//     const response = await api.get(FEATURED_PRODUCT_LIST_URL);
-//     return response.data;
-//   } catch (error) {
-//     if (error instanceof Error) {
-//       throw new Error(error.message);
-//     }
-//     throw new Error("an unknown error occurred");
-//   }
-// };
+export const POST_FILTERING_URL = `${BASE_URL}/api/app_news/filtering/`;
+export const POST_FILTER_LABELS_URL = `${BASE_URL}/api/app_news/get_filter_labels/`;

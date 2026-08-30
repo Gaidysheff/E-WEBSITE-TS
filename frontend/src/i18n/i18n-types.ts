@@ -1147,6 +1147,40 @@ type RootTranslation = {
 		 */
 		emailSubject: RequiredParams<'cartCode'>
 	}
+	newsApplication: {
+		/**
+		 * П​о​л​е​з​н​ы​е​ ​с​т​а​т​ь​и
+		 */
+		title: string
+		/**
+		 * н​а​ш​и​ ​н​о​в​о​с​т​и​ ​и​ ​с​о​б​ы​т​и​я
+		 */
+		subtitle: string
+		/**
+		 * В​с​е​ ​к​а​т​е​г​о​р​и​и
+		 */
+		allCategories: string
+		/**
+		 * Ч​и​т​а​т​ь​ ​с​т​а​т​ь​ю
+		 */
+		readArticle: string
+		/**
+		 * Б​о​л​ь​ш​е​ ​н​о​в​о​с​т​е​й​ ​п​о​я​в​и​т​с​я​ ​с​к​о​р​о​ ​.​.​.
+		 */
+		subscribeTextOne: string
+		/**
+		 * Н​е​ ​х​о​т​и​т​е​ ​н​и​ч​е​г​о​ ​п​р​о​п​у​с​т​и​т​ь​?
+		 */
+		subscribeTextTwo: string
+		/**
+		 * ч​т​о​б​ы​ ​п​о​л​у​ч​а​т​ь​ ​н​а​ш​и​ ​с​а​м​ы​е​ ​с​в​е​ж​и​е​ ​н​о​в​о​с​т​и​ ​н​а​ ​с​в​о​ю​ ​э​л​е​к​т​р​о​н​н​у​ю​ ​п​о​ч​т​у​.
+		 */
+		subscribeTextThree: string
+		/**
+		 * П​р​о​с​т​о​ ​п​о​д​п​и​ш​и​т​е​с​ь
+		 */
+		subscribeLink: string
+	}
 }
 
 export type TranslationFunctions = {
@@ -2279,6 +2313,40 @@ export type TranslationFunctions = {
 		 * Ошибка оплаты заказа (Корзина: {cartCode})
 		 */
 		emailSubject: (arg: { cartCode: string }) => LocalizedString
+	}
+	newsApplication: {
+		/**
+		 * Полезные статьи
+		 */
+		title: () => LocalizedString
+		/**
+		 * наши новости и события
+		 */
+		subtitle: () => LocalizedString
+		/**
+		 * Все категории
+		 */
+		allCategories: () => LocalizedString
+		/**
+		 * Читать статью
+		 */
+		readArticle: () => LocalizedString
+		/**
+		 * Больше новостей появится скоро ...
+		 */
+		subscribeTextOne: () => LocalizedString
+		/**
+		 * Не хотите ничего пропустить?
+		 */
+		subscribeTextTwo: () => LocalizedString
+		/**
+		 * чтобы получать наши самые свежие новости на свою электронную почту.
+		 */
+		subscribeTextThree: () => LocalizedString
+		/**
+		 * Просто подпишитесь
+		 */
+		subscribeLink: () => LocalizedString
 	}
 }
 

@@ -344,6 +344,17 @@ const ru: BaseTranslation = {
     // Динамическая строка для темы письма
     emailSubject: "Ошибка оплаты заказа (Корзина: {cartCode:string})",
   },
+  newsApplication: {
+    title: "Полезные статьи",
+    subtitle: "наши новости и события",
+    allCategories: "Все категории",
+    readArticle: "Читать статью",
+    subscribeTextOne: "Больше новостей появится скоро ...",
+    subscribeTextTwo: "Не хотите ничего пропустить?",
+    subscribeTextThree:
+      "чтобы получать наши самые свежие новости на свою электронную почту.",
+    subscribeLink: "Просто подпишитесь",
+  },
 };
 
 export default ru;

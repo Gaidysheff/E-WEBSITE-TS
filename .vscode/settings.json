@@ -1,3 +1,4 @@
 {
-  "cSpell.words": ["jivo"]
+  "cSpell.words": ["jivo"],
+  "python-envs.defaultEnvManager": "ms-python.python:system"
 }

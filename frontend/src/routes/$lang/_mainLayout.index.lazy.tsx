@@ -4,9 +4,11 @@ import { BASE_URL } from "@/api/api.ts";
 import CategorySection from "@/components/sectionCategory/CategorySection.tsx";
 import Hero from "@/components/hero/Hero.tsx";
 import Introduction from "@/components/introduction/Introduction.tsx";
-import MixItUp from "@/components/mixitup/MixItUp";
+import MixNewsOnFrontPage from "@/components/mixNews/MixNewsOnFrontPage";
 import ProductSection from "@/components/sectionProduct/ProductSection.tsx";
 import { useI18nContext } from "@/i18n/i18n-react";
+
+// import MixItUp from "@/components/mixitup/MixItUp";
 
 // import { type Product } from "@/lib/types.ts";
 
@@ -47,6 +49,7 @@ function RouteComponent() {
   // --------- Вариант-1 через loader --------------------
   // Вызываем хук из созданного api-объекта
   const data = routeApi.useLoaderData();
+  // console.log("🚀 ~ RouteComponent ~ data:", data);
 
   // Защитная проверка, чтобы TypeScript и React не ругались на undefined
   if (!data || !Array.isArray(data)) {
@@ -89,7 +92,8 @@ function RouteComponent() {
           // detailPage={false}
           // loadingFromDetailPage={false}
         />
-        <MixItUp />
+        {/* <MixItUp /> */}
+        <MixNewsOnFrontPage />
       </main>
     </>
   );

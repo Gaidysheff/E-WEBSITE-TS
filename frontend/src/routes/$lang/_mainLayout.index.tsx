@@ -16,6 +16,7 @@ export const Route = createFileRoute("/$lang/_mainLayout/")({
     } catch (error: any) {
       throw error;
     }
+    // ---------- get News Categories ----------
   },
   // ------------------------------------------------------------------------
   // loader: async () => {
