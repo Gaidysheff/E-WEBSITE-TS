@@ -347,6 +347,7 @@ const ru: BaseTranslation = {
   newsApplication: {
     title: "Полезные статьи",
     subtitle: "наши новости и события",
+    seeAll: "Смотреть все новости",
     allCategories: "Все категории",
     readArticle: "Читать статью",
     subscribeTextOne: "Больше новостей появится скоро ...",

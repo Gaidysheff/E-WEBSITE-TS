@@ -1157,6 +1157,10 @@ type RootTranslation = {
 		 */
 		subtitle: string
 		/**
+		 * С​м​о​т​р​е​т​ь​ ​в​с​е​ ​н​о​в​о​с​т​и
+		 */
+		seeAll: string
+		/**
 		 * В​с​е​ ​к​а​т​е​г​о​р​и​и
 		 */
 		allCategories: string
@@ -2323,6 +2327,10 @@ export type TranslationFunctions = {
 		 * наши новости и события
 		 */
 		subtitle: () => LocalizedString
+		/**
+		 * Смотреть все новости
+		 */
+		seeAll: () => LocalizedString
 		/**
 		 * Все категории
 		 */

@@ -22,6 +22,8 @@ import { Route as LangAuthRegisterRouteImport } from './routes/$lang/_auth/regis
 import { Route as LangAuthPasswordResetRequestRouteImport } from './routes/$lang/_auth/passwordResetRequest'
 import { Route as LangAuthLoginRouteImport } from './routes/$lang/_auth/login'
 import { Route as LangMainLayoutProductsProductSlugRouteImport } from './routes/$lang/_mainLayout/products/$productSlug'
+import { Route as LangMainLayoutNewsNewsIndexRouteImport } from './routes/$lang/_mainLayout/news/newsIndex'
+import { Route as LangMainLayoutNewsNewsSlugRouteImport } from './routes/$lang/_mainLayout/news/$newsSlug'
 import { Route as LangMainLayoutCategoriesCategoryIdRouteImport } from './routes/$lang/_mainLayout/categories/$categoryId'
 import { Route as LangMainLayoutFilterProductsRouteImport } from './routes/$lang/_mainLayout/_filter/products'
 import { Route as LangMainLayoutAuthenticatedUsers_tanstackRouteImport } from './routes/$lang/_mainLayout/_authenticated/users_tanstack'
@@ -160,6 +162,26 @@ const LangMainLayoutProductsProductSlugRoute =
       (d) => d.Route,
     ),
   )
+const LangMainLayoutNewsNewsIndexRoute =
+  LangMainLayoutNewsNewsIndexRouteImport.update({
+    id: '/news/newsIndex',
+    path: '/news/newsIndex',
+    getParentRoute: () => LangMainLayoutRoute,
+  } as any).lazy(() =>
+    import('./routes/$lang/_mainLayout/news/newsIndex.lazy').then(
+      (d) => d.Route,
+    ),
+  )
+const LangMainLayoutNewsNewsSlugRoute =
+  LangMainLayoutNewsNewsSlugRouteImport.update({
+    id: '/news/$newsSlug',
+    path: '/news/$newsSlug',
+    getParentRoute: () => LangMainLayoutRoute,
+  } as any).lazy(() =>
+    import('./routes/$lang/_mainLayout/news/$newsSlug.lazy').then(
+      (d) => d.Route,
+    ),
+  )
 const LangMainLayoutCategoriesCategoryIdRoute =
   LangMainLayoutCategoriesCategoryIdRouteImport.update({
     id: '/categories/$categoryId',
@@ -249,6 +271,8 @@ export interface FileRoutesByFullPath {
   '/$lang/users_tanstack': typeof LangMainLayoutAuthenticatedUsers_tanstackRoute
   '/$lang/products': typeof LangMainLayoutFilterProductsRoute
   '/$lang/categories/$categoryId': typeof LangMainLayoutCategoriesCategoryIdRoute
+  '/$lang/news/$newsSlug': typeof LangMainLayoutNewsNewsSlugRoute
+  '/$lang/news/newsIndex': typeof LangMainLayoutNewsNewsIndexRoute
   '/$lang/products/$productSlug': typeof LangMainLayoutProductsProductSlugRoute
   '/$lang/checkout': typeof LangMainLayoutAuthenticatedCheckoutLazyRoute
   '/$lang/profile': typeof LangMainLayoutAuthenticatedProfileLazyRoute
@@ -272,6 +296,8 @@ export interface FileRoutesByTo {
   '/$lang/users_tanstack': typeof LangMainLayoutAuthenticatedUsers_tanstackRoute
   '/$lang/products': typeof LangMainLayoutFilterProductsRoute
   '/$lang/categories/$categoryId': typeof LangMainLayoutCategoriesCategoryIdRoute
+  '/$lang/news/$newsSlug': typeof LangMainLayoutNewsNewsSlugRoute
+  '/$lang/news/newsIndex': typeof LangMainLayoutNewsNewsIndexRoute
   '/$lang/products/$productSlug': typeof LangMainLayoutProductsProductSlugRoute
   '/$lang/checkout': typeof LangMainLayoutAuthenticatedCheckoutLazyRoute
   '/$lang/profile': typeof LangMainLayoutAuthenticatedProfileLazyRoute
@@ -299,6 +325,8 @@ export interface FileRoutesById {
   '/$lang/_mainLayout/_authenticated/users_tanstack': typeof LangMainLayoutAuthenticatedUsers_tanstackRoute
   '/$lang/_mainLayout/_filter/products': typeof LangMainLayoutFilterProductsRoute
   '/$lang/_mainLayout/categories/$categoryId': typeof LangMainLayoutCategoriesCategoryIdRoute
+  '/$lang/_mainLayout/news/$newsSlug': typeof LangMainLayoutNewsNewsSlugRoute
+  '/$lang/_mainLayout/news/newsIndex': typeof LangMainLayoutNewsNewsIndexRoute
   '/$lang/_mainLayout/products/$productSlug': typeof LangMainLayoutProductsProductSlugRoute
   '/$lang/_mainLayout/_authenticated/checkout': typeof LangMainLayoutAuthenticatedCheckoutLazyRoute
   '/$lang/_mainLayout/_authenticated/profile': typeof LangMainLayoutAuthenticatedProfileLazyRoute
@@ -325,6 +353,8 @@ export interface FileRouteTypes {
     | '/$lang/users_tanstack'
     | '/$lang/products'
     | '/$lang/categories/$categoryId'
+    | '/$lang/news/$newsSlug'
+    | '/$lang/news/newsIndex'
     | '/$lang/products/$productSlug'
     | '/$lang/checkout'
     | '/$lang/profile'
@@ -348,6 +378,8 @@ export interface FileRouteTypes {
     | '/$lang/users_tanstack'
     | '/$lang/products'
     | '/$lang/categories/$categoryId'
+    | '/$lang/news/$newsSlug'
+    | '/$lang/news/newsIndex'
     | '/$lang/products/$productSlug'
     | '/$lang/checkout'
     | '/$lang/profile'
@@ -374,6 +406,8 @@ export interface FileRouteTypes {
     | '/$lang/_mainLayout/_authenticated/users_tanstack'
     | '/$lang/_mainLayout/_filter/products'
     | '/$lang/_mainLayout/categories/$categoryId'
+    | '/$lang/_mainLayout/news/$newsSlug'
+    | '/$lang/_mainLayout/news/newsIndex'
     | '/$lang/_mainLayout/products/$productSlug'
     | '/$lang/_mainLayout/_authenticated/checkout'
     | '/$lang/_mainLayout/_authenticated/profile'
@@ -504,6 +538,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LangMainLayoutProductsProductSlugRouteImport
       parentRoute: typeof LangMainLayoutRoute
     }
+    '/$lang/_mainLayout/news/newsIndex': {
+      id: '/$lang/_mainLayout/news/newsIndex'
+      path: '/news/newsIndex'
+      fullPath: '/$lang/news/newsIndex'
+      preLoaderRoute: typeof LangMainLayoutNewsNewsIndexRouteImport
+      parentRoute: typeof LangMainLayoutRoute
+    }
+    '/$lang/_mainLayout/news/$newsSlug': {
+      id: '/$lang/_mainLayout/news/$newsSlug'
+      path: '/news/$newsSlug'
+      fullPath: '/$lang/news/$newsSlug'
+      preLoaderRoute: typeof LangMainLayoutNewsNewsSlugRouteImport
+      parentRoute: typeof LangMainLayoutRoute
+    }
     '/$lang/_mainLayout/categories/$categoryId': {
       id: '/$lang/_mainLayout/categories/$categoryId'
       path: '/categories/$categoryId'
@@ -601,6 +649,8 @@ interface LangMainLayoutRouteChildren {
   LangMainLayoutIndexRoute: typeof LangMainLayoutIndexRoute
   LangMainLayoutFilterProductsRoute: typeof LangMainLayoutFilterProductsRoute
   LangMainLayoutCategoriesCategoryIdRoute: typeof LangMainLayoutCategoriesCategoryIdRoute
+  LangMainLayoutNewsNewsSlugRoute: typeof LangMainLayoutNewsNewsSlugRoute
+  LangMainLayoutNewsNewsIndexRoute: typeof LangMainLayoutNewsNewsIndexRoute
   LangMainLayoutProductsProductSlugRoute: typeof LangMainLayoutProductsProductSlugRoute
 }
 
@@ -611,6 +661,8 @@ const LangMainLayoutRouteChildren: LangMainLayoutRouteChildren = {
   LangMainLayoutFilterProductsRoute: LangMainLayoutFilterProductsRoute,
   LangMainLayoutCategoriesCategoryIdRoute:
     LangMainLayoutCategoriesCategoryIdRoute,
+  LangMainLayoutNewsNewsSlugRoute: LangMainLayoutNewsNewsSlugRoute,
+  LangMainLayoutNewsNewsIndexRoute: LangMainLayoutNewsNewsIndexRoute,
   LangMainLayoutProductsProductSlugRoute:
     LangMainLayoutProductsProductSlugRoute,
 }

@@ -343,6 +343,7 @@ const en: Translation = {
   newsApplication: {
     title: "Useful Articles",
     subtitle: "our news and events",
+    seeAll: "See all news",
     allCategories: "All categories",
     readArticle: "Read the article",
     subscribeTextOne: "More news coming soon...",

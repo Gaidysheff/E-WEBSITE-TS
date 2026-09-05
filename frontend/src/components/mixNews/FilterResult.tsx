@@ -6,8 +6,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import SubscribeCard from "./SubscribeCard";
 import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils.ts";
-
 import { useI18nContext } from "@/i18n/i18n-react";
+import { AppLink as Link } from "@/components/appLink/AppLink";
 
 type Props = {
   selectedCategory: string;
@@ -17,17 +17,19 @@ const FilterResult = ({ selectedCategory }: Props) => {
   const { LL, locale } = useI18nContext();
 
   const { data: posts = [], isPending } = useQuery<Post[]>({
-    queryKey: ["posts", locale],
-    queryFn: getFilteredNewsAction,
+    // Включаем selectedCategory в ключ кэша,
+    // чтобы триггерить перезапрос при смене фильтра
+    queryKey: ["posts-preview", selectedCategory, locale],
+    queryFn: () => getFilteredNewsAction(selectedCategory, 5),
     staleTime: 1000 * 60 * 60,
     //Данные фильтров меняются редко, кешируем на час
   });
 
   // Фильтруем новости на лету
-  const filteredNews = posts.filter((item) => {
-    if (selectedCategory === "all") return true;
-    return item.category?.slug === selectedCategory;
-  });
+  // const filteredNews = posts.filter((item) => {
+  //   if (selectedCategory === "all") return true;
+  //   return item.category?.slug === selectedCategory;
+  // });
 
   if (isPending)
     return <Spinner className="size-30 text-myMainColor mx-auto" />;
@@ -41,7 +43,8 @@ const FilterResult = ({ selectedCategory }: Props) => {
         lg:gap-6 xl:gap-10"
       >
         <AnimatePresence mode="popLayout">
-          {filteredNews.slice(0, 5).map((post) => (
+          {/* {filteredNews.slice(0, 5).map((post) => ( */}
+          {posts.map((post) => (
             <motion.div
               key={post.id}
               layout // <-- МАГИЯ: заставляет карточки плавно
@@ -82,13 +85,14 @@ const FilterResult = ({ selectedCategory }: Props) => {
 
                       {/* {`${post.text.slice(0, 100)} ...`} */}
                     </p>
-                    <div
+                    <Link
+                      to={`/news/${post.slug}`}
                       className="text-myMainColor font-semibold ml-auto
-                      hover:scale-105 duration-500"
+                      hover:scale-105 duration-500 cursor-pointer"
                     >
                       {LL.newsApplication.readArticle()}
                       {/* Read the article */}
-                    </div>
+                    </Link>
                   </div>
                 </div>
               </div>

@@ -7,6 +7,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import type { PostSearch, ProductSearch } from "@/lib/types";
 import {
   Select,
   SelectContent,
@@ -22,25 +23,42 @@ import { useSearch } from "@tanstack/react-router";
 interface Props {
   totalPages: number;
   currentPage: number;
+  pageSize: number; // Передаем размер страницы сверху
+  onPageChange: (newPage: number) => void; // Функция-коллбэк для смены страницы
+  onPageSizeChange: (newPage: string) => void; // Функция-коллбэк для смены размера страницы
+  newsPage?: boolean;
 }
 
-const PageBreak = ({ totalPages, currentPage }: Props) => {
+const PageBreak = ({
+  totalPages,
+  currentPage,
+  pageSize,
+  onPageChange,
+  onPageSizeChange,
+  newsPage,
+}: Props) => {
+  // Теперь внутри PageBreak НЕТ никаких хуков useSearch!
+  // Он просто рендерит кнопочки и при клике вызывает onPageChange(номер)
+
   const { LL } = useI18nContext();
-  const navigate = useAppNavigate();
+
+  // const navigate = useAppNavigate();
+
   // Подключаем хук с указанием маршрута, чтобы TS подхватил типы
+  // const search = useSearch({ strict: false }) as any;
+  // const search = useSearch({ from: "/$lang/_mainLayout/_filter/products" });
+  // --------------------------------------------
+  // const search = useSearch({ from: "/$lang/_mainLayout/news/newsIndex" });
 
-  const search = useSearch({ from: "/$lang/_mainLayout/_filter/products" });
-  // const search = useSearch({ from: "/_mainLayout/_filter/products" });
+  // const pageSize = search.page_size;
 
-  const pageSize = search.page_size;
+  // const handlePageChange = (newPage: number) => {
+  //   navigate({ search: { ...search, page: newPage } });
+  // };
 
-  const handlePageChange = (newPage: number) => {
-    navigate({ search: { ...search, page: newPage } });
-  };
-
-  const handlePageSizeChange = (newSize: string) => {
-    navigate({ search: { ...search, page: 1, page_size: Number(newSize) } });
-  };
+  // const handlePageSizeChange = (newSize: string) => {
+  //   navigate({ search: { ...search, page: 1, page_size: Number(newSize) } });
+  // };
 
   // --- Функция генерации умных ссылок ---
   const renderPageLinks = () => {
@@ -57,7 +75,8 @@ const PageBreak = ({ totalPages, currentPage }: Props) => {
             <PaginationLink
               className="cursor-pointer"
               isActive={i === currentPage}
-              onClick={() => handlePageChange(i)}
+              onClick={() => onPageChange(i)}
+              // onClick={() => handlePageChange(i)}
             >
               {i}
             </PaginationLink>
@@ -84,16 +103,28 @@ const PageBreak = ({ totalPages, currentPage }: Props) => {
           {LL.pageBreak.perPage()}
           {/* Units per page: */}
         </span>
-        <Select value={String(pageSize)} onValueChange={handlePageSizeChange}>
+        <Select value={String(pageSize)} onValueChange={onPageSizeChange}>
           <SelectTrigger className="w-20">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            {[10, 25, 50, 100].map((size) => (
+            {(newsPage ? [12, 24, 48, 96] : [10, 25, 50, 100]).map((size) => (
               <SelectItem key={size} value={String(size)}>
                 {size}
               </SelectItem>
             ))}
+
+            {/* {newsPage
+              ? [12, 24, 48, 96].map((size) => (
+                  <SelectItem key={size} value={String(size)}>
+                    {size}
+                  </SelectItem>
+                ))
+              : [10, 25, 50, 100].map((size) => (
+                  <SelectItem key={size} value={String(size)}>
+                    {size}
+                  </SelectItem>
+                ))} */}
           </SelectContent>
         </Select>
       </div>
@@ -103,7 +134,8 @@ const PageBreak = ({ totalPages, currentPage }: Props) => {
           <PaginationItem>
             <PaginationPrevious
               className="cursor-pointer"
-              onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
+              onClick={() => onPageChange(Math.max(1, currentPage - 1))}
+              // onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
             />
           </PaginationItem>
 
@@ -126,8 +158,9 @@ const PageBreak = ({ totalPages, currentPage }: Props) => {
           <PaginationItem>
             <PaginationNext
               className="cursor-pointer"
-              onClick={() =>
-                handlePageChange(Math.min(totalPages, currentPage + 1))
+              onClick={
+                () => onPageChange(Math.min(totalPages, currentPage + 1))
+                // handlePageChange(Math.min(totalPages, currentPage + 1))
               }
             />
           </PaginationItem>

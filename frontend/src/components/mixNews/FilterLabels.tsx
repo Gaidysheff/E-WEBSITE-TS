@@ -31,49 +31,47 @@ const FilterLabels = ({ selectedCategory, setSelectedCategory }: Props) => {
   });
 
   return (
-    <div className="my-8">
-      <Select
-        onValueChange={(value: string) => {
-          setSelectedCategory(value);
-        }}
-        value={selectedCategory || ""}
-      >
-        <SelectTrigger
-          className="w-[220px] focus:border-myMainColor/50
+    <Select
+      onValueChange={(value: string) => {
+        setSelectedCategory(value);
+      }}
+      value={selectedCategory || ""}
+    >
+      <SelectTrigger
+        className="w-[220px] focus:border-myMainColor/50
           text-xl text-myMainColor"
-        >
-          <SelectValue />
-        </SelectTrigger>
-        <SelectContent className="border-2 border-myMainColor/50">
-          <SelectGroup>
-            <SelectItem
-              value="all"
-              className="focus:bg-myMainColor/50 focus:font-bold"
-            >
-              {LL.newsApplication.allCategories()}
-              {/* All categories */}
-            </SelectItem>
-            {/* Используем защитную проверку Array.isArray */}
-            {Array.isArray(categories) &&
-              categories.map((cat) => {
-                // КРИТИЧЕСКИ ВАЖНО: добавить ключевое слово return,
-                // иначе SelectItem не отрендерится!
-                return (
-                  <SelectItem
-                    key={cat.id}
-                    value={cat.slug}
-                    className="focus:bg-myMainColor/50 focus:font-bold"
-                  >
-                    {cat.name}
-                    {/* 3. Отображаем нужное поле динамически на основе текущей локали */}
-                    {/* {locale === "ru" ? cat.name_ru : cat.name_en} */}
-                  </SelectItem>
-                );
-              })}
-          </SelectGroup>
-        </SelectContent>
-      </Select>
-    </div>
+      >
+        <SelectValue />
+      </SelectTrigger>
+      <SelectContent className="border-2 border-myMainColor/50">
+        <SelectGroup>
+          <SelectItem
+            value="all"
+            className="focus:bg-myMainColor/50 focus:font-bold"
+          >
+            {LL.newsApplication.allCategories()}
+            {/* All categories */}
+          </SelectItem>
+          {/* Используем защитную проверку Array.isArray */}
+          {Array.isArray(categories) &&
+            categories.map((cat) => {
+              // КРИТИЧЕСКИ ВАЖНО: добавить ключевое слово return,
+              // иначе SelectItem не отрендерится!
+              return (
+                <SelectItem
+                  key={cat.id}
+                  value={cat.slug}
+                  className="focus:bg-myMainColor/50 focus:font-bold"
+                >
+                  {cat.name}
+                  {/* 3. Отображаем нужное поле динамически на основе текущей локали */}
+                  {/* {locale === "ru" ? cat.name_ru : cat.name_en} */}
+                </SelectItem>
+              );
+            })}
+        </SelectGroup>
+      </SelectContent>
+    </Select>
   );
 };
 

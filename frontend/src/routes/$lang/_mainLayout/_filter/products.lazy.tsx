@@ -4,6 +4,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { type ProductUrlQuery } from "@/lib/types.ts";
 import { useQuery } from "@tanstack/react-query";
 import { createLazyFileRoute } from "@tanstack/react-router";
+import { useAppNavigate } from "@/hooks/useAppNavigate.ts";
 
 export const Route = createLazyFileRoute("/$lang/_mainLayout/_filter/products")(
   {
@@ -26,7 +27,16 @@ function RouteComponent() {
   const totalPages = data?.total_pages ?? 1;
   const currentPage = data?.current_page ?? 1;
 
-  // console.log("🚀 ~ RouteComponent ~ data:", data);
+  const navigate = useAppNavigate();
+  const handlePageChange = (newPage: number) => {
+    navigate({ search: { ...searchParams, page: newPage } });
+  };
+
+  const handlePageSizeChange = (newSize: string) => {
+    navigate({
+      search: { ...searchParams, page: 1, page_size: Number(newSize) },
+    });
+  };
 
   return (
     <div className="container">
@@ -37,6 +47,9 @@ function RouteComponent() {
         totalPages={totalPages}
         currentPage={currentPage}
         isCatalog={searchParams.isCatalog}
+        pageSize={searchParams.page_size || 10}
+        handlePageChange={handlePageChange}
+        handlePageSizeChange={handlePageSizeChange}
       />
     </div>
   );

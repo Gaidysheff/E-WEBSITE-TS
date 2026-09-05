@@ -12,7 +12,7 @@
 # from rest_framework import status
 # from django.http import HttpResponse
 # from rest_framework.authentication import SessionAuthentication
-
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from rest_framework.response import Response
 
 from .models import Category, Post
@@ -71,10 +71,18 @@ def post_detail(request, slug):
 @api_view(["GET"])
 @permission_classes([AllowAny])
 def post_filtering(request):
+
+    # Извлекаем параметры
+    page_number = request.query_params.get("page", 1)
+    page_size = request.query_params.get("page_size", 12)  # 12 по умолчанию
+
     category_query = request.query_params.get("category", "")
 
     # Начинаем со всех постов
-    posts = Post.objects.all().order_by("id")
+    # posts = Post.objects.all().order_by("id")
+
+    posts = Post.objects.all().order_by("created_at")
+
     # Сначала ВСЕГДА инициализируем базовый QuerySet
     # .order_by('id') ОБЯЗАТЕЛЕН для стабильной пагинации
 
@@ -82,11 +90,27 @@ def post_filtering(request):
     if category_query:
         posts = posts.filter(category__slug=category_query)
 
-    serializer = PostListSerializer(posts, many=True)
-    # serializer = PostListSerializer(page_obj, many=True)
+    # Только ПОСЛЕ сортировки применяем пагинацию
+    paginator = Paginator(posts, page_size)
+
+    try:
+        page_obj = paginator.page(page_number)
+    except PageNotAnInteger:
+        page_obj = paginator.page(1)
+    except EmptyPage:
+        page_obj = paginator.page(paginator.num_pages)
+    except Exception as e:
+        # ОБЯЗАТЕЛЬНО возвращаем Response при ошибке!
+        return Response({"error": str(e)}, status=500)
+
+    # serializer = PostListSerializer(posts, many=True)
+    serializer = PostListSerializer(page_obj, many=True)
 
     return Response(
         {
+            "count": paginator.count,  # Общее количество постов
+            "total_pages": paginator.num_pages,  # Всего страниц
+            "current_page": page_obj.number,
             "results": serializer.data,  # Список новостей
         }
     )

@@ -136,7 +136,7 @@ export type PaginatedResponse<T> = {
   total_pages: number;
   current_page: number;
   results: T[];
-  rating_stats: RatingStats;
+  rating_stats?: RatingStats;
 };
 
 export type PricePreset = {
@@ -145,6 +145,18 @@ export type PricePreset = {
   min_price: string;
   max_price: string;
   order: string;
+};
+
+export type PostUrlQuery = {
+  category: string;
+  page: number;
+  page_size: number;
+};
+
+export type PostSearch = {
+  category: string;
+  page: number;
+  pageSize: number;
 };
 
 // ------- Cart -----------

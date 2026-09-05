@@ -13,6 +13,9 @@ interface Props {
   totalPages: number;
   currentPage: number;
   isCatalog: boolean;
+  pageSize: number; // Передаем размер страницы сверху
+  handlePageChange: (newPage: number) => void;
+  handlePageSizeChange: (newPage: string) => void;
 }
 
 const FilteredResult = ({
@@ -21,6 +24,9 @@ const FilteredResult = ({
   totalPages,
   currentPage,
   isCatalog,
+  pageSize,
+  handlePageChange,
+  handlePageSizeChange,
 }: Props) => {
   const { LL } = useI18nContext();
   return (
@@ -58,7 +64,13 @@ const FilteredResult = ({
             </div>
 
             <div className="my-5">
-              <PageBreak totalPages={totalPages} currentPage={currentPage} />
+              <PageBreak
+                totalPages={totalPages}
+                currentPage={currentPage}
+                pageSize={pageSize}
+                onPageChange={handlePageChange}
+                onPageSizeChange={handlePageSizeChange}
+              />
             </div>
           </div>
         ) : (

@@ -427,9 +427,19 @@ export const getFilterLabelsAction = async () => {
   }
 };
 
-export const getFilteredNewsAction = async () => {
+export const getFilteredNewsAction = async (
+  category?: string,
+  pageSize: number = 5,
+) => {
   try {
-    const response = await publicApi.get(POST_FILTERING_URL);
+    const response = await publicApi.get(POST_FILTERING_URL, {
+      params: {
+        category: category === "all" ? undefined : category,
+        page: 1, // Для превью нам всегда нужна только 1-я (самая свежая) страница
+        page_size: pageSize, // Передаем лимит (5 постов)
+      },
+    });
+    // Возвращаем .results, так как бэкенд отдает пагинированный ответ
     return response.data.results;
   } catch (error: any) {
     throw error;

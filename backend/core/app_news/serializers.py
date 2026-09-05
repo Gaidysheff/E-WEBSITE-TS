@@ -26,6 +26,7 @@ class CategoryDetailSerializer(serializers.ModelSerializer):
 
 
 class PostDetailSerializer(serializers.ModelSerializer):
+    category = CategoryListSerializer(read_only=True)
 
     class Meta:
         model = Post

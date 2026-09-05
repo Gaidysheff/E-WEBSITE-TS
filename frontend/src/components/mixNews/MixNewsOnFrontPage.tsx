@@ -1,5 +1,6 @@
 import FilterLabels from "./FilterLabels";
 import FilterResult from "./FilterResult";
+import { AppLink as Link } from "@/components/appLink/AppLink";
 import { useI18nContext } from "@/i18n/i18n-react";
 import { useState } from "react";
 
@@ -23,10 +24,22 @@ const MixNewsOnFrontPage = () => {
           </h2>
         </div>
 
-        <FilterLabels
-          selectedCategory={selectedCategory}
-          setSelectedCategory={setSelectedCategory}
-        />
+        <div className="flex max-sm:flex-col justify-between">
+          <div className="my-6">
+            <FilterLabels
+              selectedCategory={selectedCategory}
+              setSelectedCategory={setSelectedCategory}
+            />
+          </div>
+          <Link
+            to="/news/newsIndex"
+            className="flex items-center hover:scale-110 duration-500
+            cursor-pointer italic max-sm:mb-6"
+          >
+            {LL.newsApplication.seeAll()}
+            {/* Смотреть все новости */}
+          </Link>
+        </div>
         <FilterResult selectedCategory={selectedCategory} />
       </div>
     </section>
