@@ -10,7 +10,7 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.core.mail import EmailMultiAlternatives
 import os
-from api.mixins import AutoTranslationMixin
+from api.mixins import MyMemoryAutoTranslateMixin
 from transliterate import translit
 from django.conf import settings
 import uuid
@@ -43,7 +43,7 @@ class CustomUserManager(BaseUserManager):
         return self.create_user(email, password, **extra_fields)
 
 
-class CustomUser(AutoTranslationMixin, AbstractUser):
+class CustomUser(MyMemoryAutoTranslateMixin, AbstractUser):
     email = models.EmailField(max_length=200, unique=True)
     username = models.CharField(max_length=200, null=True, blank=True)
     birthday = models.DateField(null=True, blank=True)

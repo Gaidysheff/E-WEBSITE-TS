@@ -19,6 +19,7 @@ type Props = {
   addressForm?: boolean;
   userInfo?: boolean;
   emailChange?: boolean;
+  subscribeForm?: boolean;
   user?: UserLoggedIn | undefined;
   iframe?: boolean;
   address?: PureAddress | null | undefined;
@@ -33,6 +34,7 @@ const Modal = ({
   addressForm,
   userInfo,
   emailChange,
+  subscribeForm,
   user,
   address,
   isModalOpen,
@@ -93,6 +95,11 @@ const Modal = ({
             <button type="button" className="outline-btn">
               {LL.profile.emailChange.emailChangeBtn()}
               {/* Email/Login Change */}
+            </button>
+          ) : subscribeForm ? (
+            <button type="button" className="outline-btn">
+              {LL.newsApplication.subscribeBtn()}
+              {/* Subscribe */}
             </button>
           ) : (
             <button

@@ -8,4 +8,7 @@ urlpatterns = [
     path("posts/<slug:slug>", views.post_detail),
     path("filtering/", views.post_filtering),
     path("get_filter_labels/", views.filter_labels),
+    path("subscribe/", views.SubscribeView.as_view()),
+    path("verify_subscription/<uuid:token>/", views.ConfirmSubscriptionView.as_view()),
+    path("unsubscribe/<uuid:token>/", views.UnsubscribeView.as_view()),
 ]

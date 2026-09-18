@@ -349,7 +349,35 @@ const en: Translation = {
     subscribeTextOne: "More news coming soon...",
     subscribeTextTwo: "Don't want to miss it?",
     subscribeTextThree: "for receiving our freshest news in your email box.",
-    subscribeLink: "Just subscribe",
+    subscribeBtn: "Just subscribe",
+    subscibeForm: {
+      title: "Subscribe to news",
+      subtitle:
+        "Receive the latest articles, events, and personalized offers from our store.",
+      label: "Email address",
+      cancel: "Cancel",
+      sending: "Sending ...",
+      subscibe: "Subscibe",
+      success: "Confirmation email sent!",
+      error: "Error while subscribing",
+      note: "* Your account email will be used",
+    },
+    subscribeConfirming: "Confirming newsletter subscription...",
+    subscribeSuccessTittle: "Successfully!",
+    subscribeSuccessText:
+      "Thank you! Your subscription has been successfully confirmed. You will now be the first to receive our latest articles and updates on events.",
+    subscribeErrorTittle: "Activation error",
+    subscribeErrorText:
+      "This link is no longer valid. The subscription may have already been confirmed, or the token has expired.",
+    unSubscribeConfirming: "Your subscription is being cancelled...",
+    unSubscribeSuccessTittle:
+      "🎉 Your subscription has been successfully cancelled!",
+    unSubscribeSuccessSubTittle: "You will no longer receive our newsletters.",
+    unSubscribeSuccessText:
+      "If you change your mind, you can resubscribe at any time.",
+    unSubscribeErrorTittle: "Error!",
+    unSubscribeErrorSubTittle: "Your subscription has not been cancelled.",
+    unSubscribeErrorText: "The token is invalid or has expired.",
   },
 };
 

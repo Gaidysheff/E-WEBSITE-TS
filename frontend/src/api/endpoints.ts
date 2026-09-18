@@ -64,3 +64,9 @@ export const NEWS_POST_DETAIL_PAGE_URL = `${BASE_URL}/api/app_news/posts/`;
 
 export const POST_FILTERING_URL = `${BASE_URL}/api/app_news/filtering/`;
 export const POST_FILTER_LABELS_URL = `${BASE_URL}/api/app_news/get_filter_labels/`;
+
+export const SUBSCRIBE_URL = `${BASE_URL}/api/app_news/subscribe/`;
+
+export const CONFIRM_SUBSCRIPTION_URL = `${BASE_URL}/api/app_news/verify_subscription/`;
+
+export const UNSUBSCRIBE_URL = `${BASE_URL}/api/app_news/unsubscribe/`;

@@ -1072,7 +1072,7 @@ type RootTranslation = {
 				 */
 				error: string
 				/**
-				 * Т​о​к​е​н​ ​н​е​д​е​й​с​т​в​и​т​е​л​е​н​ ​и​л​и​ ​с​р​о​к​ ​е​г​о​ ​д​е​й​с​т​в​и​я​ ​и​с​т​е​к​.
+				 * Т​о​к​е​н​ ​н​е​д​е​й​с​т​в​и​т​е​л​е​н​ ​и​л​и​ ​с​р​о​к​ ​е​г​о​ ​д​е​й​с​т​в​и​я​ ​и​с​т​ё​к​.
 				 */
 				noToken: string
 			}
@@ -1181,9 +1181,95 @@ type RootTranslation = {
 		 */
 		subscribeTextThree: string
 		/**
-		 * П​р​о​с​т​о​ ​п​о​д​п​и​ш​и​т​е​с​ь
+		 * П​р​о​с​т​о​ ​п​о​д​п​и​ш​и​с​ь
 		 */
-		subscribeLink: string
+		subscribeBtn: string
+		subscibeForm: {
+			/**
+			 * П​о​д​п​и​с​к​а​ ​н​а​ ​н​о​в​о​с​т​и
+			 */
+			title: string
+			/**
+			 * П​о​л​у​ч​а​й​т​е​ ​с​а​м​ы​е​ ​с​в​е​ж​и​е​ ​с​т​а​т​ь​и​,​ ​с​о​б​ы​т​и​я​ ​и​ ​п​е​р​с​о​н​а​л​ь​н​ы​е​ ​п​р​е​д​л​о​ж​е​н​и​я​ ​н​а​ш​е​г​о​ ​м​а​г​а​з​и​н​а​.
+			 */
+			subtitle: string
+			/**
+			 * А​д​р​е​с​ ​э​л​е​к​т​р​о​н​н​о​й​ ​п​о​ч​т​ы
+			 */
+			label: string
+			/**
+			 * О​т​м​е​н​а
+			 */
+			cancel: string
+			/**
+			 * О​т​п​р​а​в​к​а​.​.​.
+			 */
+			sending: string
+			/**
+			 * П​о​д​п​и​с​а​т​ь​с​я
+			 */
+			subscibe: string
+			/**
+			 * П​и​с​ь​м​о​ ​д​л​я​ ​п​о​д​т​в​е​р​ж​д​е​н​и​я​ ​о​т​п​р​а​в​л​е​н​о​!
+			 */
+			success: string
+			/**
+			 * О​ш​и​б​к​а​ ​п​р​и​ ​п​о​д​п​и​с​к​е
+			 */
+			error: string
+			/**
+			 * *​ ​Б​у​д​е​т​ ​и​с​п​о​л​ь​з​о​в​а​н​ ​e​m​a​i​l​ ​в​а​ш​е​г​о​ ​а​к​к​а​у​н​т​а
+			 */
+			note: string
+		}
+		/**
+		 * П​о​д​т​в​е​р​ж​д​а​е​м​ ​п​о​д​п​и​с​к​у​ ​н​а​ ​н​о​в​о​с​т​и​.​.​.
+		 */
+		subscribeConfirming: string
+		/**
+		 * У​с​п​е​ш​н​о​!
+		 */
+		subscribeSuccessTittle: string
+		/**
+		 * С​п​а​с​и​б​о​!​ ​В​а​ш​а​ ​п​о​д​п​и​с​к​а​ ​у​с​п​е​ш​н​о​ ​п​о​д​т​в​е​р​ж​д​е​н​а​.​ ​Т​е​п​е​р​ь​ ​в​ы​ ​б​у​д​е​т​е​ ​п​е​р​в​ы​м​и​ ​п​о​л​у​ч​а​т​ь​ ​н​а​ш​и​ ​с​в​е​ж​и​е​ ​с​т​а​т​ь​и​ ​и​ ​с​о​б​ы​т​и​я​.
+		 */
+		subscribeSuccessText: string
+		/**
+		 * О​ш​и​б​к​а​ ​а​к​т​и​в​а​ц​и​и
+		 */
+		subscribeErrorTittle: string
+		/**
+		 * Э​т​а​ ​с​с​ы​л​к​а​ ​б​о​л​ь​ш​е​ ​н​е​д​е​й​с​т​в​и​т​е​л​ь​н​а​.​ ​В​о​з​м​о​ж​н​о​,​ ​п​о​д​п​и​с​к​а​ ​у​ж​е​ ​б​ы​л​а​ ​п​о​д​т​в​е​р​ж​д​е​н​а​ ​р​а​н​е​е​ ​и​л​и​ ​т​о​к​е​н​ ​у​с​т​а​р​е​л​.
+		 */
+		subscribeErrorText: string
+		/**
+		 * И​д​ё​т​ ​п​р​о​ц​е​с​с​ ​о​т​м​е​н​ы​ ​В​а​ш​е​й​ ​п​о​д​п​и​с​к​и​ ​.​.​.
+		 */
+		unSubscribeConfirming: string
+		/**
+		 * �​�​ ​В​а​ш​а​ ​п​о​д​п​и​с​к​а​ ​у​с​п​е​ш​н​о​ ​о​т​м​е​н​е​н​а​!
+		 */
+		unSubscribeSuccessTittle: string
+		/**
+		 * В​ы​ ​б​о​л​ь​ш​е​ ​н​е​ ​б​у​д​е​т​е​ ​п​о​л​у​ч​а​т​ь​ ​н​а​ш​и​ ​и​н​ф​о​р​м​а​ц​и​о​н​н​ы​е​ ​п​и​с​ь​м​а​.
+		 */
+		unSubscribeSuccessSubTittle: string
+		/**
+		 * Е​с​л​и​ ​В​ы​ ​п​е​р​е​д​у​м​а​е​т​е​,​ ​В​ы​ ​м​о​ж​е​т​е​ ​з​а​н​о​в​о​ ​п​о​д​п​и​с​а​т​ь​с​я​ ​в​ ​л​ю​б​о​е​ ​у​д​о​б​н​о​е​ ​в​р​е​м​я​.
+		 */
+		unSubscribeSuccessText: string
+		/**
+		 * О​ш​и​б​к​а​!
+		 */
+		unSubscribeErrorTittle: string
+		/**
+		 * В​а​ш​а​ ​п​о​д​п​и​с​к​а​ ​н​е​ ​о​т​м​е​н​е​н​а​.
+		 */
+		unSubscribeErrorSubTittle: string
+		/**
+		 * Т​о​к​е​н​ ​н​е​д​е​й​с​т​в​и​т​е​л​е​н​ ​и​л​и​ ​с​р​о​к​ ​е​г​о​ ​д​е​й​с​т​в​и​я​ ​и​с​т​ё​к​.
+		 */
+		unSubscribeErrorText: string
 	}
 }
 
@@ -2244,7 +2330,7 @@ export type TranslationFunctions = {
 				 */
 				error: () => LocalizedString
 				/**
-				 * Токен недействителен или срок его действия истек.
+				 * Токен недействителен или срок его действия истёк.
 				 */
 				noToken: () => LocalizedString
 			}
@@ -2352,9 +2438,95 @@ export type TranslationFunctions = {
 		 */
 		subscribeTextThree: () => LocalizedString
 		/**
-		 * Просто подпишитесь
+		 * Просто подпишись
 		 */
-		subscribeLink: () => LocalizedString
+		subscribeBtn: () => LocalizedString
+		subscibeForm: {
+			/**
+			 * Подписка на новости
+			 */
+			title: () => LocalizedString
+			/**
+			 * Получайте самые свежие статьи, события и персональные предложения нашего магазина.
+			 */
+			subtitle: () => LocalizedString
+			/**
+			 * Адрес электронной почты
+			 */
+			label: () => LocalizedString
+			/**
+			 * Отмена
+			 */
+			cancel: () => LocalizedString
+			/**
+			 * Отправка...
+			 */
+			sending: () => LocalizedString
+			/**
+			 * Подписаться
+			 */
+			subscibe: () => LocalizedString
+			/**
+			 * Письмо для подтверждения отправлено!
+			 */
+			success: () => LocalizedString
+			/**
+			 * Ошибка при подписке
+			 */
+			error: () => LocalizedString
+			/**
+			 * * Будет использован email вашего аккаунта
+			 */
+			note: () => LocalizedString
+		}
+		/**
+		 * Подтверждаем подписку на новости...
+		 */
+		subscribeConfirming: () => LocalizedString
+		/**
+		 * Успешно!
+		 */
+		subscribeSuccessTittle: () => LocalizedString
+		/**
+		 * Спасибо! Ваша подписка успешно подтверждена. Теперь вы будете первыми получать наши свежие статьи и события.
+		 */
+		subscribeSuccessText: () => LocalizedString
+		/**
+		 * Ошибка активации
+		 */
+		subscribeErrorTittle: () => LocalizedString
+		/**
+		 * Эта ссылка больше недействительна. Возможно, подписка уже была подтверждена ранее или токен устарел.
+		 */
+		subscribeErrorText: () => LocalizedString
+		/**
+		 * Идёт процесс отмены Вашей подписки ...
+		 */
+		unSubscribeConfirming: () => LocalizedString
+		/**
+		 * 🎉 Ваша подписка успешно отменена!
+		 */
+		unSubscribeSuccessTittle: () => LocalizedString
+		/**
+		 * Вы больше не будете получать наши информационные письма.
+		 */
+		unSubscribeSuccessSubTittle: () => LocalizedString
+		/**
+		 * Если Вы передумаете, Вы можете заново подписаться в любое удобное время.
+		 */
+		unSubscribeSuccessText: () => LocalizedString
+		/**
+		 * Ошибка!
+		 */
+		unSubscribeErrorTittle: () => LocalizedString
+		/**
+		 * Ваша подписка не отменена.
+		 */
+		unSubscribeErrorSubTittle: () => LocalizedString
+		/**
+		 * Токен недействителен или срок его действия истёк.
+		 */
+		unSubscribeErrorText: () => LocalizedString
 	}
 }
 

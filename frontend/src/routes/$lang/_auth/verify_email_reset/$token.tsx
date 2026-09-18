@@ -31,7 +31,7 @@ function VerifyEmailPage() {
 
     const confirm = async () => {
       try {
-        console.log("🚀 ~ VerifyEmailPage ~ token:", token);
+        // console.log("🚀 ~ VerifyEmailPage ~ token:", token);
         await verifyNewEmail(token);
         setStatus("success");
         // Только ПОСЛЕ этого момента можно обновить setUser или попросить перевойти

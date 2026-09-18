@@ -276,7 +276,11 @@ class RequestEmailChangeView(APIView):
 
             # Использование EmailMultiAlternatives для отправки текста и HTML
             msg = EmailMultiAlternatives(
-                subject="Подтверждение смены email",
+                subject=(
+                    "Подтверждение смены email"
+                    if lang == "ru"
+                    else "Confirm change of email"
+                ),
                 body=plain_message,
                 from_email=settings.DEFAULT_FROM_EMAIL,
                 # Рекомендуется использовать этот параметр DEFAULT_FROM_EMAIL - это Company Name

@@ -46,6 +46,11 @@ const LangMainLayoutAuthenticatedCheckoutLazyRouteImport = createFileRoute(
 const LangMainLayoutAuthenticatedCartIndexLazyRouteImport = createFileRoute(
   '/$lang/_mainLayout/_authenticated/cart/',
 )()
+const LangMainLayoutNewsVerify_subscriptionTokenLazyRouteImport =
+  createFileRoute('/$lang/_mainLayout/news/verify_subscription/$token')()
+const LangMainLayoutNewsUnsubscribeTokenLazyRouteImport = createFileRoute(
+  '/$lang/_mainLayout/news/unsubscribe/$token',
+)()
 const LangMainLayoutAuthenticatedCartCartcodeLazyRouteImport = createFileRoute(
   '/$lang/_mainLayout/_authenticated/cart/$cartcode',
 )()
@@ -234,6 +239,26 @@ const LangMainLayoutAuthenticatedCartIndexLazyRoute =
       (d) => d.Route,
     ),
   )
+const LangMainLayoutNewsVerify_subscriptionTokenLazyRoute =
+  LangMainLayoutNewsVerify_subscriptionTokenLazyRouteImport.update({
+    id: '/news/verify_subscription/$token',
+    path: '/news/verify_subscription/$token',
+    getParentRoute: () => LangMainLayoutRoute,
+  } as any).lazy(() =>
+    import('./routes/$lang/_mainLayout/news/verify_subscription/$token.lazy').then(
+      (d) => d.Route,
+    ),
+  )
+const LangMainLayoutNewsUnsubscribeTokenLazyRoute =
+  LangMainLayoutNewsUnsubscribeTokenLazyRouteImport.update({
+    id: '/news/unsubscribe/$token',
+    path: '/news/unsubscribe/$token',
+    getParentRoute: () => LangMainLayoutRoute,
+  } as any).lazy(() =>
+    import('./routes/$lang/_mainLayout/news/unsubscribe/$token.lazy').then(
+      (d) => d.Route,
+    ),
+  )
 const LangMainLayoutAuthenticatedCartCartcodeLazyRoute =
   LangMainLayoutAuthenticatedCartCartcodeLazyRouteImport.update({
     id: '/cart/$cartcode',
@@ -279,6 +304,8 @@ export interface FileRoutesByFullPath {
   '/$lang/users': typeof LangMainLayoutAuthenticatedUsersLazyRoute
   '/$lang/payment': typeof LangMainLayoutAuthenticatedCloudPaymentPaymentLazyRoute
   '/$lang/cart/$cartcode': typeof LangMainLayoutAuthenticatedCartCartcodeLazyRoute
+  '/$lang/news/unsubscribe/$token': typeof LangMainLayoutNewsUnsubscribeTokenLazyRoute
+  '/$lang/news/verify_subscription/$token': typeof LangMainLayoutNewsVerify_subscriptionTokenLazyRoute
   '/$lang/cart': typeof LangMainLayoutAuthenticatedCartIndexLazyRoute
 }
 export interface FileRoutesByTo {
@@ -304,6 +331,8 @@ export interface FileRoutesByTo {
   '/$lang/users': typeof LangMainLayoutAuthenticatedUsersLazyRoute
   '/$lang/payment': typeof LangMainLayoutAuthenticatedCloudPaymentPaymentLazyRoute
   '/$lang/cart/$cartcode': typeof LangMainLayoutAuthenticatedCartCartcodeLazyRoute
+  '/$lang/news/unsubscribe/$token': typeof LangMainLayoutNewsUnsubscribeTokenLazyRoute
+  '/$lang/news/verify_subscription/$token': typeof LangMainLayoutNewsVerify_subscriptionTokenLazyRoute
   '/$lang/cart': typeof LangMainLayoutAuthenticatedCartIndexLazyRoute
 }
 export interface FileRoutesById {
@@ -333,6 +362,8 @@ export interface FileRoutesById {
   '/$lang/_mainLayout/_authenticated/users': typeof LangMainLayoutAuthenticatedUsersLazyRoute
   '/$lang/_mainLayout/_authenticated/_CloudPayment/payment': typeof LangMainLayoutAuthenticatedCloudPaymentPaymentLazyRoute
   '/$lang/_mainLayout/_authenticated/cart/$cartcode': typeof LangMainLayoutAuthenticatedCartCartcodeLazyRoute
+  '/$lang/_mainLayout/news/unsubscribe/$token': typeof LangMainLayoutNewsUnsubscribeTokenLazyRoute
+  '/$lang/_mainLayout/news/verify_subscription/$token': typeof LangMainLayoutNewsVerify_subscriptionTokenLazyRoute
   '/$lang/_mainLayout/_authenticated/cart/': typeof LangMainLayoutAuthenticatedCartIndexLazyRoute
 }
 export interface FileRouteTypes {
@@ -361,6 +392,8 @@ export interface FileRouteTypes {
     | '/$lang/users'
     | '/$lang/payment'
     | '/$lang/cart/$cartcode'
+    | '/$lang/news/unsubscribe/$token'
+    | '/$lang/news/verify_subscription/$token'
     | '/$lang/cart'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -386,6 +419,8 @@ export interface FileRouteTypes {
     | '/$lang/users'
     | '/$lang/payment'
     | '/$lang/cart/$cartcode'
+    | '/$lang/news/unsubscribe/$token'
+    | '/$lang/news/verify_subscription/$token'
     | '/$lang/cart'
   id:
     | '__root__'
@@ -414,6 +449,8 @@ export interface FileRouteTypes {
     | '/$lang/_mainLayout/_authenticated/users'
     | '/$lang/_mainLayout/_authenticated/_CloudPayment/payment'
     | '/$lang/_mainLayout/_authenticated/cart/$cartcode'
+    | '/$lang/_mainLayout/news/unsubscribe/$token'
+    | '/$lang/_mainLayout/news/verify_subscription/$token'
     | '/$lang/_mainLayout/_authenticated/cart/'
   fileRoutesById: FileRoutesById
 }
@@ -594,6 +631,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LangMainLayoutAuthenticatedCartIndexLazyRouteImport
       parentRoute: typeof LangMainLayoutAuthenticatedRoute
     }
+    '/$lang/_mainLayout/news/verify_subscription/$token': {
+      id: '/$lang/_mainLayout/news/verify_subscription/$token'
+      path: '/news/verify_subscription/$token'
+      fullPath: '/$lang/news/verify_subscription/$token'
+      preLoaderRoute: typeof LangMainLayoutNewsVerify_subscriptionTokenLazyRouteImport
+      parentRoute: typeof LangMainLayoutRoute
+    }
+    '/$lang/_mainLayout/news/unsubscribe/$token': {
+      id: '/$lang/_mainLayout/news/unsubscribe/$token'
+      path: '/news/unsubscribe/$token'
+      fullPath: '/$lang/news/unsubscribe/$token'
+      preLoaderRoute: typeof LangMainLayoutNewsUnsubscribeTokenLazyRouteImport
+      parentRoute: typeof LangMainLayoutRoute
+    }
     '/$lang/_mainLayout/_authenticated/cart/$cartcode': {
       id: '/$lang/_mainLayout/_authenticated/cart/$cartcode'
       path: '/cart/$cartcode'
@@ -652,6 +703,8 @@ interface LangMainLayoutRouteChildren {
   LangMainLayoutNewsNewsSlugRoute: typeof LangMainLayoutNewsNewsSlugRoute
   LangMainLayoutNewsNewsIndexRoute: typeof LangMainLayoutNewsNewsIndexRoute
   LangMainLayoutProductsProductSlugRoute: typeof LangMainLayoutProductsProductSlugRoute
+  LangMainLayoutNewsUnsubscribeTokenLazyRoute: typeof LangMainLayoutNewsUnsubscribeTokenLazyRoute
+  LangMainLayoutNewsVerify_subscriptionTokenLazyRoute: typeof LangMainLayoutNewsVerify_subscriptionTokenLazyRoute
 }
 
 const LangMainLayoutRouteChildren: LangMainLayoutRouteChildren = {
@@ -665,6 +718,10 @@ const LangMainLayoutRouteChildren: LangMainLayoutRouteChildren = {
   LangMainLayoutNewsNewsIndexRoute: LangMainLayoutNewsNewsIndexRoute,
   LangMainLayoutProductsProductSlugRoute:
     LangMainLayoutProductsProductSlugRoute,
+  LangMainLayoutNewsUnsubscribeTokenLazyRoute:
+    LangMainLayoutNewsUnsubscribeTokenLazyRoute,
+  LangMainLayoutNewsVerify_subscriptionTokenLazyRoute:
+    LangMainLayoutNewsVerify_subscriptionTokenLazyRoute,
 }
 
 const LangMainLayoutRouteWithChildren = LangMainLayoutRoute._addFileChildren(

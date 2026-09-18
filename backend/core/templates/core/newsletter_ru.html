@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Новости</title>
+    <style></style>
+  </head>
+  <body>
+    <h2>Новая статья на сайте: {{ post_title }}</h2>
+    {% if post_image %}
+    <img
+      src="{{ post_image }}"
+      alt="{{ post_title }}"
+      style="max-width: 100%; height: auto"
+    />
+    {% endif %}
+    <p>{{ post_text }}</p>
+
+    <a
+      href="{{ post_link }}"
+      style="
+        display: inline-block;
+        padding: 10px 20px;
+        background: blueviolet;
+        color: white;
+        text-decoration: none;
+      "
+    >
+      Читать на сайте
+    </a>
+
+    <!-- ФУТЕР С ОТПИСКОЙ -->
+    <hr style="border: none; border-top: 1px solid #eee; margin-top: 30px" />
+    <p style="font-size: 12px; color: #999">
+      Вы получили это письмо, так как подписались на рассылку новостей. <br />
+      Если вы больше не хотите получать наши письма, вы можете
+      <a
+        href="{{ unsubscribe_link }}"
+        style="color: #999; text-decoration: underline"
+        >отписаться в один клик</a
+      >.
+    </p>
+  </body>
+</html>

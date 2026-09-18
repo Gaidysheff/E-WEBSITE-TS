@@ -6,7 +6,7 @@ from transliterate import translit
 
 from colorfield.fields import ColorField
 
-from .mixins import AutoTranslationMixin  # Импортируем наш миксин
+from .mixins import MyMemoryAutoTranslateMixin  # Импортируем наш миксин
 
 # from deep_translator import GoogleTranslator  # Бесплатный переводчик
 
@@ -18,7 +18,7 @@ class ProductAvailabilityManager(models.Manager):
 
 
 # ------------------------------------------------------------------------
-class Category(AutoTranslationMixin, models.Model):
+class Category(MyMemoryAutoTranslateMixin, models.Model):
 
     name = models.CharField(max_length=255, unique=True, verbose_name="Название")
     slug = models.SlugField(
@@ -35,6 +35,8 @@ class Category(AutoTranslationMixin, models.Model):
         ordering = [
             "name",
         ]
+
+    translate_fields = ["name"]
 
     # def save(self, *args, **kwargs):
 
@@ -67,7 +69,7 @@ class Brand(models.Model):
         ]
 
 
-class Color(AutoTranslationMixin, models.Model):
+class Color(MyMemoryAutoTranslateMixin, models.Model):
     name = models.CharField(max_length=255, unique=True, verbose_name="Название")
     color_code = ColorField(
         default="#FF0000",
@@ -83,6 +85,8 @@ class Color(AutoTranslationMixin, models.Model):
         ordering = [
             "name",
         ]
+
+    translate_fields = ["name"]
 
 
 # ------------------------------------------
@@ -101,7 +105,7 @@ def get_default_color():
         return None  # Или любой другой резервный ID
 
 
-class Product(AutoTranslationMixin, models.Model):
+class Product(MyMemoryAutoTranslateMixin, models.Model):
 
     MALE = "M"
     FEMALE = "F"
@@ -192,6 +196,9 @@ class Product(AutoTranslationMixin, models.Model):
             "name",
         ]
 
+    # Перечисляем все поля через запятую — миксин переведет их за ОДИН пакетный запрос к API!
+    translate_fields = ["name", "description"]
+
     # ===== функционал сохранения перевода передаём в Mixin для тиражирования =====
     # ==== Метод save() писать НЕ НУЖНО, он автоматически прилетит из миксина! ====
     # =============================================================================
@@ -253,7 +260,7 @@ class CartItem(models.Model):
         return f"{self.quantity} x {self.product.name} in cart {self.cart.cart_code}"
 
 
-class Review(AutoTranslationMixin, models.Model):
+class Review(MyMemoryAutoTranslateMixin, models.Model):
 
     RATING_CHOICES = [
         (1, "1 - Poor"),
@@ -280,6 +287,8 @@ class Review(AutoTranslationMixin, models.Model):
     class Meta:
         unique_together = ["user", "product"]
         ordering = ["-created"]
+
+    translate_fields = ["review"]
 
 
 class ProductRating(models.Model):
@@ -335,7 +344,7 @@ class OrderItem(models.Model):
         # return f"Order {self.product.name} - {self.order.stripe_checkout_id}"
 
 
-class CustomerAddress(AutoTranslationMixin, models.Model):
+class CustomerAddress(MyMemoryAutoTranslateMixin, models.Model):
     customer = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="address"
     )
@@ -360,8 +369,11 @@ class CustomerAddress(AutoTranslationMixin, models.Model):
             self.street_ru = translit(self.street_en, "ru")
         super().save(*args, **kwargs)
 
+    # Перечисляем все поля через запятую — миксин переведет их за ОДИН пакетный запрос к API!
+    translate_fields = ["city", "region", "state"]
 
-class DeliveryOption(AutoTranslationMixin, models.Model):
+
+class DeliveryOption(MyMemoryAutoTranslateMixin, models.Model):
 
     name = models.CharField(max_length=100, verbose_name="Название (напр. DHL)")
     description = models.TextField(blank=True, verbose_name="Описание")
@@ -385,6 +397,9 @@ class DeliveryOption(AutoTranslationMixin, models.Model):
 
     def __str__(self):
         return f"{self.name} - {self.price}₽"
+
+    # Перечисляем все поля через запятую — миксин переведет их за ОДИН пакетный запрос к API!
+    translate_fields = ["name", "description"]
 
 
 class PricePresets(models.Model):

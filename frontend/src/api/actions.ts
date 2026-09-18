@@ -6,6 +6,7 @@ import {
   CART_PRODUCT_ADDED_URL,
   CHECKOUT_URL,
   CLOUD_PAYMENTS_URL,
+  CONFIRM_SUBSCRIPTION_URL,
   CURRENT_USER_DATA_URL,
   DELIVERY_OPTIONS_URL,
   NEWS_CATEGORY_DETAIL_PAGE_URL,
@@ -17,6 +18,8 @@ import {
   REVIEW_ADD_URL,
   REVIEW_DELETE_URL,
   REVIEW_UPDATE_URL,
+  SUBSCRIBE_URL,
+  UNSUBSCRIBE_URL,
   WISHLIST_ADD_AND_DELETE_URL,
   WISHLIST_PRODUCT_ADDED_URL,
 } from "@/api/endpoints.ts";
@@ -376,7 +379,7 @@ export const getDeliveryOptionsAction = async () => {
   }
 };
 
-// ======================== get News ===========================
+// ======================== News App ===========================
 
 export const getNewsCategoriesAction = async () => {
   try {
@@ -441,6 +444,44 @@ export const getFilteredNewsAction = async (
     });
     // Возвращаем .results, так как бэкенд отдает пагинированный ответ
     return response.data.results;
+  } catch (error: any) {
+    throw error;
+  }
+};
+
+// -------------------------- Subscription --------------------------
+
+type SubscribeInput = {
+  email: string;
+};
+
+export const subscribeToNews = async (value: SubscribeInput) => {
+  try {
+    const response = await publicApi.post(SUBSCRIBE_URL, {
+      email: value.email,
+    });
+    return response.data;
+  } catch (error: any) {
+    // Пробрасываем ошибку, чтобы TanStack Query / Form её поймали
+    throw error;
+  }
+};
+
+// ----------------------- Verify Subscription -----------------------
+
+export const verifySubscription = async (token: string) => {
+  try {
+    await publicApi.post(`${CONFIRM_SUBSCRIPTION_URL}${token}/`);
+  } catch (error: any) {
+    throw error;
+  }
+};
+
+// ----------------------- Unsubscribe -----------------------
+
+export const unsubscribeAction = async (token: string) => {
+  try {
+    await publicApi.post(`${UNSUBSCRIBE_URL}${token}/`);
   } catch (error: any) {
     throw error;
   }

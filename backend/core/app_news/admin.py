@@ -1,9 +1,6 @@
 from django.contrib import admin, messages
 from django.utils.safestring import mark_safe
-from .models import (
-    Post,
-    Category,
-)
+from .models import Post, Category, Subscriber
 from modeltranslation.admin import TranslationAdmin
 
 # class nameSlugAdmin(admin.ModelAdmin):
@@ -69,3 +66,39 @@ class CategoryAdmin(TranslationAdmin):
         "id",
         "name",
     ]
+
+
+@admin.register(Subscriber)
+class SubscriberAdmin(admin.ModelAdmin):
+    list_display = [
+        # "user",
+        "get_username",
+        "email",
+        "lang",
+        "is_verified",
+        "token",
+        "created_at",
+        "unsubscribed_at",
+        "is_active",
+        "duration",
+    ]
+    readonly_fields = [
+        "user",
+        "get_username",
+        "email",
+        "lang",
+        "is_verified",
+        "token",
+        "created_at",
+        "unsubscribed_at",
+        "is_active",
+        "duration",
+    ]
+
+    # 2. Описываем метод вытаскивания данных
+    @admin.display(description="Пользователь", ordering="user__username")
+    def get_username(self, obj):
+        # Проверяем, привязан ли юзер (чтобы не упасть в AttributeError, если это гость)
+        if obj.user:
+            return obj.user.username
+        return "Гость"  # То, что выведется вместо прочерка
