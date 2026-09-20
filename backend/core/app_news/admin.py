@@ -2,6 +2,8 @@ from django.contrib import admin, messages
 from django.utils.safestring import mark_safe
 from .models import Post, Category, Subscriber
 from modeltranslation.admin import TranslationAdmin
+from django.utils.safestring import mark_safe
+from django.urls import reverse
 
 # class nameSlugAdmin(admin.ModelAdmin):
 #     prepopulated_fields = {"slug": ("title", "name")}
@@ -83,7 +85,7 @@ class SubscriberAdmin(admin.ModelAdmin):
         "duration",
     ]
     readonly_fields = [
-        "user",
+        # "user",
         "get_username",
         "email",
         "lang",
@@ -95,10 +97,28 @@ class SubscriberAdmin(admin.ModelAdmin):
         "duration",
     ]
 
+    # Полностью убираем оригинальное поле 'user' (селектор) из карточки редактирования
+
+    exclude = [
+        "user",
+    ]
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        # Жёстко подгружаем связанных пользователей одним SQL JOIN
+        return qs.select_related("user")
+
     # 2. Описываем метод вытаскивания данных
     @admin.display(description="Пользователь", ordering="user__username")
     def get_username(self, obj):
         # Проверяем, привязан ли юзер (чтобы не упасть в AttributeError, если это гость)
         if obj.user:
-            return obj.user.username
+            # return obj.user.username
+
+            # Генерируем внутреннюю ссылку на редактирование
+            # этого конкретного пользователя в админке
+
+            url = reverse("admin:users_customuser_change", args=[obj.user.id])
+
+            return mark_safe(f'<a href="{url}">{obj.user.username}</a>')
         return "Гость"  # То, что выведется вместо прочерка

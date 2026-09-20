@@ -457,7 +457,7 @@ type SubscribeInput = {
 
 export const subscribeToNews = async (value: SubscribeInput) => {
   try {
-    const response = await publicApi.post(SUBSCRIBE_URL, {
+    const response = await privateApi.post(SUBSCRIBE_URL, {
       email: value.email,
     });
     return response.data;
@@ -471,7 +471,7 @@ export const subscribeToNews = async (value: SubscribeInput) => {
 
 export const verifySubscription = async (token: string) => {
   try {
-    await publicApi.post(`${CONFIRM_SUBSCRIPTION_URL}${token}/`);
+    await privateApi.post(`${CONFIRM_SUBSCRIPTION_URL}${token}/`);
   } catch (error: any) {
     throw error;
   }
@@ -481,7 +481,7 @@ export const verifySubscription = async (token: string) => {
 
 export const unsubscribeAction = async (token: string) => {
   try {
-    await publicApi.post(`${UNSUBSCRIBE_URL}${token}/`);
+    await privateApi.post(`${UNSUBSCRIBE_URL}${token}/`);
   } catch (error: any) {
     throw error;
   }

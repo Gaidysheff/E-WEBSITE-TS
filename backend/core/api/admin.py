@@ -1,5 +1,6 @@
 from django.contrib import admin, messages
 from django.utils.safestring import mark_safe
+from django.urls import reverse
 from .models import (
     Cart,
     CartItem,
@@ -296,6 +297,7 @@ class CustomerAddressAdmin(TranslationAdmin):
     # class CustomerAddressAdmin(admin.ModelAdmin):
     list_display = [
         "street",
+        "get_customer_link",
         "house",
         "apartment",
         "city",
@@ -304,6 +306,8 @@ class CustomerAddressAdmin(TranslationAdmin):
         "state",
     ]
     readonly_fields = [
+        # "customer",
+        "get_customer_link",
         "street",
         "house",
         "apartment",
@@ -315,6 +319,16 @@ class CustomerAddressAdmin(TranslationAdmin):
     list_filter = [
         "city",
     ]
+    exclude = ["customer"]  # Убираем селектор из формы
+
+    @admin.display(description="Клиент")
+    def get_customer_link(self, obj):
+        if obj.customer:
+            url = reverse("admin:users_customuser_change", args=[obj.customer.id])
+            return mark_safe(
+                f'<a href="{url}">{obj.customer.get_full_name() or obj.customer.username}</a>'
+            )
+        return "Не указан"
 
 
 @admin.register(DeliveryOption)
