@@ -4,6 +4,9 @@ from .models import Post, Category, Subscriber
 from modeltranslation.admin import TranslationAdmin
 from django.utils.safestring import mark_safe
 from django.urls import reverse
+import json
+from django.db.models import Count, Avg, F
+from django.db.models.functions import TruncMonth
 
 # class nameSlugAdmin(admin.ModelAdmin):
 #     prepopulated_fields = {"slug": ("title", "name")}
@@ -74,8 +77,8 @@ class CategoryAdmin(TranslationAdmin):
 class SubscriberAdmin(admin.ModelAdmin):
     list_display = [
         # "user",
-        "get_username",
         "email",
+        "get_username",
         "lang",
         "is_verified",
         "token",
@@ -122,3 +125,55 @@ class SubscriberAdmin(admin.ModelAdmin):
 
             return mark_safe(f'<a href="{url}">{obj.user.username}</a>')
         return "Гость"  # То, что выведется вместо прочерка
+
+    #   =========================== Аналитика ===========================
+
+    # Указываем Django использовать наш кастомный шаблон аналитики
+    change_list_template = "admin/app_news/subscriber/analytics_change_list.html"
+
+    def changelist_view(self, request, extra_context=None):
+        extra_context = extra_context or {}
+
+        # 1. Считаем динамику подписок по месяцам
+        monthly_data = (
+            Subscriber.objects.annotate(month=TruncMonth("created_at"))
+            .values("month")
+            .annotate(count=Count("id"))
+            .order_by("month")[
+                :6
+            ]  # Сортируем от старых к новым по месяцу и берем 6 штук
+        )
+        # Разворачиваем хронологически (от старых к новым)
+        monthly_data = list(reversed(monthly_data))
+
+        months = [
+            item["month"].strftime("%b %Y") for item in monthly_data if item["month"]
+        ]
+        joined_counts = [item["count"] for item in monthly_data if item["month"]]
+
+        # 2. Считаем средний жизненный срок для ОТПИСАВШИХСЯ пользователей
+        # Нам нужно вычесть из даты отписки дату создания и взять среднее
+        avg_lifetime = (
+            Subscriber.objects.filter(is_active=False)
+            .annotate(lifetime=F("unsubscribed_at") - F("created_at"))
+            .aggregate(average_time=Avg("lifetime"))
+        )
+
+        # Переводим timedelta в читаемые дни для графика
+        avg_days = 0
+        if avg_lifetime["average_time"]:
+            avg_days = round(avg_lifetime["average_time"].days)
+
+        # 3. Собираем всё в единый JSON-пакет
+        analytics_payload = {
+            "months": months,
+            "joined": joined_counts,
+            "avg_lifetime_days": avg_days,
+        }
+
+        # Передаем в контекст шаблона под именем, которое ждет JS
+        # ВАЖНО: Передаем СЛОВАРЬ (dict), а не строку!
+        extra_context["analytics_json"] = analytics_payload
+
+        # Вызываем стандартный метод обработки страницы, но уже с нашей порцией данных
+        return super().changelist_view(request, extra_context=extra_context)

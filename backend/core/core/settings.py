@@ -227,15 +227,15 @@ CORS_ALLOW_ALL_ORIGINS = False
 
 # 2. CORS_ALLOWED_ORIGINS — это домены ФРОНТЕНДА, которым разрешено делать запросы.
 # ВАЖНО: без путей (/ru, /en) на конце! Только протокол и домен.
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",  # СТРОГО БЕЗ слэша на конце!
-    "http://127.0.0.1:5173",
-    "http://172.27.32.1:5173",
-    "http://192.168.20.2:5173",
-    "https://test.gaidysheff.ru",  # Без /ru и /en! и СТРОГО БЕЗ слэша на конце!
-    "https://eshop.gaidysheff.ru",  # Без /ru и /en! и СТРОГО БЕЗ слэша на конце!
-    "https://e-website-ts.vercel.app",  # Без /ru и /en! и СТРОГО БЕЗ слэша на конце!
-]
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:5173",  # СТРОГО БЕЗ слэша на конце!
+#     "http://127.0.0.1:5173",
+#     "http://172.27.32.1:5173",
+#     "http://192.168.20.2:5173",
+#     "https://test.gaidysheff.ru",  # Без /ru и /en! и СТРОГО БЕЗ слэша на конце!
+#     "https://eshop.gaidysheff.ru",  # Без /ru и /en! и СТРОГО БЕЗ слэша на конце!
+#     "https://e-website-ts.vercel.app",  # Без /ru и /en! и СТРОГО БЕЗ слэша на конце!
+# ]
 
 # 3. Обязательно разрешаем передачу учетных данных (куки/токены)
 CORS_ALLOW_CREDENTIALS = True  # Обязательно разрешаем передачу кук/авторизации
@@ -246,11 +246,13 @@ if DEBUG:
         "http://127.0.0.1:5173",
         "http://172.27.32.1:5173",
         "http://192.168.20.2:5173",
+        # "https://cloudflare.com",
     ]
 else:
     CORS_ALLOWED_ORIGINS = [
         "https://gaidysheff.ru",
         "https://e-website-ts.vercel.app",
+        # "https://cloudflare.com",
     ]
 
 CORS_ALLOW_HEADERS = list(default_headers) + [
