@@ -1,35 +1,37 @@
-# from django.shortcuts import render
-from rest_framework import viewsets, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from knox.models import AuthToken
+from social_django.utils import psa
+from rest_framework import viewsets, permissions, status
+import traceback
+from social_django.utils import load_backend, load_strategy
 from .serializers import *
 from .models import *
 from django.contrib.auth import get_user_model, authenticate
 from api.models import Cart
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from knox.models import AuthToken
 import requests
 from rest_framework import status
 
 from django.shortcuts import get_object_or_404
 
+# from django.shortcuts import render
 # from django.core.mail import send_mail
 from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 
-User = get_user_model()
-
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
-from django.conf import settings
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, permissions
 from django.utils import translation
+
+User = get_user_model()
 
 
 def merge_carts(user, guest_cart_code, user_cart):
@@ -404,3 +406,496 @@ def google_auth(request):
             "user": {"email": user.email, "first_name": user.first_name, "id": user.id},
         }
     )
+
+
+# ====================== Yandex Auth ==========================
+# class YandexSocialAuthView(APIView):
+#     permission_classes = [permissions.AllowAny]
+
+#     # Декоратор @psa перехватывает запрос и подключает нужный социальный бэкенд
+#     # @psa("yandex-oauth2")
+#     # def post(self, request, backend):
+
+#     def post(self, request):
+#         # Фронтенд присылает нам временный код авторизации в ключе 'code'
+#         code = request.data.get("code")
+#         if not code:
+#             return Response(
+#                 {"error": "Code is required"}, status=status.HTTP_400_BAD_REQUEST
+#             )
+
+#         try:
+#             # Инициализируем стратегию и бэкенд Яндекса вручную без использования магии @psa
+#             strategy = load_strategy(request)
+#             backend = load_backend(
+#                 strategy=strategy, name="yandex-oauth2", redirect_uri=None
+#             )
+
+#             # Добавляем принудительное чтение ключей из настроек для ручной инициализации
+#             backend.setting("KEY", settings.SOCIAL_AUTH_YANDEX_OAUTH2_KEY)
+#             backend.setting("SECRET", settings.SOCIAL_AUTH_YANDEX_OAUTH2_SECRET)
+
+#             # Магия python-social-auth: меняем код на пользователя
+#             # user = request.backend.do_auth(code)
+
+#             user = backend.do_auth(code)
+
+#             if user:
+#                 # Если пользователь успешно вошел/создался, генерируем для него Knox-токен!
+#                 instance, token = AuthToken.objects.create(user)
+#                 return Response(
+#                     {
+#                         "token": token,
+#                         "user": {
+#                             "id": user.id,
+#                             "email": user.email,
+#                             "username": user.username,
+#                         },
+#                     },
+#                     status=status.HTTP_200_OK,
+#                 )
+
+#             else:
+#                 return Response(
+#                     {"error": "Не удалось аутентифицировать пользователя через Yandex"},
+#                     status=status.HTTP_400_BAD_REQUEST,
+#                 )
+
+#         except Exception as e:
+#             # КРИТИЧЕСКИ ВАЖНО ДЛЯ ОТЛАДКИ: Выводим полный Traceback ошибки 500 в консоль Django!
+#             # print("❌❌❌ КРИТИЧЕСКАЯ ОШИБКА В СОЦ-АВТОРИЗАЦИИ:")
+#             print("[ERROR] КРИТИЧЕСКАЯ ОШИБКА В СОЦ-АВТОРИЗАЦИИ:")
+#             traceback.print_exc()
+#             return Response(
+#                 {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+#             )
+
+#         # except Exception as e:
+#         #     return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+#         # return Response(
+#         #     {"error": "Authentication failed"}, status=status.HTTP_400_BAD_REQUEST
+#         # )
+
+# ============================ Вариант-2 =======================================
+# from social_django.models import UserSocialAuth
+# from requests.auth import HTTPBasicAuth
+
+
+# class YandexSocialAuthView(APIView):
+#     permission_classes = [permissions.AllowAny]
+
+#     def post(self, request):
+#         code = request.data.get("code")
+#         if not code:
+#             return Response(
+#                 {"error": "Code is required"}, status=status.HTTP_400_BAD_REQUEST
+#             )
+
+#         try:
+#             # 1. Меняем code на access_token
+#             token_url = "https://yandex.ru"
+
+#             headers = {"Content-Type": "application/x-www-form-urlencoded"}
+
+#             # В теле запроса оставляем только код, тип гранта и redirect_uri
+#             token_data = {
+#                 "grant_type": "authorization_code",
+#                 "code": code,
+#                 "client_id": settings.SOCIAL_AUTH_YANDEX_OAUTH2_KEY,
+#                 "client_secret": settings.SOCIAL_AUTH_YANDEX_OAUTH2_SECRET,
+#                 # КРИТИЧЕСКИЙ ФИКС: Передаем тот самый redirect_uri, который был на фронтенде!
+#                 "redirect_uri": settings.SOCIAL_AUTH_YANDEX_OAUTH2_REDIRECT_URL,
+#             }
+
+#             # Ключи приложения передаем через легальный заголовок Basic Auth (requests сделает base64 сам!)
+#             # client_id = settings.SOCIAL_AUTH_YANDEX_OAUTH2_KEY
+#             # client_secret = settings.SOCIAL_AUTH_YANDEX_OAUTH2_SECRET
+
+#             # Отправляем данные как обычную x-www-form-urlencoded форму
+#             token_res = requests.post(
+#                 token_url,
+#                 # json=token_data,  # <-- МЕНЯЕМ НА JSON
+#                 data=token_data,
+#                 headers=headers,  # Заголовки формы
+#                 # auth=HTTPBasicAuth(client_id, client_secret),  # <-- Защита Basic Auth
+#                 timeout=5,
+#             )
+
+#             print(f"[DEBUG OAUTH] Отправляем код: {code}")
+#             print(
+#                 f"[DEBUG OAUTH] Ссылка возврата бэкенда: {settings.SOCIAL_AUTH_YANDEX_OAUTH2_REDIRECT_URL}"
+#             )
+#             print(f"[DEBUG OAUTH] Ответ сервера (Код статуса): {token_res.status_code}")
+
+#             # Проверяем, пришел ли JSON, чтобы избежать падения JSONDecodeError
+#             try:
+#                 token_json = token_res.json()
+#             except Exception:
+#                 # Если Яндекс прислал ошибку текстом/HTML — выводим её в консоль
+#                 print(
+#                     f"[DEBUG ERROR] Яндекс вернул не-JSON ответ (Статус {token_res.status_code}): {token_res.text}"
+#                 )
+#                 print("[DEBUG RESPONSE TEXT]:", token_res.text)
+#                 return Response(
+#                     {
+#                         "error": "Yandex returned invalid format",
+#                         "status_code": token_res.status_code,
+#                         "raw_response": token_res.text[:200],
+#                     },
+#                     status=400,
+#                 )
+
+#             if token_res.status_code != 200:
+#                 print(
+#                     f"[DEBUG OAUTH] Яндекс отклонил запрос обмена токенов. Ответ API: {token_json}"
+#                 )
+#                 return Response(
+#                     {"error": "Yandex token exchange failed", "details": token_json},
+#                     status=400,
+#                 )
+
+#             access_token = token_json.get("access_token")
+
+#             # 2. Запрашиваем данные профиля
+#             info_url = "https://yandex.ru"
+#             headers = {"Authorization": f"OAuth {access_token}"}
+
+#             info_res = requests.get(info_url, headers=headers, timeout=5)
+#             if info_res.status_code != 200:
+#                 return Response(
+#                     {
+#                         "error": "Yandex profile fetch failed",
+#                         "details": info_res.json(),
+#                     },
+#                     status=400,
+#                 )
+
+#             user_info = info_res.json()
+
+#             # 3. Извлекаем данные (Яндекс может вернутьdefault_email или массив emails)
+#             email = user_info.get("default_email") or (
+#                 user_info.get("emails")[0] if user_info.get("emails") else None
+#             )
+#             if not email:
+#                 return Response(
+#                     {
+#                         "error": "Yandex did not return an email. Check application scopes."
+#                     },
+#                     status=400,
+#                 )
+
+#             # 4. Находим или создаем пользователя
+#             # Если login отсутствует, берем часть email до собачки
+#             username_default = user_info.get("login") or email.split("@")[0]
+
+#             user, created = User.objects.get_or_create(
+#                 email=email.lower().strip(),
+#                 defaults={
+#                     "username": username_default,
+#                     "first_name": user_info.get("first_name", ""),
+#                     "last_name": user_info.get("last_name", ""),
+#                 },
+#             )
+
+#             # Записываем связь в таблицу социалок
+#             UserSocialAuth.objects.get_or_create(
+#                 user=user, provider="yandex-oauth2", uid=user_info.get("id")
+#             )
+
+#             # 5. Выпускаем токен Knox
+#             instance, token = AuthToken.objects.create(user)
+
+#             return Response(
+#                 {
+#                     "token": token,
+#                     "user": {
+#                         "id": user.id,
+#                         "email": user.email,
+#                         "username": user.username,
+#                     },
+#                 },
+#                 status=status.HTTP_200_OK,
+#             )
+
+#         except Exception as e:
+#             print("[ERROR] КРИТИЧЕСКАЯ ОШИБКА В ЯНДЕКС-АВТОРИЗАЦИИ:")
+#             traceback.print_exc()
+#             return Response(
+#                 {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+#             )
+
+
+# ============================ Вариант-3 ==================
+
+# from rest_framework.views import APIView
+# from rest_framework.response import Response
+# from rest_framework import status, permissions
+
+# from django.utils.decorators import method_decorator
+# from django.views.decorators.csrf import csrf_exempt
+
+
+# # КРИТИЧЕСКИЙ ФИКС: Освобождаем API-эндпоинт от проверки CSRF кук браузера!
+# @method_decorator(csrf_exempt, name="dispatch")
+# class YandexSocialAuthView(APIView):
+#     permission_classes = [permissions.AllowAny]
+
+#     def post(self, request):
+#         # Наш тестовый код с заглушкой
+#         code = request.data.get("code")
+#         if not code:
+#             return Response(
+#                 {"error": "Code is required"}, status=status.HTTP_400_BAD_REQUEST
+#             )
+
+#         try:
+#             # Ваша тестовая заглушка:
+#             user_info = {
+#                 "id": "123456789_yandex_test",
+#                 "default_email": "test-yandex-user@gaidysheff.ru",
+#                 "first_name": "Семен",
+#                 "last_name": "Семеныч",
+#                 "login": "gaidysheff_test",
+#             }
+
+#             email = user_info.get("default_email")
+#             username_default = user_info.get("login") or email.split("@")[0]
+
+#             user, created = User.objects.get_or_create(
+#                 email=email.lower().strip(),
+#                 defaults={
+#                     "username": username_default,
+#                     "first_name": user_info.get("first_name", ""),
+#                     "last_name": user_info.get("last_name", ""),
+#                 },
+#             )
+
+#             # Выпускаем токен Knox
+#             instance, token = AuthToken.objects.create(user)
+
+#             return Response(
+#                 {
+#                     "token": token,
+#                     "user": {
+#                         "id": user.id,
+#                         "email": user.email,
+#                         "username": user.username,
+#                     },
+#                 },
+#                 status=status.HTTP_200_OK,
+#             )
+
+#         except Exception as e:
+#             return Response(
+#                 {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+#             )
+
+
+# ======================== Финальный Вариант ============================
+import requests
+import traceback
+from django.conf import settings
+from django.contrib.auth import get_user_model
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status, permissions
+from knox.models import AuthToken
+from social_django.models import UserSocialAuth
+from django.core.files.base import ContentFile  # Добавляем импорт в самый верх файла
+
+User = get_user_model()
+
+
+@method_decorator(csrf_exempt, name="dispatch")
+class YandexSocialAuthView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        code = request.data.get("code")
+        if not code:
+            return Response(
+                {"error": "Code is required"}, status=status.HTTP_400_BAD_REQUEST
+            )
+
+        try:
+            # 1. МЕНЯЕМ КОД НА ACCESS_TOKEN (СТРОГИЙ URL ПО ДОКУМЕНТАЦИИ ЯНДЕКСА)
+            token_url = "https://oauth.yandex.ru/token"
+
+            headers = {"Content-Type": "application/x-www-form-urlencoded"}
+
+            # Передаем ВСЕ параметры строго в теле формы x-www-form-urlencoded
+            token_data = {
+                "grant_type": "authorization_code",
+                "code": code,
+                "client_id": settings.SOCIAL_AUTH_YANDEX_OAUTH2_KEY,
+                "client_secret": settings.SOCIAL_AUTH_YANDEX_OAUTH2_SECRET,
+                "redirect_uri": settings.SOCIAL_AUTH_YANDEX_OAUTH2_REDIRECT_URL,
+            }
+
+            token_res = requests.post(
+                token_url,
+                data=token_data,
+                headers=headers,
+                timeout=5,
+            )
+
+            # print(f"[DEBUG OAUTH] Отправляем код: {code}")
+            # print(f"[DEBUG OAUTH] Ответ Яндекса (Статус): {token_res.status_code}")
+
+            # try:
+            #     token_json = token_res.json()
+            # except Exception:
+            #     # Если Яндекс вернул ошибку текстом/HTML — выводим без смайликов в консоль
+            #     print(
+            #         "[DEBUG ERROR] Yandex returned non-JSON format. Status:",
+            #         token_res.status_code,
+            #     )
+            #     print("[DEBUG RESPONSE TEXT]:", token_res.text[:300])
+            #     return Response(
+            #         {
+            #             "error": "Yandex returned invalid format",
+            #             "status_code": token_res.status_code,
+            #             "raw_response": token_res.text[:150],
+            #         },
+            #         status=400,
+            #     )
+
+            # Если Яндекс вернул ошибку авторизации (например, код устарел)
+            if token_res.status_code != 200:
+                # print(f"[DEBUG OAUTH] Сбой обмена токенов. Ответ API: {token_res.json()}")
+                return Response(
+                    {
+                        "error": "Yandex token exchange failed",
+                        "details": token_res.json(),
+                    },
+                    status=400,
+                )
+
+            token_json = token_res.json()
+            access_token = token_json.get("access_token")
+
+            # 2. ЗАПРАШИВАЕМ ДАННЫЕ ПРОФИЛЯ (СТРОГИЙ URL СЕРВЕРА ПАСПОРТА)
+            info_url = "https://login.yandex.ru/info"
+            headers = {"Authorization": f"OAuth {access_token}"}
+
+            info_res = requests.get(info_url, headers=headers, timeout=5)
+            if info_res.status_code != 200:
+                return Response(
+                    {
+                        "error": "Yandex profile fetch failed",
+                        "details": info_res.json(),
+                    },
+                    status=400,
+                )
+
+            user_info = info_res.json()
+
+            # 3. Извлекаем данные
+            emails_list = user_info.get("emails", [])
+            email = user_info.get("default_email") or (
+                emails_list[0] if emails_list else None
+            )
+
+            if not email:
+                return Response(
+                    {
+                        "error": "Yandex did not return an email. Check application scopes."
+                    },
+                    status=400,
+                )
+
+            # A. Формируем безопасный номер телефона
+            phone_data = user_info.get("default_phone") or {}
+            # Вытаскиваем строго номер телефона текстом
+            phone_number = phone_data.get("number", "")
+
+            # B. Обрабатываем дату рождения (Яндекс отдает её в формате YYYY-MM-DD
+            #  или пустую строку, если не заполнена)
+            birthday_raw = user_info.get("birthday", "")
+            # Если в модели поле birthday ожидает объект даты (DateField),
+            # а Яндекс прислал пустую строку, лучше записать None,
+            # чтобы Django не ругался на неверный формат даты
+            birthday_value = birthday_raw if birthday_raw else None
+
+            # C. Формируем абсолютную ссылку на аватарку Яндекса
+            avatar_id = user_info.get("default_avatar_id")
+            avatar_url = ""
+            if avatar_id:
+                # Склеиваем по официальной спецификации с размером islands-large
+                avatar_url = (
+                    f"https://avatars.yandex.net/get-yapic/{avatar_id}/islands-200"
+                )
+
+            # 4. Находим или создаем пользователя в нашей модели
+            email_clean = email.lower().strip()
+
+            username_default = user_info.get("login") or email.split("@")[0]
+
+            # 4-1. Сначала находим или создаем пользователя БЕЗ картинки
+            user, created = User.objects.get_or_create(
+                email=email_clean,
+                # email=email.lower().strip(),
+                defaults={
+                    "username": username_default,
+                    "first_name": user_info.get("first_name", ""),
+                    "last_name": user_info.get("last_name", ""),
+                    "birthday": birthday_value,  # Безопасная дата
+                    "phone": phone_number,  # Чистый номер телефона +7...
+                    # "image": avatar_url,  # Готовая ссылка на аватарку Яндекса!
+                },
+            )
+
+            # 4-2. Если пользователь только что создался и у него есть аватарка в Яндексе
+            if created and avatar_url:
+                try:
+                    # Скачиваем бинарные данные картинки из Яндекса
+                    response = requests.get(avatar_url, timeout=5)
+                    if response.status_code == 200:
+                        # Формируем уникальное имя файла
+                        file_name = f"yandex_avatar_{user.id}.jpg"
+                        # Магия Django: передаем ContentFile в ImageField!
+                        # Он САМ положит файл в images_users/YYYY/MM/DD/ благодаря upload_to
+                        user.image.save(
+                            file_name, ContentFile(response.content), save=True
+                        )
+                except Exception as e:
+                    print(f"[DEBUG ERROR] Не удалось скачать аватарку Яндекса: {e}")
+
+            # Сохраняем связь профилей
+            UserSocialAuth.objects.get_or_create(
+                user=user, provider="yandex-oauth2", uid=user_info.get("id")
+            )
+
+            # 5. Выпускаем ваш Knox-токен
+            instance, token = AuthToken.objects.create(user)
+
+            # Формируем безопасный текстовый URL аватарки для JSON ответа
+            # Если картинка есть, берем её .url, если нет — пустую строку
+            avatar_response_url = user.image.url if user.image else ""
+
+            return Response(
+                {
+                    "token": token,
+                    "user": {
+                        "id": user.id,
+                        "email": user.email,
+                        "username": user.username,
+                        "birthday": user.birthday,
+                        "phone": user.phone,
+                        # "image": user.image,
+                        "image": avatar_response_url,
+                        # <-- ФИКС: Передаем СТРОКУ с URL, а не бинарный объект!
+                    },
+                },
+                status=status.HTTP_200_OK,
+            )
+
+        except Exception as e:
+            print("[ERROR] КРИТИЧЕСКАЯ ОШИБКА В ЯНДЕКС-АВТОРИЗАЦИИ:")
+            traceback.print_exc()
+            return Response(
+                {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )

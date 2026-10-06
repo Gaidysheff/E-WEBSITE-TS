@@ -16,4 +16,5 @@ urlpatterns = [
     path("google-auth/", google_auth, name="google-auth"),
     path("request_email_change/", RequestEmailChangeView.as_view()),
     path("verify_email_change/<uuid:token>/", ConfirmEmailChangeView.as_view()),
+    path("yandex-login/", YandexSocialAuthView.as_view(), name="yandex-login"),
 ]

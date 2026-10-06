@@ -34,6 +34,9 @@ urlpatterns = [
     path(
         "schema/redoc/", SpectacularRedocView.as_view(url_name="schema"), name="redoc"
     ),
+    # КРИТИЧЕСКИ ВАЖНОЕ ДОБАВЛЕНИЕ ДЛЯ СОЦСЕТЕЙ:
+    # Namespace 'social' обязателен, библиотека ищет именно его!
+    path("social-auth/", include("social_django.urls", namespace="social")),
 ]
 
 if settings.DEBUG:

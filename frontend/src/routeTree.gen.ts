@@ -18,6 +18,7 @@ import { Route as LangMainLayoutRouteImport } from './routes/$lang/_mainLayout'
 import { Route as LangMainLayoutIndexRouteImport } from './routes/$lang/_mainLayout.index'
 import { Route as LangPaymentResultSuccessRouteImport } from './routes/$lang/_paymentResult/success'
 import { Route as LangMainLayoutAuthenticatedRouteImport } from './routes/$lang/_mainLayout/_authenticated'
+import { Route as LangAuthSocialAuthCallbackRouteImport } from './routes/$lang/_auth/social-auth-callback'
 import { Route as LangAuthRegisterRouteImport } from './routes/$lang/_auth/register'
 import { Route as LangAuthPasswordResetRequestRouteImport } from './routes/$lang/_auth/passwordResetRequest'
 import { Route as LangAuthLoginRouteImport } from './routes/$lang/_auth/login'
@@ -110,6 +111,12 @@ const LangMainLayoutAuthenticatedRoute =
   LangMainLayoutAuthenticatedRouteImport.update({
     id: '/_authenticated',
     getParentRoute: () => LangMainLayoutRoute,
+  } as any)
+const LangAuthSocialAuthCallbackRoute =
+  LangAuthSocialAuthCallbackRouteImport.update({
+    id: '/_auth/social-auth-callback',
+    path: '/social-auth-callback',
+    getParentRoute: () => LangRoute,
   } as any)
 const LangAuthRegisterRoute = LangAuthRegisterRouteImport.update({
   id: '/_auth/register',
@@ -288,6 +295,7 @@ export interface FileRoutesByFullPath {
   '/$lang/login': typeof LangAuthLoginRoute
   '/$lang/passwordResetRequest': typeof LangAuthPasswordResetRequestRoute
   '/$lang/register': typeof LangAuthRegisterRoute
+  '/$lang/social-auth-callback': typeof LangAuthSocialAuthCallbackRoute
   '/$lang/success': typeof LangPaymentResultSuccessRoute
   '/$lang/failed': typeof LangPaymentResultFailedLazyRoute
   '/$lang/': typeof LangMainLayoutIndexRoute
@@ -316,6 +324,7 @@ export interface FileRoutesByTo {
   '/$lang/login': typeof LangAuthLoginRoute
   '/$lang/passwordResetRequest': typeof LangAuthPasswordResetRequestRoute
   '/$lang/register': typeof LangAuthRegisterRoute
+  '/$lang/social-auth-callback': typeof LangAuthSocialAuthCallbackRoute
   '/$lang/success': typeof LangPaymentResultSuccessRoute
   '/$lang/failed': typeof LangPaymentResultFailedLazyRoute
   '/$lang/password-reset/$token': typeof LangAuthPasswordResetTokenRoute
@@ -345,6 +354,7 @@ export interface FileRoutesById {
   '/$lang/_auth/login': typeof LangAuthLoginRoute
   '/$lang/_auth/passwordResetRequest': typeof LangAuthPasswordResetRequestRoute
   '/$lang/_auth/register': typeof LangAuthRegisterRoute
+  '/$lang/_auth/social-auth-callback': typeof LangAuthSocialAuthCallbackRoute
   '/$lang/_mainLayout/_authenticated': typeof LangMainLayoutAuthenticatedRouteWithChildren
   '/$lang/_paymentResult/success': typeof LangPaymentResultSuccessRoute
   '/$lang/_paymentResult/failed': typeof LangPaymentResultFailedLazyRoute
@@ -376,6 +386,7 @@ export interface FileRouteTypes {
     | '/$lang/login'
     | '/$lang/passwordResetRequest'
     | '/$lang/register'
+    | '/$lang/social-auth-callback'
     | '/$lang/success'
     | '/$lang/failed'
     | '/$lang/'
@@ -404,6 +415,7 @@ export interface FileRouteTypes {
     | '/$lang/login'
     | '/$lang/passwordResetRequest'
     | '/$lang/register'
+    | '/$lang/social-auth-callback'
     | '/$lang/success'
     | '/$lang/failed'
     | '/$lang/password-reset/$token'
@@ -432,6 +444,7 @@ export interface FileRouteTypes {
     | '/$lang/_auth/login'
     | '/$lang/_auth/passwordResetRequest'
     | '/$lang/_auth/register'
+    | '/$lang/_auth/social-auth-callback'
     | '/$lang/_mainLayout/_authenticated'
     | '/$lang/_paymentResult/success'
     | '/$lang/_paymentResult/failed'
@@ -525,6 +538,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/$lang'
       preLoaderRoute: typeof LangMainLayoutAuthenticatedRouteImport
       parentRoute: typeof LangMainLayoutRoute
+    }
+    '/$lang/_auth/social-auth-callback': {
+      id: '/$lang/_auth/social-auth-callback'
+      path: '/social-auth-callback'
+      fullPath: '/$lang/social-auth-callback'
+      preLoaderRoute: typeof LangAuthSocialAuthCallbackRouteImport
+      parentRoute: typeof LangRoute
     }
     '/$lang/_auth/register': {
       id: '/$lang/_auth/register'
@@ -733,6 +753,7 @@ interface LangRouteChildren {
   LangAuthLoginRoute: typeof LangAuthLoginRoute
   LangAuthPasswordResetRequestRoute: typeof LangAuthPasswordResetRequestRoute
   LangAuthRegisterRoute: typeof LangAuthRegisterRoute
+  LangAuthSocialAuthCallbackRoute: typeof LangAuthSocialAuthCallbackRoute
   LangPaymentResultSuccessRoute: typeof LangPaymentResultSuccessRoute
   LangPaymentResultFailedLazyRoute: typeof LangPaymentResultFailedLazyRoute
   LangAuthPasswordResetTokenRoute: typeof LangAuthPasswordResetTokenRoute
@@ -744,6 +765,7 @@ const LangRouteChildren: LangRouteChildren = {
   LangAuthLoginRoute: LangAuthLoginRoute,
   LangAuthPasswordResetRequestRoute: LangAuthPasswordResetRequestRoute,
   LangAuthRegisterRoute: LangAuthRegisterRoute,
+  LangAuthSocialAuthCallbackRoute: LangAuthSocialAuthCallbackRoute,
   LangPaymentResultSuccessRoute: LangPaymentResultSuccessRoute,
   LangPaymentResultFailedLazyRoute: LangPaymentResultFailedLazyRoute,
   LangAuthPasswordResetTokenRoute: LangAuthPasswordResetTokenRoute,

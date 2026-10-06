@@ -55,6 +55,15 @@ const en: Translation = {
     passwordChangedMessage: "Your password has been successfully changed. 👋!",
     mustField: "This field is required",
     tooLong: "Your email is too long (RFC allows up to 254 characters)",
+    socialAuthCallback: {
+      loadingTitle: "Authorization in the store via YandexID",
+      loadingMessage: "Please wait while we're setting up your profile.",
+      errorTitle: "Login error",
+      errorMessage:
+        "An error occurred while exchanging data with the authorization server.",
+      returnBtn: "Return to the Login page",
+      yandexBtn: "Log in via Yandex",
+    },
   },
 
   choices: {

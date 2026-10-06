@@ -18,6 +18,7 @@ import { Label } from "@/components/ui/label";
 import { AppLink as Link } from "@/components/appLink/AppLink";
 import { MoveLeft } from "lucide-react";
 import { SUPPORTED_LANGUAGES } from "@/routes/$lang.tsx";
+import YandexOAuth from "@/components/socialOAuth/YandexOAuth";
 import { getZodTranslation } from "@/lib/i18nHelper.ts";
 import { toast } from "react-toastify";
 import { useCart } from "@/store/CartContext.tsx";
@@ -399,6 +400,8 @@ export function Login() {
               {LL.auth.login()}
               {/* Login */}
             </Button>
+
+            <YandexOAuth />
 
             {/* <div className="mt-6">
               <div className="relative mb-4">

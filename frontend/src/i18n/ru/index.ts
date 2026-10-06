@@ -58,6 +58,15 @@ const ru: BaseTranslation = {
     passwordChangedMessage: "Ваш пароль успешно изменен. 👋!",
     mustField: "Поле обязательно",
     tooLong: "Эл. адрес слишком длинный (RFC допускает до 254 символов)",
+    socialAuthCallback: {
+      loadingTitle: "Авторизация в магазине через YandexID",
+      loadingMessage: "Пожалуйста, подождите, мы настраиваем ваш профиль.",
+      errorTitle: "Ошибка входа",
+      errorMessage:
+        "Произошла ошибка при обмене данными с сервером авторизации.",
+      returnBtn: "Вернуться на страницу входа",
+      yandexBtn: "Войти через Яндекс",
+    },
   },
 
   choices: {

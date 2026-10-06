@@ -209,6 +209,32 @@ type RootTranslation = {
 		 * Э​л​.​ ​а​д​р​е​с​ ​с​л​и​ш​к​о​м​ ​д​л​и​н​н​ы​й​ ​(​R​F​C​ ​д​о​п​у​с​к​а​е​т​ ​д​о​ ​2​5​4​ ​с​и​м​в​о​л​о​в​)
 		 */
 		tooLong: string
+		socialAuthCallback: {
+			/**
+			 * А​в​т​о​р​и​з​а​ц​и​я​ ​в​ ​м​а​г​а​з​и​н​е​ ​ч​е​р​е​з​ ​Y​a​n​d​e​x​I​D
+			 */
+			loadingTitle: string
+			/**
+			 * П​о​ж​а​л​у​й​с​т​а​,​ ​п​о​д​о​ж​д​и​т​е​,​ ​м​ы​ ​н​а​с​т​р​а​и​в​а​е​м​ ​в​а​ш​ ​п​р​о​ф​и​л​ь​.
+			 */
+			loadingMessage: string
+			/**
+			 * О​ш​и​б​к​а​ ​в​х​о​д​а
+			 */
+			errorTitle: string
+			/**
+			 * П​р​о​и​з​о​ш​л​а​ ​о​ш​и​б​к​а​ ​п​р​и​ ​о​б​м​е​н​е​ ​д​а​н​н​ы​м​и​ ​с​ ​с​е​р​в​е​р​о​м​ ​а​в​т​о​р​и​з​а​ц​и​и​.
+			 */
+			errorMessage: string
+			/**
+			 * В​е​р​н​у​т​ь​с​я​ ​н​а​ ​с​т​р​а​н​и​ц​у​ ​в​х​о​д​а
+			 */
+			returnBtn: string
+			/**
+			 * В​о​й​т​и​ ​ч​е​р​е​з​ ​Я​н​д​е​к​с
+			 */
+			yandexBtn: string
+		}
 	}
 	choices: {
 		shape: {
@@ -1469,6 +1495,32 @@ export type TranslationFunctions = {
 		 * Эл. адрес слишком длинный (RFC допускает до 254 символов)
 		 */
 		tooLong: () => LocalizedString
+		socialAuthCallback: {
+			/**
+			 * Авторизация в магазине через YandexID
+			 */
+			loadingTitle: () => LocalizedString
+			/**
+			 * Пожалуйста, подождите, мы настраиваем ваш профиль.
+			 */
+			loadingMessage: () => LocalizedString
+			/**
+			 * Ошибка входа
+			 */
+			errorTitle: () => LocalizedString
+			/**
+			 * Произошла ошибка при обмене данными с сервером авторизации.
+			 */
+			errorMessage: () => LocalizedString
+			/**
+			 * Вернуться на страницу входа
+			 */
+			returnBtn: () => LocalizedString
+			/**
+			 * Войти через Яндекс
+			 */
+			yandexBtn: () => LocalizedString
+		}
 	}
 	choices: {
 		shape: {

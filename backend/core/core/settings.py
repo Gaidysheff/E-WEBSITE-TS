@@ -76,6 +76,7 @@ INSTALLED_APPS = [
     "crispy_bootstrap4",
     "drf_spectacular",
     "colorfield",
+    "social_django",  # Пакет для интеграции социальных сетей
 ]
 
 MIDDLEWARE = [
@@ -97,6 +98,11 @@ AUTH_USER_MODEL = "users.CustomUser"
 
 AUTHENTICATION_BACKENDS = [
     # 'users.auth_backend.EmailBackend',
+    # "social_core.backends.vk.VKOAuth2",  # Для VK
+    "social_core.backends.yandex.YandexOAuth2",  # Добавляем Яндекс
+    # "social_core.backends.ok.OKOAuth2",  # Для Одноклассников
+    # "social_core.backends.odnoklassniki.OdnoklassnikiOAuth2"
+    "social_core.backends.mailru.MailruOAuth2",  # Для Mail.ru
     "django.contrib.auth.backends.ModelBackend",  # this line fixed the problem
 ]
 
@@ -331,3 +337,56 @@ SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin-allow-popups"
 SECURE_REFERRER_POLICY = "no-referrer-when-downgrade"
 
 # APPEND_SLASH = False
+
+# Ключи, которые вы получите в кабинетах разработчиков
+# (перенесите потом в .env)
+# Ключи, которые вы получите в личном кабинете VK
+SOCIAL_AUTH_VK_OAUTH2_KEY = "client_id_vk"
+SOCIAL_AUTH_VK_OAUTH2_SECRET = "secret_key_vk"
+
+# Ключи, которые вы получите в личном кабинете OK
+SOCIAL_AUTH_OK_OAUTH2_KEY = "client_id_ok"
+SOCIAL_AUTH_OK_OAUTH2_SECRET = "secret_key_ok"
+
+# Ключи, которые вы получите в личном кабинете Яндекса
+SOCIAL_AUTH_YANDEX_OAUTH2_KEY = os.getenv("SOCIAL_AUTH_YANDEX_OAUTH2_KEY")
+SOCIAL_AUTH_YANDEX_OAUTH2_SECRET = os.getenv("SOCIAL_AUTH_YANDEX_OAUTH2_SECRET")
+
+# Запрашиваем у Яндекса расширенные данные (заголовки)
+SOCIAL_AUTH_YANDEX_OAUTH2_SCOPE = [
+    "login:email",
+    "login:info",
+    "login:birthday",
+    "login:avatar",
+    "login:default_phone",
+]
+
+# Настройка создания пользователя: Django автоматически создаст юзера
+# в вашей модели, если его еще нет в базе, или свяжет по email.
+SOCIAL_AUTH_PIPELINE = (
+    "social_core.pipeline.social_auth.social_details",
+    "social_core.pipeline.social_auth.social_uid",
+    "social_core.pipeline.social_auth.auth_allowed",
+    "social_core.pipeline.social_auth.social_user",
+    "social_core.pipeline.user.get_username",
+    "social_core.pipeline.social_auth.associate_by_email",
+    # Ели юзер уже есть с таким email — связываем, а не создаем дубликат!
+    "social_core.pipeline.user.create_user",
+    # Если юзера нет — создаем в БД
+    "social_core.pipeline.social_auth.associate_user",
+    "social_core.pipeline.social_auth.load_extra_data",
+    "social_core.pipeline.user.user_details",
+    # Заполняет first_name, last_name, email
+    "api.users.pipelines.save_custom_user_details",
+    # Наш кастомный шаг для даты рождения и телефона!
+)
+
+# Фиксируем адрес возврата для бэкенда. Он должен СТРОГО совпадать с фронтендом!
+if DEBUG:
+    SOCIAL_AUTH_YANDEX_OAUTH2_REDIRECT_URL = (
+        "http://localhost:5173/ru/social-auth-callback"
+    )
+else:
+    SOCIAL_AUTH_YANDEX_OAUTH2_REDIRECT_URL = (
+        "http://eshop.gaidysheff.ru/ru/social-auth-callback"
+    )
