@@ -102,7 +102,7 @@ AUTHENTICATION_BACKENDS = [
     "social_core.backends.yandex.YandexOAuth2",  # Добавляем Яндекс
     # "social_core.backends.ok.OKOAuth2",  # Для Одноклассников
     # "social_core.backends.odnoklassniki.OdnoklassnikiOAuth2"
-    "social_core.backends.mailru.MailruOAuth2",  # Для Mail.ru
+    # "social_core.backends.mailru.MailruOAuth2",  # Для Mail.ru
     "django.contrib.auth.backends.ModelBackend",  # this line fixed the problem
 ]
 
@@ -144,12 +144,28 @@ WSGI_APPLICATION = "core.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+
+if DEBUG:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.mysql",
+            "NAME": "gaidys2d_ecomm",
+            "USER": "gaidys2d_ecomm",
+            "PASSWORD": "9UCy4dPbR&nA",
+            "HOST": "localhost",
+            "POST": "3306",
+        },
+        "OPTIONS": {
+            "init_command": "SET sql_mode='STRICT_TRANS_TABLES'",
+        },
+    }
 
 
 # Password validation
@@ -206,7 +222,7 @@ if DEBUG:
     STATICFILES_DIRS = [os.path.join(BASE_DIR, "mailing/static")]
 else:
     STATIC_ROOT = "/home/g/gaidys2d/eshop/backend_app/static"
-    MEDIA_ROOT = "/home/g/gaidys2d/eshop/backend_app/media"
+    MEDIA_ROOT = "/home/g/gaidys2d/eshop/backend_app/core/media"
 
 # STATIC_ROOT = os.path.join(BASE_DIR, "static")
 # MEDIA_ROOT = os.path.join(BASE_DIR, "media")
@@ -338,17 +354,15 @@ SECURE_REFERRER_POLICY = "no-referrer-when-downgrade"
 
 # APPEND_SLASH = False
 
-# Ключи, которые вы получите в кабинетах разработчиков
-# (перенесите потом в .env)
-# Ключи, которые вы получите в личном кабинете VK
-SOCIAL_AUTH_VK_OAUTH2_KEY = "client_id_vk"
-SOCIAL_AUTH_VK_OAUTH2_SECRET = "secret_key_vk"
+# Ключи из личного кабинета VK
+SOCIAL_AUTH_VKID_OAUTH2_KEY = os.getenv("SOCIAL_AUTH_VKID_OAUTH2_KEY")
+SOCIAL_AUTH_VKID_OAUTH2_SECRET = os.getenv("SOCIAL_AUTH_VKID_OAUTH2_SECRET")
 
-# Ключи, которые вы получите в личном кабинете OK
+# Ключи из личного кабинета OK
 SOCIAL_AUTH_OK_OAUTH2_KEY = "client_id_ok"
 SOCIAL_AUTH_OK_OAUTH2_SECRET = "secret_key_ok"
 
-# Ключи, которые вы получите в личном кабинете Яндекса
+# Ключи из личного кабинета Яндекса
 SOCIAL_AUTH_YANDEX_OAUTH2_KEY = os.getenv("SOCIAL_AUTH_YANDEX_OAUTH2_KEY")
 SOCIAL_AUTH_YANDEX_OAUTH2_SECRET = os.getenv("SOCIAL_AUTH_YANDEX_OAUTH2_SECRET")
 
@@ -386,7 +400,11 @@ if DEBUG:
     SOCIAL_AUTH_YANDEX_OAUTH2_REDIRECT_URL = (
         "http://localhost:5173/ru/social-auth-callback"
     )
+    SOCIAL_AUTH_VKID_OAUTH2_REDIRECT_URL = "http://localhost:5173/ru/vk-auth-callback"
 else:
     SOCIAL_AUTH_YANDEX_OAUTH2_REDIRECT_URL = (
-        "http://eshop.gaidysheff.ru/ru/social-auth-callback"
+        "https://eshop.gaidysheff.ru/ru/social-auth-callback"
+    )
+    SOCIAL_AUTH_VKID_OAUTH2_REDIRECT_URL = (
+        "https://eshop.gaidysheff.ru/ru/vk-auth-callback"
     )

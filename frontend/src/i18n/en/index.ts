@@ -32,7 +32,7 @@ const en: Translation = {
     logoutMessage: "You have left the authorized area 👋!",
     loginQuestion: "Already registered?",
     loginLink: "Please Login",
-    or: "Or continue with",
+    or: "or continue with ...",
     google: "Continue with Google",
     validating: "Validating...",
     authorized: "You have been successfully authorized 👋!",

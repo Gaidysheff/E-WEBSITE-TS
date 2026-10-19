@@ -34,7 +34,7 @@ const ru: BaseTranslation = {
     logoutMessage: "Вы покинули авторизованную зону 👋!",
     loginQuestion: "Уже зарегистрированы?",
     loginLink: "Пожалуйста, авторизуйтесь",
-    or: "Или продолжить c ...",
+    or: "или продолжить c ...",
     google: "Продолжить с Google",
     validating: "Проверяем...",
     authorized: "Ваша авторизация прошла успешно. 👋!",

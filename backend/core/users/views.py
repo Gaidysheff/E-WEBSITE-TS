@@ -30,6 +30,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, permissions
 from django.utils import translation
+from requests.auth import HTTPBasicAuth  # Обязательно импортируем для заголовков!
 
 User = get_user_model()
 
@@ -409,290 +410,6 @@ def google_auth(request):
 
 
 # ====================== Yandex Auth ==========================
-# class YandexSocialAuthView(APIView):
-#     permission_classes = [permissions.AllowAny]
-
-#     # Декоратор @psa перехватывает запрос и подключает нужный социальный бэкенд
-#     # @psa("yandex-oauth2")
-#     # def post(self, request, backend):
-
-#     def post(self, request):
-#         # Фронтенд присылает нам временный код авторизации в ключе 'code'
-#         code = request.data.get("code")
-#         if not code:
-#             return Response(
-#                 {"error": "Code is required"}, status=status.HTTP_400_BAD_REQUEST
-#             )
-
-#         try:
-#             # Инициализируем стратегию и бэкенд Яндекса вручную без использования магии @psa
-#             strategy = load_strategy(request)
-#             backend = load_backend(
-#                 strategy=strategy, name="yandex-oauth2", redirect_uri=None
-#             )
-
-#             # Добавляем принудительное чтение ключей из настроек для ручной инициализации
-#             backend.setting("KEY", settings.SOCIAL_AUTH_YANDEX_OAUTH2_KEY)
-#             backend.setting("SECRET", settings.SOCIAL_AUTH_YANDEX_OAUTH2_SECRET)
-
-#             # Магия python-social-auth: меняем код на пользователя
-#             # user = request.backend.do_auth(code)
-
-#             user = backend.do_auth(code)
-
-#             if user:
-#                 # Если пользователь успешно вошел/создался, генерируем для него Knox-токен!
-#                 instance, token = AuthToken.objects.create(user)
-#                 return Response(
-#                     {
-#                         "token": token,
-#                         "user": {
-#                             "id": user.id,
-#                             "email": user.email,
-#                             "username": user.username,
-#                         },
-#                     },
-#                     status=status.HTTP_200_OK,
-#                 )
-
-#             else:
-#                 return Response(
-#                     {"error": "Не удалось аутентифицировать пользователя через Yandex"},
-#                     status=status.HTTP_400_BAD_REQUEST,
-#                 )
-
-#         except Exception as e:
-#             # КРИТИЧЕСКИ ВАЖНО ДЛЯ ОТЛАДКИ: Выводим полный Traceback ошибки 500 в консоль Django!
-#             # print("❌❌❌ КРИТИЧЕСКАЯ ОШИБКА В СОЦ-АВТОРИЗАЦИИ:")
-#             print("[ERROR] КРИТИЧЕСКАЯ ОШИБКА В СОЦ-АВТОРИЗАЦИИ:")
-#             traceback.print_exc()
-#             return Response(
-#                 {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
-#             )
-
-#         # except Exception as e:
-#         #     return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
-#         # return Response(
-#         #     {"error": "Authentication failed"}, status=status.HTTP_400_BAD_REQUEST
-#         # )
-
-# ============================ Вариант-2 =======================================
-# from social_django.models import UserSocialAuth
-# from requests.auth import HTTPBasicAuth
-
-
-# class YandexSocialAuthView(APIView):
-#     permission_classes = [permissions.AllowAny]
-
-#     def post(self, request):
-#         code = request.data.get("code")
-#         if not code:
-#             return Response(
-#                 {"error": "Code is required"}, status=status.HTTP_400_BAD_REQUEST
-#             )
-
-#         try:
-#             # 1. Меняем code на access_token
-#             token_url = "https://yandex.ru"
-
-#             headers = {"Content-Type": "application/x-www-form-urlencoded"}
-
-#             # В теле запроса оставляем только код, тип гранта и redirect_uri
-#             token_data = {
-#                 "grant_type": "authorization_code",
-#                 "code": code,
-#                 "client_id": settings.SOCIAL_AUTH_YANDEX_OAUTH2_KEY,
-#                 "client_secret": settings.SOCIAL_AUTH_YANDEX_OAUTH2_SECRET,
-#                 # КРИТИЧЕСКИЙ ФИКС: Передаем тот самый redirect_uri, который был на фронтенде!
-#                 "redirect_uri": settings.SOCIAL_AUTH_YANDEX_OAUTH2_REDIRECT_URL,
-#             }
-
-#             # Ключи приложения передаем через легальный заголовок Basic Auth (requests сделает base64 сам!)
-#             # client_id = settings.SOCIAL_AUTH_YANDEX_OAUTH2_KEY
-#             # client_secret = settings.SOCIAL_AUTH_YANDEX_OAUTH2_SECRET
-
-#             # Отправляем данные как обычную x-www-form-urlencoded форму
-#             token_res = requests.post(
-#                 token_url,
-#                 # json=token_data,  # <-- МЕНЯЕМ НА JSON
-#                 data=token_data,
-#                 headers=headers,  # Заголовки формы
-#                 # auth=HTTPBasicAuth(client_id, client_secret),  # <-- Защита Basic Auth
-#                 timeout=5,
-#             )
-
-#             print(f"[DEBUG OAUTH] Отправляем код: {code}")
-#             print(
-#                 f"[DEBUG OAUTH] Ссылка возврата бэкенда: {settings.SOCIAL_AUTH_YANDEX_OAUTH2_REDIRECT_URL}"
-#             )
-#             print(f"[DEBUG OAUTH] Ответ сервера (Код статуса): {token_res.status_code}")
-
-#             # Проверяем, пришел ли JSON, чтобы избежать падения JSONDecodeError
-#             try:
-#                 token_json = token_res.json()
-#             except Exception:
-#                 # Если Яндекс прислал ошибку текстом/HTML — выводим её в консоль
-#                 print(
-#                     f"[DEBUG ERROR] Яндекс вернул не-JSON ответ (Статус {token_res.status_code}): {token_res.text}"
-#                 )
-#                 print("[DEBUG RESPONSE TEXT]:", token_res.text)
-#                 return Response(
-#                     {
-#                         "error": "Yandex returned invalid format",
-#                         "status_code": token_res.status_code,
-#                         "raw_response": token_res.text[:200],
-#                     },
-#                     status=400,
-#                 )
-
-#             if token_res.status_code != 200:
-#                 print(
-#                     f"[DEBUG OAUTH] Яндекс отклонил запрос обмена токенов. Ответ API: {token_json}"
-#                 )
-#                 return Response(
-#                     {"error": "Yandex token exchange failed", "details": token_json},
-#                     status=400,
-#                 )
-
-#             access_token = token_json.get("access_token")
-
-#             # 2. Запрашиваем данные профиля
-#             info_url = "https://yandex.ru"
-#             headers = {"Authorization": f"OAuth {access_token}"}
-
-#             info_res = requests.get(info_url, headers=headers, timeout=5)
-#             if info_res.status_code != 200:
-#                 return Response(
-#                     {
-#                         "error": "Yandex profile fetch failed",
-#                         "details": info_res.json(),
-#                     },
-#                     status=400,
-#                 )
-
-#             user_info = info_res.json()
-
-#             # 3. Извлекаем данные (Яндекс может вернутьdefault_email или массив emails)
-#             email = user_info.get("default_email") or (
-#                 user_info.get("emails")[0] if user_info.get("emails") else None
-#             )
-#             if not email:
-#                 return Response(
-#                     {
-#                         "error": "Yandex did not return an email. Check application scopes."
-#                     },
-#                     status=400,
-#                 )
-
-#             # 4. Находим или создаем пользователя
-#             # Если login отсутствует, берем часть email до собачки
-#             username_default = user_info.get("login") or email.split("@")[0]
-
-#             user, created = User.objects.get_or_create(
-#                 email=email.lower().strip(),
-#                 defaults={
-#                     "username": username_default,
-#                     "first_name": user_info.get("first_name", ""),
-#                     "last_name": user_info.get("last_name", ""),
-#                 },
-#             )
-
-#             # Записываем связь в таблицу социалок
-#             UserSocialAuth.objects.get_or_create(
-#                 user=user, provider="yandex-oauth2", uid=user_info.get("id")
-#             )
-
-#             # 5. Выпускаем токен Knox
-#             instance, token = AuthToken.objects.create(user)
-
-#             return Response(
-#                 {
-#                     "token": token,
-#                     "user": {
-#                         "id": user.id,
-#                         "email": user.email,
-#                         "username": user.username,
-#                     },
-#                 },
-#                 status=status.HTTP_200_OK,
-#             )
-
-#         except Exception as e:
-#             print("[ERROR] КРИТИЧЕСКАЯ ОШИБКА В ЯНДЕКС-АВТОРИЗАЦИИ:")
-#             traceback.print_exc()
-#             return Response(
-#                 {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
-#             )
-
-
-# ============================ Вариант-3 ==================
-
-# from rest_framework.views import APIView
-# from rest_framework.response import Response
-# from rest_framework import status, permissions
-
-# from django.utils.decorators import method_decorator
-# from django.views.decorators.csrf import csrf_exempt
-
-
-# # КРИТИЧЕСКИЙ ФИКС: Освобождаем API-эндпоинт от проверки CSRF кук браузера!
-# @method_decorator(csrf_exempt, name="dispatch")
-# class YandexSocialAuthView(APIView):
-#     permission_classes = [permissions.AllowAny]
-
-#     def post(self, request):
-#         # Наш тестовый код с заглушкой
-#         code = request.data.get("code")
-#         if not code:
-#             return Response(
-#                 {"error": "Code is required"}, status=status.HTTP_400_BAD_REQUEST
-#             )
-
-#         try:
-#             # Ваша тестовая заглушка:
-#             user_info = {
-#                 "id": "123456789_yandex_test",
-#                 "default_email": "test-yandex-user@gaidysheff.ru",
-#                 "first_name": "Семен",
-#                 "last_name": "Семеныч",
-#                 "login": "gaidysheff_test",
-#             }
-
-#             email = user_info.get("default_email")
-#             username_default = user_info.get("login") or email.split("@")[0]
-
-#             user, created = User.objects.get_or_create(
-#                 email=email.lower().strip(),
-#                 defaults={
-#                     "username": username_default,
-#                     "first_name": user_info.get("first_name", ""),
-#                     "last_name": user_info.get("last_name", ""),
-#                 },
-#             )
-
-#             # Выпускаем токен Knox
-#             instance, token = AuthToken.objects.create(user)
-
-#             return Response(
-#                 {
-#                     "token": token,
-#                     "user": {
-#                         "id": user.id,
-#                         "email": user.email,
-#                         "username": user.username,
-#                     },
-#                 },
-#                 status=status.HTTP_200_OK,
-#             )
-
-#         except Exception as e:
-#             return Response(
-#                 {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
-#             )
-
-
-# ======================== Финальный Вариант ============================
 import requests
 import traceback
 from django.conf import settings
@@ -896,6 +613,237 @@ class YandexSocialAuthView(APIView):
         except Exception as e:
             print("[ERROR] КРИТИЧЕСКАЯ ОШИБКА В ЯНДЕКС-АВТОРИЗАЦИИ:")
             traceback.print_exc()
+            return Response(
+                {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+
+# ========================= VK ID Auth =============================
+@method_decorator(csrf_exempt, name="dispatch")
+class VKSocialAuthView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        # Получаем от фронтенда!
+        code = request.data.get("code")
+        state = request.data.get("state")
+        device_id = request.data.get("device_id")
+
+        # АВТОМАТИЧЕСКИЙ ПЕРЕХВАТ: Достаем оригинальный верификатор из кук SDK!
+        code_verifier = request.COOKIES.get("vkid_sdk:codeVerifier")
+
+        if not code:
+            return Response(
+                {"error": "Code is required"}, status=status.HTTP_400_BAD_REQUEST
+            )
+
+        try:
+            # 1. Меняем code на access_token в VK ID
+            token_url = "https://id.vk.ru/oauth2/auth"
+            headers = {"Content-Type": "application/x-www-form-urlencoded"}
+
+            # Превращаем ID приложения строго в ЧИСЛО
+            client_id_numeric = int(settings.SOCIAL_AUTH_VKID_OAUTH2_KEY)
+            client_secret = settings.SOCIAL_AUTH_VKID_OAUTH2_SECRET
+            redirect_uri = settings.SOCIAL_AUTH_VKID_OAUTH2_REDIRECT_URL
+
+            token_data = {
+                "grant_type": "authorization_code",
+                "code": code,
+                "client_id": client_id_numeric,  # Передаем как число!
+                "client_secret": client_secret,
+                "redirect_uri": redirect_uri,
+                "state": state,
+            }
+
+            # Если кука успешно долетела до бэкенда, передаем её в VK ID
+            if code_verifier:
+                token_data["code_verifier"] = code_verifier
+
+            # Если фронтенд прислал device_id, обязательно добавляем его в форму!
+            if device_id:
+                token_data["device_id"] = device_id
+
+            token_res = requests.post(
+                token_url, data=token_data, headers=headers, timeout=5
+            )
+
+            token_json = token_res.json()
+
+            if token_res.status_code != 200:
+                # ++++++++++ после отработки кода закомментить это логирование ++++++++++
+                # Жестко прописываем абсолютный путь к error_wsgi.txt в корень backend_app
+                # log_path = "/home/g/gaidys2d/eshop/backend_app/error_wsgi.txt"
+                # with open(log_path, "w", encoding="utf-8") as f:
+                #     f.write(
+                #         f"--- ШЛЮЗ VK ID ОТКЛОНИЛ ОБМЕН ---\nОтвет API: {token_json}\n"
+                #     )
+                # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                return Response(
+                    {"error": "VK token exchange error", "details": token_json},
+                    status=400,
+                )
+
+            # Безопасный извлекатель токена
+            raw_token = token_json.get("access_token")
+            access_token = None
+
+            if isinstance(raw_token, dict):
+                access_token = raw_token.get("token") or raw_token.get("access_token")
+            elif isinstance(raw_token, str):
+                access_token = raw_token
+
+            if not access_token:
+                access_token = token_json.get("token") or token_json.get("id_token")
+
+            # ++++++++++ после отработки кода закомментить это логирование ++++++++++
+            # Жестко фиксируем абсолютный путь для записи успешного лога
+            # log_path = "/home/g/gaidys2d/eshop/backend_app/error_wsgi.txt"
+            # with open(log_path, "w", encoding="utf-8") as f:
+            #     f.write(f"--- УСПЕШНЫЙ ОТВЕТ VK ID ---\n")
+            #     f.write(f"Полный JSON ответа: {token_json}\n")
+            #     f.write(f"Извлеченный access_token: {access_token}\n")
+            # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+            if not access_token:
+                # КРИТИЧЕСКИЙ ФИКС ДЛЯ ОТЛАДКИ: Отдаем весь сырой ответ VK
+                # прямо на фронтенд в details!
+                return Response(
+                    {
+                        "error": "No access_token in VK response",
+                        "details": token_json,  # Выводим сырой ответ VK на экран!
+                    },
+                    status=400,
+                )
+
+            # 🛠️ 2. ЗАПРОС ДАННЫХ ПРОФИЛЯ
+            # (СТРОГО ПО СПЕЦИФИКАЦИИ VK ID С ПЕРЕДАЧЕЙ CLIENT_ID)
+            info_url = "https://id.vk.ru/oauth2/user_info"
+            info_headers = {"Authorization": f"Bearer {access_token}"}
+
+            # По документации VK ID, передаем параметры как форму POST-запросом!
+            info_headers = {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "Authorization": f"Bearer {access_token}",
+            }
+
+            info_data = {
+                "client_id": int(
+                    settings.SOCIAL_AUTH_VKID_OAUTH2_KEY
+                )  # Передаем ID приложения числом
+            }
+
+            info_res = requests.post(
+                info_url, data=info_data, headers=info_headers, timeout=5
+            )
+
+            # Проверяем второй ответ на JSON
+
+            try:
+                user_info = info_res.json()
+            except Exception:
+                # +++++ после отработки кода закомментить это логирование +++++
+                # with open(
+                #     os.path.join(settings.BASE_DIR, "error_wsgi.txt"),
+                #     "w",
+                #     encoding="utf-8",
+                # ) as f:
+                #     f.write(f"--- СБОЙ НА ЭТАПЕ ЗАПРОСА ПРОФИЛЯ ---\n")
+                #     f.write(f"Статус ответа VK: {info_res.status_code}\n")
+                #     f.write(f"Текст ответа VK: {info_res.text[:500]}\n")
+                # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                return Response(
+                    {"error": "VK ID profile returned non-JSON format"}, status=400
+                )
+
+            if info_res.status_code != 200 or "error" in user_info:
+                # +++++ после отработки кода закомментить это логирование +++++
+                # with open(
+                #     os.path.join(settings.BASE_DIR, "error_wsgi.txt"),
+                #     "w",
+                #     encoding="utf-8",
+                # ) as f:
+                #     f.write(f"--- ШЛЮЗ VK ID ОТКЛОНИЛ ЗАПРОС ПРОФИЛЯ ---\n")
+                #     f.write(f"Ответ API: {user_info}\n")
+                # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                return Response(
+                    {"error": "VK ID profile fetch failed", "details": user_info},
+                    status=400,
+                )
+
+            # 3. ИЗВЛЕКАЕМ ДАННЫЕ ПОЛЬЗОВАТЕЛЯ (VK ID возвращает их в плоском виде
+            #  или в объекте 'user')
+            user_data = user_info.get("user", user_info)
+
+            # 3. Извлекаем данные
+            email = user_data.get("email")
+            if not email:
+                # На случай, если у аккаунта в VK нет почты, создаем уникальный
+                # внутренний email по user_id
+                vk_uid = token_json.get("user_id") or user_data.get("id") or "unknown"
+                email = f"vk_user_{vk_uid}@eshop.gaidysheff.ru"
+
+            email_clean = email.lower().strip()
+
+            # Формируем имя пользователя
+            vk_user_id = token_json.get("user_id") or user_data.get("id") or "user"
+            username_default = (
+                user_data.get("username")
+                or user_data.get("nickname")
+                or f"vk_{vk_user_id}"
+            )
+
+            # 4. НАХОДИМ ИЛИ СОЗДАЕМ ПОЛЬЗОВАТЕЛЯ В БД DJANGO
+            user, created = User.objects.get_or_create(
+                email=email_clean,
+                defaults={
+                    "username": username_default,
+                    "first_name": user_data.get("first_name", ""),
+                    "last_name": user_data.get("last_name", ""),
+                    "phone": user_data.get("phone", ""),
+                },
+            )
+
+            # 5. АВТОМАТИЧЕСКОЕ СКАЧИВАНИЕ АВАТАРКИ
+            # (Обычно поле называется 'avatar' или 'picture')
+            avatar_url = user_data.get("avatar") or user_data.get("picture")
+            if created and avatar_url:
+                try:
+                    img_res = requests.get(avatar_url, timeout=5)
+                    if img_res.status_code == 200:
+                        file_name = f"vkid_avatar_{user.id}.jpg"
+                        user.image.save(
+                            file_name, ContentFile(img_res.content), save=True
+                        )
+                except Exception:
+                    pass
+
+            # 6. ВЫПУСКАЕМ Knox-ТОКЕН МАГАЗИНА
+            instance, token = AuthToken.objects.create(user)
+            avatar_response_url = user.image.url if user.image else ""
+
+            return Response(
+                {
+                    "token": token,
+                    "user": {
+                        "id": user.id,
+                        "email": user.email,
+                        "username": user.username,
+                        "image": avatar_response_url,
+                    },
+                },
+                status=status.HTTP_200_OK,
+            )
+
+        except Exception as e:
+
+            # ++++++++++ после отработки кода закомментить это логирование ++++++++++
+            # import traceback
+
+            # with open(os.path.join(settings.BASE_DIR, "error_wsgi.txt"), "w") as f:
+            #     f.write("=== КРИТИЧЕСКОЕ ИСКЛЮЧЕНИЕ PYTHON ===\n")
+            #     traceback.print_exc(file=f)
+            # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             return Response(
                 {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )

@@ -18,6 +18,7 @@ import { Label } from "@/components/ui/label";
 import { AppLink as Link } from "@/components/appLink/AppLink";
 import { MoveLeft } from "lucide-react";
 import { SUPPORTED_LANGUAGES } from "@/routes/$lang.tsx";
+import VKSocialAuth from "@/components/socialOAuth/VKSocialAuth";
 import YandexOAuth from "@/components/socialOAuth/YandexOAuth";
 import { getZodTranslation } from "@/lib/i18nHelper.ts";
 import { toast } from "react-toastify";
@@ -401,7 +402,15 @@ export function Login() {
               {/* Login */}
             </Button>
 
-            <YandexOAuth />
+            <p className="mt-8 pb-2">
+              {LL.auth.or()}
+              {/* Или продолжить c ... */}
+            </p>
+
+            <div className="flex gap-2">
+              <YandexOAuth />
+              <VKSocialAuth />
+            </div>
 
             {/* <div className="mt-6">
               <div className="relative mb-4">

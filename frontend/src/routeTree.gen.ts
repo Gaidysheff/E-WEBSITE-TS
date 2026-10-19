@@ -18,6 +18,8 @@ import { Route as LangMainLayoutRouteImport } from './routes/$lang/_mainLayout'
 import { Route as LangMainLayoutIndexRouteImport } from './routes/$lang/_mainLayout.index'
 import { Route as LangPaymentResultSuccessRouteImport } from './routes/$lang/_paymentResult/success'
 import { Route as LangMainLayoutAuthenticatedRouteImport } from './routes/$lang/_mainLayout/_authenticated'
+import { Route as LangAuthYandexAuthCallbackRouteImport } from './routes/$lang/_auth/yandex-auth-callback'
+import { Route as LangAuthVkAuthCallbackRouteImport } from './routes/$lang/_auth/vk-auth-callback'
 import { Route as LangAuthSocialAuthCallbackRouteImport } from './routes/$lang/_auth/social-auth-callback'
 import { Route as LangAuthRegisterRouteImport } from './routes/$lang/_auth/register'
 import { Route as LangAuthPasswordResetRequestRouteImport } from './routes/$lang/_auth/passwordResetRequest'
@@ -112,6 +114,17 @@ const LangMainLayoutAuthenticatedRoute =
     id: '/_authenticated',
     getParentRoute: () => LangMainLayoutRoute,
   } as any)
+const LangAuthYandexAuthCallbackRoute =
+  LangAuthYandexAuthCallbackRouteImport.update({
+    id: '/_auth/yandex-auth-callback',
+    path: '/yandex-auth-callback',
+    getParentRoute: () => LangRoute,
+  } as any)
+const LangAuthVkAuthCallbackRoute = LangAuthVkAuthCallbackRouteImport.update({
+  id: '/_auth/vk-auth-callback',
+  path: '/vk-auth-callback',
+  getParentRoute: () => LangRoute,
+} as any)
 const LangAuthSocialAuthCallbackRoute =
   LangAuthSocialAuthCallbackRouteImport.update({
     id: '/_auth/social-auth-callback',
@@ -296,6 +309,8 @@ export interface FileRoutesByFullPath {
   '/$lang/passwordResetRequest': typeof LangAuthPasswordResetRequestRoute
   '/$lang/register': typeof LangAuthRegisterRoute
   '/$lang/social-auth-callback': typeof LangAuthSocialAuthCallbackRoute
+  '/$lang/vk-auth-callback': typeof LangAuthVkAuthCallbackRoute
+  '/$lang/yandex-auth-callback': typeof LangAuthYandexAuthCallbackRoute
   '/$lang/success': typeof LangPaymentResultSuccessRoute
   '/$lang/failed': typeof LangPaymentResultFailedLazyRoute
   '/$lang/': typeof LangMainLayoutIndexRoute
@@ -325,6 +340,8 @@ export interface FileRoutesByTo {
   '/$lang/passwordResetRequest': typeof LangAuthPasswordResetRequestRoute
   '/$lang/register': typeof LangAuthRegisterRoute
   '/$lang/social-auth-callback': typeof LangAuthSocialAuthCallbackRoute
+  '/$lang/vk-auth-callback': typeof LangAuthVkAuthCallbackRoute
+  '/$lang/yandex-auth-callback': typeof LangAuthYandexAuthCallbackRoute
   '/$lang/success': typeof LangPaymentResultSuccessRoute
   '/$lang/failed': typeof LangPaymentResultFailedLazyRoute
   '/$lang/password-reset/$token': typeof LangAuthPasswordResetTokenRoute
@@ -355,6 +372,8 @@ export interface FileRoutesById {
   '/$lang/_auth/passwordResetRequest': typeof LangAuthPasswordResetRequestRoute
   '/$lang/_auth/register': typeof LangAuthRegisterRoute
   '/$lang/_auth/social-auth-callback': typeof LangAuthSocialAuthCallbackRoute
+  '/$lang/_auth/vk-auth-callback': typeof LangAuthVkAuthCallbackRoute
+  '/$lang/_auth/yandex-auth-callback': typeof LangAuthYandexAuthCallbackRoute
   '/$lang/_mainLayout/_authenticated': typeof LangMainLayoutAuthenticatedRouteWithChildren
   '/$lang/_paymentResult/success': typeof LangPaymentResultSuccessRoute
   '/$lang/_paymentResult/failed': typeof LangPaymentResultFailedLazyRoute
@@ -387,6 +406,8 @@ export interface FileRouteTypes {
     | '/$lang/passwordResetRequest'
     | '/$lang/register'
     | '/$lang/social-auth-callback'
+    | '/$lang/vk-auth-callback'
+    | '/$lang/yandex-auth-callback'
     | '/$lang/success'
     | '/$lang/failed'
     | '/$lang/'
@@ -416,6 +437,8 @@ export interface FileRouteTypes {
     | '/$lang/passwordResetRequest'
     | '/$lang/register'
     | '/$lang/social-auth-callback'
+    | '/$lang/vk-auth-callback'
+    | '/$lang/yandex-auth-callback'
     | '/$lang/success'
     | '/$lang/failed'
     | '/$lang/password-reset/$token'
@@ -445,6 +468,8 @@ export interface FileRouteTypes {
     | '/$lang/_auth/passwordResetRequest'
     | '/$lang/_auth/register'
     | '/$lang/_auth/social-auth-callback'
+    | '/$lang/_auth/vk-auth-callback'
+    | '/$lang/_auth/yandex-auth-callback'
     | '/$lang/_mainLayout/_authenticated'
     | '/$lang/_paymentResult/success'
     | '/$lang/_paymentResult/failed'
@@ -538,6 +563,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/$lang'
       preLoaderRoute: typeof LangMainLayoutAuthenticatedRouteImport
       parentRoute: typeof LangMainLayoutRoute
+    }
+    '/$lang/_auth/yandex-auth-callback': {
+      id: '/$lang/_auth/yandex-auth-callback'
+      path: '/yandex-auth-callback'
+      fullPath: '/$lang/yandex-auth-callback'
+      preLoaderRoute: typeof LangAuthYandexAuthCallbackRouteImport
+      parentRoute: typeof LangRoute
+    }
+    '/$lang/_auth/vk-auth-callback': {
+      id: '/$lang/_auth/vk-auth-callback'
+      path: '/vk-auth-callback'
+      fullPath: '/$lang/vk-auth-callback'
+      preLoaderRoute: typeof LangAuthVkAuthCallbackRouteImport
+      parentRoute: typeof LangRoute
     }
     '/$lang/_auth/social-auth-callback': {
       id: '/$lang/_auth/social-auth-callback'
@@ -754,6 +793,8 @@ interface LangRouteChildren {
   LangAuthPasswordResetRequestRoute: typeof LangAuthPasswordResetRequestRoute
   LangAuthRegisterRoute: typeof LangAuthRegisterRoute
   LangAuthSocialAuthCallbackRoute: typeof LangAuthSocialAuthCallbackRoute
+  LangAuthVkAuthCallbackRoute: typeof LangAuthVkAuthCallbackRoute
+  LangAuthYandexAuthCallbackRoute: typeof LangAuthYandexAuthCallbackRoute
   LangPaymentResultSuccessRoute: typeof LangPaymentResultSuccessRoute
   LangPaymentResultFailedLazyRoute: typeof LangPaymentResultFailedLazyRoute
   LangAuthPasswordResetTokenRoute: typeof LangAuthPasswordResetTokenRoute
@@ -766,6 +807,8 @@ const LangRouteChildren: LangRouteChildren = {
   LangAuthPasswordResetRequestRoute: LangAuthPasswordResetRequestRoute,
   LangAuthRegisterRoute: LangAuthRegisterRoute,
   LangAuthSocialAuthCallbackRoute: LangAuthSocialAuthCallbackRoute,
+  LangAuthVkAuthCallbackRoute: LangAuthVkAuthCallbackRoute,
+  LangAuthYandexAuthCallbackRoute: LangAuthYandexAuthCallbackRoute,
   LangPaymentResultSuccessRoute: LangPaymentResultSuccessRoute,
   LangPaymentResultFailedLazyRoute: LangPaymentResultFailedLazyRoute,
   LangAuthPasswordResetTokenRoute: LangAuthPasswordResetTokenRoute,

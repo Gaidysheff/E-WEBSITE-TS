@@ -126,7 +126,7 @@ type RootTranslation = {
 		 */
 		loginLink: string
 		/**
-		 * И​л​и​ ​п​р​о​д​о​л​ж​и​т​ь​ ​c​ ​.​.​.
+		 * и​л​и​ ​п​р​о​д​о​л​ж​и​т​ь​ ​c​ ​.​.​.
 		 */
 		or: string
 		/**
@@ -1412,7 +1412,7 @@ export type TranslationFunctions = {
 		 */
 		loginLink: () => LocalizedString
 		/**
-		 * Или продолжить c ...
+		 * или продолжить c ...
 		 */
 		or: () => LocalizedString
 		/**

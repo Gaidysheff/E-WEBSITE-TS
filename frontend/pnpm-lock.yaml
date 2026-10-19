@@ -56,6 +56,9 @@ importers:
       '@types/react-select-country-list':
         specifier: ^2.2.3
         version: 2.2.3
+      '@vkid/sdk':
+        specifier: ^2.6.9
+        version: 2.6.9
       axios:
         specifier: ^1.13.2
         version: 1.13.2
@@ -1780,6 +1783,9 @@ packages:
     peerDependencies:
       vite: ^4.2.0 || ^5.0.0 || ^6.0.0 || ^7.0.0
 
+  '@vkid/sdk@2.6.9':
+    resolution: {integrity: sha512-H1K5GvUYrNVZx3pwVW8Z/gbYLobX5tgPqxdm3O+lCH3e9x4V4aOa1/3BqpKqSWDKE9Q7+vHiUaJVLlEzeMrHAw==}
+
   '@xobotyi/scrollbar-width@1.9.5':
     resolution: {integrity: sha512-N8tkAACJx2ww8vFMneJmaAgmjAG1tnVBZJRLRcx061tmsLRZHSEZSLuGWnwPtunsSLvSqXQ2wfp7Mgqg1I+2dQ==}
 
@@ -1930,6 +1936,10 @@ packages:
   cross-spawn@7.0.6:
     resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==}
     engines: {node: '>= 8'}
+
+  crypto-js@4.2.0:
+    resolution: {integrity: sha512-KALDyEYgpY+Rlob/iriUtjV6d5Eq+Y191A5g4UqLAi8CyGP9N1+FdVbkc1SxKc2r4YAYqG8JzO2KGL+AizD70Q==}
+    deprecated: Active development of CryptoJS has been discontinued. This library is no longer maintained.
 
   css-in-js-utils@3.1.0:
     resolution: {integrity: sha512-fJAcud6B3rRu+KHYk+Bwf+WFL2MDCJJ1XG9x137tJQ0xYxor7XziQtuGFbWNdqrvF4Tk26O3H73nfVqXt/fW1A==}
@@ -4695,6 +4705,10 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@vkid/sdk@2.6.9':
+    dependencies:
+      crypto-js: 4.2.0
+
   '@xobotyi/scrollbar-width@1.9.5': {}
 
   acorn-jsx@5.3.2(acorn@8.15.0):
@@ -4857,6 +4871,8 @@ snapshots:
       path-key: 3.1.1
       shebang-command: 2.0.0
       which: 2.0.2
+
+  crypto-js@4.2.0: {}
 
   css-in-js-utils@3.1.0:
     dependencies:

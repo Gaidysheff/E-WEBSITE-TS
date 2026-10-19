@@ -17,4 +17,5 @@ urlpatterns = [
     path("request_email_change/", RequestEmailChangeView.as_view()),
     path("verify_email_change/<uuid:token>/", ConfirmEmailChangeView.as_view()),
     path("yandex-login/", YandexSocialAuthView.as_view(), name="yandex-login"),
+    path("vk-login/", VKSocialAuthView.as_view(), name="vk-login"),
 ]
