@@ -5,6 +5,7 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.conf import settings
 from .models import Post, Subscriber
+from .utils import _async_newsletter_sender  # Импортируем нашу асинхронную обертку
 
 
 @receiver(pre_save, sender=Post)
@@ -35,85 +36,100 @@ def send_newsletter_on_post_creation(sender, instance, created, **kwargs):
     # Читаем флаг, который мы подготовили в pre_save
     should_send = getattr(instance, "_should_send_newsletter", False)
 
-    # # Условие для отправки: статус должен быть строго "Опубликовано"
-    # if instance.status != "P":
-    #     return
-
-    # should_send = False
-
-    # if created:
-    #     # Кейс 1: Пост создали и у него СРАЗУ стоит статус "Опубликовано"
-    #     should_send = True
-    # else:
-    #     # Кейс 2: Пост редактируют. Нам нужно проверить, какой статус был ДО сохранения.
-    #     try:
-    #         old_post = Post.objects.get(pk=instance.pk)
-    #         # Если раньше был Черновик/Архив, а сейчас стала Публикация — отправляем!
-    #         if old_post.status == "P":
-    #             should_send = False
-    #     except Post.DoesNotExist:
-    #         pass
-
-    # Если условия совпали — запускаем рассылку
-
     if should_send:
         # Удаляем временный флаг
         instance._should_send_newsletter = False
 
-        subscribers = Subscriber.objects.filter(is_verified=True, is_active=True)
+        # subscribers = Subscriber.objects.filter(is_verified=True, is_active=True)
 
-        if not subscribers.exists():
+        # 1. Извлекаем данные активных подписчиков в виде легкого списка словарей
+        # Это предотвратит проблемы с обращением к БД из параллельного потока
+        subscribers_data = list(
+            Subscriber.objects.filter(is_verified=True, is_active=True).values(
+                "email", "lang", "token"
+            )
+        )
+
+        if not subscribers_data:
             return
 
-        for subscriber in subscribers:
-            subscriber_lang = subscriber.lang
+        # 2. Готовим данные статьи для передачи в поток
+        backend_url = settings.BASE_URL_BACKEND.rstrip("/")
+        image_path = instance.image.url.lstrip("/") if instance.image else None
+        post_image = f"{backend_url}/{image_path}" if image_path else None
 
-            template_name = (
-                "core/newsletter_en.html"
-                if subscriber_lang == "en"
-                else "core/newsletter_ru.html"
-            )
-            post_title = (
-                instance.title_en if subscriber_lang == "en" else instance.title_ru
-            )
-            post_text = (
-                instance.text_en if subscriber_lang == "en" else instance.text_ru
-            )
+        post_data = {
+            "title_ru": instance.title_ru,
+            "title_en": instance.title_en,
+            "text_ru": instance.text_ru,
+            "text_en": instance.text_en,
+            "slug": instance.slug,
+            "post_image": post_image,
+        }
 
-            post_link = (
-                f"{settings.BASE_URL_FRONTEND}/{subscriber_lang}/news/{instance.slug}"
-            )
+        # 3. ИНИЦИАЛИЗИРУЕМ И ЗАПУСКАЕМ ФОНОВЫЙ ПОТОК
+        # Передаем управление операционной системе Beget
+        newsletter_thread = threading.Thread(
+            target=_async_newsletter_sender, args=(post_data, subscribers_data)
+        )
 
-            # Корректно склеиваем путь к картинке без дублирования слэшей
-            backend_url = settings.BASE_URL_BACKEND.rstrip("/")
-            image_path = instance.image.url.lstrip("/")
-            post_image = f"{backend_url}/{image_path}" if instance.image else None
+        # Запускаем! Django выполнит это за долю миллисекунды
+        newsletter_thread.start()
 
-            unsubscribe_link = f"{settings.BASE_URL_FRONTEND}/{subscriber_lang}/news/unsubscribe/{subscriber.token}"
+        print("[SIGNALS] Фоновый поток рассылки успешно инициирован.")
 
-            context = {
-                "post_title": post_title,
-                "post_text": post_text[:300] + "...",
-                "post_image": post_image,
-                "post_link": post_link,
-                "unsubscribe_link": unsubscribe_link,
-            }
+        # if not subscribers.exists():
+        #     return
 
-            html_message = render_to_string(template_name, context=context)
-            plain_message = strip_tags(html_message)
+        # for subscriber in subscribers:
+        #     subscriber_lang = subscriber.lang
 
-            msg = EmailMultiAlternatives(
-                subject=(
-                    f"Новая статья: {post_title}"
-                    if subscriber_lang == "ru"
-                    else f"New article: {post_title}"
-                ),
-                body=plain_message,
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                to=[subscriber.email],
-            )
-            msg.attach_alternative(html_message, "text/html")
-            msg.send()
+        #     template_name = (
+        #         "core/newsletter_en.html"
+        #         if subscriber_lang == "en"
+        #         else "core/newsletter_ru.html"
+        #     )
+        #     post_title = (
+        #         instance.title_en if subscriber_lang == "en" else instance.title_ru
+        #     )
+        #     post_text = (
+        #         instance.text_en if subscriber_lang == "en" else instance.text_ru
+        #     )
+
+        #     post_link = (
+        #         f"{settings.BASE_URL_FRONTEND}/{subscriber_lang}/news/{instance.slug}"
+        #     )
+
+        #     # Корректно склеиваем путь к картинке без дублирования слэшей
+        #     backend_url = settings.BASE_URL_BACKEND.rstrip("/")
+        #     image_path = instance.image.url.lstrip("/")
+        #     post_image = f"{backend_url}/{image_path}" if instance.image else None
+
+        #     unsubscribe_link = f"{settings.BASE_URL_FRONTEND}/{subscriber_lang}/news/unsubscribe/{subscriber.token}"
+
+        #     context = {
+        #         "post_title": post_title,
+        #         "post_text": post_text[:300] + "...",
+        #         "post_image": post_image,
+        #         "post_link": post_link,
+        #         "unsubscribe_link": unsubscribe_link,
+        #     }
+
+        #     html_message = render_to_string(template_name, context=context)
+        #     plain_message = strip_tags(html_message)
+
+        #     msg = EmailMultiAlternatives(
+        #         subject=(
+        #             f"Новая статья: {post_title}"
+        #             if subscriber_lang == "ru"
+        #             else f"New article: {post_title}"
+        #         ),
+        #         body=plain_message,
+        #         from_email=settings.DEFAULT_FROM_EMAIL,
+        #         to=[subscriber.email],
+        #     )
+        #     msg.attach_alternative(html_message, "text/html")
+        #     msg.send()
 
 
 # @receiver(post_save, sender=Post)

@@ -1,0 +1,95 @@
+Сейчас у меня такией вьюшки.
+
+@receiver(pre_save, sender=Post)
+def check_post_publication_status(sender, instance, **kwargs):
+
+    instance._should_send_newsletter = False
+
+    if instance.status != "P":
+        return
+
+    if not instance.pk:
+
+        instance._should_send_newsletter = True
+    else:
+
+        try:
+            old_post = Post.objects.get(pk=instance.pk)
+
+            if old_post.status != "P":
+                instance._should_send_newsletter = True
+        except Post.DoesNotExist:
+            pass
+
+@receiver(post_save, sender=Post)
+def send_newsletter_on_post_creation(sender, instance, created, **kwargs):
+
+    should_send = getattr(instance, "_should_send_newsletter", False)
+
+    if should_send:
+
+        instance._should_send_newsletter = False
+
+        subscribers = Subscriber.objects.filter(is_verified=True, is_active=True)
+
+        if not subscribers.exists():
+            return
+
+        for subscriber in subscribers:
+            subscriber_lang = subscriber.lang
+
+            template_name = (
+                "core/newsletter_en.html"
+                if subscriber_lang == "en"
+                else "core/newsletter_ru.html"
+            )
+            post_title = (
+                instance.title_en if subscriber_lang == "en" else instance.title_ru
+            )
+            post_text = (
+                instance.text_en if subscriber_lang == "en" else instance.text_ru
+            )
+
+            post_link = (
+                f"{settings.BASE_URL_FRONTEND}/{subscriber_lang}/news/{instance.slug}"
+            )
+
+            backend_url = settings.BASE_URL_BACKEND.rstrip("/")
+            image_path = instance.image.url.lstrip("/")
+            post_image = f"{backend_url}/{image_path}" if instance.image else None
+
+            unsubscribe_link = f"{settings.BASE_URL_FRONTEND}/{subscriber_lang}/news/unsubscribe/{subscriber.token}"
+
+            context = {
+                "post_title": post_title,
+                "post_text": post_text[:300] + "...",
+                "post_image": post_image,
+                "post_link": post_link,
+                "unsubscribe_link": unsubscribe_link,
+            }
+
+            html_message = render_to_string(template_name, context=context)
+            plain_message = strip_tags(html_message)
+
+            msg = EmailMultiAlternatives(
+                subject=(
+                    f"Новая статья: {post_title}"
+                    if subscriber_lang == "ru"
+                    else f"New article: {post_title}"
+                ),
+                body=plain_message,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                to=[subscriber.email],
+            )
+            msg.attach_alternative(html_message, "text/html")
+            msg.send()	
+
+Здесь подписчики перебираются индивидуально и в зависимости от языка отсылается
+соответствующая версия письма. 
+
+Если прописать
+        subscribers = Subscriber.objects.filter(
+            is_verified=True, is_active=True
+        ).values_list("email", flat=True)
+        recipient_list = [email for email in subscribers if email]
+то создаётся один монолитный список получателей.

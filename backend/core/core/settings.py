@@ -156,9 +156,12 @@ else:
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.mysql",
-            "NAME": "gaidys2d_ecomm",
-            "USER": "gaidys2d_ecomm",
-            "PASSWORD": "9UCy4dPbR&nA",
+            "NAME": "gaidys2d_eshop",
+            "USER": "gaidys2d_eshop",
+            "PASSWORD": "sHDfv3vn8!8!",
+            #         "NAME": "gaidys2d_ecomm",
+            #         "USER": "gaidys2d_ecomm",
+            #         "PASSWORD": "9UCy4dPbR&nA",
             "HOST": "localhost",
             "POST": "3306",
         },
