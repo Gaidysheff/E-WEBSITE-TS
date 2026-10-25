@@ -39,6 +39,8 @@ from rest_framework.views import APIView
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
+from .utils import _async_subscribe_email_sender
+import threading
 
 # ================= Category =======================
 
@@ -180,36 +182,45 @@ class SubscribeView(APIView):
 
         subscriber.save()
 
-        # --- Формирование красивого HTML-письма на основе языка запроса ---
-        # Ссылку верификации тоже строим с учетом сохраненного request_lang:
-        template_name = (
-            "core/subscribe_en.html"
-            if request_lang == "en"
-            else "core/subscribe_ru.html"
+        # # --- Формирование красивого HTML-письма на основе языка запроса ---
+        # # Ссылку верификации тоже строим с учетом сохраненного request_lang:
+        # template_name = (
+        #     "core/subscribe_en.html"
+        #     if request_lang == "en"
+        #     else "core/subscribe_ru.html"
+        # )
+        # # Ссылка для фронтенда (React / TanStack Router перехватит её)
+        # confirm_link = f"{settings.BASE_URL_FRONTEND}/{request_lang}/news/verify_subscription/{subscriber.token}"
+
+        # context = {
+        #     "confirm_link": confirm_link,
+        #     "email_address": subscriber.email,
+        # }
+
+        # html_message = render_to_string(template_name, context=context)
+        # plain_message = strip_tags(html_message)
+
+        # msg = EmailMultiAlternatives(
+        #     subject=(
+        #         "Подтверждение подписки на новости"
+        #         if request_lang == "ru"
+        #         else "Confirm your subscription"
+        #     ),
+        #     body=plain_message,
+        #     from_email=settings.DEFAULT_FROM_EMAIL,
+        #     to=[subscriber.email],
+        # )
+        # msg.attach_alternative(html_message, "text/html")
+        # msg.send()
+
+        # ВМЕСТО ПРЯМОГО msg.send() ЗАПУСКАЕМ ФОНОВЫЙ ПОТОК:
+        mail_thread = threading.Thread(
+            target=_async_subscribe_email_sender,
+            args=(subscriber.email, request_lang, subscriber.token),
         )
-        # Ссылка для фронтенда (React / TanStack Router перехватит её)
-        confirm_link = f"{settings.BASE_URL_FRONTEND}/{request_lang}/news/verify_subscription/{subscriber.token}"
+        mail_thread.start()  # Улетает в фон за 0.001 сек!
 
-        context = {
-            "confirm_link": confirm_link,
-            "email_address": subscriber.email,
-        }
-
-        html_message = render_to_string(template_name, context=context)
-        plain_message = strip_tags(html_message)
-
-        msg = EmailMultiAlternatives(
-            subject=(
-                "Подтверждение подписки на новости"
-                if request_lang == "ru"
-                else "Confirm your subscription"
-            ),
-            body=plain_message,
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            to=[subscriber.email],
-        )
-        msg.attach_alternative(html_message, "text/html")
-        msg.send()
+        # Мгновенно возвращаем фронтенду статус 201/200, не дожидаясь SMTP!
 
         return Response(
             {

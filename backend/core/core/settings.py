@@ -243,6 +243,9 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # CORS settings
 
 
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
+CRISPY_TEMPLATE_PACK = "bootstrap4"
+
 CORS_ALLOW_HEADERS = list(default_headers) + [
     "accept-language",  # Разрешаем читать этот заголовок при CORS-запросах
 ]
@@ -297,37 +300,6 @@ CORS_ALLOW_METHODS = [
     "POST",
     "PUT",
 ]
-
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-
-# ======================= Gmail ==========================
-
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = "KALIKA Shop <gaidysheff@gmail.com>"
-EMAIL_HOST_USER = os.getenv("GMAIL_EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD = os.getenv("GMAIL_EMAIL_HOST_PASSWORD")
-# EMAIL_HOST_USER = os.environ.get("GMAIL_EMAIL_HOST_USER")
-# EMAIL_HOST_PASSWORD = os.environ.get("GMAIL_EMAIL_HOST_PASSWORD")
-
-CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
-CRISPY_TEMPLATE_PACK = "bootstrap4"
-
-# ======================= Yandex ==========================
-
-# EMAIL_HOST = "smtp.yandex.ru"
-# EMAIL_PORT = 465
-# EMAIL_HOST_USER = os.getenv("YANDEX_EMAIL_HOST_USER")
-# EMAIL_HOST_PASSWORD = os.getenv("YANDEX_EMAIL_HOST_PASSWORD")
-# EMAIL_USE_SSL = True
-
-# ACCOUNT_EMAIL_REQUIRED = True
-# ACCOUNT_UNIQUE_EMAIL = True
-# ACCOUNT_USERNAME_REQUIRED = False
-# ACCOUNT_AUTHENTICATION_METHOD = "email"
-# ACCOUNT_EMAIL_VERIFICATION = "mandatory"
-
 
 # ======================= STRIPE ==========================
 
@@ -411,3 +383,40 @@ else:
     SOCIAL_AUTH_VKID_OAUTH2_REDIRECT_URL = (
         "https://eshop.gaidysheff.ru/ru/vk-auth-callback"
     )
+
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+
+if DEBUG:
+    # ======================= Gmail ==========================
+    EMAIL_HOST = "smtp.gmail.com"
+    EMAIL_PORT = 587
+    EMAIL_USE_TLS = True
+    DEFAULT_FROM_EMAIL = "KALIKA Shop <gaidysheff@gmail.com>"
+    EMAIL_HOST_USER = os.getenv("GMAIL_EMAIL_HOST_USER")
+    EMAIL_HOST_PASSWORD = os.getenv("GMAIL_EMAIL_HOST_PASSWORD")
+
+    # ======================= Yandex ==========================
+    # EMAIL_HOST = "smtp.yandex.ru"
+    # EMAIL_PORT = 465
+    # EMAIL_HOST_USER = os.getenv("YANDEX_EMAIL_HOST_USER")
+    # EMAIL_HOST_PASSWORD = os.getenv("YANDEX_EMAIL_HOST_PASSWORD")
+    # EMAIL_USE_SSL = True
+
+    # ACCOUNT_EMAIL_REQUIRED = True
+    # ACCOUNT_UNIQUE_EMAIL = True
+    # ACCOUNT_USERNAME_REQUIRED = False
+    # ACCOUNT_AUTHENTICATION_METHOD = "email"
+    # ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+else:
+    # =============== email Beget localhost ===================
+    EMAIL_HOST = "smtp.beget.com"  # Используем хост Beget
+    EMAIL_PORT = 2525  # Используем успешный порт из telnet!
+    EMAIL_HOST_USER = os.getenv(
+        "BEGET_EMAIL_HOST_USER"
+    )  # Корпоративный ящик (полностью с доменом)
+    EMAIL_HOST_PASSWORD = os.getenv("BEGET_EMAIL_HOST_PASSWORD")
+    EMAIL_USE_TLS = False  # Отключаем TLS, чтобы обойти ошибку сертификатов
+    EMAIL_TIMEOUT = 5
+    # Адрес отправителя по умолчанию (должен совпадать с EMAIL_HOST_USER)
+    DEFAULT_FROM_EMAIL = "info@gaidysheff.ru"

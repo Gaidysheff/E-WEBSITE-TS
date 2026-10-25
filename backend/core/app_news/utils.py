@@ -2,7 +2,7 @@
 # from django.core.mail import send_mail
 # from django.conf import settings
 
-
+import os
 import threading
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
@@ -103,3 +103,51 @@ def _async_newsletter_sender(post_data, subscribers_data):
 
 #     # Запускаем поток в фоновом режиме
 #     email_thread.start()
+
+
+# Выносим тяжелую отправку в отдельную изолированную функцию
+def _async_subscribe_email_sender(email, lang, token):
+    try:
+        template_name = (
+            "core/subscribe_en.html" if lang == "en" else "core/subscribe_ru.html"
+        )
+
+        # Ссылка для фронтенда (React / TanStack Router перехватит её)
+        confirm_link = (
+            f"{settings.BASE_URL_FRONTEND}/{lang}/news/verify_subscription/{token}"
+        )
+
+        # Готовим контекст для письма подтверждения
+        context = {
+            "confirm_link": confirm_link,
+            "email_address": email,
+        }
+
+        html_message = render_to_string(template_name, context=context)
+        plain_message = strip_tags(html_message)
+
+        msg = EmailMultiAlternatives(
+            subject=(
+                "Подтверждение подписки на новости"
+                if lang == "ru"
+                else "Confirm your subscription"
+            ),
+            body=plain_message,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            to=[email],
+        )
+
+        msg.attach_alternative(html_message, "text/html")
+        msg.send()
+
+        print(f"[MAIL SUCCESS] Письмо подтверждения успешно отправлено на {email}")
+    except Exception as mail_err:
+        # Ошибка SMTP запишется в логи сервера,
+        # но больше никогда не уронит веб-страницу пользователя!
+        import traceback
+
+        # log_path = "/home/g/gaidys2d/eshop/backend_app/error_wsgi.txt"
+        log_path = os.path.join(settings.BASE_DIR, "error_mail.txt")
+        with open(log_path, "a", encoding="utf-8") as f:
+            f.write(f"\n=== СБОЙ SMTP В ФОНЕ ===\n")
+            traceback.print_exc(file=f)

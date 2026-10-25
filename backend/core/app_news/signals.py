@@ -6,6 +6,7 @@ from django.utils.html import strip_tags
 from django.conf import settings
 from .models import Post, Subscriber
 from .utils import _async_newsletter_sender  # Импортируем нашу асинхронную обертку
+import threading
 
 
 @receiver(pre_save, sender=Post)
