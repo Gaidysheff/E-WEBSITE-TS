@@ -79,9 +79,9 @@ class Post(MyMemoryAutoTranslateMixin, models.Model):
     #                 self.text_ru
     #             )
 
-    #         print("🎉 Автоперевод через Lingva успешно выполнен!")
+    #         print("Автоперевод через Lingva успешно выполнен!")
     #     except Exception as e:
-    #         print(f"❌ Сбой автоперевода Lingva: {e}")
+    #         print(f"Сбой автоперевода Lingva: {e}")
 
     #     super().save(*args, **kwargs)
 
@@ -119,10 +119,10 @@ class Post(MyMemoryAutoTranslateMixin, models.Model):
     #             elif translate_text:
     #                 self.text_en = translated_results[0]
 
-    #             print("🎉 Автоперевод через MyMemory успешно выполнен!")
+    #             print("Автоперевод через MyMemory успешно выполнен!")
 
     #         except Exception as e:
-    #             print(f"❌ Сбой пакетного автоперевода: {e}")
+    #             print(f"Сбой пакетного автоперевода: {e}")
     #             # На продакшене (Beget) логгируйте это или пишите в файлы, чтобы не падать
 
     #     super().save(*args, **kwargs)
@@ -142,7 +142,7 @@ class Post(MyMemoryAutoTranslateMixin, models.Model):
 #         #     pass  # Если нет интернета, просто пропускаем
 #         except Exception as e:
 #             print(
-#                 f"❌ ОШИБКА ПЕРЕВОДА TITLE: {e}"
+#                 f"ОШИБКА ПЕРЕВОДА TITLE: {e}"
 #             )  # Это покажет реальную причину в терминале
 
 #     if self.text_ru and not self.text_en:
@@ -154,7 +154,7 @@ class Post(MyMemoryAutoTranslateMixin, models.Model):
 #         #     pass  # Если нет интернета, просто пропускаем
 #         except Exception as e:
 #             print(
-#                 f"❌ ОШИБКА ПЕРЕВОДА TITLE: {e}"
+#                 f" ОШИБКА ПЕРЕВОДА TITLE: {e}"
 #             )  # Это покажет реальную причину в терминале
 
 #     super().save(*args, **kwargs)
@@ -195,10 +195,10 @@ class Category(MyMemoryAutoTranslateMixin, models.Model):
     #                 source="ru-RU", target="en-US"
     #             ).translate(self.name_ru)
 
-    #             print("🎉 Автоперевод через MyMemory успешно выполнен!")
+    #             print("Автоперевод через MyMemory успешно выполнен!")
 
     #         except Exception as e:
-    #             print(f"❌ Сбой автоперевода: {e}")
+    #             print(f"Сбой автоперевода: {e}")
     #     # На продакшене (Beget) логгируйте это или пишите в файлы, чтобы не падать
 
     #     super().save(*args, **kwargs)

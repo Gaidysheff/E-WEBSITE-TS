@@ -95,15 +95,81 @@ const UserInfoForm = ({ setIsModalOpen }: Props) => {
       onChange: userInfoSchema,
       onMount: userInfoSchema, // ПРИНУДИТЕЛЬНАЯ ПРОВЕРКА ПРИ ЗАГРУЗКЕ
     },
+
     onSubmit: async ({ value }) => {
       setBtnLoader(true);
+
       try {
+        // -------------- Вариант № 3 --------------------
+        // 1. Создаем чистый объект FormData прямо здесь
+        // const formData = new FormData();
+
+        // // 2. Поштучно и безопасно добавляем текстовые поля
+        // formData.append("email", user?.email ?? "");
+        // formData.append("username", value.username);
+        // formData.append("birthday", value.birthday ?? "");
+        // formData.append("firstName", value.firstName);
+        // formData.append("lastName", value.lastName);
+        // formData.append("phone", value.phone);
+
+        // // 3. Извлекаем файл СТРОГО из нативного инпута браузера по его ID!
+        // // Это самый надежный способ в веб-разработке,
+        // // обходящий любые капризы стейт-менеджеров
+        // const fileInput = document.getElementById(
+        //   "avatar-upload",
+        // ) as HTMLInputElement;
+        // const nativeFile = fileInput?.files?.[0];
+
+        // if (nativeFile) {
+        //   console.log(
+        //     "[FRONTEND] Нашли файл для отправки:",
+        //     nativeFile.name,
+        //     nativeFile.size,
+        //   );
+        //   formData.append("image", nativeFile); // Имя ключа строго 'image'
+        // } else {
+        //   console.log(
+        //     "[FRONTEND] Новый файл не выбран, отправка без изменения фото",
+        //   );
+        // }
+
+        // // 4. Отправляем FormData напрямую через Axios, ЯВНО указывая заголовки
+        // const response = await privateApi.put(CURRENT_USER_DATA_URL, formData, {
+        //   headers: {
+        //     "Content-Type": "multipart/form-data", // ХАК: Заставляем Axios переключиться на режим передачи файлов!
+        //   },
+        // });
+        // const newUserData = response.data;
+
+        // -------------- Вариант № 2 --------------------
+        // const nativeFile = form.getFieldValue("image");
+
+        // const userData = {
+        //   email: user?.email ?? "",
+        //   // ФИКС: НЕ делаем спред объекта ...value!
+        //   // ...value,
+        //   // Вместо этого явно берем нативный файл прямо из стейта TanStack Form
+        //   username: value.username,
+        //   birthday: value.birthday,
+        //   firstName: value.firstName,
+        //   lastName: value.lastName,
+        //   phone: value.phone,
+        //   // Передаем строго оригинальный File
+        //   // (или старую строку-урл, если файл не меняли)
+        //   image: nativeFile,
+        // };
+
+        // const newUserData = await addUserInfoAction(userData);
+        // -------------- Вариант № 1 --------------------
+
         const userData = {
           email: user?.email ?? "",
           ...value,
         };
+
         const newUserData = await addUserInfoAction(userData);
 
+        // ---------------------------------------------
         // Обновляем контекст пользователя вручную
         // Теперь во всем приложении адрес обновится МГНОВЕННО без перезагрузки
         // Разворачиваем новые данные в стейт через спред ...newUserData
@@ -112,6 +178,7 @@ const UserInfoForm = ({ setIsModalOpen }: Props) => {
 
         // Альтернативный железобетонный вариант маппинга, если бэкенд и фронт
         // имеют разные ключи:
+
         setUser((prev) => {
           if (!prev) return prev;
 

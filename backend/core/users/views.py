@@ -201,10 +201,18 @@ def update_user_data(request):
     customer.last_name = request.data.get("lastName", customer.last_name)  # Исправлено
     customer.phone = request.data.get("phone", customer.phone)
 
+    # print("=== FILES IN REQUEST ===", request.FILES)
+    # print("=== DATA IN REQUEST ===", request.data)
+
     # Картинку обрабатываем отдельно: обновляем только если пришел реальный файл.
     # Если пришла строка или пустота — игнорируем, чтобы не вызвать ошибку 500
     if "image" in request.FILES:
+        # Если прилетел реальный бинарный файл
         customer.image = request.FILES["image"]
+    elif "image" in request.data and isinstance(request.data["image"], str):
+        # Если прилетела обычная строка (пользователь не менял фото),
+        # просто игнорируем или сохраняем текст
+        pass
 
     birthday_val = request.data.get("birthday")
     # Если пришла пустота, "null" или None — пишем в БД честный NULL

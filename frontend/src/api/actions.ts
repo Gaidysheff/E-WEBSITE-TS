@@ -339,7 +339,12 @@ export const addUserInfoAction: UserInfoHandler = async (
 
   try {
     // Axios автоматически выставит 'Content-Type': 'multipart/form-data'
-    const response = await privateApi.put(CURRENT_USER_DATA_URL, formData);
+    const response = await privateApi.put(CURRENT_USER_DATA_URL, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data", // ХАК:
+        // Заставляем Axios переключиться на режим передачи файлов!
+      },
+    });
 
     // const response = await privateApi.put(CURRENT_USER_DATA_URL, userData);
     console.log("🚀 ~ addUserInfoAction ~ response:", response);

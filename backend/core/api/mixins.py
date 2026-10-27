@@ -54,12 +54,12 @@ class MyMemoryAutoTranslateMixin:
                     setattr(self, f"{field_name}_en", translated_results[index])
 
                 print(
-                    f"🎉 [AutoTranslate] Успешно переведены поля: {', '.join(fields_to_update)} в модели {self.__class__.__name__}"
+                    f"[AutoTranslate] Успешно переведены поля: {', '.join(fields_to_update)} в модели {self.__class__.__name__}"
                 )
 
             except Exception as e:
                 print(
-                    f"❌ [AutoTranslate] Ошибка при переводе полей в {self.__class__.__name__}: {e}"
+                    f"[AutoTranslate] Ошибка при переводе полей в {self.__class__.__name__}: {e}"
                 )
 
         # 4. Вызываем стандартное сохранение Django
