@@ -347,7 +347,7 @@ export const addUserInfoAction: UserInfoHandler = async (
     });
 
     // const response = await privateApi.put(CURRENT_USER_DATA_URL, userData);
-    console.log("🚀 ~ addUserInfoAction ~ response:", response);
+    // console.log("🚀 ~ addUserInfoAction ~ response:", response);
     return response.data;
   } catch (error: any) {
     throw error;

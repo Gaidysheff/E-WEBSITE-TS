@@ -132,7 +132,9 @@ def password_reset_token_created(reset_password_token, *args, **kwargs):
 
     # Выбираем нужный шаблон
     template_name = (
-        "core/password_reset_en.html" if lang == "en" else "core/password_reset_ru.html"
+        "users/password_reset_en.html"
+        if lang == "en"
+        else "users/password_reset_ru.html"
     )
 
     html_message = render_to_string(template_name, context=context)

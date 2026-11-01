@@ -17,7 +17,6 @@ export type User = {
     zip: string;
     region: string;
     state: string;
-    // phone: string;
   };
 };
 
@@ -59,8 +58,8 @@ export type Product = {
   category: Category;
   gender: string;
   shape: string;
-  isAvailable: boolean;
-  // is_available: boolean;
+  // isAvailable: boolean;
+  is_available: boolean;
 };
 
 export type Review = {

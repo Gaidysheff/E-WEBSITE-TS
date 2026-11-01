@@ -7,28 +7,36 @@
     <style></style>
   </head>
   <body>
-    <h2>Новая статья на сайте: {{ post_title }}</h2>
-    {% if post_image %}
-    <img
-      src="{{ post_image }}"
-      alt="{{ post_title }}"
-      style="max-width: 100%; height: auto"
-    />
-    {% endif %}
-    <p>{{ post_text }}</p>
-
-    <a
-      href="{{ post_link }}"
+    <div
       style="
-        display: inline-block;
-        padding: 10px 20px;
-        background: blueviolet;
-        color: white;
-        text-decoration: none;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 20px;
+        margin-bottom: 20px;
       "
     >
-      Читать на сайте
-    </a>
+      <h2>Новая статья на сайте: {{ post_title }}</h2>
+      {% if post_image %}
+      <img
+        src="{{ post_image }}"
+        alt="{{ post_title }}"
+        style="max-width: 500px; height: auto"
+      />
+      {% endif %}
+      <p>{{ post_text }}</p>
+
+      <a
+        href="{{ post_link }}"
+        style="
+          display: inline-block;
+          padding: 10px 20px;
+          background: blueviolet;
+          color: white;
+          text-decoration: none;
+        "
+      >
+        Читать на сайте
+      </a>
+    </div>
 
     <!-- ФУТЕР С ОТПИСКОЙ -->
     <hr style="border: none; border-top: 1px solid #eee; margin-top: 30px" />

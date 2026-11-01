@@ -51,7 +51,7 @@ export const UserContextProvider = ({ children }: UserProviderProps) => {
       const response = await privateApi.get(CURRENT_USER_URL);
       // setUser(response.data); // Если поля совпадают с UserLoggedIn
 
-      console.log("🚀 ~ getUser ~ data:", response?.data);
+      // console.log("🚀 ~ getUser ~ data:", response?.data);
 
       const loadedData = {
         id: response.data.id,

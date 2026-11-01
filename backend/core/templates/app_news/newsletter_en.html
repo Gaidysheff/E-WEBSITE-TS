@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>News</title>
+    <style></style>
+  </head>
+  <body>
+    <div
+      style="
+        border-bottom: 1px solid #eee;
+        padding-bottom: 20px;
+        margin-bottom: 20px;
+      "
+    >
+      <h2>New article on the website: {{ post_title }}</h2>
+      {% if post_image %}
+      <img
+        src="{{ post_image }}"
+        alt="{{ post_title }}"
+        style="max-width: 500px; height: auto"
+      />
+      {% endif %}
+      <p>{{ post_text }}</p>
+
+      <a
+        href="{{ post_link }}"
+        style="
+          display: inline-block;
+          padding: 10px 20px;
+          background: blueviolet;
+          color: white;
+          text-decoration: none;
+        "
+      >
+        Read on the website
+      </a>
+    </div>
+
+    <!-- ФУТЕР С ОТПИСКОЙ -->
+    <hr style="border: none; border-top: 1px solid #eee; margin-top: 30px" />
+    <p style="font-size: 12px; color: #999">
+      You received this email because you subscribed to our newsletter. <br />
+      If you no longer wish to receive our emails, you can
+      <a
+        href="{{ unsubscribe_link }}"
+        style="color: #999; text-decoration: underline"
+        >unsubscribe in one click</a
+      >.
+    </p>
+  </body>
+</html>

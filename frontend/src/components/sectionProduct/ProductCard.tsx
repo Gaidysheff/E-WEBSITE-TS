@@ -22,6 +22,29 @@ const ProductCard = ({ product }: Props) => {
           px-5 py-6 transition-all duration-300 hover:shadow-xl hover:scale-105
           cursor-pointer grayscale hover:grayscale-0"
       >
+        {!product.is_available && (
+          <div
+            className="block absolute mt-[25%] xsm:mt-[30%] text-center
+                      flex flex-col z-40 top-0 inset-x-0 py-1 xsm:py-4 
+                      bg-gray-400/20 dark:bg-gray-300/20 
+                      backdrop-grayscale backdrop-blur-xl"
+          >
+            <span
+              className="font-semibold italic text-myMainColor/70
+                      z-50 drop-shadow-[2px_2px_1px_rgba(255,255,255,.9)]
+                      text-base sm:text-xl md:text-base lg:text-xl"
+            >
+              Нет в наличии
+            </span>
+            <span
+              className="font-semibold italic text-myMainColor/70
+                      z-50 drop-shadow-[2px_2px_1px_rgba(255,255,255,.9)]
+                      text-sm sm:text-xl md:text-base lg:text-xl"
+            >
+              Ожидаем в ближайшее время
+            </span>
+          </div>
+        )}
         <div className="w-[200px] h-[200px] rounded-md overflow-hidden">
           <img
             src={`${BASE_URL}${product.image}`}

@@ -6,7 +6,7 @@ export const Route = createFileRoute("/$lang/_mainLayout/news/$newsSlug")({
 
   loader: async ({ params: { newsSlug } }) => {
     const response = await getNewsPostDetailAction(newsSlug);
-    console.log("🚀 ~ response:", response);
+    // console.log("🚀 ~ response:", response);
     return {
       post: response.data,
     };

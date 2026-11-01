@@ -16,7 +16,7 @@ import {
   wishlistAddAndDeleteAction,
 } from "@/api/actions.ts";
 import { useUser } from "@/store/UserContext.tsx";
-
+import { useParams } from "@tanstack/react-router";
 import { toast } from "react-toastify";
 
 interface Props {
@@ -28,6 +28,10 @@ const ProductInfo = ({ product, isAuthorized }: Props) => {
   const { LL } = useI18nContext();
 
   const { formatPrice } = useCurrency();
+
+  // Вытаскиваем живой параметр lang из URL роутера
+  const { lang } = useParams({ from: "/$lang" });
+  // console.log("🚀 ~ ProductInfo ~ product:", product);
 
   const { user } = useUser();
   const email = typeof user === "undefined" ? "" : user.email;
@@ -149,9 +153,32 @@ const ProductInfo = ({ product, isAuthorized }: Props) => {
     >
       {/* Product Image */}
       <div
-        className="bg-card md:col-span-3 relative overflow-hidden rounded-lg 
-      max-md:mt-10 p-3 xsm:p-10 md:p-3 shadow-sm border border-gray-200"
+        className="bg-card md:col-span-3 relative overflow-hidden rounded-lg
+        max-md:mt-10 p-3 xsm:p-10 md:p-3 shadow-sm border border-gray-200"
       >
+        {!product.is_available && (
+          <div
+            className="block absolute mt-[25%] xsm:mt-[30%] text-center
+                      flex flex-col z-40 top-0 inset-x-0 py-1 xsm:py-4 
+                      bg-gray-400/20 dark:bg-gray-300/20 
+                      backdrop-grayscale backdrop-blur-xl"
+          >
+            <span
+              className="font-semibold italic text-myMainColor/70
+                      z-50 drop-shadow-[2px_2px_1px_rgba(255,255,255,.9)]
+                      text-base sm:text-xl md:text-base lg:text-xl"
+            >
+              Нет в наличии
+            </span>
+            <span
+              className="font-semibold italic text-myMainColor/70
+                      z-50 drop-shadow-[2px_2px_1px_rgba(255,255,255,.9)]
+                      text-sm sm:text-xl md:text-base lg:text-xl"
+            >
+              Ожидаем в ближайшее время
+            </span>
+          </div>
+        )}
         <img
           src={`${BASE_URL}${product.image}`}
           alt="product image"
@@ -187,7 +214,8 @@ const ProductInfo = ({ product, isAuthorized }: Props) => {
           </h3>
           <p
             className="text-primaryDark text-justify md:leading-6 text-base
-            max-sm:text-sm mb-10"
+            max-sm:text-sm mb-10 text-justify hyphens-auto break-words"
+            lang={lang}
           >
             {/* {product.description} */}
             {product.description}
@@ -197,7 +225,7 @@ const ProductInfo = ({ product, isAuthorized }: Props) => {
         {/* Buttons */}
         <div className="flex py-3 items-center gap-4 flex-wrap">
           <Button
-            disabled={addToCartLoader || isAddedToCart}
+            disabled={addToCartLoader || isAddedToCart || !product.is_available}
             handleClick={handleAddToCart}
             className="product-btn 
               disabled:opacity-50 disabled:cursor-not-allowed"

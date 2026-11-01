@@ -419,4 +419,4 @@ else:
     EMAIL_USE_TLS = False  # Отключаем TLS, чтобы обойти ошибку сертификатов
     EMAIL_TIMEOUT = 5
     # Адрес отправителя по умолчанию (должен совпадать с EMAIL_HOST_USER)
-    DEFAULT_FROM_EMAIL = "info@gaidysheff.ru"
+    DEFAULT_FROM_EMAIL = os.getenv("BEGET_EMAIL_HOST_USER")

@@ -82,7 +82,7 @@ const fetchProducts = async (options: ProductSearch) => {
         rating: options.rating || undefined,
       },
     });
-    console.log("🚀 ~ fetchProducts ~ response:", response);
+    // console.log("🚀 ~ fetchProducts ~ response:", response);
 
     return response.data;
   } catch (error) {

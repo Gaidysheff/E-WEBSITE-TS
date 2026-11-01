@@ -263,9 +263,9 @@ class RequestEmailChangeView(APIView):
 
             # Выбираем нужный шаблон
             template_name = (
-                "core/email_reset_en.html"
+                "users/email_reset_en.html"
                 if lang == "en"
-                else "core/email_reset_ru.html"
+                else "users/email_reset_ru.html"
             )
 
             html_message = render_to_string(template_name, context=context)

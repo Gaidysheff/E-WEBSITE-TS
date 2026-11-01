@@ -57,7 +57,7 @@ const Waves = ({ id }: Props): JSX.Element | never => {
   }
 
   const _: never = id;
-  console.log("🚀 ~ WavesSwitch ~ _:", _);
+  // console.log("🚀 ~ WavesSwitch ~ _:", _);
 
   throw new Error();
 };

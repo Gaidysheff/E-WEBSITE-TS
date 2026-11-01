@@ -34,7 +34,7 @@ function Payment() {
         CardData.fourthSet,
         CardData.additionalSet,
       ].join(""); // Склеит всё в одну строку без пробелов
-      console.log("🚀 ~ CardDataHandler ~ cardNumber:", cardNumber);
+      // console.log("🚀 ~ CardDataHandler ~ cardNumber:", cardNumber);
 
       // console.log("🚀 ~ CardDataHandler ~ cardNumber:", cardNumber);
       // console.log("🚀 ~ CardDataHandler ~ CardData:", CardData);

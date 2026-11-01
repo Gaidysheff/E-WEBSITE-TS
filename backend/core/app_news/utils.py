@@ -24,7 +24,9 @@ def _async_newsletter_sender(post_data, subscribers_data):
             email = sub["email"]
 
             template_name = (
-                "core/newsletter_en.html" if lang == "en" else "core/newsletter_ru.html"
+                "app_news/newsletter_en.html"
+                if lang == "en"
+                else "app_news/newsletter_ru.html"
             )
             post_title = (
                 post_data["title_en"] if lang == "en" else post_data["title_ru"]
@@ -109,7 +111,9 @@ def _async_newsletter_sender(post_data, subscribers_data):
 def _async_subscribe_email_sender(email, lang, token):
     try:
         template_name = (
-            "core/subscribe_en.html" if lang == "en" else "core/subscribe_ru.html"
+            "app_news/subscribe_en.html"
+            if lang == "en"
+            else "app_news/subscribe_ru.html"
         )
 
         # Ссылка для фронтенда (React / TanStack Router перехватит её)

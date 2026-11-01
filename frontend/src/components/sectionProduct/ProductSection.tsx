@@ -29,29 +29,30 @@ const ProductSection = ({
     try {
       await publicApi.get(FEATURED_PRODUCT_LIST_URL).then((response) => {
         const res = response.data;
-        const loadedData = [];
+        // const loadedData = [];
 
-        for (const key in res) {
-          loadedData.push({
-            id: res[key].id,
-            name: res[key].name,
-            slug: res[key].slug,
-            brand: res[key].brand,
-            color: res[key].color,
-            description: res[key].description,
-            price: res[key].price,
-            image: res[key].image,
-            featured: res[key].featured,
-            carousel: res[key].carousel,
-            category: res[key].category.name,
-            gender: res[key].gender,
-            shape: res[key].shape,
-            isAvailable: res[key].is_available,
-            // is_available: res[key].is_available, сделать замену в типах
-          });
-        }
+        // for (const key in res) {
+        //   loadedData.push({
+        //     id: res[key].id,
+        //     name: res[key].name,
+        //     slug: res[key].slug,
+        //     brand: res[key].brand,
+        //     color: res[key].color,
+        //     description: res[key].description,
+        //     price: res[key].price,
+        //     image: res[key].image,
+        //     featured: res[key].featured,
+        //     carousel: res[key].carousel,
+        //     category: res[key].category.name,
+        //     gender: res[key].gender,
+        //     shape: res[key].shape,
+        //     // isAvailable: res[key].is_available,
+        //     is_available: res[key].is_available,
+        //   });
+        // }
 
-        setProducts(loadedData);
+        // setProducts(loadedData);
+        setProducts(res);
       });
     } catch (error) {
       console.log("🚀 ~ Register ~ error:", error);

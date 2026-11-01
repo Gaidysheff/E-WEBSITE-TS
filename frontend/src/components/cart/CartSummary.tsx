@@ -95,13 +95,15 @@ const CartSummary = ({ total }: Props) => {
       </div>
 
       <div className="w-full flex items-center justify-between py-2">
-        <p className="text-primary text-sm 2xsm:text-base sm:text-lg">
+        <p className="w-8/10 text-primary text-sm 2xsm:text-base sm:text-lg">
           {LL.cart.selected()}
           {/* Number of selected goods */}
         </p>
-        <p className="text-sm 2xsm:text-lg text-primaryDark font-semibold">
+        <p
+          className="w-2/10 text-end text-sm 2xsm:text-lg text-primaryDark
+          font-semibold"
+        >
           {cartItemsCount}
-
           {/* <NumericFormat
             value={cartItemsCount}
             displayType={"text"}
@@ -211,6 +213,7 @@ const CartSummary = ({ total }: Props) => {
           </div>
         )}
       </Button> */}
+
       <Button
         disabled={total < 0.01}
         handleClick={() => {

@@ -616,7 +616,7 @@ type RootTranslation = {
 		 */
 		total: string
 		/**
-		 * П​е​р​е​й​т​и​ ​к​ ​о​ф​о​р​м​л​е​н​и​ю​ ​з​а​к​а​з​а
+		 * О​ф​о​р​м​и​т​ь​ ​з​а​к​а​з
 		 */
 		checklist: string
 		/**
@@ -1900,7 +1900,7 @@ export type TranslationFunctions = {
 		 */
 		total: () => LocalizedString
 		/**
-		 * Перейти к оформлению заказа
+		 * Оформить заказ
 		 */
 		checklist: () => LocalizedString
 		/**
